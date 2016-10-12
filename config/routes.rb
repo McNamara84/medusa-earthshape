@@ -1,7 +1,59 @@
 Medusa::Application.routes.draw do
+
+  resources :collectors
+
+  resources :quantityunits
+
+  resources :search_maps
+
+  resources :filetopics
+
+
+  concern :ingestable do
+    member do
+      post :ingest_box
+      post :ingest_collection
+      post :ingest_place
+      post :ingest_stone
+      get :clear      
+    end
+  end
+
+
+  resources :stagings, concerns: [:ingestable] do
+    collection do
+      post :import
+    end
+  end
+
+  resources :landuses
+
+  resources :vegetations
+
+  resources :topographic_positions
+
+  resources :preparations
+
+  resources :preparation_for_classifications
+
+  resources :preparation_types
+
+  resources :collectionmethods
+
+  resources :stonecontainer_types
+
   devise_for :users, only: :sessions
 
-  root 'records#index'
+  root 'search_maps#index'
+
+
+
+  concern :igsnable do
+    member do
+      get :igsn_register
+      get :igsn_create
+    end
+  end
 
   concern :bundleable do
     collection do
@@ -50,13 +102,24 @@ Medusa::Application.routes.draw do
     end
   end
 
-  resources :stones, concerns: [:bundleable, :reportable], except: [:new] do
+   resources :collections, concerns: [:bundleable, :reportable], except: [:new] do 
+       member do
+         get :map
+         get :property
+       end
+       resources :attachment_files, concerns: [:link_by_global_id], only: [:index, :create, :update, :destroy], controller: "nested_resources/attachment_files", defaults: { parent_resource: "collection" }
+    resource :record_property, only: [:show, :update], defaults: { parent_resource: "collection" }
+  end
+
+
+  resources :stones, concerns: [:bundleable, :reportable, :igsnable], except: [:new] do
     member do
       get :family
       get :picture
       get :map
       get :property
     end
+    resources :preparations, concerns: [:link_by_global_id], only: [:index, :create, :update, :destroy], controller: "nested_resources/preparations", defaults: { parent_resource: "stone" }
     resource :record_property, only: [:show, :update], defaults: { parent_resource: "stone" }
     resources :attachment_files, concerns: [:link_by_global_id], only: [:index, :create, :update, :destroy], controller: "nested_resources/attachment_files", defaults: { parent_resource: "stone" }
     resources :bibs, concerns: [:link_by_global_id], only: [:index, :create, :update, :destroy], controller: "nested_resources/bibs", defaults: { parent_resource: "stone" }
@@ -153,6 +216,10 @@ Medusa::Application.routes.draw do
   end
 
   resource  :system_preference, only: [:show]
+
+  resource  :system_lab_preference, only: [:show]
+
+
   resource  :account, only: [:show, :edit, :update] do
     member do
       get 'find_by_global_id'

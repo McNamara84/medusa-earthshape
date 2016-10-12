@@ -3,7 +3,7 @@ class AttachmentFile < ActiveRecord::Base
   include HasRecordProperty
 
   has_attached_file :data,
-                    styles: { thumb: "160x120>", tiny: "50x50" },
+#                    styles: { thumb: "160x120>", tiny: "50x50" },
                     path: ":rails_root/public/system/:class/:id_partition/:basename_with_style.:extension",
                     url: "#{Rails.application.config.relative_url_root}/system/:class/:id_partition/:basename_with_style.:extension"
   alias_attribute :name, :data_file_name
@@ -16,12 +16,15 @@ class AttachmentFile < ActiveRecord::Base
   has_many :bibs, through: :attachings, source: :attachable, source_type: "Bib"
   has_many :analyses, through: :attachings, source: :attachable, source_type: "Analysis"
 
+  belongs_to :filetopic
+
   attr_accessor :path
   after_post_process :save_geometry
 
   serialize :affine_matrix, Array
 
   validates :data, presence: true
+  validates :filetopic, presence: true
 
   def path(style = :original)
     File.exists?(data.path(style)) ? data.url(style) : data.url(:original)

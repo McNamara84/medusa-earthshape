@@ -1,25 +1,42 @@
-<%= paginate @stones %>
+ <%= paginate @stones %>
+
+<%= link_to "New Entry", stones_path(anchor: "newentry"), class: "btn btn-default newentrybutton" %>
+
 <table class="table table-condensed table-striped">
-  <thead>
+  <thead class="searchheader">
     <%= search_form_for @search do |f| %>
     <tr>
-      <th>
-        <%= f.button class: "btn btn-default" do %>
-        <span class="glyphicon glyphicon-refresh"></span>
-        <% end %>
-      </th>
+	    <th></th><th colspan="6"><u> Search and filter <%= Stone.model_name.human%></u></th><th></th><th></th><th></th>
+	    <%= th_if_expand do %>    
+		<th></th><th></th><th></th><th></th><th></th>
+	    <%end%>
+    </tr>
+    <tr>
+      <th>Entries per page	</th>
       <th><%= sort_link @search, :name, "name" %></th>
       <th><%= sort_link @search, :parent_name, "parent" %></th>
+      <th><%= sort_link @search, :labname, "Labname" %></th>
+      <th><%= sort_link @search, :igsn, "IGSN" %></th>   
+      <th><%= sort_link @search, :place_name, Place.model_name.human %></th>        
+     <%= th_if_expand do %>
+	 <%= sort_link @search, :date, Stone.human_attribute_name("date")%>     
+      <% end %>     
       <%= th_if_expand do %>
-        <%= sort_link @search, :box_name, "box" %>
+	 <%= sort_link @search, :collection_name, Collection.model_name.human %>
       <% end %>
+	<%= th_if_expand do %>
+        <%= sort_link @search, :box_name, "box" %>
+      <% end %>      
+<!--      
       <th><%= sort_link @search, :physical_form_name, "physical form" %></th>
+ -->     
       <th><%= sort_link @search, :classification_name, "classification" %></th>
-      <%= th_if_expand "tags" %><!-- don't sort -->
+ <% if false %>           <%= th_if_expand "tags" %><!-- don't sort --> <% end %>
       <%= th_if_expand do %>
         <%= sort_link @search, :user_username, "owner" %>
       <% end %>
-      <th><%= sort_link @search, :group_name, "group" %></th>
+      <th>
+      <%= sort_link @search, :group_name, "group" %></th>
       <%= th_if_expand do %>
         <%= sort_link @search, :record_property_published_at, "published" %>
       <% end %>
@@ -30,41 +47,69 @@
       <th><%= toggle_column_link %></th>
     </tr>
     <tr>
-      <th><%= text_field_tag :per_page, (params[:per_page] || Stone.default_per_page), class: "form-control input-sm", size: 4 %></th>
-      <th><%= f.text_field :name_cont, class: "form-control input-sm", size: 15 %></th>
-      <th><%= f.text_field :parent_name_cont, class: "form-control input-sm", size: 15 %></th>
-      <%= th_if_expand do %>
-        <%= f.text_field :box_name_cont, class: "form-control input-sm", size: 15 %>
+      <th><%= text_field_tag :per_page, (params[:per_page] || Stone.default_per_page), size: 1 %>
+             <%= f.button class: "btn btn-default" do %>
+       <span class="glyphicon glyphicon-refresh"></span>
+        <% end %> 
+      </th>
+      <th><%= f.text_field :name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
+      <th><%= f.text_field :parent_name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
+      <th><%= f.text_field :labname_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
+      <th><%= f.text_field :igsn_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
+      <th><%= f.text_field :place_name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
+      <%= th_if_expand do %>      
+	<%= f.text_field :date_lteq, class: "form-control input-sm", placeholder: "min:", size: 15 %>
+      <% end %>      
+      <%= th_if_expand do %>      
+      <%= f.text_field :collection_name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %>
       <% end %>
+      <%= th_if_expand do %>
+        <%= f.text_field :box_name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %>
+      <% end %>
+<!--      
       <th><%= f.text_field :physical_form_name_cont, class: "form-control input-sm", size: 12 %></th>
-      <th><%= f.text_field :classification_name_cont, class: "form-control input-sm", size: 12 %></th>
-      <%= th_if_expand do %>
-        <%= f.select :tags_name_eq, ActsAsTaggableOn::Tag.pluck(:name), { include_blank: true }, class: "form-control input-sm" %>
+ -->
+ <th><%= f.text_field :classification_name_cont, class: "form-control input-sm", placeholder: "search:", size: 12 %></th>
+ <% if false %>     
+	<%= th_if_expand do %>
+		<%= f.select :tags_name_eq, ActsAsTaggableOn::Tag.order(:name).pluck(:name), { include_blank: true }, class: "form-control input-sm" %>
       <% end %>
+<% end %>      
       <%= th_if_expand do %>
-        <%= f.text_field :user_username_cont, class: "form-control input-sm", size: 15 %>
+        <%= f.text_field :user_username_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %>
       <% end %>
-      <th><%= f.text_field :group_name_cont, class: "form-control input-sm", size: 15 %></th>
+      <th><%= f.text_field :group_name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
       <%= th_if_expand do %>
+ <% if false %>     
         <%= f.select :record_property_published_eq, [true, false], { include_blank: true }, class: "form-control input-sm" %>
       <% end %>
+<% end %>      
       <th>
         <%= f.text_field :updated_at_gteq, placeholder: "from:", value: format_date(params[:q] && params[:q][:updated_at_gteq]), class: "form-control input-sm datepicker", size: 10 %>
       </th>
       <%= th_if_expand do %>
         <%= f.text_field :created_at_gteq, placeholder: "from:", value: format_date(params[:q] && params[:q][:created_at_gteq]), class: "form-control input-sm datepicker", size: 10 %>
       <% end %>
+      <th></th>      
     </tr>
     <tr>
       <th></th>
       <th></th>
       <th></th>
+      <th></th>      
+      <th></th>    
+      <th></th>               
+      <%= th_if_expand do %>      
+	<%= f.text_field :date_gteq, class: "form-control input-sm", placeholder: "max:", size: 15 %>
+      <% end %>           
+      <%= th_if_expand nil %>
+      <%= th_if_expand nil %>
+ <!--     <th></th>-->
+      <th></th>
+  <!--       <%= th_if_expand nil %>-->
       <%= th_if_expand nil %>
       <th></th>
-      <th></th>
-      <%= th_if_expand nil %>
-      <%= th_if_expand nil %>
-      <th></th>
+     
       <%= th_if_expand nil %>
       <th>
         <%= f.text_field :updated_at_lteq_end_of_day, placeholder: "to:", value: format_date(params[:q] && params[:q][:updated_at_lteq_end_of_day]), class: "form-control input-sm datepicker", size: 10 %>
@@ -72,6 +117,7 @@
       <%= th_if_expand do %>
         <%= f.text_field :created_at_lteq_end_of_day, placeholder: "to:", value: format_date(params[:q] && params[:q][:created_at_lteq_end_of_day]), class: "form-control input-sm datepicker", size: 10 %>
       <% end %>
+      <th></th>      
     </tr>
     <% end %>
   </thead>
@@ -80,12 +126,31 @@
     <%= render partial: :stone, collection: @stones, locals: { checked: false } %>
     <% end %>
   </tbody>
-  <tfoot>
-    <%= render partial: "new", locals: { stone: Stone.new } %>
+ <tfoot>
+      <tr><th><%= check_box_tag nil, nil, false, class: "select-row-all" %> Select all </th></tr>
+      <tr><th><%= link_to_function  "bundle edit", "$('#bundle-form').submit();", class: "btn btn-default" %></th></tr>
+   
   </tfoot>
-</table>
-<%= link_to_function content_tag(:span, nil, class: "glyphicon glyphicon-pencil"), "$('#bundle-form').submit();", class: "btn btn-default" %>
+  
+  </table>
 
+
+
+<hr>
+<div id="newentry">
+   <u>Create <%= Stone.model_name.human%> here:</u>
+       <%
+		newstones=Stone.new  
+		newstones.collectors.build
+	%>
+
+<%= form_for newstones, remote: true, format: :json, html: { class: "create" } do |f| %>
+    <%= render partial: "new", locals: { stone: newstones, f: f, group_id: nil   } %>
+<% end %>
+
+
+
+</div>
 <%= javascript_tag do %>
   $(document).on("succeed.ajaxForm", "#new_stone", function() {
     $("#stone_search").submit();

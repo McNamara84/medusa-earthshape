@@ -13,7 +13,7 @@
       var $dl = $("<dl>");
       $dl.addClass("dl-horizontal");
       $.each(errors, function(key, message) {
-        $dl.append("<dt>" + key + "</dt><dd>" + message + "</dd>");
+        $dl.append("<dd>" + message + "</dd>");
       });
       $.notification.error($dl);
     },

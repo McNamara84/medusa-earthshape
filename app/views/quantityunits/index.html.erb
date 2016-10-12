@@ -1,0 +1,52 @@
+<div>
+<%= link_to_unless_current Classification.model_name.human.downcase,classifications_path %>  | 
+<%= link_to_unless_current PreparationType.model_name.human.downcase,preparation_types_path %>  | 
+<%= link_to_unless_current PreparationForClassification.model_name.human.downcase,preparation_for_classifications_path %> |  
+<%= link_to_unless_current Preparation.model_name.human.downcase,preparations_path %> |
+<%= link_to_unless_current Collectionmethod.model_name.human.downcase,collectionmethods_path %> |
+<%= link_to_unless_current Quantityunit.model_name.human.downcase,quantityunits_path %> 
+</div>
+<br><br>
+
+<%= paginate @quantityunits %>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>quantity unit</th>   
+    </tr>
+  </thead>
+  <tbody>
+    <% @quantityunits.each do |quantityunit| %>
+    <tr>
+      <td>
+        <%= link_to edit_quantityunit_path(quantityunit) do %>
+        <span class="glyphicon glyphicon-edit"></span>
+        <% end %>
+      </td>
+      <td><%= quantityunit.name  %></td>
+      <td></td>
+      <td>
+        <%= link_to quantityunit_path(quantityunit), method: :delete, data: {confirm: t("confirm.delete")} do %>
+        <span class="glyphicon glyphicon-remove"></span>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <%= form_for Quantityunit.new, remote: true, format: :json, html: { class: "create" } do |f| %>
+    <tr>
+      <td></td>
+      <td><%= f.text_field :name, class: "form-control input-sm" %></td>      
+      <td>
+        <%= f.button class: "btn btn-default" do %>
+        <span class="glyphicon glyphicon-save"></span>
+        <% end %>
+      </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <% end %>
+  </tfoot>
+</table>

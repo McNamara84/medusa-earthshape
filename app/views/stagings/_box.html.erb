@@ -1,0 +1,50 @@
+<% @stagings.each do |staging| %>
+<table class="stagingstable" >
+	<tbody>	  
+
+	       <%= form_for staging, url: ingest_box_staging_path(staging), method: :post do |f|%>
+	       <%= hidden_tabname_tag(__FILE__) %>
+	       <% 
+	        boxhash=@boxes[staging.id]
+		box=nil
+		if boxhash[:id].present?
+			box=Box.find(boxhash[:id])
+		else
+			box=Box.new({:parent_id => boxhash[:parent_id], :box_type_id =>boxhash[:box_type_id], :name => boxhash[:name]})
+		end	
+	       %> 
+	            
+		    <%=   f.fields_for :box_create_attributes, box  do |r| %>
+			       <tr>
+					<td><%= r.hidden_field :id %><%= r.label :name, class:"small" %><%= r.text_field :name, class: "form-control input-sm", placeholder: '- required -'  %></td>
+					<td><%= r.label :parent_id, class:"small" %><%= r.select :parent_id, Box.order(:name).pluck(:name,:id), { include_blank: true }, class: "form-control input-sm" %></td>
+					<td><%= r.label :box_type_id, class:"small" %><%= r.select :box_type_id, BoxType.order(:name).pluck(:name,:id), { include_blank: true }, class: "form-control input-sm" %></td>
+				</tr>
+				<tr>
+					<td>
+						  <div class="form-group form-group-sm">
+						  <%= r.fields_for :record_property_attributes do |g| %>
+							<label class="small">Group</label>
+							<div >
+							 <%= g.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), {  include_blank: true }, class: "form-control input-sm" %>
+							<%= g.hidden_field :user_id ,value: @current_user.id %>
+			                                <%= g.hidden_field :guest_readable , value: "true" %>							
+							  </div>
+						  <% end %>
+						</div>
+
+					</td>
+					<td style="vertical-align:middle">
+						<% if box.id.blank? %>
+							<%= submit_tag "Create" %>
+						<%else%>				
+							<%= submit_tag "Update" %>			
+						<%end%>					
+					</td>						
+				</tr>
+			<%end%>			
+		<%end%>
+
+	</tbody>
+	</table>
+<%end%>

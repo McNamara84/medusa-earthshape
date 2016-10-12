@@ -1,4 +1,5 @@
 <ul class="nav navbar-nav navbar-right">
+      <li><%= link_to image_tag("brand-logo.png",height: 26, border: 0),url_for("http://www.geo.uni-tuebingen.de/projekte/earthshape/htdocs/") %></li>
   <li>
   <%= link_to root_path do %>
     <span class="glyphicon glyphicon-home"></span>
@@ -10,9 +11,17 @@
     <span class="glyphicon glyphicon-wrench"></span>
   <% end %>
   </li>
+<% if false %>  
+  <li>
+  <%= link_to system_lab_preference_path ,title: "preparation preference" do %>
+    <span class="glyphicon glyphicon-asterisk"></span>
+  <% end %>
+  </li>
+<% end %>  
+  
   <% end %>
   <li>
-  <%= link_to edit_account_path,title: "account" do %>
+  <%= link_to edit_account_path,title: "my account" do %>
     <span class="glyphicon glyphicon-user"></span>
   <% end %>
   </li>
@@ -28,9 +37,13 @@
   </li>
 </ul>
 
+<% if false %>
+
 <%= search_form_for @records_search, url: records_path, class: "navbar-form navbar-right" do |f| %>
   <div class="form-group">
     <%= f.text_field(:name_or_global_id_cont, class: "form-control") %>
   </div>
   <%= f.submit "search", class: "btn btn-default" %>
+<% end %>
+
 <% end %>

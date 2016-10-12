@@ -1,6 +1,6 @@
 GIT
-  remote: git://github.com/halogenandtoast/alchemist.git
-  revision: 5c086daffa1baf962b6b0e304234535ba964b86a
+  remote: https://github.com/halogenandtoast/alchemist
+  revision: d05404b472e7149d203920f912af0100e3606881
   specs:
     alchemist (0.1.7)
 
@@ -8,7 +8,6 @@ GEM
   remote: https://rubygems.org/
   remote: http://dream.misasa.okayama-u.ac.jp/rubygems/
   specs:
-    Ascii85 (1.0.2)
     actionmailer (4.0.2)
       actionpack (= 4.0.2)
       mail (~> 2.5.4)
@@ -18,6 +17,8 @@ GEM
       erubis (~> 2.7.0)
       rack (~> 1.5.2)
       rack-test (~> 0.6.2)
+    active_link_to (1.0.3)
+      actionpack
     activemodel (4.0.2)
       activesupport (= 4.0.2)
       builder (~> 3.1.0)
@@ -41,7 +42,6 @@ GEM
       railties (~> 4.0)
     acts_as_taggable_on (3.0.0.rc2)
       rails (>= 3, < 5)
-    afm (0.2.0)
     arel (4.0.1)
     atomic (1.1.14)
     barby (0.5.1)
@@ -96,6 +96,10 @@ GEM
     columnize (0.8.9)
     comma (3.2.0)
       activesupport (>= 3.0.0)
+    crossref (0.0.4)
+      nokogiri (>= 1.2.3)
+    datacite_doi_ify (1.1.0)
+      rest-client (~> 1.7)
     debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
     devise (3.2.2)
@@ -106,6 +110,8 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
     docile (1.1.1)
+    domain_name (0.5.25)
+      unf (>= 0.0.5, < 1.0.0)
     draper (1.3.0)
       actionpack (>= 3.0)
       activemodel (>= 3.0)
@@ -124,6 +130,7 @@ GEM
     ffi (1.9.3)
     formatador (0.2.4)
     geonames (0.3.3)
+    gmaps4rails (2.1.2)
     guard (2.2.5)
       formatador (>= 0.2.4)
       listen (~> 2.1)
@@ -133,8 +140,9 @@ GEM
     guard-rspec (4.2.2)
       guard (~> 2.1, >= 2.1)
       rspec (~> 3.0.0.beta, >= 2.14, < 4.0)
-    hashery (2.1.1)
     hike (1.2.3)
+    http-cookie (1.0.2)
+      domain_name (~> 0.5)
     i18n (0.6.9)
     jbuilder (1.5.3)
       activesupport (>= 3.0.0)
@@ -166,6 +174,7 @@ GEM
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.8.0)
+    netrc (0.11.0)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
     orm_adapter (0.5.0)
@@ -174,12 +183,7 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.3)
       mime-types
-    pdf-reader (1.3.3)
-      Ascii85 (~> 1.0.0)
-      afm (~> 0.2.0)
-      hashery (~> 2.0)
-      ruby-rc4
-      ttfunk
+    pdf-core (0.4.0)
     pg (0.17.1)
     poltergeist (1.5.0)
       capybara (~> 2.1)
@@ -189,9 +193,9 @@ GEM
     polyamorous (0.6.4)
       activerecord (>= 3.0)
     polyglot (0.3.3)
-    prawn (0.12.0)
-      pdf-reader (>= 0.9.0)
-      ttfunk (~> 1.0.2)
+    prawn (1.3.0)
+      pdf-core (~> 0.4.0)
+      ttfunk (~> 1.4.0)
     pry (0.9.12.4)
       coderay (~> 1.0)
       method_source (~> 0.8)
@@ -237,6 +241,10 @@ GEM
       json (~> 1.4)
     ref (1.0.5)
     request_store (1.0.5)
+    rest-client (1.8.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
     rqrcode (0.4.2)
     rspec (3.0.0.beta1)
       rspec-core (= 3.0.0.beta1)
@@ -261,7 +269,6 @@ GEM
       rspec-expectations (= 3.0.0.beta1)
       rspec-mocks (= 3.0.0.beta1)
     rspec-support (3.0.0.beta1)
-    ruby-rc4 (0.1.5)
     rubyzip (1.1.0)
     sass (3.2.14)
     sass-rails (4.0.1)
@@ -299,8 +306,8 @@ GEM
     therubyracer (0.12.0)
       libv8 (~> 3.16.14.0)
       ref
-    thinreports (0.7.6)
-      prawn (>= 0.12.0, <= 0.12.0)
+    thinreports (0.8.0)
+      prawn (= 1.3.0)
     thor (0.18.1)
     thread_safe (0.1.3)
       atomic
@@ -310,11 +317,14 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    ttfunk (1.0.3)
+    ttfunk (1.4.0)
     tzinfo (0.3.38)
     uglifier (2.4.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.1)
     unicorn (4.7.0)
       kgio (~> 2.6)
       rack
@@ -337,6 +347,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_link_to
   acts_as_list
   acts_as_mappable
   acts_as_taggable_on
@@ -354,11 +365,14 @@ DEPENDENCIES
   ci_reporter
   coffee-rails (~> 4.0.0)
   comma
+  crossref
+  datacite_doi_ify
   devise
   draper
   exception_notification
   factory_girl_rails
   geonames
+  gmaps4rails
   guard-rspec
   jbuilder (~> 1.2)
   jquery-rails
@@ -384,9 +398,12 @@ DEPENDENCIES
   simplecov-rcov
   spring
   therubyracer
-  thinreports
+  thinreports (>= 0.8.0)
   uglifier (>= 1.3.0)
   unicorn
   validates_existence
   whenever
   with_recursive
+
+BUNDLED WITH
+   1.11.2

@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   
   validates :username, presence: true, length: {maximum: 255}, uniqueness: true
   validates :box, existence: true, allow_nil: true
-
+  validate :correct_igsn_prefix, allow_nil: true
 
   alias_attribute :admin?, :administrator
   
@@ -30,6 +30,9 @@ class User < ActiveRecord::Base
 
   protected
 
+  def correct_igsn_prefix
+    errors.add(:prefix, 'The prefix must begin with "GF" and end with three characters, i.e. "GFABC" or "GFC12" ') unless prefix =~ %r{\AGF}
+  end
 
   def email_required?
     false

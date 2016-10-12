@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%= render partial: "layouts/head" %>
+</head>
+<body>
+  <%= render partial: "layouts/navbar_lab" if user_signed_in? %>
+  <div class="container">
+    <%= yield %>
+  </div>
+  <%= render partial: "layouts/notification_modal" %>
+</body>
+</html>

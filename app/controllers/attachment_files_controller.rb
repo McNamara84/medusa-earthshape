@@ -78,6 +78,7 @@ class AttachmentFilesController < ApplicationController
       :user_id,
       :group_id,
       :published,
+      :filetopic_id,
       record_property_attributes: [
         :global_id,
         :user_id,

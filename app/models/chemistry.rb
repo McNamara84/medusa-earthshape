@@ -12,6 +12,10 @@ class Chemistry < ActiveRecord::Base
   validates :uncertainty, numericality: true, allow_nil: true
 
   def display_name
-    "#{measurement_item.display_name}: #{sprintf("%.2f", self.value)}"
+     if self.value==0.0 && !self.description.blank?
+	"#{measurement_item.display_name}: #{self.description}"
+    else
+    	"#{measurement_item.display_name}: #{sprintf("%.2f", self.value)}"
+    end
   end
 end

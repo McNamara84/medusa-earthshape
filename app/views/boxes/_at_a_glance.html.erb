@@ -22,10 +22,13 @@
     <tr>
       <th></th>
       <th>name</th>
-      <th>form</th>
-      <th>global-id</th>
+<!--      <th>form</th>
+ -->  
+ <% if @current_user.advanced then %>  
+	<th>global-id</th>
+<% end %>
       <th>boxes</th>
-      <th>stones</th>
+      <th>samples</th>
       <th>owner</th>
       <th>group</th>
       <th>updated-at</th>
@@ -38,7 +41,9 @@
       <td></td>
       <td><%= link_to_if(can?(:read, child_box), child_box.name, box_path(child_box)) %></td>
       <td><%= child_box.box_type.try(:name) %></td>
+ <% if @current_user.advanced then %>        
       <td><%= child_box.global_id %></td>
+<% end %>
       <td><%= child_box.children.count %></td>
       <td><%= child_box.stones.count %></td>
       <td><%= child_box.user.try(:username) %></td>
@@ -51,8 +56,11 @@
     <tr>
       <td></td>
       <td><%= link_to_if(can?(:read, stone), stone.name, stone_path(stone)) %></td>
-      <td><%= stone.physical_form.try(:name) %></td>
-      <td><%= stone.global_id %></td>
+<!--<td><%= stone.physical_form.try(:name) %></td>
+-->  
+ <% if @current_user.advanced then %>  
+	<td><%= stone.global_id %></td>
+<% end %>
       <td></td>
       <td></td>
       <td><%= stone.user.try(:username) %></td>

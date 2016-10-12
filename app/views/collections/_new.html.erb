@@ -1,0 +1,72 @@
+
+
+<fieldset class="stonefieldset">
+<legend>Identification</legend>
+
+   <div class="form-group form-group-sm">
+    <%= f.label :name, class: "small" %>
+    <%= f.text_field :name, class: "form-control input-sm", placeholder: "- required -" %>
+  </div>
+  
+   <div class="form-group form-group-sm">
+    <%= f.label :project, class: "small" %>
+    <%= f.text_field :project, class: "form-control input-sm", placeholder: "- required -" %>
+   </div>
+   
+   <div class="form-group form-group-sm">
+    <%= f.label :timeseries, class: "small" %>
+    <%=f.select :timeseries , [["Yes", true], ["No", false]], { :include_blank => true}, class: "form-control input-sm" %>
+    </div>
+
+</fieldset>
+
+<fieldset class="stonefieldset">
+<legend>Description</legend>
+
+	  <div class="form-group form-group-sm placedescription">
+	    <%= f.label :samplingstrategy, class: "small" %>
+	    <%= f.text_area :samplingstrategy, class: "form-control input-sm", placeholder: "- required -" %>
+	  </div>
+		
+
+		  
+	  <div class="form-group form-group-sm placedescription">
+	    <%= f.label :weather_conditions, class: "small" %>
+	    <%= f.text_area :weather_conditions, class: "form-control input-sm" %>
+	  </div>
+	  <div class="form-group form-group-sm placedescription">
+	    <%= f.label :comment, class: "small" %>
+	    <%= f.text_area :comment, class: "form-control input-sm" %>
+	  </div> 
+
+</fieldset>
+
+<fieldset class="stonefieldset">
+<legend>Metadata Access</legend>
+
+	<div class="form-group form-group-sm">
+		  <%= f.fields_for :record_property_attributes do |r| %>
+			  <label class="small">Group</label>
+			  <div >
+			    <%= r.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), {selected: group_id,  include_blank: true }, class: "form-control input-sm" %>
+			    <%= r.hidden_field :user_id ,value: @current_user.id %>
+                            <%= r.hidden_field :guest_readable , value: "true" %>			    
+			  </div>
+		  <% end %>
+	</div>	
+</fieldset>
+
+<div style="float:left; margin:10px">	
+  	  <div class="form-group form-group-sm">
+		  <label class="small">Save</label>
+		  <div>
+			<%= f.button class: "btn btn-default" do %>
+			<span class="glyphicon glyphicon-save"></span>
+			<% end %>
+		  </div>
+	</div>
+</div>
+
+
+    
+

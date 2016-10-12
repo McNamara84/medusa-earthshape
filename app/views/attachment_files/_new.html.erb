@@ -1,13 +1,16 @@
+
+<% if false %>
 <%= form_for attachment_file, remote: false, format: :html, html: { class: "create"} do |f| %>
 <tr>
   <th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th>
   <th></th>
-  <th colspan="2"><%= f.file_field :data %></th>
+  <th ><%= f.file_field :data %></th>
+    <th colspan="2"><%= f.select :filetopic_id, Filetopic.order(:name).pluck(:name, :id), { :prompt =>  '- select required topic -'  } %></th>
   <th></th>
   <%= f.fields_for :record_property_attributes do |r| %>
   <%= th_if_expand @current_user.username %>
   <th>
-    <%= r.select :group_id ,Group.pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %>
+    <%= r.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %>
     <%= r.hidden_field :user_id ,value: @current_user.id %>
   </th>
   <% end %>
@@ -27,4 +30,68 @@
   </th>
 </tr>
 <% end %>
+<% end %>
 
+<%= form_for attachment_file, remote: false, format: :html, html: { class: "create"} do |f| %>
+
+<div style="float:left; margin:10px">
+  <div class="form-group form-group-sm">
+    <%= f.label :filetopic_id, class: "small" %>
+    <div class="input-group">
+      <%= f.select :filetopic_id, Filetopic.order(:name).pluck(:name, :id), { :prompt =>  '- select required topic -'  }, class: "form-control input-sm" %>         
+    </div>
+   </div>
+</div>
+<div style="float:left; margin:10px">
+   <div class="form-group form-group-sm">
+    <%= f.label "Upload File here:", class: "small" %>
+    <div class="input-group">
+      <%= f.file_field :data%>         
+    </div>
+   </div>  
+</div>
+<div style="float:left; margin:10px">   
+   <div  style="display:none" class="form-group form-group-sm">
+	  <%= f.label :@current_user, "Owner", class: "small" %>
+	    <div class="input-group">
+		<span class="input-group-addon">		      
+			<%= @current_user.username %>
+		</span>
+	    </div>  
+	</div>
+
+	  <div class="form-group form-group-sm">
+		  <%= f.fields_for :record_property_attributes do |r| %>
+			  <label class="small">Group</label>
+			  <div >
+					    <%= r.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %>
+					    <%= r.hidden_field :user_id ,value: @current_user.id %>
+			  </div>
+		  <% end %>
+	</div>
+</div>	
+  <div style="float:left; margin:10px">
+    <%
+      page_params = {}
+      [:page , :per_page , :q].each do |key|
+        page_params[key] = params[key] if params[key]
+      end
+    %>
+    <%= hidden_field_tag :page_params,Base64.encode64(Marshal.dump(page_params)) %>
+  </div>
+<div style="float:left; margin:10px">
+
+	  <div class="form-group form-group-sm">
+		  <label class="small">Save</label>
+		  <div>
+		    <%= f.button class: "btn btn-default" do %>
+		    <span class="glyphicon glyphicon-save"></span>
+		    <% end %>
+		  </div>
+	</div>
+	
+</div>
+
+
+</div>
+<% end %>

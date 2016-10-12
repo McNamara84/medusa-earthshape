@@ -33,7 +33,9 @@ class AccountsController < ApplicationController
       :first_name,
       :description,
       :box_id,
-      :username
+      :username,
+      :prefix,
+      :advanced
     )
   end
 

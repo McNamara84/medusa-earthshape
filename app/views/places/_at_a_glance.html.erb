@@ -3,6 +3,8 @@
   <li>name: <%= @place.name %></li>
   <li>latitude: <%= @place.latitude_to_text %></li>
   <li>longitude: <%= @place.longitude_to_text %></li>
+  <li>slope description: <%= @place.try!(:slope_description) %></li>
+  <li>landuse: <%= @place.landuse.try!(:name)%></li>  
   <li>description: <%= @place.try!(:description) %></li>
   <li>sample: <% @place.stones.each do |stone| %>
     <%= link_to_if can?(:read, stone), stone.name, stone_path(stone) %>

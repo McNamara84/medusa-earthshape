@@ -1,0 +1,28 @@
+<%= paginate @vegetations, remote: true %>
+<%= search_form_for @search, url: polymorphic_path(@search.klass, format: :modal), remote: true do |f| %>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th>
+        <%= f.button class: "btn btn-default" do %>
+        <span class="glyphicon glyphicon-refresh"></span>
+        <% end %>
+      </th>      
+      <th><div><%= sort_link @search, :name, Vegetation.model_name.human, { format: :modal }, remote: true %></div></th>
+     
+    </tr>
+    <tr>
+      <th><%= text_field_tag :per_page, (params[:per_page] || Stone.default_per_page), size: 4, readonly: true %></th>
+      <th><div><%= f.text_field :name_cont, size: 15 %></div></th>
+    </tr>
+    <tr>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render partial: "vegetation.modal", collection: @vegetations, locals: { checked: false } %>
+  </tbody>
+</table>
+<% end %>
+

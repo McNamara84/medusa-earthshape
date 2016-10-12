@@ -26,17 +26,55 @@ class PlacesController < ApplicationController
   end
 
   def create
-    @place = Place.new(place_params)
-    @place.save
-    respond_with @place
+
+	place_params.delete :is_parent if not current_user.admin?
+	@place = Place.new(place_params)   
+	begin
+		ActiveRecord::Base.transaction do
+		    @place.save
+		    @place.validate_stringlatlon(place_params[:latitude],place_params[:longitude])
+		    if @place.errors.size > 0
+			raise ActiveRecord::RecordInvalid.new(@place)
+		    end
+		end 
+	rescue
+	end
+	respond_with @place
+
   end
 
   def update
-    @place.update_attributes(place_params)
-    respond_with @place
+        place_params.delete :is_parent if not current_user.admin?   
+	begin
+		ActiveRecord::Base.transaction do
+			@place.update_attributes(place_params)
+			@place.validate_stringlatlon(place_params[:latitude],place_params[:longitude])
+			if @place.errors.size > 0
+				raise ActiveRecord::RecordInvalid.new(@place)
+			end
+		end 
+	rescue
+	end   
+    
+	respond_with @place
+    
+    
   end
 
   def map
+     if @place.is_parent
+	@places=Place.where(parent_id: @place.id)
+     else
+	@places=[@place]     
+     end
+
+    @hash = Gmaps4rails.build_markers(@places) do |place, marker|
+       marker.lat place.latitude
+       marker.lng place.longitude
+       marker.json({:id => place.id })
+       marker.infowindow Place.model_name.human+": "+place.name
+    end	  
+    
     respond_with @stone, layout: !request.xhr?
   end
 
@@ -93,11 +131,21 @@ class PlacesController < ApplicationController
       :latitude,
       :longitude,
       :elevation,
+      :landuse,
+      :slope_description,
       :link_url,
       :doi,
       :user_id,
       :group_id,
       :published,
+      :lightsituation,
+      :topographic_position_id,
+      :vegetation_id,
+      :landuse_id,
+      :aspect,
+      :parent_id,
+      :parent_global_id,
+      :is_parent,
       record_property_attributes: [
         :global_id,
         :user_id,

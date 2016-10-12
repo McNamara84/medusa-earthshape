@@ -1,3 +1,13 @@
+<div>
+<%= link_to_unless_current MeasurementItem.model_name.human.downcase,measurement_items_path %>    | 
+<%= link_to_unless_current MeasurementCategory.model_name.human.downcase,measurement_categories_path %>    | 
+<%= link_to_unless_current Unit.model_name.human.downcase,units_path %>   | 
+<%= link_to_unless_current Technique.model_name.human.downcase,techniques_path %>   | 
+<%= link_to_unless_current Device.model_name.human.downcase,devices_path %>   | 
+<%= link_to_unless_current Author.model_name.human.downcase,authors_path %>
+</div>
+<br><br>
+
 <%= paginate @techniques %>
 <table class="table table-condensed table-striped">
   <thead>

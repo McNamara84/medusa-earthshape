@@ -1,0 +1,7 @@
+<%= render partial: "parts/property", locals: { record: @collection } %>
+
+<%= javascript_tag do %>
+  $(document).on("succeed.ajaxForm", "#edit_collection_<%= @collection.id %>", function() {
+    location.href="<% collection_path(@collection) %>";
+  });
+<% end %>

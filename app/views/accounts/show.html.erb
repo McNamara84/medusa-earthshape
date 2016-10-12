@@ -9,6 +9,7 @@
         'family name: ' => @user.family_name,
         'e-mail: ' => @user.email,
         'description: ' => @user.description,
+        'IGSN prefix: ' => @user.prefix,
         'groups: ' =>@user.groups.map{|g| g.name}.join(", ")}.each do |k,v| %>
         <%= li_if_exist(k,v) %>
     <% end %>

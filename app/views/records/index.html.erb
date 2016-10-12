@@ -1,26 +1,30 @@
 <%= paginate @records %>
 <table class="table table-condensed table-striped">
-  <thead>
+  <thead  class="searchheader">
     <%= search_form_for @records_search, url: records_path do |f| %>
     <tr>
-      <th>
-        <%= f.button class: "btn btn-default" do %>
-        <span class="glyphicon glyphicon-refresh"></span>
-        <% end %>
-      </th>
+	    <th></th><th colspan="6"><u> Search and filter Entries</u></th>
+    </tr>     
+    <tr>
+      <th>Entries per page</th>
       <th><%= sort_link @records_search, :name, "name" %></th>
-      <th><%= sort_link @records_search, :global_id, "global-id" %></th>
+      <th>Type</th>   
+<%if false%>      <th><%= sort_link @records_search, :global_id, "global-id" %></th><%end%>
       <th><%= sort_link @records_search, :user_username, "owner" %></th>
       <th><%= sort_link @records_search, :group_name, "group" %></th>
       <th><%= sort_link @records_search, :updated_at, "updated-at" %></th>
       <th><%= sort_link @records_search, :created_at, "created-at" %></th>
     </tr>
     <tr>
-      <th><%= text_field_tag :per_page, (params[:per_page] || RecordProperty.default_per_page), class: "form-control input-sm", size: 4 %></th>
-      <th><%= f.text_field :name_cont, class: "form-control input-sm", size: 15 %></th>
-      <th><%= f.text_field :global_id_cont, class: "form-control input-sm", size: 15 %></th>
-      <th><%= f.text_field :user_username_cont, class: "form-control input-sm", size: 15 %></th>
-      <th><%= f.text_field :group_name_cont, class: "form-control input-sm", size: 15 %></th>
+      <th><%= text_field_tag :per_page, (params[:per_page] || RecordProperty.default_per_page), size: 1 %>
+        <%= f.button class: "btn btn-default" do %>
+        <span class="glyphicon glyphicon-refresh"></span>
+        <% end %></th>
+      <th><%= f.text_field :name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
+      <th><%= f.select :datum_type_eq, RecordProperty.readables(current_user).where.not(datum_type: ["Chemistry", "Spot"]).order(:datum_type).map{|r|[r.datum_type.constantize.model_name.human,r.datum_type]}.uniq,{:include_blank =>  'search:' }, class: "form-control input-sm" %></th>
+<%if false%>      <th><%= f.text_field :global_id_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th> <%end%>
+      <th><%= f.text_field :user_username_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
+      <th><%= f.text_field :group_name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
       <th>
         <%= f.text_field :updated_at_gteq, placeholder: "from:", value: format_date(params[:q] && params[:q][:updated_at_gteq]), class: "form-control input-sm datepicker", size: 10 %>
       </th>
@@ -32,14 +36,16 @@
       <th></th>
       <th></th>
       <th></th>
+ <!--     <th></th>-->
       <th></th>
-      <th></th>
+    <th></th>      
       <th>
         <%= f.text_field :updated_at_lteq_end_of_day, placeholder: "to:", value: format_date(params[:q] && params[:q][:updated_at_lteq_end_of_day]), class: "form-control input-sm datepicker", size: 10 %>
       </th>
       <th>
         <%= f.text_field :created_at_lteq_end_of_day, placeholder: "to:", value: format_date(params[:q] && params[:q][:created_at_lteq_end_of_day]), class: "form-control input-sm datepicker", size: 10 %>
       </th>
+
     </tr>
     <% end %>
   </thead>
@@ -48,7 +54,8 @@
     <tr>
       <td></td>
       <td><%= link_to record.name, record.datum %></td>
-      <td><%= record.global_id %></td>
+      <td><%= record.datum_type.classify.constantize.model_name.human %></td>
+<%if false%>      <td><%= record.global_id %></td><%end%>
       <td><%= record.user.try!(:username) %></td>
       <td><%= record.group.try!(:name) %></td>
       <td><%= difference_from_now(record.updated_at) %></td>

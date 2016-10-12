@@ -19,4 +19,13 @@ class Classification < ActiveRecord::Base
   def reflection_child_full_name
     children(force_reload: true).map { |child| child.save }
   end
+
+  def get_material()
+    if parent
+      return parent.get_material()
+    else
+      return name
+    end
+  end
+
 end

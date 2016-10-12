@@ -1,0 +1,74 @@
+<% @stagings.each do |staging| %>	
+	<table class="stagingstable" >
+	<tbody>	  
+
+	       <%= form_for staging, url: ingest_place_staging_path(staging), method: :post do |f|%>
+	       <%= hidden_tabname_tag(__FILE__) %>
+	       <% 
+	        placehash=@places[staging.id]
+		place=nil
+		if placehash[:id].present?
+			place=Place.find(placehash[:id])
+		elsif placehash[:latitude].present? and placehash[:longitude].present?
+			place=Place.new(
+			{:name=>placehash[:name], :parent_global_id=> placehash[:parent_global_id], :latitude=>placehash[:latitude], :longitude=>placehash[:longitude], :elevation=>placehash[:elevation], :topographic_position_id=>placehash[:topographic_position_id],
+			:slope_description=>placehash[:slope_description], :aspect=>placehash[:aspect], :vegetation_id=>placehash[:vegetation_id], :landuse_id=>placehash[:landuse_id], :description=>placehash[:description],
+			:lightsituation=>placehash[:lightsituation]
+			})
+                else
+                        place=Place.new();
+		end	
+	       %>
+	       
+	
+	            <%=   f.fields_for :place_create_attributes, place  do |r| %>
+				<tr>	
+					<td><%= r.hidden_field :id %> <%= r.hidden_field :is_parent, :value => '0' %>
+					
+					<%= r.label :name, class:"small" %><%=  r.text_field :name, {:prompt =>  '- required -' } %></td>
+					
+					<td>
+					<%= r.label :parent_id, class:"small" %><%= r.select :parent_global_id, Place.choose_parent_global_id(@current_user), { :prompt =>  '- required -' }, class: "form-control input-sm" %>
+					</td>
+					<td><%= r.label :latitude, class:"small" %><%=  r.text_field   :latitude, { :prompt =>  '- required -'  } %></td>
+					<td><%= r.label :longitude, class:"small" %><%= r.text_field :longitude, {:prompt =>  '- required -'}  %></td>
+					<td colspan="2"><%= r.label :elevation, class:"small" %><%=  r.text_field  :elevation %></td>
+					<td colspan="2"><%= r.label :topographic_position_id, class:"small" %><%= r.select :topographic_position_id, TopographicPosition.order(:name).pluck(:name,:id), { include_blank: true, :prompt =>  '- required -'  }, class: "form-control input-sm" %></td>
+					<td><%= r.label :vegetation_id, class:"small" %><%= r.select :vegetation_id, Vegetation.order(:name).pluck(:name,:id), { include_blank: true }, class: "form-control input-sm" %></td>
+					<td><%= r.label :landuse_id, class:"small" %><%= r.select :landuse_id, Landuse.order(:name).pluck(:name,:id), { include_blank: true }, class: "form-control input-sm" %></td>
+					</tr><tr>					
+
+					<td><%= r.label :slope_description, class:"small" %><%=  r.text_field :slope_description  %></td>
+					<td><%= r.label :aspect, class:"small" %><%=  r.text_field :aspect   %></td>
+					<td ><%= r.label :description, class:"small" %><%= r.text_field :description, {:prompt =>  '- required -' }   %></td>
+
+					<td ><%= r.label :lightsituation, class:"small" %><%= r.text_field :lightsituation %></td>
+
+				</tr><tr>
+				<td>
+					  <div class="form-group form-group-sm">
+					  <%= r.fields_for :record_property_attributes do |g| %>
+						<label class="small">Group</label>
+						<div >
+						 <%= g.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %>
+						<%= g.hidden_field :user_id ,value: @current_user.id %>
+   		                                <%= r.hidden_field :guest_readable , value: "true" %>						
+						  </div>
+					  <% end %>
+					</div>
+
+				</td>
+				<td style="vertical-align:middle">
+					<% if place.id.blank? %>
+						<%= submit_tag "Create" %>
+					<%else%>				
+						<%= submit_tag "Update" %>			
+					<%end%>					
+				</td>						
+				</tr>
+			<%end%>			
+		<%end%>
+
+	</tbody>
+	</table>
+<%end%>

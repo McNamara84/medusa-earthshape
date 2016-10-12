@@ -1,16 +1,50 @@
 <nav class="navbar navbar-inverse" role="navigation">
   <div class="collapse navbar-collapse" id="menubar">
     <ul class="nav navbar-nav">
-      <li><%= link_to "site", system_preference_path %></li>
-      <li><%= link_to "user", users_path %></li>
-      <li><%= link_to "group", groups_path %></li>
-      <li><%= link_to "stone", classifications_path %></li>
-      <li><%= link_to "box_type", box_types_path %></li>
-      <li><%= link_to "analysis", measurement_items_path %></li>
-      <li><%= link_to "unit", units_path %></li>
-      <li><%= link_to "technique", techniques_path %></li>
-      <li><%= link_to "device", devices_path %></li>
-      <li><%= link_to "author", authors_path %></li>
+      <li><%= active_link_to "site", system_preference_path %></li>
+      
+      <% if is_active_link?(groups_path, :inclusive) %>
+	<li><%= active_link_to "Access", groups_path %></li>
+      <% else %>      
+	<li><%= active_link_to "Access", users_path %></li>
+      <% end %>
+      
+      <% if is_active_link?(preparation_types_path, :inclusive) %>
+	<li><%= active_link_to  "Sample", preparation_types_path %></li>
+      <% elsif is_active_link?(preparation_for_classifications_path, :inclusive) %>      
+        <li><%= active_link_to "Sample", preparation_for_classifications_path %></li>
+      <% elsif is_active_link?(preparations_path, :inclusive) %>     	
+        <li><%= active_link_to "Sample", preparations_path %></li>
+      <% elsif is_active_link?(collectionmethods_path, :inclusive) %>         
+        <li><%= active_link_to "Sample", collectionmethods_path %></li>
+      <% elsif is_active_link?(quantityunits_path, :inclusive) %>         
+        <li><%= active_link_to "Sample", quantityunits_path %></li>	
+      <% else %> 
+        <li><%= active_link_to "Sample", classifications_path %></li>
+      <% end %>
+      
+      <% if is_active_link?(stonecontainer_types_path, :inclusive) %>
+        <li><%= active_link_to "Storage", stonecontainer_types_path %></li>     
+      <% else %> 
+        <li><%= active_link_to "Storage", box_types_path %></li>
+      <% end %>     
+
+	<li><%= active_link_to "File", filetopics_path %></li> 
+
+      <% if is_active_link?(authors_path, :inclusive) %>
+        <li><%= active_link_to "Analysis", authors_path %></li>
+      <% elsif is_active_link?(units_path, :inclusive) %>      
+        <li><%= active_link_to "Analysis", units_path %></li>
+      <% elsif is_active_link?(techniques_path, :inclusive) %>     	
+        <li><%= active_link_to "Analysis", techniques_path %></li>
+      <% elsif is_active_link?(devices_path, :inclusive) %>         
+        <li><%= active_link_to "Analysis", devices_path %></li>
+      <% elsif is_active_link?(measurement_categories_path, :inclusive) %>         
+        <li><%= active_link_to "Analysis", measurement_categories_path %></li>
+      <% else %> 
+	<li><%= active_link_to  "Analysis", measurement_items_path %></li>	
+      <% end %>
+
     </ul>
     <%= render partial: "layouts/navbar_common_part" %>
   </div>

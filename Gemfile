@@ -34,6 +34,12 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+#Crossref
+  gem 'crossref'
+
+#DataCite/IGSN
+  gem 'datacite_doi_ify'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'
 
@@ -54,7 +60,7 @@ gem 'paperclip'
 gem 'barby'
 gem 'rqrcode'
 gem 'chunky_png'
-gem 'alchemist', github: 'halogenandtoast/alchemist'
+gem 'alchemist', git: 'https://github.com/halogenandtoast/alchemist'
 gem 'geonames'
 gem 'rubyzip'
 #gem 'oai'
@@ -67,7 +73,7 @@ gem 'validates_existence'
 gem 'acts_as_mappable'
 #gem 'with_recursive', git: 'git@devel.misasa.okayama-u.ac.jp:gems/withrecursive.git'
 gem 'with_recursive'
-gem 'thinreports'
+gem 'thinreports', '>= 0.8.0'
 gem 'bootstrap-sass'
 gem 'ransack'
 gem 'whenever', require: false
@@ -96,3 +102,6 @@ group :test do
   gem 'ci_reporter'
   gem 'factory_girl_rails'
 end
+
+gem 'active_link_to'
+gem 'gmaps4rails'

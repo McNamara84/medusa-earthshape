@@ -17,7 +17,7 @@
       <th>name</th>
       <th>parent</th>
       <th>box-type</th>
-      <%= th_if_expand "tags" %>
+<% if false %>     <%= th_if_expand "tags" %> <% end %>
       <%= th_if_expand "owner" %>
       <th>group</th>
       <%= th_if_expand "published" %>
@@ -43,14 +43,14 @@
 	  </span>
 	</div>
       </th>
-      <th><%= f.select :box_type_id, BoxType.pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>
+      <th><%= f.select :box_type_id, BoxType.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>
       <%= th_if_expand do %>
         <%= f.text_field :tag_list, class: "form-control input-sm" %>
       <% end %>
       <%= th_if_expand do %>
-        <%= f.select :user_id ,User.pluck(:username, :id), { include_blank: true }, class: "form-control input-sm" %>
+        <%= f.select :user_id ,User.order(:username).pluck(:username, :id), { include_blank: true }, class: "form-control input-sm" %>
       <% end %>
-      <th><%= f.select :group_id ,Group.pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>
+      <th><%= f.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>
       <%= th_if_expand do %>
         <%= f.select :published ,[true, false], { include_blank: true }, class: "form-control input-sm" %>
       <% end %>

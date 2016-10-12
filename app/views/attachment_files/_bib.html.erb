@@ -3,7 +3,9 @@
     <tr>
       <th></th>
       <th colspan= "2">name</th>
+ <% if @current_user.advanced then %>  
       <th>global-id</th>
+ <% end %>
       <th></th>
     </tr>
   </thead>
@@ -15,7 +17,9 @@
               <%= check_box_tag("ids[]", bib.id, false, {id: "ids_#{bib.id}", class: "select-row"}) if can?(:update, bib) %>
             </td>
           <td colspan="2"><%= link_to_if can?(:read, bib), bib.name, bib %></td>
-          <td><%= bib.try!(:global_id) %></td>
+<% if @current_user.advanced then %>
+	<td><%= bib.try!(:global_id) %></td>
+<% end %>	
           <td>
             <%= link_to attachment_file_bib_path(@attachment_file,bib) + tab_param(__FILE__), method: :delete ,title: "unlink bib",data: {confirm: t("confirm.unlink")} do %>
               <span class="glyphicon glyphicon-remove"></span>
@@ -27,6 +31,13 @@
   </tbody>
   <tfoot>
     <tr>
+        <th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th><th>Select all</th>
+    <tr>
+  </tfoot>
+</table>
+<%= link_to_function "bundle edit", "$('#bib-bundle-form').submit();", class: "btn btn-default" %>
+
+<% if false %>
      <%= form_for Bib.new, url: attachment_file_bibs_path(@attachment_file) do |f|%>
         <%= hidden_tabname_tag(__FILE__) %>
         <th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th>
@@ -37,26 +48,25 @@
           <%# end %>
         </th>
       <% end %>
-    <%= form_tag link_by_global_id_attachment_file_bibs_path(@attachment_file),method: :post do %>
+<% end %>
+
+<hr>
+<div>Link Bibliography</div>
+<%= form_tag link_by_global_id_attachment_file_bibs_path(@attachment_file),method: :post do %>
         <%= hidden_tabname_tag(__FILE__) %>
-        <th>
+        <div style="float:left; margin:5px">
 	  <div class="input-group">
-	    <%= text_field_tag :global_id, "", id: "bib-global-id", class: "form-control input-sm" %>
+            <%= select_tag :global_id, options_for_select(Bib.choose_global_id(@current_user)), { include_blank: true  , id: "bib-global-id", class: "form-control input-sm"} %> 	  	  
 	    <span class="input-group-addon">
 	      <%= link_to bibs_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#bib-global-id" do %>
 	      <span class="glyphicon glyphicon-search"></span>
 	      <% end %>
 	    </span>
 	  </div>
-	</th>
-        <th>
+        </div>
+        <div style="float:left; margin:5px">
           <%= button_tag title: "link bib by global id",class: "btn btn-default" do %>
             <span class="glyphicon glyphicon-save"></span>
           <% end %>
-        </th>
+        </div>
       <% end %>
-    <tr>
-  </tfoot>
-</table>
-<%= link_to_function "edit", "$('#bib-bundle-form').submit();", class: "btn btn-default" %>
-

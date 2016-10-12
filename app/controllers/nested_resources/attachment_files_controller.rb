@@ -29,6 +29,15 @@ class NestedResources::AttachmentFilesController < ApplicationController
 
   def link_by_global_id
     @attachment_file = AttachmentFile.joins(:record_property).where(record_properties: {global_id: params[:global_id]}).readonly(false)
+    
+#    logger.info @attachment_file[0].inspect
+    
+    if params[:parent_resource] = "stone" and params.has_key?(:filetopic_id)	    
+	file=@attachment_file[0]
+	file.filetopic_id=params[:filetopic_id]
+	file.save
+    end
+    
     @parent.attachment_files << @attachment_file
     respond_with @attachment_file, location: adjust_url_by_requesting_tab(request.referer)
   rescue
@@ -51,6 +60,7 @@ class NestedResources::AttachmentFilesController < ApplicationController
       :data,
       :original_geometry,
       :affine_matrix,
+      :filetopic_id,
       record_property_attributes: [
         :global_id,
         :user_id,

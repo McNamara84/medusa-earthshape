@@ -1,3 +1,5 @@
+<%if false%>
+
 <%= form_for bib, remote: true, format: :json, html: { class: "create" } do |f| %>
 <tr>
   <th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th>
@@ -9,7 +11,7 @@
   <%= f.fields_for :record_property_attributes do |r| %>
   <%= th_if_expand @current_user.username %>
   <th>
-    <%= r.select :group_id ,Group.pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %>
+    <%= r.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %>
     <%= r.hidden_field :user_id ,value: @current_user.id %>
   </th>
   <% end %>
@@ -21,4 +23,59 @@
   <th></th>
 </tr>
 <% end %>
+<% end %>
 
+
+<%= form_for bib, remote: true, format: :json, html: { class: "create" } do |f| %>
+
+<div style="float:left; margin:10px">
+   <div class="form-group form-group-sm">
+    <%= f.label :doi, class: "small" %>
+    <%= f.text_field :doi, class: "form-control input-sm", placeholder: "- required -" %>
+  </div>
+   <div style="display:none">
+	   <%= f.text_field :name, class: "form-control input-sm", size: 15 %>
+	   <%= f.collection_select(:author_ids, Author.all.to_a, :id, :name, {}, multiple: true, class: "form-control input-sm") %>
+	   <%= f.text_field :year, class: "form-control input-sm", size: 4 %>
+	  <%= f.text_field :entry_type, class: "form-control input-sm", size: 6 %>
+   </div> 
+</div>
+ 
+<div style="float:left; margin:10px">
+	  <div style="display:none" class="form-group form-group-sm">
+	  <%= f.label :@current_user, "Owner", class: "small" %>
+	    <div class="input-group">
+		<span class="input-group-addon">		      
+			<%= @current_user.username %>
+		</span>
+	    </div>  
+	</div>
+	  <div class="form-group form-group-sm">
+		  <%= f.fields_for :record_property_attributes do |r| %>
+			  <label class="small">Group</label>
+			  <div >
+					    <%= r.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %>
+					    <%= r.hidden_field :user_id ,value: @current_user.id %>
+		                            <%= r.hidden_field :guest_readable , value: "true" %>					    
+			  </div>
+		  <% end %>
+	</div>	
+</div>
+
+
+<div style="float:left; margin:10px">
+
+	  <div class="form-group form-group-sm">
+		  <label class="small">Save</label>
+		  <div>
+		    <%= f.button class: "btn btn-default" do %>
+		    <span class="glyphicon glyphicon-save"></span>
+		    <% end %>
+		  </div>
+	</div>
+	
+</div>
+
+
+</div>
+<% end %>

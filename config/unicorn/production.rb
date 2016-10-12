@@ -2,7 +2,7 @@ worker_processes Integer(ENV["WEB_CONCURRENCY"] || 3)
 timeout 60
 preload_app true
 
-listen 3001
+listen "127.0.0.1:3001"
 pid File.expand_path("tmp/pids/unicorn.pid", ENV['RAILS_ROOT'])
 
 stderr_path File.expand_path('log/unicorn.error.log', ENV['RAILS_ROOT'])

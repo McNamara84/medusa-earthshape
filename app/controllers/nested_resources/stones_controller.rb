@@ -11,7 +11,10 @@ class NestedResources::StonesController < ApplicationController
 
   def create
     @stone = Stone.new(stone_params)
+#    logger.info stone_params.inspect    
+#    logger.info @stone.inspect    
     @parent.send(params[:association_name]) << @stone if @stone.save
+    @stone.copy_associations(@parent)    
     respond_with @stone, location: adjust_url_by_requesting_tab(request.referer), action: "error" 
   end
 
@@ -44,11 +47,24 @@ class NestedResources::StonesController < ApplicationController
       :classification_id,
       :quantity,
       :quantity_unit,
+      :quantityunit_id,      
       :tag_list,
       :parent_id,
       :box_id,
       :place_id,
       :description,
+      :place_global_id,
+      :box_global_id,
+      :collection_global_id,
+      :collection_id,   
+      :collectionmethod_id,             
+      :quantity_initial,
+      :igsn,
+      :stonecontainer_type_id,
+      :labname,
+      :tag_list,
+      :date,
+      :sampledepth,
       record_property_attributes: [
         :global_id,
         :user_id,
@@ -61,7 +77,13 @@ class NestedResources::StonesController < ApplicationController
         :guest_writable,
         :published,
         :published_at
-      ]
+      ],
+      collectors_attributes: [
+        :id,
+        :name,
+        :affiliation,
+	:_destroy
+	]
     )
   end
 

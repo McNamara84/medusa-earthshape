@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @collector.name %>
+</p>
+
+<p>
+  <strong>Affiliation:</strong>
+  <%= @collector.affiliation %>
+</p>
+
+<p>
+  <strong>Stone:</strong>
+  <%= @collector.stone %>
+</p>
+
+<%= link_to 'Edit', edit_collector_path(@collector) %> |
+<%= link_to 'Back', collectors_path %>

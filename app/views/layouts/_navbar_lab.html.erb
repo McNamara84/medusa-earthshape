@@ -1,0 +1,11 @@
+<nav class="navbar navbar-inverse" role="navigation">
+  <div class="collapse navbar-collapse" id="menubar">
+    <ul class="nav navbar-nav">
+      <li><%= active_link_to "preparations", preparation_for_classifications_path %></li>
+      <li><%= active_link_to "collection methods", collectionmethods_path %></li>
+      <li><%= active_link_to "sample containers", stonecontainer_types_path %></li>
+      <li><%= active_link_to "field measurement types", filetopics_path %></li>
+    </ul>
+    <%= render partial: "layouts/navbar_common_part" %>
+  </div>
+</nav>

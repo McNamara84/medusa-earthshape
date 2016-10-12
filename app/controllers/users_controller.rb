@@ -56,6 +56,8 @@ class UsersController < ApplicationController
       :description,
       :box_id,
       :username,
+      :prefix,
+      :advanced,
       group_ids: []
     )
   end

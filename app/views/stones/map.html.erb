@@ -1,2 +1,20 @@
 <%= @stone.place.try(:to_map) %>
+
+<script  type="text/javascript">
+if (typeof google != 'undefined'){
+	var handler = Gmaps.build('Google');
+	handler.buildMap({ provider: {}, internal: {id: 'map-canvas'}}, function(){	
+	  var domelement=document.getElementById('map-canvas');
+	  var latitude=domelement.getAttribute('data-lat');
+	  var longitude=domelement.getAttribute('data-lng');	  
+	  var markers = handler.addMarkers([{"lat":latitude,"lng":longitude}]);;
+	  handler.bounds.extendWith(markers);
+	  handler.fitMapToBounds();
+	  handler.getMap().setZoom(2);	  
+	});
+}
+</script>
+
+<!--
 <%= javascript_tag "actsAsMappable.initToMap();" %>
+-->

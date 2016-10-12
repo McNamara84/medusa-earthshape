@@ -1,36 +1,69 @@
-id,name,full_name,description,parent_id,lft,rgt
-2,meteorite,meteorite,,,29,44
-3,mineral,mineral,,,45,68
-4,synthetic,synthetic,"",,69,82
-5,igneous,igneous,"",,2,19
-6,metamorphic,metamorphic,"",,20,21
-7,sedimentary,sedimentary,"",,22,23
-8,unknown,unknown,"",,24,25
-9,xenolithic,xenolithic,"",,26,27
-10,iron,meteorite:iron,,2,30,31
-11,stony,meteorite:stony,,2,32,37
-12,stonyiron,meteorite:stonyiron,"",2,38,39
-14,olivine,mineral:olivine,,3,46,47
-16,pyroxene,mineral:pyroxene,"",3,48,49
-17,chondrite,meteorite:stony:chondrite,,11,33,34
-18,achondrite,meteorite:stony:achondrite,,11,35,36
-20,glass,synthetic:glass,"",4,70,71
-23,mineral,synthetic:mineral,"",4,72,81
-32,volcanic,volcanic,"",,3,10
-33,basaltic,volcanic:basaltic,,32,4,5
-34,andesitic,volcanic:andesitic,,32,6,7
-35,rhyolitic,volcanic:rhyolitic,,32,8,9
-36,plutonic,plutonic,"",,11,18
-37,ultramafic,plutonic:ultramafic,,36,12,13
-38,mafic,plutonic:mafic,,36,14,15
-40,felsic,plutonic:felsic,,36,16,17
-54,feldspar,mineral:feldspar,"",3,50,51
-55,amphibole,mineral:amphibole,"",3,52,53
-56,mica,mineral:mica,,3,54,55
-57,garnet,mineral:garnet,,3,56,57
-58,spinel,mineral:spinel,,3,58,59
-59,zircon,mineral:zircon,,3,60,61
-63,biotic,biotic,,,83,84
-64,metal,metal,"",,85,86
-65,glass,glass,"",,87,88
-72,dacitic,volcanic:dacitic,,32,,
+"id","name","full_name","description","parent_id","lft","rgt"
+"82","other material","other material",,,,
+"73","water","water",,,,
+"81","other fluid","water:other fluid",,"73",,
+"80","river","water:river",,"73",,
+"79","sea","water:sea",,"73",,
+"78","lake","water:lake",,"73",,
+"77","precipitation","water:precipitation",,"73",,
+"76","porewater","water:porewater",,"73",,
+"75","soilwater","water:soilwater",,"73",,
+"74","groundwater","water:groundwater",,"73",,
+"109","ice","water:ice",,"73",,
+"110","melt","water:melt",,"73",,
+"111","gas","gas",,,,
+"112","soil gas/air","gas:soil gas/air",,"111",,
+"113","atmosphere (above soil)","gas:atmosphere (above soil)",,"111",,
+"114","fog","gas:fog",,"111",,
+"143","bedrock sedimentary","rock:bedrock sedimentary",,"105",,
+"144","bedrock metamorphic","rock:bedrock metamorphic",,"105",,
+"145","bedrock volcanic","rock:bedrock volcanic",,"105",,
+"146","bedrock undefined","rock:bedrock undefined",,"105",,
+"147","core stone","rock:core stone",,"105",,
+"148","weathering rind","rock:weathering rind",,"105",,
+"94","vegetation","vegetation",,,,
+"101","branch","vegetation:branch",,"94",,
+"99","bark","vegetation:bark",,"94",,
+"98","root","vegetation:root",,"94",,
+"97","wood","vegetation:wood",,"94",,
+"96","leaves/needles","vegetation:leaves/needles",,"94",,
+"100","twig","vegetation:twig",,"94",,
+"115","whole plant","vegetation:whole plant",,"94",,
+"116","stem","vegetation:stem",,"94",,
+"117","fruit","vegetation:fruit",,"94",,
+"118","seed","vegetation:seed",,"94",,
+"119","pollen","vegetation:pollen",,"94",,
+"120","leaf litter","vegetation:leaf litter",,"94",,
+"121","other plant litter","vegetation:other plant litter",,"94",,
+"122","litter bag","vegetation:litter bag",,"94",,
+"123","dead wood","vegetation:dead wood",,"94",,
+"124","fauna/microbiota","fauna/microbiota",,,,
+"125","fungi surface","fauna/microbiota:fungi surface",,"124",,
+"126","fungi subsurface","fauna/microbiota:fungi subsurface",,"124",,
+"127","biofilm/biocrust","fauna/microbiota:biofilm/biocrust",,"124",,
+"128","burrowing animal/insect","fauna/microbiota:burrowing animal/insect",,"124",,
+"129","surface animal/insect","fauna/microbiota:surface animal/insect",,"124",,
+"130","bone or carcus","fauna/microbiota:bone or carcus",,"124",,
+"131","soft tissue","fauna/microbiota:soft tissue",,"124",,
+"87","sediment","sediment",,,,
+"88","bed load","sediment:bed load",,"87",,
+"90","riverbank","sediment:riverbank",,"87",,
+"91","terrace","sediment:terrace",,"87",,
+"92","core","sediment:core",,"87",,
+"89","river suspended load","sediment:river suspended load",,"87",,
+"132","bank","sediment:bank",,"87",,
+"133","lacustrine","sediment:lacustrine",,"87",,
+"134","marine","sediment:marine",,"87",,
+"135","aeolian","sediment:aeolian",,"87",,
+"136","fluvial","sediment:fluvial",,"87",,
+"137","speleothem","sediment:speleothem",,"87",,
+"138","hillslope deposit","sediment:hillslope deposit",,"87",,
+"105","rock","rock",,,,
+"139","soil","soil:soil",,"103",,
+"140","soil crust","soil:soil crust",,"103",,
+"141","peat","soil:peat",,"103",,
+"106","granit","rock:granit",,"105",,
+"104","saprolite","soil:saprolite",,"103",,
+"103","soil","soil",,,,
+"107","other rock","rock:other rock",,"105",,
+"142","bedrock igneous","rock:bedrock igneous",,"105",,

@@ -2,14 +2,42 @@
   <% if @stone.place %>
     <% place = @stone.place.decorate %>
     <li>
-      place: <%= place.try!(:latitude_to_text) + ", " + place.try!(:longitude_to_text) %> <%= link_to "more", place_path(place) %>
+      site: <%= place.try!(:latitude_to_text) + ", " + place.try!(:longitude_to_text) %> <%= link_to "more", place_path(place) %>
     </li>
   <% end %>
-  <%= li_if_exist("classification: ", @stone.classification.try!(:name)) %>
-  <%= li_if_exist("physical_form: ", @stone.physical_form.try!(:name)) %>
+  
+  <% if @stone.igsn.present? %>
+	  <span> IGSN: 
+		<%= @stone.igsn %>
+                (registration not yet available)
+<!--		<%= link_to igsn_register_stone_path(@stone), class: "btn btn-default", title:"register IGSN", id: "tag-button" do %>
+		  <span class="glyphicon glyphicon-tag"></span>
+		<% end %>-->
+	  </span>
+   <%else %>
+	  <span> IGSN:
+		<%= link_to igsn_create_stone_path(@stone), class: "btn btn-default", title:"create IGSN", id: "tag-button" do %>
+		  Create
+		  <% end %>
+		</span>
+   <% end %>
+   
+  <%= li_if_exist(Collection.model_name.human+": ", @stone.collection.try!(:name)) %> 
+   <%= li_if_exist("material: ", @stone.classification.try!(:get_material)) %> 
+   <%= li_if_exist("type: ", @stone.classification.try!(:name)) %>   
+ <!-- <%= li_if_exist("physical_form: ", @stone.physical_form.try!(:name)) %>-->
+  <%= li_if_exist("container type: ", @stone.stonecontainer_type.try!(:name)) %>
   <%= li_if_exist("quantity (#{@stone.quantity_unit}): ", @stone.quantity) %>
   <%= li_if_exist("tag list: ", @stone.tag_list) %>
-  <%= li_if_exist("description: ", @stone.description) %>
+<li> Preparations:<br>
+        <% @stone.preparations.each do |preparation| %>
+	<%=preparation.preparation_type.try!(:name)%> (<%=preparation.info%>)<br>
+      <% end %>
+
+</li>
+  
+  
+  
   <li>modified at <%= difference_from_now(@stone.updated_at) %></li>
   <% if @stone.attachment_files.present? %>
     <li>
@@ -29,47 +57,3 @@
   <% end %>
 </ul>
 
-<% unless @stone.analyses.empty? %>
-  Table of analysis on <%= content_tag(:span, nil, class: "glyphicon glyphicon-cloud") + link_to(@stone.name, stone_path(@stone)) %>
-  <table class="table table-condensed table-striped">
-    <%
-    if params[:measurement_category_id].blank?
-      measurement_items = MeasurementItem.all
-    else
-      measurement_items = MeasurementItem.categorize(params[:measurement_category_id])
-    end
-    %>
-    <thead>
-      <tr><th colspan="<%= @stone.analyses.size + 2 %>"></th></tr>
-      <tr>
-        <th></th>
-        <th>unit</th>
-        <% @stone.analyses.each do |analysis| %>
-          <th <%== "class=\"success\"" if params[:analysis_id] == analysis.id.to_s %>><%= analysis.name %></th>
-        <% end %>
-      </tr>
-    </thead>
-    <tbody>
-      <% measurement_items.each do |measurement_item| %>
-        <tr>
-          <th align="right"><%== measurement_item.display_name %></th>
-          <th> <%== measurement_item.unit.try!(:html) %></th>
-          <% value = "ー" %>
-          <% @stone.analyses.each do |analysis| %>
-            <% analysis.chemistries.each {|chemistry| value = chemistry.value if chemistry.measurement_item_id == measurement_item.id } %>
-            <td <%== "class=\"success\"" if params[:analysis_id] == analysis.id.to_s %>align="right">
-              <%= value %>
-            </td>
-          <% end %>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= form_tag(stone_path(@stone), method: :get) do %>
-    analysis:
-    <%= select_tag :analysis_id, options_for_select(@stone.analyses.map {|analysis| [analysis.name, analysis.id]}, params[:analysis_id]), include_blank: true %>
-    measurement_category:
-    <%= select_tag :measurement_category_id, options_for_select(MeasurementCategory.pluck(:name, :id), params[:measurement_category_id]), include_blank: true %>
-    <%= submit_tag "reload" %>
-  <% end %>
-<% end %>

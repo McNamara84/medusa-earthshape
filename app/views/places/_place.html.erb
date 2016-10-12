@@ -1,12 +1,23 @@
 <tr>
   <td><%= check_box_tag("ids[]", place.id, checked, id: "ids_#{place.id}", class: "select-row") if can?(:update, place) %></td>
   <td><%= link_to place.name, place %></td>
+  <td>
+	<% if place.parent %>
+	<%=  link_to place.parent.name, place.parent %>
+	<% end %>
+  </td>  
+  <td><%  place.collectors.select("collectors.name").distinct.each do  |t|%> 
+		<%= t.try!(:name)%>			
+		<% end %></td>
   <td><%= place.latitude_to_text %></td>
   <td><%= place.longitude_to_text %></td>
   <td><%= place.elevation_to_text %></td>
   <td><%= place.stones_count %></td>
   <%= td_if_expand place.user.try!(:username) %>
   <td><%= place.group.try!(:name) %></td>
+  <%= td_if_expand place.vegetation.try!(:name) %>  
+  <%= td_if_expand place.topographic_position.try!(:name) %>  
+  <%= td_if_expand place.landuse.try!(:name) %>  
   <%= td_if_expand difference_from_now(place.published_at) %>
   <td><%= difference_from_now(place.updated_at) %></td>
   <%= td_if_expand difference_from_now(place.created_at) %>

@@ -1,0 +1,77 @@
+<% 
+if false
+if @boxes.present? %>
+  <% box_ids = @boxes.pluck(:id) %>
+  <div class="text-right">
+    <%= link_to download_bundle_label_boxes_path(ids: box_ids) do %>
+      <i class="glyphicon glyphicon-tag"></i>
+    <% end %>
+    ,<%= link_to(image_tag("icon_pdf_1.png", size: "24x24"), download_bundle_card_boxes_path(ids: box_ids)) %>,
+    and <%= link_to("A4", download_bundle_card_boxes_path(ids: box_ids, a4: true)) %>
+  </div>
+<% end 
+end
+%>
+
+<%= form_for Collection.new, url: bundle_update_collections_path do |f| %>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th></th>
+       <th><%= Collection.human_attribute_name(:name) %></th>
+      <th><%= Collection.human_attribute_name(:project) %></th>
+      <th><%= Collection.human_attribute_name(:collector)  %></th>
+      <th><%= Collection.human_attribute_name(:affiliation)  %></th>
+      <th><%= Collection.human_attribute_name(:timeseries)  %></th>
+      <th><%= Collection.human_attribute_name(:collectionmethod_id)  %></th>      
+      <%= th_if_expand Collection.human_attribute_name(:collection_start)   %> 
+      <%= th_if_expand Collection.human_attribute_name(:collection_end)   %>       
+      <%= th_if_expand Collection.human_attribute_name(:depth_min)   %>       
+       <%= th_if_expand Collection.human_attribute_name(:depth_max)   %>
+      <th><%= Collection.human_attribute_name(:samplingstrategy)  %></th>
+	<%= th_if_expand Collection.human_attribute_name(:weather_conditions)   %>
+       <%= th_if_expand Collection.human_attribute_name(:comment)   %>	      
+      <%= th_if_expand "owner" %>
+      <th>group</th>
+      <th>updated-at</th>
+     <%= th_if_expand "created-at" %>
+      <th><%= toggle_column_link method: "post" %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render partial: :collection, collection: @collections, locals: { checked: true } %>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th><%= check_box_tag nil, nil, true, class: "select-row-all" %></th>
+      <th></th>
+    <th><%= f.text_field :project, class: "form-control input-sm"%></th>
+    <th><%= f.text_field :collector, class: "form-control input-sm"%></th>    
+    <th><%= f.text_field :affiliation, class: "form-control input-sm"%></th>        
+    <th><%=f.select :timeseries , [["Yes", true], ["No", false]], { :include_blank => true}, class: "form-control input-sm" %></th>
+    <th><%= f.select :collectionmethod_id, Collectionmethod.order(:name).pluck(:name,:id), { include_blank: true }, class: "form-control input-sm" %></th>
+      <%= th_if_expand  %>
+      <%= th_if_expand  %>
+       <%= th_if_expand  %>
+      <%= th_if_expand  %>
+	<th><%= f.text_field :samplingstrategy, class: "form-control input-sm"%></th>  
+       <%= th_if_expand do %>
+		<%= f.text_field :weather_conditions, class: "form-control input-sm" %>		
+        <% end %>
+        <%= th_if_expand do %>
+		<%= f.text_field :comment, class: "form-control input-sm" %>
+        <% end %>
+       <%= th_if_expand do %>
+		<%= f.select :user_id ,User.order(:username).pluck(:username, :id), { include_blank: true }, class: "form-control input-sm" %>
+      <% end %>
+      <th><%= f.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>   
+      <th>
+        <%= f.button class: "btn btn-default" do %>
+          <span class="glyphicon glyphicon-save"></span>
+        <% end %>
+      </th>
+      <th></th>
+    </tr>
+  </tfoot>
+</table>
+<% end %>

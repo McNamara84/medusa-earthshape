@@ -3,6 +3,7 @@
     <tr>
       <th></th>
       <th>name</th>
+      <th>operator</th>
       <th>device</th>
       <th></th>
       <th>size</th>
@@ -18,6 +19,7 @@
             <%= check_box_tag("ids[]", analysis.id, false, {id: "ids_#{analysis.id}", class: "select-row"}) if can?(:update, analysis) %>
           </td>
           <td><%= link_to_if can?(:read, analysis), analysis.name, analysis %></td>
+	  <td><%= analysis.operator %></td>
           <td><%= analysis.device.try!(:name) %></td>
           <td></td>
           <td><%= analysis.chemistries.size %></td>
@@ -37,7 +39,8 @@
         <%= hidden_tabname_tag(__FILE__) %>
         <th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th>
         <th><%= f.text_field :name, class: "form-control input-sm" %></th>
-        <th><%= f.select :device_id, Device.pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>
+	<th><%= f.text_field :operator, class: "form-control input-sm", size: 15 %></th>  	
+        <th><%= f.select :device_id, Device.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>
         <th>
           <%= f.button title:"add analysis file",class: "btn btn-default" do %>
             <span class="glyphicon glyphicon-save"></span>

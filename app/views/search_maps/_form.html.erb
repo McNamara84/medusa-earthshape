@@ -1,0 +1,17 @@
+<%= form_for(@search_map) do |f| %>
+  <% if @search_map.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@search_map.errors.count, "error") %> prohibited this search_map from being saved:</h2>
+
+      <ul>
+      <% @search_map.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

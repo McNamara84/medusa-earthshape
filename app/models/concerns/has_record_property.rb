@@ -13,6 +13,8 @@ module HasRecordProperty
     after_save :update_record_property
 
     scope :readables, ->(user) { includes(:record_property).joins(:record_property).merge(RecordProperty.readables(user)) }
+    scope :choose_global_id, ->(user) { RecordProperty.readables(user).where(datum_type:  self).order(:name).pluck(:name, :global_id) }
+    scope :choose_id, ->(user) { includes(:record_property).joins(:record_property).merge(RecordProperty.readables(user)).order(:name).pluck(:name, :id) }      
   end
 
   def as_json(options = {})

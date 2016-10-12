@@ -1,0 +1,48 @@
+<div>
+<%= link_to_unless_current BoxType.model_name.human.downcase,box_types_path %>    | 
+<%= link_to_unless_current StonecontainerType.model_name.human.downcase,stonecontainer_types_path %>
+</div>
+<br><br>
+
+<%= paginate @stonecontainer_types %>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>collection method</th>   
+    </tr>
+  </thead>
+  <tbody>
+    <% @stonecontainer_types.each do |stonecontainer_type| %>
+    <tr>
+      <td>
+        <%= link_to edit_stonecontainer_type_path(stonecontainer_type) do %>
+        <span class="glyphicon glyphicon-edit"></span>
+        <% end %>
+      </td>
+      <td><%= stonecontainer_type.name  %></td>
+      <td></td>
+      <td>
+        <%= link_to stonecontainer_type_path(stonecontainer_type), method: :delete, data: {confirm: t("confirm.delete")} do %>
+        <span class="glyphicon glyphicon-remove"></span>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <%= form_for StonecontainerType.new, remote: true, format: :json, html: { class: "create" } do |f| %>
+    <tr>
+      <td></td>
+      <td><%= f.text_field :name, class: "form-control input-sm" %></td>      
+      <td>
+        <%= f.button class: "btn btn-default" do %>
+        <span class="glyphicon glyphicon-save"></span>
+        <% end %>
+      </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <% end %>
+  </tfoot>
+</table>

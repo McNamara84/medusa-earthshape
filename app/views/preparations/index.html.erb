@@ -1,0 +1,58 @@
+<div>
+<%= link_to_unless_current Classification.model_name.human.downcase,classifications_path %>  | 
+<%= link_to_unless_current PreparationType.model_name.human.downcase,preparation_types_path %>  | 
+<%= link_to_unless_current PreparationForClassification.model_name.human.downcase,preparation_for_classifications_path %> |  
+<%= link_to_unless_current Preparation.model_name.human.downcase,preparations_path %> |
+<%= link_to_unless_current Collectionmethod.model_name.human.downcase,collectionmethods_path %> |
+<%= link_to_unless_current Quantityunit.model_name.human.downcase,quantityunits_path %>  
+</div>
+<br><br>
+<%= paginate @preparations %>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>sample</th>
+      <th>preparation type</th>
+      <th>info</th>      
+      
+    </tr>
+  </thead>
+  <tbody>
+    <% @preparations.each do |preparation| %>
+    <tr>
+      <td>
+        <%= link_to edit_preparation_path(preparation) do %>
+        <span class="glyphicon glyphicon-edit"></span>
+        <% end %>
+      </td>
+      <td><%= preparation.stone.name  %></td>
+      <td><%= preparation.preparation_type.full_name   %></td>
+      <td><%= preparation.info  %></td>
+      <td></td>
+      <td>
+        <%= link_to preparation_path(preparation), method: :delete, data: {confirm: t("confirm.delete")} do %>
+        <span class="glyphicon glyphicon-remove"></span>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <%= form_for Preparation.new, remote: true, format: :json, html: { class: "create" } do |f| %>
+    <tr>
+      <td></td>
+      <td><%= f.select :stone_id, Stone.choose_id(@current_user), { include_blank: true }, class: "form-control input-sm" %></td>
+      <td><%= f.select :preparation_type_id, PreparationType.order(:full_name).pluck(:full_name,:id), { include_blank: true }, class: "form-control input-sm" %></td>     
+      <td><%= f.text_field :info, class: "form-control input-sm" %></td>      
+      <td>
+        <%= f.button class: "btn btn-default" do %>
+        <span class="glyphicon glyphicon-save"></span>
+        <% end %>
+      </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <% end %>
+  </tfoot>
+</table>

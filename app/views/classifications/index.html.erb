@@ -1,5 +1,14 @@
-<div><%= link_to_unless_current Classification.model_name.human.downcase,classifications_path %>
+<div style="display:none"><%= link_to_unless_current Classification.model_name.human.downcase,classifications_path %>
 <%= link_to_unless_current PhysicalForm.model_name.human.downcase,physical_forms_path %></div>
+<div>
+<%= link_to_unless_current Classification.model_name.human.downcase,classifications_path %>  | 
+<%= link_to_unless_current PreparationType.model_name.human.downcase,preparation_types_path %>  | 
+<%= link_to_unless_current PreparationForClassification.model_name.human.downcase,preparation_for_classifications_path %> |  
+<%= link_to_unless_current Preparation.model_name.human.downcase,preparations_path %> |
+<%= link_to_unless_current Collectionmethod.model_name.human.downcase,collectionmethods_path %> |
+<%= link_to_unless_current Quantityunit.model_name.human.downcase,quantityunits_path %>  
+</div>
+<br><br>
 <%= paginate @classifications %>
 <table class="table table-condensed table-striped">
   <thead>
@@ -30,7 +39,7 @@
     <%= form_for Classification.new, remote: true, format: :json, html: { class: "create" } do |f| %>
     <tr>
       <td></td>
-      <td><%= f.select :parent_id, Classification.pluck(:full_name,:id), { include_blank: true }, class: "form-control input-sm" %></td>
+      <td><%= f.select :parent_id, Classification.order(:full_name).pluck(:full_name,:id), { include_blank: true }, class: "form-control input-sm" %></td>
       <td><%= f.text_field :name, class: "form-control input-sm" %></td>
       <td>
         <%= f.button class: "btn btn-default" do %>

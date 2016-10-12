@@ -6,7 +6,9 @@
       <th>latitude</th>
       <th>longitude</th>
       <th></th>
+ <% if @current_user.advanced then %>  
       <th>global-id</th>
+ <% end %>
       <th></th>
     </tr>
   </thead>
@@ -21,7 +23,9 @@
           <td><%= place.decorate.latitude_to_text %></td>
           <td><%= place.decorate.longitude_to_text %></td>
           <td></td>
+ <% if @current_user.advanced then %>  	  
           <td><%= place.try!(:global_id) %></td> 
+ <% end %>
           <td>
             <%= link_to bib_place_path(@bib, place) + tab_param(__FILE__), method: :delete, title: "unlink place", data: {confirm: t("confirm.unlink")} do %>
               <span class="glyphicon glyphicon-remove"></span>
@@ -33,6 +37,12 @@
   </tbody>
   <tfoot>
     <tr>
+        <th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th>        <th>Select all</th>
+    </tr>
+  </tfoot>
+</table>
+<%= link_to_function "bundle edit", "$('#place-bundle-form').submit();", class: "btn btn-default" %>
+<% if false %>
       <%= form_for Place.new, url: bib_places_path(@bib) do |f|%>
         <%= hidden_tabname_tag(__FILE__) %>
         <th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th>
@@ -45,26 +55,24 @@
           <% end %>
         </th>
       <% end %>
+<% end %>
+
+<hr>
       <%= form_tag link_by_global_id_bib_places_path(@bib),method: :post do %>
         <%= hidden_tabname_tag(__FILE__) %>
-        <th>
+	<div style="float:left; margin:10px">
 	  <div class="input-group">
-	    <%= text_field_tag :global_id, nil, id: "place-global-id", class: "form-control input-sm" %>
+          <%= select_tag :global_id, options_for_select(Place.choose_global_id(@current_user)), { include_blank: true  , id: "place-global-id", class: "form-control input-sm"} %>
 	    <span class="input-group-addon">
 	      <%= link_to places_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#place-global-id" do %>
 	      <span class="glyphicon glyphicon-search"></span>
 	      <% end %>
 	    </span>
 	  </div>
-	</th>
-        <th>
+	</div>
+	<div style="float:left; margin:10px">
           <%= button_tag title: "link place by global id",class: "btn btn-default" do %>
             <span class="glyphicon glyphicon-save"></span>
           <% end %>
-        </th>
+	</div>
       <% end %>
-    </tr>
-  </tfoot>
-</table>
-<%= link_to_function "edit", "$('#place-bundle-form').submit();", class: "btn btn-default" %>
-

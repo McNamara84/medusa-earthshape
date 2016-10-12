@@ -2,11 +2,14 @@
   <thead>
     <tr>
       <th></th>
+            <th><%=AttachmentFile.human_attribute_name("filetopic")%></th>
       <th></th>
       <th>name</th>
       <th></th>
       <th>type</th>
+ <% if @current_user.advanced then %>  
       <th>global-id</th>
+ <% end %>
       <th></th>
       <th></th>
     </tr>
@@ -19,6 +22,7 @@
           <td>
             <%= check_box_tag("ids[]", attachment_file.id, false, {id: "ids_#{attachment_file.id}", class: "select-row"}) if can?(:update, attachment_file) %>
           </td>
+          <td><%= attachment_file.filetopic.try!(:name) %></td>		  
           <td><%= attachment_file.decorate.picture(width: 70, height: 70, type: :thumb) %></td>
           <td><%= link_to_if can?(:read, attachment_file), attachment_file.data_file_name,attachment_file %></td>
           <td>
@@ -27,7 +31,9 @@
             <% end %>
           </td>
           <td><%= attachment_file.try!(:data_content_type) %></td>
-          <td><%= attachment_file.try!(:global_id) %></td> 
+ <% if @current_user.advanced then %>  
+	<td><%= attachment_file.try!(:global_id) %></td> 
+<% end %>
           <td>
             <%= link_to move_to_top_attaching_path(attaching) + tab_param(__FILE__), method: :move_to_top ,title: "move to top" do %>
               <span class="glyphicon glyphicon-arrow-up"></span>
@@ -42,41 +48,71 @@
       <% end %>
     <% end %>
   </tbody>
-  <tfoot>
-    <tr>
-      <%= form_for AttachmentFile.new, url: box_attachment_files_path(@box),multipart: true do |f|%>
+  <tfoot> 
+  	 <tr><th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th><th>Select All</th></tr>
+  </tfoot>
+</table>
+<%= link_to_function "edit", "$('#attachment-file-bundle-form').submit();", class: "btn btn-default" %>
+
+	  <div style="clear:both; margin:5px;border: 1px solid grey;">
+		      <%= form_for AttachmentFile.new, url: box_attachment_files_path(@box), multipart: true do |f|%>
+    
+			<%= hidden_tabname_tag(__FILE__) %>
+			<%= f.fields_for :record_property_attributes do |r| %>
+			  <%= r.hidden_field :user_id ,value: @current_user.id %>
+			<% end %>
+
+
+			<div style="float:left; margin:5px; width:150px" >
+				<label class="small" for="attachment_file_filetopic_id"><%=AttachmentFile.human_attribute_name("filetopic")%></label>
+				<%= f.select :filetopic_id, Filetopic.order(:name).pluck(:name, :id), { :prompt =>  '- required -'  }, class: "form-control input-sm" %>
+			</div>		
+			<div style="float:left; margin:5px" >
+				<label class="small" for="attachment_file_data">File upload</label>
+				<%= f.file_field :data %>
+			</div>
+                        <div style="float:left; margin:5px">   
+	                          <div class="form-group form-group-sm">
+		                          <%= f.fields_for :record_property_attributes do |r| %>
+			                          <label class="small">Group</label>
+			                          <div >
+			                            <%= r.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %>
+			                            <%= r.hidden_field :user_id ,value: @current_user.id %>
+			                          </div>
+		                          <% end %>
+	                        </div>
+                        </div>				
+			<div style="float:left; margin:5px;margin-top:25px">
+			  <%= f.button title:"add attachment file", class: "btn btn-default" do %>
+			    <span class="glyphicon glyphicon-save"></span>
+			  <% end %>
+			</div>
+
+		      <% end %>
+	  </div>
+	  
+	  <div style="clear:both; margin:5px;border: 1px solid grey;">
+      <%= form_tag link_by_global_id_box_attachment_files_path(@box), method: :post do %>
+
         <%= hidden_tabname_tag(__FILE__) %>
-        <%= f.fields_for :record_property_attributes do |r| %>
-          <%= r.hidden_field :user_id ,value: @current_user.id %>
-        <% end %>
-        <th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th>
-        <th colspan= "2"><%= f.file_field :data %></th>
-        <th>
-          <%= f.button title:"add attachment file",class: "btn btn-default" do %>
-            <span class="glyphicon glyphicon-save"></span>
-          <% end %>
-        </th>
-      <% end %>
-      <%= form_tag link_by_global_id_box_attachment_files_path(@box),method: :post do %>
-        <%= hidden_tabname_tag(__FILE__) %>
-        <th>
+	
+        <div style="float:left; margin:5px">
+		    <label class="small" for="attachment-file-global-id">Link file from inventory</label>
 	  <div class="input-group">
-	    <%= text_field_tag :global_id,nil, id: "attachment-file-global-id", class: "form-control input-sm" %>
+            <%= select_tag :global_id, options_for_select(AttachmentFile.choose_global_id(@current_user)), { include_blank: true  , id: "attachment-file-global-id", class: "form-control input-sm"} %> 	  
 	    <span class="input-group-addon">
 	      <%= link_to attachment_files_path(per_page: 5, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#attachment-file-global-id" do %>
 	      <span class="glyphicon glyphicon-search"></span>
 	      <% end %>
 	    </span>
 	  </div>
-	</th>
-        <th>
-          <%= button_tag title: "link attachment file by global id",class: "btn btn-default" do %>
+	</div>
+        <div style="float:left; margin:5px;margin-top:25px">
+          <%= button_tag title: "link attachment file by global id", class: "btn btn-default" do %>
             <span class="glyphicon glyphicon-save"></span>
           <% end %>
-        </th>
-      <% end %>
-    </tr>
-  </tfoot>
-</table>
-<%= link_to_function "edit", "$('#attachment-file-bundle-form').submit();", class: "btn btn-default" %>
+        </div>
 
+      <% end %>
+	  </div>
+	  

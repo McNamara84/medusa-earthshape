@@ -1,0 +1,59 @@
+<% @stagings.each do |staging| %>	
+	<table class="stagingstable" >
+	<tbody>	  
+
+	       <%= form_for staging, url: ingest_collection_staging_path(staging), method: :post do |f|%>
+	       <%= hidden_tabname_tag(__FILE__) %>
+	       <% 
+	        collectionhash=@collections[staging.id]
+		collection=nil
+		if collectionhash[:id].present?
+			collection=Collection.find(collectionhash[:id])
+		else
+			collection=Collection.new(
+			{:name=>collectionhash[:name], :project =>collectionhash[:project], :timeseries=>collectionhash[:timeseries],
+			  :collectionmethod_id =>collectionhash[:collectionmethod_id],
+			 :comment=>collectionhash[:comment], :samplingstrategy =>collectionhash[:samplingstrategy], :weather_conditions =>collectionhash[:weather_conditions]
+			})
+		end	
+	       %>
+	       
+		    <%=   f.fields_for :collection_create_attributes, collection do |r| %>
+			<tr >
+				 <td><%= r.hidden_field :id %><%= r.label :name, class:"small" %><%= r.text_field :name,  class: "form-control input-sm", placeholder: '- required -'  %></td>
+				 <td><%= r.label :project, class:"small" %><%= r.text_field :project, class: "form-control input-sm", placeholder: '- required -' %></td>
+				 <td><%= r.label :timeseries, class:"small" %> <%= r.select :timeseries, [["Yes", true], ["No", false]], { :include_blank => true}, class: "form-control input-sm" %></td>
+			</tr ><tr>
+
+				 <td ><%= r.label :comment, class:"small" %><%= r.text_field :comment, class: "form-control input-sm" %></td>
+				 <td ><%= r.label :samplingstrategy, class:"small" %><%= r.text_field :samplingstrategy,  class: "form-control input-sm", placeholder: '- required -'%></td>
+					<td colspan="2"><%= r.label :weather_conditions, class:"small" %><%= r.text_field :weather_conditions , class: "form-control input-sm"%></td>				 
+			</tr>
+				<tr>
+				<td>
+					  <div class="form-group form-group-sm">
+					  <%= r.fields_for :record_property_attributes do |g| %>
+						<label class="small">Group</label>
+						<div >
+						 <%= g.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %>
+						<%= g.hidden_field :user_id ,value: @current_user.id %>	
+			                            <%= g.hidden_field :guest_readable , value: "true" %>										
+						  </div>
+					  <% end %>
+					</div>
+
+				</td>				
+				<td style="vertical-align:middle">
+					<% if collection.id.blank? %>
+						<%= submit_tag "Create" %>
+					<%else%>				
+						<%= submit_tag "Update" %>			
+					<%end%>					
+				</td>						
+				</tr>
+			<%end%>			
+		<%end%>
+
+	</tbody>
+	</table>
+<%end%>

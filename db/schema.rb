@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140328034684) do
+ActiveRecord::Schema.define(version: 20160906172704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,7 +56,10 @@ ActiveRecord::Schema.define(version: 20140328034684) do
     t.text     "affine_matrix"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "filetopic_id"
   end
+
+  add_index "attachment_files", ["filetopic_id"], name: "index_attachment_files_on_filetopic_id", using: :btree
 
   create_table "authors", force: true do |t|
     t.string   "name"
@@ -144,7 +147,50 @@ ActiveRecord::Schema.define(version: 20140328034684) do
 
   add_index "classifications", ["parent_id"], name: "index_classifications_on_parent_id", using: :btree
 
+  create_table "collectionmethods", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "collections", force: true do |t|
+    t.string   "name"
+    t.string   "collector"
+    t.date     "collection_start"
+    t.date     "collection_end"
+    t.float    "depth_min"
+    t.float    "depth_max"
+    t.string   "depth_unit"
+    t.text     "weather_conditions"
+    t.text     "comment"
+    t.integer  "collectionmethod_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "affiliation"
+    t.string   "project"
+    t.boolean  "timeseries"
+    t.string   "samplingstrategy"
+  end
+
+  add_index "collections", ["collectionmethod_id"], name: "index_collections_on_collectionmethod_id", using: :btree
+
+  create_table "collectors", force: true do |t|
+    t.string   "name"
+    t.string   "affiliation"
+    t.integer  "stone_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "collectors", ["stone_id"], name: "index_collectors_on_stone_id", using: :btree
+
   create_table "devices", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "filetopics", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -175,6 +221,12 @@ ActiveRecord::Schema.define(version: 20140328034684) do
     t.datetime "updated_at"
   end
 
+  create_table "landuses", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "measurement_categories", force: true do |t|
     t.string  "name"
     t.string  "description"
@@ -200,6 +252,57 @@ ActiveRecord::Schema.define(version: 20140328034684) do
     t.float    "latitude"
     t.float    "longitude"
     t.float    "elevation"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "slope_description"
+    t.string   "landuse"
+    t.string   "aspect"
+    t.integer  "vegetation_id"
+    t.integer  "landuse_id"
+    t.integer  "topographic_position_id"
+    t.string   "lightsituation"
+    t.integer  "parent_id"
+    t.boolean  "is_parent"
+  end
+
+  add_index "places", ["landuse_id"], name: "index_places_on_landuse_id", using: :btree
+  add_index "places", ["parent_id"], name: "index_places_on_parent_id", using: :btree
+  add_index "places", ["topographic_position_id"], name: "index_places_on_topographic_position_id", using: :btree
+  add_index "places", ["vegetation_id"], name: "index_places_on_vegetation_id", using: :btree
+
+  create_table "preparation_for_classifications", force: true do |t|
+    t.integer  "classification_id",   null: false
+    t.integer  "preparation_type_id", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "preparation_for_classifications", ["classification_id"], name: "index_preparation_for_classifications_on_classification_id", using: :btree
+  add_index "preparation_for_classifications", ["preparation_type_id"], name: "index_preparation_for_classifications_on_preparation_type_id", using: :btree
+
+  create_table "preparation_types", force: true do |t|
+    t.string   "name"
+    t.boolean  "creates_siblings"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "full_name"
+    t.text     "description"
+    t.integer  "parent_id"
+  end
+
+  create_table "preparations", force: true do |t|
+    t.string   "info"
+    t.integer  "preparation_type_id"
+    t.integer  "stone_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "preparations", ["preparation_type_id"], name: "index_preparations_on_preparation_type_id", using: :btree
+  add_index "preparations", ["stone_id"], name: "index_preparations_on_stone_id", using: :btree
+
+  create_table "quantityunits", force: true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -239,6 +342,11 @@ ActiveRecord::Schema.define(version: 20140328034684) do
   add_index "referrings", ["bib_id"], name: "index_referrings_on_bib_id", using: :btree
   add_index "referrings", ["referable_id"], name: "index_referrings_on_referable_id", using: :btree
 
+  create_table "search_maps", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "spots", force: true do |t|
     t.integer  "attachment_file_id"
     t.string   "name"
@@ -258,6 +366,72 @@ ActiveRecord::Schema.define(version: 20140328034684) do
 
   add_index "spots", ["attachment_file_id"], name: "index_spots_on_attachment_file_id", using: :btree
 
+  create_table "stagings", force: true do |t|
+    t.string   "collection_name"
+    t.string   "collection_project"
+    t.boolean  "collection_timeseries"
+    t.text     "collection_comment"
+    t.string   "place_name"
+    t.string   "place_latitude"
+    t.string   "place_longitude"
+    t.float    "place_elevation"
+    t.string   "place_topographic_positon"
+    t.string   "place_slopedescription"
+    t.string   "place_aspect"
+    t.string   "place_vegetation"
+    t.string   "place_landuse"
+    t.string   "place_description"
+    t.string   "place_lightsituation"
+    t.string   "box_name"
+    t.string   "box_parent"
+    t.string   "box_type"
+    t.string   "sample_name"
+    t.string   "sample_igsn"
+    t.string   "sample_labname"
+    t.date     "sample_date"
+    t.string   "sample_collectionmethod"
+    t.text     "sample_comment"
+    t.string   "sample_parent"
+    t.string   "sample_material"
+    t.string   "sample_classification"
+    t.string   "sample_container"
+    t.float    "sample_quantityinitial"
+    t.string   "sample_unit"
+    t.float    "sample_quantity"
+    t.string   "treatment_monitor1"
+    t.string   "treatment_monitor2"
+    t.string   "treatment_monitor3"
+    t.string   "treatment_preparation1"
+    t.string   "treatment_preparation2"
+    t.string   "treatment_preparation3"
+    t.string   "treatment_strategy"
+    t.string   "treatment_analyticalmethod"
+    t.text     "treatment_comment"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.float    "sample_depth"
+    t.string   "hidden_column"
+    t.string   "collection_weather"
+    t.string   "collection_group"
+    t.string   "place_is_parent"
+    t.string   "place_parent"
+    t.string   "place_group"
+    t.string   "box_group"
+    t.string   "sample_location"
+    t.string   "sample_campaign"
+    t.string   "sample_storageroom"
+    t.string   "sample_group"
+    t.string   "sample_collector"
+    t.string   "sample_affiliation"
+    t.string   "collection_strategy"
+  end
+
+  create_table "stonecontainer_types", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "stones", force: true do |t|
     t.string   "name"
     t.string   "stone_type"
@@ -271,11 +445,24 @@ ActiveRecord::Schema.define(version: 20140328034684) do
     t.string   "quantity_unit"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.float    "quantity_initial"
+    t.string   "labname"
+    t.string   "igsn"
+    t.integer  "collection_id"
+    t.integer  "stonecontainer_type_id"
+    t.float    "sampledepth"
+    t.date     "date"
+    t.integer  "quantityunit_id"
+    t.integer  "collectionmethod_id"
   end
 
   add_index "stones", ["classification_id"], name: "index_stones_on_classification_id", using: :btree
+  add_index "stones", ["collection_id"], name: "index_stones_on_collection_id", using: :btree
+  add_index "stones", ["collectionmethod_id"], name: "index_stones_on_collectionmethod_id", using: :btree
   add_index "stones", ["parent_id"], name: "index_stones_on_parent_id", using: :btree
   add_index "stones", ["physical_form_id"], name: "index_stones_on_physical_form_id", using: :btree
+  add_index "stones", ["quantityunit_id"], name: "index_stones_on_quantityunit_id", using: :btree
+  add_index "stones", ["stonecontainer_type_id"], name: "index_stones_on_stonecontainer_type_id", using: :btree
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"
@@ -296,6 +483,12 @@ ActiveRecord::Schema.define(version: 20140328034684) do
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
   create_table "techniques", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "topographic_positions", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -329,10 +522,18 @@ ActiveRecord::Schema.define(version: 20140328034684) do
     t.text     "description"
     t.string   "username",                               null: false
     t.integer  "box_id"
+    t.string   "prefix"
+    t.boolean  "advanced"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
+
+  create_table "vegetations", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end

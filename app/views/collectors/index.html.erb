@@ -1,0 +1,31 @@
+<h1>Listing collectors</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Affiliation</th>
+      <th>Stone</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @collectors.each do |collector| %>
+      <tr>
+        <td><%= collector.name %></td>
+        <td><%= collector.affiliation %></td>
+        <td><%= collector.stone %></td>
+        <td><%= link_to 'Show', collector %></td>
+        <td><%= link_to 'Edit', edit_collector_path(collector) %></td>
+        <td><%= link_to 'Destroy', collector, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Collector', new_collector_path %>

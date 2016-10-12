@@ -15,5 +15,6 @@
 //= require jquery.ui.datepicker
 //= require jquery.ui.widget
 //= require bootstrap
-//= require acts_as_mappable
+//= require underscore
+//= require gmaps/google
 //= require_tree .

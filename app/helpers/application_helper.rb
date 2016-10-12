@@ -62,6 +62,16 @@ module ApplicationHelper
     hidden_field_tag :tab,tabname_from_filename(filename)
   end
 
+  def link_to_add_fields(name, addfieldsclass, f, association)
+    new_object = f.object.send(association).klass.new
+    id = new_object.object_id
+    addfieldsclass=addfieldsclass+" add_fields"
+    fields = f.fields_for(association, new_object, child_index: id) do |builder|
+      render(association.to_s.singularize + "_fields", f: builder)
+    end
+    link_to(name, '#', class: addfieldsclass, data: {id: id, fields: fields.gsub("\n", "")})
+  end
+
   private
 
   def tabname_from_filename(filename)

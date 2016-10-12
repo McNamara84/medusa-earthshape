@@ -1,0 +1,19 @@
+<%= form_for @preparation, html: {class: "col-lg-3"} do |f| %>
+  <%= error_notification(@preparation.errors) %>
+
+  <div class="form-classification form-classification-sm">
+    <%= f.label "Sample", class: "small" %>
+    <%= f.select :stone_id, Stone.order(:name).pluck(:name,:id), { include_blank: true }, class: "form-control input-sm" %>
+  </div>
+  <div class="form-classification form-classification-sm">
+    <%= f.label "Preparation type", class: "small" %>
+    <%= f.select :preparation_type_id, PreparationType.order(:full_name).pluck(:full_name,:id), { include_blank: true }, class: "form-control input-sm" %>
+  </div>
+  <div class="form-classification form-classification-sm">
+    <%= f.label :info, class: "small" %>
+    <%= f.text_field :info, class: "form-control input-sm" %>
+  </div>
+
+  <%= f.submit "update", class: "btn btn-sm" %>
+  <%= link_to "cancel", preparations_path, class: "btn btn-sm" %>
+<% end %>

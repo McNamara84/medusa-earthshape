@@ -1,0 +1,100 @@
+<% @stagings.each do |staging| %>
+	<table class="stagingstable" >
+	<tbody>	  
+
+	       <%= form_for staging, url: ingest_stone_staging_path(staging), method: :post do |f|%>
+	       <%= hidden_tabname_tag(__FILE__) %>
+	       <% 
+	        stonehash=@stones[staging.id]
+		stone=nil
+		if stonehash[:id].present?
+			stone=Stone.find(stonehash[:id])
+		else
+			stone=Stone.new(
+			{:name=>stonehash[:name], :igsn=>stonehash[:igsn], :labname=>stonehash[:labname],:date=>stonehash[:date],:sampledepth=>stonehash[:sampledepth],:parent_id=>stonehash[:parent_id],
+			:classification_id=>stonehash[:classification_id], :stonecontainer_type_id =>stonehash[:stonecontainer_type_id], :quantity_initial=>stonehash[:quantity_initial],:quantity_unit=>stonehash[:quantity_unit],
+			:quantity=>stonehash[:quantity],:description=>stonehash[:description],:place_id => stonehash[:place_id], :collection_id => stonehash[:collection_id], :box_id => stonehash[:box_id],
+			:collectionmethod_id=>stonehash[:collectionmethod_id], :collectors_attributes=>{DateTime.now.strftime('%Q')=>{:name=>stonehash[:collector],:affiliation=>stonehash[:affiliation]}}
+			})
+		end	
+		
+		material=Classification.where("parent_id IS NULL AND name ILIKE ?","#{staging.sample_material }%").take.try!(:id).try(:to_i)	
+
+	       %>
+       
+		    <%=   f.fields_for :stone_create_attributes, stone do |r| %>
+
+			<tr>
+				 <td ><%= r.hidden_field :id %><%= r.label :name, class:"small" %><%= r.text_field :name, {:prompt =>  '- required -' }%></td>
+ 				 <td><%= r.label :parent_id, class:"small" %><%= r.select :parent_id, Stone.choose_id(@current_user), { include_blank: true  }, class: "form-control input-sm" %> </td>
+				 <td><%= r.label :igsn, class:"small" %><%=  r.text_field :igsn, class: "form-control input-sm" %></td>
+				 <td><%= r.label :collectionmethod_id, class:"small" %> <%= r.select :collectionmethod_id, Collectionmethod.order(:name).pluck(:name,:id), { include_blank: true }, class: "form-control input-sm" %></td>			
+				 <td ><%= r.label "Material", class:"small" %><%= r.select :classification_id, Classification.where(parent_id: material).order(:full_name).pluck(:full_name,:id), { include_blank: true, :prompt =>  '- required -'  }, class: "form-control input-sm" %></td>
+				 <td ><%= r.label "Location", class:"small" %><%= r.select :place_id, Place.order(:name).pluck(:name,:id), { include_blank: true, :prompt =>  '- required -'  }, class: "form-control input-sm" %></td>				 
+				 <td><%= r.label "Campaign", class:"small" %><%= r.select :collection_id, Collection.order(:name).pluck(:name,:id), { include_blank: true, :prompt =>  '- required -'  }, class: "form-control input-sm" %></td>				 
+
+
+			</tr><tr>				 
+				 <td><%= r.label :sampledepth, class:"small" %><%= r.text_field :sampledepth, class: "form-control input-sm" %></td>
+				  <td><%= r.label :date, class:"small" %><%= r.text_field :date, class: "form-control input-sm datepicker" %></td>				 
+				 <td><%= r.label :quantity_initial, class:"small" %><%= r.text_field :quantity_initial, { :prompt =>  '- required -' } %></td>
+				 <td><%= r.label :quantity_unit, class:"small" %><%= r.text_field :quantity_unit, {:prompt =>  '- required -'} %></td>	
+				 <td><%= r.label :quantity, class:"small" %><%= r.text_field :quantity %></td>	
+				  <td><%= r.label :labname, class:"small" %><%= r.text_field :labname, class: "form-control input-sm" %></td>
+				 <td><%= r.label :box_id, class:"small" %><%= r.select :box_id, Box.order(:name).pluck(:name,:id), { include_blank: true, :prompt =>  '- required -'  }, class: "form-control input-sm" %></td>				 				 
+			
+			</tr>
+			
+			<tr>
+			
+	
+				 <td><%= r.label :container_id, class:"small" %><%= r.select :stonecontainer_type_id, StonecontainerType.order(:name).pluck(:name,:id), { include_blank: true, :prompt =>  '- required -'  }, class: "form-control input-sm" %></td>
+	
+				 <td colspan="2"><%= r.label :description, class:"small" %><%= r.text_field :description, class: "form-control input-sm" %></td>
+				 
+		                     <%= r.fields_for :collectors do |collector| %>
+                                                <td>
+	                                                <%= collector.label :name, class: "small" %>
+	                                                <%= collector.text_field :name , class: "form-control input-sm" %>
+                                                </td>
+                                                <td>
+	                                                <%= collector.label :affiliation, class: "small" %>
+	                                                <%= collector.text_field :affiliation, class: "form-control input-sm"%>    
+                                                </td>
+		                     <% end %>				 
+			 
+			</tr>			
+			
+		
+
+
+			
+			<tr>
+				<td>
+					  <div class="form-group form-group-sm">
+					  <%= r.fields_for :record_property_attributes do |g| %>
+						<label class="small">Group</label>
+						<div >
+						 <%= g.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %>
+						<%= g.hidden_field :user_id ,value: @current_user.id %>
+			                        <%= g.hidden_field :guest_readable , value: "true" %>						
+						  </div>
+					  <% end %>
+					</div>
+
+				</td>
+				<td style="vertical-align:middle">
+					<% if stone.id.blank? %>
+						<%= submit_tag "Create" %>
+					<%else%>				
+						<%= submit_tag "Update" %>			
+					<%end%>					
+				</td>						
+			</tr>
+			<%end%>			
+		<%end%>
+
+	</tbody>
+	</table>		
+	
+<%end%>

@@ -1,0 +1,48 @@
+<% @stagings.each do |staging| %>
+
+   <%= form_for staging, url: ingest_staging_path(staging), method: :post do |f| %>
+    <% 
+    
+
+	staging.treatment_preparation1=PreparationType.where("name ILIKE ?","#{staging.treatment_preparation1 }%").take.try!(:id).try(:to_i)
+	staging.treatment_preparation2=PreparationType.where("name ILIKE ?","#{staging.treatment_preparation2 }%").take.try!(:id).try(:to_i)
+	staging.treatment_preparation3=PreparationType.where("name ILIKE ?","#{staging.treatment_preparation3 }%").take.try!(:id).try(:to_i)	
+
+
+%>   
+   
+       <style>
+
+      .stagingstable td b div { height:26px }
+      .stagingstable input {  width:100%}
+    </style>
+
+	<table class="stagingstable" >
+	  <tbody>  
+	  
+
+
+			<tr>
+<!--				 <td class="header"><b><div>Measurements/ Preparations: </b></td>		
+
+-->				 <td><b><div>Preparation</div></b><div></div><%= f.select :treatment_preparation1, PreparationType.order(:name).pluck(:name,:id), { include_blank: true }, class: "form-control input-sm" %></td>
+				 <td><b><div>Preparation</div></b><div></div><%= f.select :treatment_preparation2, PreparationType.order(:name).pluck(:name,:id), { include_blank: true }, class: "form-control input-sm" %></td>
+				 <td><b><div>Preparation</div></b><div></div><%= f.select :treatment_preparation3, PreparationType.order(:name).pluck(:name,:id), { include_blank: true }, class: "form-control input-sm" %></td>
+				 
+
+<!--					
+-->			</tr>
+
+	      <tr>
+		<td><%= submit_tag "Import" %></td>
+<!--		<td><%= link_to 'Show', staging %></td>-->
+
+		<td><%= link_to 'Edit', edit_staging_path(staging) %></td>
+		<td><%= link_to 'Destroy', staging, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+	      </tr>
+
+	  </tbody>
+	</table>
+
+   <% end %>
+<% end %>

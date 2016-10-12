@@ -78,10 +78,10 @@ Medusa::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  config.middleware.use ExceptionNotification::Rack,
-  :email => {
-    :email_prefix => "[Medusa exception] ",
-    :sender_address => %{"no reply" <medusa@example.com>},
-    :exception_recipients => %w{m-imaoka@probizmo.co.jp}
-  }
+#  config.middleware.use ExceptionNotification::Rack,
+#  :email => {
+#    :email_prefix => "[Medusa exception] ",
+#    :sender_address => %{"no reply" <medusa@example.com>},
+#   :exception_recipients => %w{m-imaoka@probizmo.co.jp}
+#  }
 end

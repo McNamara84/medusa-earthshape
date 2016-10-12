@@ -29,7 +29,7 @@
     <tr>
       <th><%= check_box_tag nil, nil, true, class: "select-row-all" %></th>
       <th></th>
-      <th><%= f.select :device_id, Device.pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>
+      <th><%= f.select :device_id, Device.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>
       <th>
 	<div class="input-group">
 	  <%= f.text_field :stone_global_id, class: "form-control input-sm" %>
@@ -42,10 +42,10 @@
       </th>
       <th></th>
       <%= th_if_expand do %>
-        <%= f.select :user_id ,User.pluck(:username, :id), { include_blank: true }, class: "form-control input-sm" %>
+        <%= f.select :user_id ,User.order(:username).pluck(:username, :id), { include_blank: true }, class: "form-control input-sm" %>
       <% end %>
 
-      <th><%= f.select :group_id ,Group.pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>
+      <th><%= f.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>
       <%= th_if_expand do %>
         <%= f.select :published ,[true, false], { include_blank: true }, class: "form-control input-sm" %>
       <% end %>

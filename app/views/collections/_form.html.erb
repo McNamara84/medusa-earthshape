@@ -1,0 +1,65 @@
+<%= form_for @collection, html: {class: "col-lg-3"} do |f| %>
+  <%= error_notification(@collection.errors) %>
+
+  <div class="form-classification form-classification-sm">
+    <%= f.label :name, class: "small" %>
+    <%= f.text_field :name, class: "form-control input-sm" %>
+  </div>
+  <div class="form-classification form-classification-sm">
+    <%= f.label :collector, class: "small" %>
+    <%= f.text_field :collector, class: "form-control input-sm" %>
+  </div>
+  <div class="form-classification form-classification-sm">
+    <%= f.label :affiliation, class: "small" %>
+    <%= f.text_field :affiliation, class: "form-control input-sm" %>
+  </div>
+  <div class="form-classification form-classification-sm">
+    <%= f.label :project, class: "small" %>
+    <%= f.text_field :project, class: "form-control input-sm" %>
+  </div>  
+   <div class="form-classification form-classification-sm">
+    <%= f.label :timeseries, class: "small" %>
+    <%= f.select :timeseries, [["Yes", true], ["No", false]], { :include_blank => true}, class: "form-control input-sm" %>
+  </div> 
+   <div class="form-classification form-classification-sm">
+    <%= f.label :collectionmethod, class: "small" %>
+    <%= f.select :collectionmethod_id, Collectionmethod.order(:name).pluck(:name,:id), { include_blank: true }, class: "form-control input-sm" %>
+  </div>   
+   <div class="form-classification form-classification-sm">
+    <%= f.label :collection_start, class: "small" %>
+    <%= f.text_field :collection_start, placeholder: "start:",  class: "form-control input-sm datepicker" %>
+  </div>
+    <div class="form-classification form-classification-sm">
+    <%= f.label :collection_end, class: "small" %>
+    <%= f.text_field :collection_end,  placeholder: "start:", class: "form-control input-sm datepicker" %>
+  </div>
+  <div class="form-classification form-classification-sm">
+    <%= f.label :depth_min, class: "small" %>
+    <%= f.text_field :depth_min, class: "form-control input-sm" %>
+  </div>
+  <div class="form-classification form-classification-sm">
+    <%= f.label :depth_max, class: "small" %>
+    <%= f.text_field :depth_max, class: "form-control input-sm" %>
+  </div>
+  <div class="form-classification form-classification-sm">
+    <%= f.label :depth_unit, class: "small" %>
+    <%= f.text_field :depth_unit, class: "form-control input-sm" %>
+  </div>
+  <div class="form-classification form-classification-sm">
+    <%= f.label :weather_conditions, class: "small" %>
+    <%= f.text_area :weather_conditions, class: "form-control input-sm" %>
+  </div>
+  <div class="form-classification form-classification-sm">
+    <%= f.label :comment, class: "small" %>
+    <%= f.text_area :comment, class: "form-control input-sm" %>
+  </div>
+    <div class="form-classification form-classification-sm">
+    <%= f.label :samplingstrategy, class: "small" %>
+    <%= f.text_area :samplingstrategy, class: "form-control input-sm" %>
+  </div>
+  <%= f.submit "update", class: "btn btn-sm" %>
+  <%= link_to "cancel", collections_path, class: "btn btn-sm" %>
+<% end %>
+
+
+    

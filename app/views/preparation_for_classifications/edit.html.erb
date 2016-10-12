@@ -1,0 +1,16 @@
+<%= form_for @preparation_for_classification, html: {class: "col-lg-3"} do |f| %>
+  <%= error_notification(@preparation_for_classification.errors) %>
+
+  <div class="form-classification form-classification-sm">
+    <%= f.label :classification, class: "small" %>
+    <%= f.select :classification_id, Classification.order(:full_name).pluck(:full_name,:id), { include_blank: true }, class: "form-control input-sm" %>
+  </div>
+  
+  <div class="form-classification form-classification-sm">
+    <%= f.label :preparation, class: "small" %>
+    <%= f.select :preparation_type_id, PreparationType.order(:full_name).pluck(:full_name,:id), { include_blank: true }, class: "form-control input-sm" %>
+  </div>
+
+  <%= f.submit "update", class: "btn btn-sm" %>
+  <%= link_to "cancel", preparation_for_classifications_path, class: "btn btn-sm" %>
+<% end %>

@@ -5,7 +5,7 @@
 
     <div>
       <%= f.label :box_id %><br>
-      <%= f.select :box_id, Box.pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %>
+      <%= f.select :box_id, Box.choose_id(@current_user), { include_blank: true }, class: "form-control input-sm" %>
     </div>
 
     <div>
@@ -42,13 +42,22 @@
       <%= f.label :description %><br />
       <%= f.text_area :description, class: "form-control input-sm" %>
     </div>
+  <div>
+    <%= f.label :advanced %><br />
+    <%= f.check_box :advanced, class: "form-control input-sm" %>
+  </div>    
+    
+  <div>
+    <%= f.label :prefix %><br />
+    <%= f.text_field :prefix, class: "form-control input-sm" %>
+  </div>    
 
     <%= f.submit  "Update",class: "btn btn-sm" %>
 
     <% end %>
   </div>
 </div>
-<div class="row">
+<div class="row" style="margin-top:20px">
   <div class="col-lg-12">
     <%= form_tag(find_by_global_id_account_path,method: :get) do %>
     <span class="pull-left">Table of records that you can access: Fill ID</span>
@@ -73,7 +82,7 @@
 	<th></th>
 	<% class_names.each do |class_name| %>
         <th>
-          <%= link_to class_name.underscore,send("#{class_name.tableize}_path") %>
+          <%= link_to class_name.constantize.model_name.human ,send("#{class_name.tableize}_path") %>
         </th>
 	<% end %>
       </tr>

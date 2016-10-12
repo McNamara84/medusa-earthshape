@@ -1,13 +1,22 @@
 <%= paginate @bibs %>
+
+<%= link_to "New Entry", bibs_path(anchor: "newentry"), class: "btn btn-default newentrybutton" %>
+
+
+<br>The Bibliography is used to store publications related to the project. <br><br>
+
+
 <table class="table table-condensed table-striped">
-  <thead>
+  <thead class="searchheader">
     <%= search_form_for @search do |f| %>
     <tr>
-      <th>
-        <%= f.button class: "btn btn-default" do %>
-        <span class="glyphicon glyphicon-refresh"></span>
-        <% end %>
-      </th>
+	    <th></th><th colspan="6"><u> Search and filter <%= Bib.model_name.human%></u></th><th></th><th></th>
+	    <%= th_if_expand do %>  	    
+		<th></th><th></th>
+	    <%end%>
+    </tr>    
+    <tr>
+      <th>Entries per page </th>
       <th><%= sort_link @search, :name, "name" %></th>
       <th><%= sort_link @search, :doi, "doi" %></th>
       <th>author</th><!-- don't sort -->
@@ -27,16 +36,20 @@
       <th><%= toggle_column_link %></th>
     </tr>
     <tr>
-      <th><%= text_field_tag :per_page, (params[:per_page] || Bib.default_per_page), size: 4 %></th>
-      <th><%= f.text_field :name_cont, class: "form-control input-sm", size: 15 %></th>
-      <th><%= f.text_field :doi_cont, class: "form-control input-sm", size: 10 %></th>
-      <th><%= f.text_field :authors_name_cont, class: "form-control input-sm", size: 12 %></th>
+      <th><%= text_field_tag :per_page, (params[:per_page] || Bib.default_per_page), size: 1 %>
+             <%= f.button class: "btn btn-default" do %>
+       <span class="glyphicon glyphicon-refresh"></span>
+        <% end %> 
+      </th>
+      <th><%= f.text_field :name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
+      <th><%= f.text_field :doi_cont, class: "form-control input-sm", placeholder: "search:", size: 10 %></th>
+      <th><%= f.text_field :authors_name_cont, class: "form-control input-sm", placeholder: "search:", size: 12 %></th>
       <th></th>
-      <th><%= f.text_field :entry_type_cont, class: "form-control input-sm", size: 6 %></th>
+      <th><%= f.text_field :entry_type_cont, class: "form-control input-sm", placeholder: "search:", size: 6 %></th>
       <%= th_if_expand do %>
-        <%= f.text_field :user_username_cont, class: "form-control input-sm", size: 15 %>
+        <%= f.text_field :user_username_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %>
       <% end %>
-      <th><%= f.text_field :group_name_cont, class: "form-control input-sm", size: 15 %></th>
+      <th><%= f.text_field :group_name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
       <%= th_if_expand do %>
         <%= f.select :record_property_published_eq, [true, false], { include_blank: true }, class: "form-control input-sm" %>
       <% end %>
@@ -46,6 +59,7 @@
       <%= th_if_expand do %>
         <%= f.text_field :created_at_gteq, placeholder: "from:", value: format_date(params[:q] && params[:q][:created_at_gteq]), class: "form-control input-sm datepicker", size: 10 %>
       <% end %>
+      <th></th>
     </tr>
     <tr>
       <th></th>
@@ -63,6 +77,7 @@
       <%= th_if_expand do %>
         <%= f.text_field :created_at_lteq_end_of_day, placeholder: "to:", value: format_date(params[:q] && params[:q][:created_at_lteq_end_of_day]), class: "form-control input-sm datepicker", size: 10 %>
       <% end %>
+      <th></th>
     </tr>
     <% end %>
   </thead>
@@ -72,10 +87,19 @@
     <% end %>
   </tbody>
   <tfoot>
-    <%= render partial: "new", locals: { bib: Bib.new } %>
+       <tr><th><%= check_box_tag nil, nil, false, class: "select-row-all" %> Select all </th></tr>
+      <tr><th><%= link_to_function  "bundle edit", "$('#bundle-form').submit();", class: "btn btn-default" %></th></tr>   
   </tfoot>
 </table>
-<%= link_to_function content_tag(:span, nil, class: "glyphicon glyphicon-pencil"), "$('#bundle-form').submit();", class: "btn btn-default" %>
+
+<hr>
+<div id="newentry">
+   <u>Create <%= Bib.model_name.human%> here: </u><br><br>
+   
+   Fill in the DOI (<i>10.xxx/yyy.zzz</i>) of an article and click <i>save</i>. All information related to this publication will be retrieved automatically.
+   
+    <%= render partial: "new", locals: { bib: Bib.new } %>
+</div>
 
 <%= javascript_tag do %>
   $(document).on("succeed.ajaxForm", "#new_bib", function() {

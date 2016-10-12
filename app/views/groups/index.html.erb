@@ -1,3 +1,7 @@
+<div><%= link_to_unless_current User.model_name.human.downcase,users_path %>  | 
+<%= link_to_unless_current Group.model_name.human.downcase,groups_path %> </div>
+<br><br>
+
 <%= paginate @groups %>
 <table class="table table-condensed table-striped">
   <thead>

@@ -1,0 +1,209 @@
+<%= form_for(@staging) do |f| %>
+  <% if @staging.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@staging.errors.count, "error") %> prohibited this import row from being saved:</h2>
+
+      <ul>
+      <% @staging.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :collection_name %><br>
+    <%= f.text_field :collection_name %>
+  </div>
+  <div class="field">
+    <%= f.label :collection_project %><br>
+    <%= f.text_field :collection_project %>
+  </div>
+  <div class="field">
+    <%= f.label :collection_collector %><br>
+    <%= f.text_field :collection_collector %>
+  </div>
+  <div class="field">
+    <%= f.label :collection_affiliation %><br>
+    <%= f.text_field :collection_affiliation %>
+  </div>
+  <div class="field">
+    <%= f.label :collection_timeseries %><br>
+    <%= f.check_box :collection_timeseries %>
+  </div>
+  <div class="field">
+    <%= f.label :collection_start %><br>
+<%= f.text_field :collection_start, { :prompt =>  '- required -' , size:10, class: "datepicker"}  %>    
+  </div>
+  <div class="field">
+    <%= f.label :collection_end %><br>
+<%= f.text_field :collection_end, { size:10, class: "datepicker"}  %>    
+  </div>
+  <div class="field">
+    <%= f.label :collection_depth_min %><br>
+    <%= f.text_field :collection_depth_min %>
+  </div>
+  <div class="field">
+    <%= f.label :collectin_depth_max %><br>
+    <%= f.text_field :collectin_depth_max %>
+  </div>
+  <div class="field">
+    <%= f.label :collection_comment %><br>
+    <%= f.text_area :collection_comment %>
+  </div>
+  <div class="field">
+    <%= f.label :place_name %><br>
+    <%= f.text_field :place_name %>
+  </div>
+  <div class="field">
+    <%= f.label :place_latitude %><br>
+    <%= f.text_field :place_latitude %>
+  </div>
+  <div class="field">
+    <%= f.label :place_longitude %><br>
+    <%= f.text_field :place_longitude %>
+  </div>
+  <div class="field">
+    <%= f.label :place_elevation %><br>
+    <%= f.text_field :place_elevation %>
+  </div>
+  <div class="field">
+    <%= f.label :place_topographic_positon %><br>
+    <%= f.text_field :place_topographic_positon %>
+  </div>
+  <div class="field">
+    <%= f.label :place_slopedescription %><br>
+    <%= f.text_field :place_slopedescription %>
+  </div>
+  <div class="field">
+    <%= f.label :place_aspect %><br>
+    <%= f.text_field :place_aspect %>
+  </div>
+  <div class="field">
+    <%= f.label :place_vegetation %><br>
+    <%= f.text_field :place_vegetation %>
+  </div>
+  <div class="field">
+    <%= f.label :place_landuse %><br>
+    <%= f.text_field :place_landuse %>
+  </div>
+  <div class="field">
+    <%= f.label :place_description %><br>
+    <%= f.text_field :place_description %>
+  </div>
+  <div class="field">
+    <%= f.label :place_weather %><br>
+    <%= f.text_area :place_weather %>
+  </div>
+  <div class="field">
+    <%= f.label :place_lightsituation %><br>
+    <%= f.text_field :place_lightsituation %>
+  </div>
+  <div class="field">
+    <%= f.label :box_name %><br>
+    <%= f.text_field :box_name %>
+  </div>
+  <div class="field">
+    <%= f.label :box_parent %><br>
+    <%= f.text_field :box_parent %>
+  </div>
+  <div class="field">
+    <%= f.label :box_type %><br>
+    <%= f.text_field :box_type %>
+  </div>
+  <div class="field">
+    <%= f.label :sample_name %><br>
+    <%= f.text_field :sample_name %>
+  </div>
+  <div class="field">
+    <%= f.label :sample_igsn %><br>
+    <%= f.text_field :sample_igsn %>
+  </div>
+  <div class="field">
+    <%= f.label :sample_labname %><br>
+    <%= f.text_field :sample_labname %>
+  </div>
+  <div class="field">
+    <%= f.label :sample_date %><br>
+<%= f.text_field :sample_date, { :prompt =>  '- required -' , size:10, class: "datepicker"}  %>
+  </div>
+   <div class="field">
+    <%= f.label :sample_depth %><br>
+    <%= f.text_field :sample_depth %>
+  </div>
+  <div class="field">
+    <%= f.label :sample_collectionmethod %><br>
+    <%= f.text_field :sample_collectionmethod %>
+  </div>
+  <div class="field">
+    <%= f.label :sample_comment %><br>
+    <%= f.text_area :sample_comment %>
+  </div>
+  <div class="field">
+    <%= f.label :sample_parent %><br>
+    <%= f.text_field :sample_parent %>
+  </div>
+  <div class="field">
+    <%= f.label :sample_material %><br>
+    <%= f.text_field :sample_material %>
+  </div>
+  <div class="field">
+    <%= f.label :sample_classification %><br>
+    <%= f.text_field :sample_classification %>
+  </div>
+  <div class="field">
+    <%= f.label :sample_container %><br>
+    <%= f.text_field :sample_container %>
+  </div>
+  <div class="field">
+    <%= f.label :sample_quantityinitial %><br>
+    <%= f.text_field :sample_quantityinitial %>
+  </div>
+  <div class="field">
+    <%= f.label :sample_unit %><br>
+    <%= f.text_field :sample_unit %>
+  </div>
+  <div class="field">
+    <%= f.label :sample_quantity %><br>
+    <%= f.text_field :sample_quantity %>
+  </div>
+  <div class="field">
+    <%= f.label :treatment_monitor1 %><br>
+    <%= f.text_field :treatment_monitor1 %>
+  </div>
+  <div class="field">
+    <%= f.label :treatment_monitor2 %><br>
+    <%= f.text_field :treatment_monitor2 %>
+  </div>
+  <div class="field">
+    <%= f.label :treatment_monitor3 %><br>
+    <%= f.text_field :treatment_monitor3 %>
+  </div>
+  <div class="field">
+    <%= f.label :treatment_preparation1 %><br>
+    <%= f.text_field :treatment_preparation1 %>
+  </div>
+  <div class="field">
+    <%= f.label :treatment_preparation2 %><br>
+    <%= f.text_field :treatment_preparation2 %>
+  </div>
+  <div class="field">
+    <%= f.label :treatment_preparation3 %><br>
+    <%= f.text_field :treatment_preparation3 %>
+  </div>
+  <div class="field">
+    <%= f.label :treatment_strategy %><br>
+    <%= f.text_field :treatment_strategy %>
+  </div>
+  <div class="field">
+    <%= f.label :treatment_analyticalmethod %><br>
+    <%= f.text_field :treatment_analyticalmethod %>
+  </div>
+  <div class="field">
+    <%= f.label :treatment_comment %><br>
+    <%= f.text_area :treatment_comment %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -5,11 +5,14 @@
         <tr>
           <th></th>
           <th>name</th>
-          <th>physical form</th>
+<!--
+	<th>physical form</th>
+-->
           <th>quantity</th>
-          <th>unit</th>
           <th></th>
-          <th>global-id</th>
+ <% if @current_user.advanced then %>  
+      <th>global-id</th>
+ <% end %>     
           <th></th>
         </tr>
       </thead>
@@ -20,12 +23,16 @@
               <td>
                 <%= check_box_tag("ids[]", stone.id, false, {id: "ids_#{stone.id}", class: "select-row"}) if can?(:update, stone) %>
               </td>
-              <td><%= link_to_if can?(:read, stone), stone.name, stone %></td>
+              <td><%= link_to_if can?(:read, stone), stone.name, stone %>
+	              </td>
+<!--      
               <td><%= stone.physical_form.try!(:name) %></td>
-              <td><%= stone.try!(:quantity) %></td>
-              <td><%= stone.try!(:quantity_unit) %></td>
+-->
+		<td><%= stone.try!(:quantity) %> <%= stone.try!(:quantity_unit) %></td>
               <td></td>
+ <% if @current_user.advanced then %>  
               <td><%= stone.try!(:global_id) %></td>
+<% end %>
               <td>
                 <%= link_to stone_daughter_path(@stone, stone) + tab_param(__FILE__), method: :delete, title: "unlink stone", data: {confirm: t("confirm.unlink")} do %>
                   <span class="glyphicon glyphicon-remove"></span>
@@ -37,47 +44,58 @@
       </tbody>
       <tfoot>
         <tr>
-          <%= form_for Stone.new, url: stone_daughters_path(@stone) do |f|%>
             <%= hidden_tabname_tag(__FILE__) %>
-            <th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th>
-            <th><%= f.text_field :name, class: "form-control input-sm" %></th>
-            <th><%= f.select :physical_form_id, PhysicalForm.pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>
-            <th><%= f.text_field :quantity, class: "form-control input-sm" %></th>
-            <th><%= f.text_field :quantity_unit, class: "form-control input-sm" %></th>
-            <th>
-              <%= f.button title:"add stone", class: "btn btn-default" do %>
-                <span class="glyphicon glyphicon-save"></span>
-              <% end %>
-            </th>
-          <% end %>
-          <%= form_tag link_by_global_id_stone_daughters_path(@stone), method: :post do %>
-            <%= hidden_tabname_tag(__FILE__) %>
-            <th>
-	      <div class="input-group">
-		<%= text_field_tag :global_id, nil, id: "daughter-global-id", class: "form-control input-sm" %>
-		<span class="input-group-addon">
-		  <%= link_to stones_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#daughter-global-id" do %>
-		  <span class="glyphicon glyphicon-search"></span>
-		  <% end %>
-		</span>
-	      </div>
-	    </th>
-            <th>
-              <%= button_tag title: "link stone by global id", class: "btn btn-default" do %>
-                <span class="glyphicon glyphicon-save"></span>
-              <% end %>
-            </th>
-          <% end %>
+            <th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th><th>Select all</th>
         </tr>
       </tfoot>
     </table>
-    <%= link_to_function "edit", "$('#stone-bundle-form').submit();", class: "btn btn-default" %>
+    
+     
+    <%= link_to_function "bundle edit", "$('#stone-bundle-form').submit();", class: "btn btn-default" %>
   </div>
   <div class="hidden" id="display-type-tex">
     <pre><code><%= @stone.to_tex %></code></pre>
   </div>
 </div>
+<% if @current_user.advanced then %>
 <div class="btn-group">
   <a href="#display-type-html" class="btn radio-button-group">html</a>
   <a href="#display-type-tex" class="btn radio-button-group">tex</a>
 </div>
+<%end %>
+<hr>
+ <div >Enter Child sample to this sample</div>	
+  <div >
+          <%= form_for @daughter, url: stone_daughters_path(@stone) do |f|%>
+		<%= render partial: "new", locals: { stone: @daughter, f: f, group_id: @daughterproperties.group_id} %>
+          <% end %>
+	  
+        </div>    
+<hr style="clear:both">
+ <div style="clear:both">Link Child sample to this sample</div>	
+	  <div >
+          <%= form_tag link_by_global_id_stone_daughters_path(@stone), method: :post do %>
+            <%= hidden_tabname_tag(__FILE__) %>
+	      <div style="float:left; margin:5x">
+			<div class="input-group">
+			<%= select_tag :global_id, options_for_select(Stone.choose_global_id(@current_user)), { include_blank: true  , id: "daughter-global-id", class: "form-control input-sm"} %>				
+			<span class="input-group-addon">
+			  <%= link_to stones_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#daughter-global-id" do %>
+			  <span class="glyphicon glyphicon-search"></span>
+			  <% end %>
+			</span>
+		      </div>
+	    </div>
+	     <div style="float:left; margin-top:0px; margin-left:5px">
+				  <div>	     
+					      <%= button_tag title: "link sample by global id", class: "btn btn-default" do %>
+						<span class="glyphicon glyphicon-save"></span>
+					      <% end %>
+				  </div>
+		      
+            </div>
+          <% end %>
+	  </div>
+	  
+    
+

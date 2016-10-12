@@ -1,0 +1,41 @@
+<%= paginate @landuses %>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th><%= Landuse.model_name.human %></th>
+    </tr>
+     </thead>
+  <tbody>
+    <% @landuses.each do |landuse| %>
+    <tr>
+      <td>
+        <%= link_to edit_landuse_path(landuse) do %>
+        <span class="glyphicon glyphicon-edit"></span>
+        <% end %>
+      </td>
+        <td><%= landuse.name %></td>
+      <td>
+        <%= link_to landuse_path(landuse), method: :delete, data: {confirm: t("confirm.delete")} do %>
+        <span class="glyphicon glyphicon-remove"></span>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+  
+    <%= form_for Landuse.new, remote: true, format: :json, html: { class: "create" } do |f| %>
+    <tr>
+      <td></td>
+      <td><%= f.text_field :name, class: "form-control input-sm" %></td>  
+      <td>
+        <%= f.button class: "btn btn-default" do %>
+        <span class="glyphicon glyphicon-save"></span>
+        <% end %>
+      </td>
+    </tr>
+    
+    <% end %>
+  </tfoot>
+</table>

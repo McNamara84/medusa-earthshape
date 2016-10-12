@@ -1,6 +1,10 @@
 <div class="row">
   <div id="show-caption" class="col-lg-12">
-    <%= @attachment_file.name_with_id %>
+    <% if  @current_user.advanced then %>
+	<%= @attachment_file.name_with_id %>
+  <% else %>
+	<%= @attachment_file.name %> 
+  <% end %>
   </div>
 </div>
 <div class="row">
@@ -35,18 +39,27 @@
     </div>
   </div>
   <div id="show-body" class="col-lg-8">
-    <% tab_info = [
-        ["at-a-glance",nil],
-        ["stone",@attachment_file.stones],
-        ["box",@attachment_file.boxes],
-        ["place",@attachment_file.places],
-        ["analysis",@attachment_file.analyses],
-        ["bib",@attachment_file.bibs],
-        ["spot",@attachment_file.spots]] %>
+    <% if @current_user.advanced then %>  
+            <% tab_info = [
+                ["at-a-glance",nil],
+                ["stone",@attachment_file.stones,"sample"],
+                ["box",@attachment_file.boxes],
+                ["place",@attachment_file.places],
+                ["analysis",@attachment_file.analyses],
+                ["bib",@attachment_file.bibs],
+                ["spot",@attachment_file.spots]] %>
+    <% else %>
+            <% tab_info = [
+                ["at-a-glance",nil],
+                ["stone",@attachment_file.stones,"sample"],
+                ["place",@attachment_file.places,"location"],
+                ["analysis",@attachment_file.analyses]] %>
+    <% end %>        
+        
     <!-- Nav tabs -->
     <ul class="nav nav-tabs">
-      <% tab_info.each do |key,array| %>
-       <li class="<%= active_if_current(key) %>" ><a href="#<%= key %>" data-toggle="tab"><%= key + data_count(array) %></a></li>
+      <% tab_info.each do |key,array,title| %>
+       <li class="<%= active_if_current(key) %>" ><a href="#<%= key %>" data-toggle="tab"><%= (title.blank? ? key : title) + data_count(array) %></a></li>
       <% end %>
 
     </ul>

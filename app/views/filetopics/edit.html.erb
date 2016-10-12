@@ -1,0 +1,11 @@
+<%= form_for @filetopic, html: {class: "col-lg-3"} do |f| %>
+  <%= error_notification(@filetopic.errors) %>
+
+ <div class="form-classification form-classification-sm">
+    <%= f.label :name, class: "small" %>
+    <%= f.text_field :name, class: "form-control input-sm" %>
+  </div>
+
+  <%= f.submit "update", class: "btn btn-sm" %>
+  <%= link_to "cancel", filetopics_path, class: "btn btn-sm" %>
+<% end %>

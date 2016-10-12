@@ -10,12 +10,13 @@ class NestedResources::PlacesController < ApplicationController
   end
   
   def create
+    place_params.delete :is_parent  
     @place = Place.new(place_params)
     @parent.places << @place if @place.save
     respond_with @place, location: adjust_url_by_requesting_tab(request.referer), action: "error"
   end
 
-  def update
+  def update	  
     @place = Place.find(params[:id])
     @parent.places << @place
     respond_with @place, location: adjust_url_by_requesting_tab(request.referer)
@@ -50,8 +51,21 @@ class NestedResources::PlacesController < ApplicationController
       :latitude,
       :longitude,
       :elevation,
+      :landuse,
+      :slope_description,
       :link_url,
       :doi,
+      :user_id,
+      :group_id,
+      :published,
+      :lightsituation,
+      :topographic_position_id,
+      :vegetation_id,
+      :landuse_id,
+      :aspect,
+      :parent_id, 
+      :parent_global_id, 
+      :is_parent,     
       record_property_attributes: [
         :global_id,
         :user_id,

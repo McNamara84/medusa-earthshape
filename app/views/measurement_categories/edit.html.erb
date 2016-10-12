@@ -9,7 +9,7 @@
 
   <div>
     <%= f.label :unit_id %>
-    <%= f.select :unit_id, Unit.all.map{|r|[raw(r.html),r.id]}, { include_blank: true }, class: "form-control input-sm" %>
+    <%= f.select :unit_id, Unit.order(:html).pluck(:html,id), { include_blank: true }, class: "form-control input-sm" %>
   </div>
 
   <div>

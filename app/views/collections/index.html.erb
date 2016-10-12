@@ -1,0 +1,152 @@
+<%= paginate @collections %>
+
+<%= link_to "New Entry", collections_path(anchor: "newentry"), class: "btn btn-default newentrybutton" %>
+
+<table class="table table-condensed table-striped">
+  <thead class="searchheader">
+    <%= search_form_for @search do |f| %>  
+    <tr>
+	    <th></th><th colspan="6"><u> Search and filter <%= Collection.model_name.human%></u></th>
+		<th></th><th></th><th></th><th></th> 
+	        <%= th_if_expand%> 
+		<%= th_if_expand%> 
+		<%= th_if_expand%> 
+		<%= th_if_expand%> 
+		<%= th_if_expand%>  
+		<%= th_if_expand%>  
+	        <%= th_if_expand%> 
+	        <%= th_if_expand%>		
+    </tr>    
+    <tr>
+      <th>Entries per page</th>
+      <th><%= sort_link @search, :name,Collection.human_attribute_name(:name) %></th>
+      <th><%= sort_link @search, :project, "Project"%></th>
+      <th><%= sort_link @search, :collectors_name, "Collector"%></th>
+      <th><%= sort_link @search, :collectors_affiliation, "Affiliation"%></th>
+      <th><%= Collection.human_attribute_name(:timeseries)  %></th>
+      <th><%= Collection.human_attribute_name(:collectionmethod_id)  %></th>     
+       <%= th_if_expand do %>
+		<%= Collection.human_attribute_name(:collection_start)%>	
+	<%end%>     
+       <%= th_if_expand do %>
+		<%= Collection.human_attribute_name(:collection_end)%>	       
+	<%end%>    
+        <%= th_if_expand do %>
+		<%= Collection.human_attribute_name(:depth_min)%>	
+	<%end%>
+        <%= th_if_expand do %>
+		<%= Collection.human_attribute_name(:depth_max)%>	
+	<%end%>     	
+      <th><%= Collection.human_attribute_name(:samplingstrategy)  %></th> 
+        <%= th_if_expand do %>
+	<%= Collection.human_attribute_name(:weather_conditions)  %>
+	<%end%>    
+        <%= th_if_expand do %>
+	<%= Collection.human_attribute_name(:comment)  %>
+	<%end%>    	
+      <%= th_if_expand do %>
+        <%= sort_link @search, :user_username, "owner" %>
+      <% end %>
+      <th><%= sort_link @search, :group_name, "group" %></th>
+      <th><%= sort_link @search, :updated_at, "updated-at" %></th>
+      <%= th_if_expand do %>
+        <%= sort_link @search, :created_at, "created-at" %>
+      <% end %>      
+      <th><%= toggle_column_link %></th>      
+    </tr>
+    <tr>
+      <th> 
+	<%= text_field_tag :per_page, (params[:per_page] || Collection.default_per_page), size: 1 %>
+       <%= f.button class: "btn btn-default" do %>
+       <span class="glyphicon glyphicon-refresh"></span>
+        <% end %> 	
+	</th>
+      <th><%= f.text_field :name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>    
+      <th><%= f.text_field :project_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
+      <th><%= f.text_field :collector_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
+      <th><%= f.text_field :affiliation_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th> 	
+ <th></th>
+ <th><%= f.text_field :collectionmethods_name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
+ <%= th_if_expand do %>
+      <%= f.text_field :stones_date_gteq, class: "form-control input-sm datepicker", placeholder: "search:", size: 15 %>
+ <% end%>
+ <%= th_if_expand do %>
+      <%= f.text_field :stones_date_lteq, class: "form-control input-sm datepicker", placeholder: "search:", size: 15 %>
+ <% end%>
+ <%= th_if_expand do %>
+      <%= f.text_field :stones_sampledepth_gteq, class: "form-control input-sm", placeholder: "search:", size: 15 %>
+ <% end%>
+ <%= th_if_expand do %>
+      <%= f.text_field :stones_sampledepth_lteq, class: "form-control input-sm", placeholder: "search:", size: 15 %>
+ <% end%>
+  <th><%= f.text_field :samplingstrategy_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
+ <%= th_if_expand do %>
+       <%= f.text_field :weather_conditions_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %>
+  <% end%>
+ <%= th_if_expand do %>
+        <%= f.text_field :comment_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %>
+  <% end%>  
+
+
+      <%= th_if_expand do %>
+        <%= f.text_field :user_username_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %>
+      <% end %>
+      <th><%= f.text_field :group_name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
+      <th>
+        <%= f.text_field :updated_at_gteq, placeholder: "from:", value: format_date(params[:q] && params[:q][:updated_at_gteq]), class: "form-control input-sm datepicker", size: 10 %>
+      </th>
+      <%= th_if_expand do %>
+        <%= f.text_field :created_at_gteq, placeholder: "from:", value: format_date(params[:q] && params[:q][:created_at_gteq]), class: "form-control input-sm datepicker", size: 10 %>
+      <% end %>      
+      <th></th>
+    </tr>    
+    <tr>
+      <th> </th>
+      		<th></th><th></th><th></th>
+      		      <%= th_if_expand %>
+		     <%= th_if_expand %>
+		     <%= th_if_expand %>
+		     <%= th_if_expand %>
+		     <%= th_if_expand %>
+		     <%= th_if_expand %>
+		     <%= th_if_expand %>	     
+		   
+      	<th></th><th></th><th></th><th></th>
+      <th></th>
+      <th>
+        <%= f.text_field :updated_at_lteq_end_of_day, placeholder: "to:", value: format_date(params[:q] && params[:q][:updated_at_lteq_end_of_day]), class: "form-control input-sm datepicker", size: 10 %>
+      </th>
+      <%= th_if_expand do %>
+        <%= f.text_field :created_at_lteq_end_of_day, placeholder: "to:", value: format_date(params[:q] && params[:q][:created_at_lteq_end_of_day]), class: "form-control input-sm datepicker", size: 10 %>
+      <% end %>   
+      <th></th>   		
+    </tr>      
+    <% end %>
+     </thead>
+  <tbody>
+	    <%= form_tag bundle_edit_collections_path, id: "bundle-form" do %>
+	    <%= render partial: :collection, collection: @collections, locals: { checked: false } %>
+	    <% end %>
+  </tbody>
+  <tfoot>
+      <tr><th><%= check_box_tag nil, nil, false, class: "select-row-all" %> Select all </th></tr>
+      <tr><th><%= link_to_function  "bundle edit", "$('#bundle-form').submit();", class: "btn btn-default" %></th></tr>  
+
+  </tfoot>
+</table>
+
+<hr>
+<div id="newentry">
+   <u>Create <%= Collection.model_name.human%> here:</u>
+   <% collection=Collection.new %>
+   <%= form_for collection, remote: true, format: :json, html: { class: "create" } do |f| %>
+	<%= render partial: "new", locals: { collection: collection, f:f, group_id: collection.group_id  } %>
+   <% end %>
+</div>
+
+
+<%= javascript_tag do %>
+  $(document).on("succeed.ajaxForm", "#new_collection", function() {
+    $("#collection_search").submit();
+  });
+<% end %>

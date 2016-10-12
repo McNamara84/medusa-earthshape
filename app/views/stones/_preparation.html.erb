@@ -1,0 +1,53 @@
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th>Preparation type</th>
+      <th>Info</th>      
+    </tr>
+  </thead>
+  <tbody>
+
+
+      <% @stone.preparations.each do |preparation| %>
+        <tr>
+	<td><%=preparation.preparation_type.try!(:name)%></td>	
+	<td><%=preparation.info%></td>
+
+<td>	
+<% if can? :update, @stone %>
+
+    <%= link_to stone_preparation_path(@stone, preparation) + tab_param(__FILE__), method: :delete, title: "unlink preparation", data: {confirm: t("confirm.unlink")} do %>
+    <span class="glyphicon glyphicon-remove"></span>
+    <% end %>    
+<% end %>
+
+</td>
+
+        </tr>
+      <% end %>
+
+  </tbody>
+  
+  
+ <tfoot>
+<% if can? :update, @stone %>
+
+    <tr>
+      <%= form_for Preparation.new, url: stone_preparations_path(@stone) do |f|%>
+        <%= hidden_tabname_tag(__FILE__) %>
+
+        <th><%= f.select :preparation_type_id, PreparationForClassification.joins(:preparation_type).where("classification_id=? OR classification_id=?",@stone.classification_id,@stone.classification.try!(:parent_id)).order("preparation_types.name").pluck(:name, :preparation_type_id ), { include_blank: true }, class: "form-control input-sm" %></th>
+        <th><%= f.text_field :info, class: "form-control input-sm" %></th>
+	<th>
+          <%= f.button title:"add analysis file",class: "btn btn-default" do %>
+            <span class="glyphicon glyphicon-save"></span>
+          <% end %>
+        </th>
+        <th></th>
+      <% end %>
+     </tr>
+  </tfoot>  
+<% end %>
+</table>
+
+

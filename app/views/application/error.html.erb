@@ -3,8 +3,8 @@
 <ul>
 <% [@stone,@box,@analysis,@place,@bib,@attachment_file,@chemistry,@spot].each do |record| %>
   <% if record %>
-    <% record.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
+    <% record.errors.each do |key,msg| %>
+      <li><%= raw(msg) %></li>
     <% end %>
   <% end %>
 <% end %>

@@ -1,0 +1,13 @@
+<%= form_for @topographic_position, html: {class: "col-lg-3"} do |f| %>
+  <%= error_notification(@topographic_position.errors) %>
+
+  <div class="form-classification form-classification-sm">
+    <%= f.label :name, class: "small" %>
+    <%= f.text_field :name, class: "form-control input-sm" %>
+  </div>
+  <%= f.submit "update", class: "btn btn-sm" %>
+  <%= link_to "cancel", topographic_positions_path, class: "btn btn-sm" %>
+<% end %>
+
+
+    

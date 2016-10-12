@@ -7,6 +7,7 @@
       <%= link_to(image_tag("icon_pdf_1.png", size: "24x24"), download_attachment_file_path(attachment_file.id), id: "file-#{attachment_file.id}-button") %>
     <% end %>
   </td>
+  <td><%= attachment_file.filetopic.try!(:name) %></td>  
   <td><%= attachment_file.data_content_type %></td>
   <td><%= attachment_file.data_file_size %></td>
   <%= td_if_expand attachment_file.user.try!(:username) %>

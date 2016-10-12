@@ -1,6 +1,10 @@
 <div class="row">
   <div id="show-caption" class="col-lg-12">
-    <%= @box.name_with_id %>
+  <% if  @current_user.advanced then %>
+	<%= @box.name_with_id %>
+  <% else %>
+	<%= @box.name %> 
+  <% end %>
   </div>
 </div>
 <div class="row">
@@ -42,13 +46,23 @@
 
   <div id="show-body" class="col-lg-8">
     <%= @box.box_path %>
-    <% tab_info = [
-        ["at-a-glance",nil],
-        ["stone",@box.stones],
-        ["daughter",@box.children,"box"],
-        ["analysis",@box.analyses],
-        ["bib",@box.bibs],
-        ["file",@box.attachment_files]] %>
+    <% if @current_user.advanced then %>       
+           <% tab_info = [
+                ["at-a-glance",nil],
+                ["stone",@box.stones,"sample"],
+                ["daughter",@box.children,"box"],
+                ["analysis",@box.analyses],
+                ["bib",@box.bibs],
+                ["file",@box.attachment_files]] %>
+    <% else %>   		
+         <% tab_info = [
+                ["at-a-glance",nil],
+                ["stone",@box.stones,"sample"],
+                ["daughter",@box.children,"box"],
+                ["bib",@box.bibs],
+                ["file",@box.attachment_files]] %>  
+    <% end %>       
+    
     <!-- Nav tabs -->
     <ul class="nav nav-tabs">
       <% tab_info.each do |key,array,title| %>

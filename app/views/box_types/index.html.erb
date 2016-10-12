@@ -1,3 +1,9 @@
+<div>
+<%= link_to_unless_current BoxType.model_name.human.downcase,box_types_path %>    | 
+<%= link_to_unless_current StonecontainerType.model_name.human.downcase,stonecontainer_types_path %>
+</div>
+<br><br>
+
 <%= paginate @box_types %>
 <table class="table table-condensed table-striped">
   <thead>

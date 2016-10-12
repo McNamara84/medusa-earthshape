@@ -1,0 +1,63 @@
+<ul>
+  <li>name: <%= @collection.name %></li>
+  <li>Sampling date (start/end): <%= @collection.stones.minimum("date").to_s+" / "+@collection.stones.maximum("date").to_s %></li>
+  <li>Sampling depth (from/to): <%= @collection.stones.minimum("sampledepth").to_s+"m / "+@collection.stones.maximum("sampledepth").to_s+"m" %></li>
+  <li>Collectors: <%  @collection.collectors.select("collectors.name").distinct.each do  |t|%> 
+		<%= t.try!(:name)%>			
+		<% end %></li>  
+  <li>Affiliations: <%  @collection.collectors.select(:affiliation).distinct.each do  |t|%> 
+		<%= t.try!(:affiliation)%>			
+		<% end %></li>
+
+  <% @collection.places.order(:name).uniq.map do |place| %>
+	<li>Sampling Location <%= link_to_if(can?(:read, place), place.name, url_for(place)) %>: 
+
+ <div>
+Samples: 
+                        <table class="table table-condensed table-striped">
+                         <thead>
+                        <tr><th>Sample</th><th>Material</th><th>Classification</th><th>Quantity</th><th>Depth</th><th>Date</th></tr>
+                        </thead>
+                        <tbody>
+                          <% Stone.where(collection_id: @collection.id, place_id: place.id).order(:name).uniq.map do |stone| %>
+                          <tr><td> <%= link_to_if(can?(:read, stone), stone.name, url_for(stone)) %> </td>
+                          <td> <%= stone.classification.get_material %> </td>
+                          <td> <%= stone.classification.try!(:name) %> </td>
+
+                          <td>
+
+<% if stone.quantity_initial.blank? %>
+                         <div> initial:</div>
+<% else %>
+                         <div> initial:&nbsp;<%= stone.quantity_initial %>&nbsp;<%= stone.quantityunit.try!(:name) %></div>
+<% end %>
+
+<% if stone.quantity.blank? %>
+                          <div> current:</div>
+<% else %>
+                          <div> current:&nbsp;<%= stone.quantity %>&nbsp;<%= stone.quantityunit.try!(:name) %></div>
+<% end %>
+                        </td>
+                          <td> <%= stone.sampledepth %>m </td>
+                          <td> <%= stone.date %> </td>
+                          </tr>
+                        <% end %>
+                        </tbody>
+                        </table>
+			
+			
+			
+</div>
+	</li>
+
+   <% end %>		
+  
+
+
+  
+
+  <li>modified at <%= difference_from_now(@collection.updated_at) -%></li>
+
+
+
+</ul>

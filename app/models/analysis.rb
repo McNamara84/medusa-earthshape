@@ -16,6 +16,7 @@ class Analysis < ActiveRecord::Base
   validates :device, existence: true, allow_nil: true
   validates :technique, existence: true, allow_nil: true
   validates :name, presence: true, length: { maximum: 255 }
+  validates :operator, presence: true, length: { maximum: 255 }
 
   MeasurementCategory.all.each do |mc|
     comma mc.name.to_sym do

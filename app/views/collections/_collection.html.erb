@@ -1,0 +1,28 @@
+    <tr>
+       <td><%= check_box_tag("ids[]", collection.id, checked, id: "ids_#{collection.id}", class: "select-row") if can?(:update, collection) %></td>
+        <td><%= link_to collection.name, collection%></td><td><%= collection.project %></td>
+        <td><%  collection.collectors.select("collectors.name").distinct.each do  |t|%> 
+		<%= t.try!(:name)%>			
+		<% end %></td>
+        <td><%  collection.collectors.select(:affiliation).distinct.each do  |t| %> 
+		<%= t.try!(:affiliation)%>			
+		<% end %>		
+		</td>
+        <td><%= collection.timeseries? ? "Yes" : "No" %></td>
+        <td><%  collection.collectionmethods.select("collectionmethods.name").distinct.each do  |t| %> 
+		<%=t.try!(:name)  %>
+		<% end %>
+	</td>
+	<%= td_if_expand collection.stones.minimum("date") %>
+	<%= td_if_expand collection.stones.maximum("date") %>
+	<%= td_if_expand collection.stones.minimum("sampledepth") %>
+	<%= td_if_expand collection.stones.maximum("sampledepth") %>	
+        <td><%= collection.samplingstrategy %></td>
+	<%= td_if_expand collection.weather_conditions %>
+	<%= td_if_expand collection.comment %>	
+	<%= td_if_expand collection.user.try!(:username) %>
+	<td><%= collection.group.try!(:name) %></td>
+       <td><%= difference_from_now(collection.updated_at) %></td>
+       <%= td_if_expand difference_from_now(collection.created_at) %>	
+  </tr>
+    

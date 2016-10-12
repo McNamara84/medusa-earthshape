@@ -20,9 +20,48 @@ class BibsController < ApplicationController
   end
 
   def create
-    @bib = Bib.new(bib_params)
-    @bib.save
-    respond_with @bib
+
+
+    paper=nil
+    if !(bib_params[:doi].empty?)
+	paper=CrossrefHelper::Metadata.new(:pid=>"accountname", :doi=>bib_params[:doi])
+    end
+   
+    if (!paper.nil? && paper.result?)
+	paper.authors.each do |x|
+		name=x[:surname]+", "+x[:given_name]
+		author=nil
+		begin
+			author = Author.where(name: name).take!
+		rescue ActiveRecord::RecordNotFound
+			author=Author.new
+			author.name=name
+			author.save		
+		end
+		bib_params[:author_ids].push author.id
+	end
+	@bib = Bib.new(bib_params)
+	@bib.name=paper.title
+	@bib.year=paper.published[:year]
+	if (!paper.journal[:month].nil?)	
+		@bib.month=paper.published[:month]
+	end
+	@bib.journal=paper.journal[:full_title]	
+	@bib.link_url="http://doi.org/"+bib_params[:doi]
+	if (!paper.journal[:volume].nil?)
+		@bib.volume=paper.journal[:volume]
+	end
+	if (!paper.journal[:first_page].nil? && !paper.journal[:last_page].nil?)
+		@bib.pages=paper.journal[:first_page]+"-"+paper.journal[:last_page]
+	end
+	@bib.save
+	respond_with @bib	
+    else
+	@bib = Bib.new(bib_params)	
+	@bib.save
+	respond_with @bib	
+    end   
+  
   end
 
   def update

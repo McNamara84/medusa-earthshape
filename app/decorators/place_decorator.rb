@@ -4,27 +4,55 @@ class PlaceDecorator < Draper::Decorator
   delegate :as_json
 
   def name_with_id
-    h.content_tag(:span, nil, class: "glyphicon glyphicon-globe") + " #{name} < #{global_id} >"
+		h.content_tag(:span, nil, class: "glyphicon glyphicon-globe") + " #{name} < #{global_id} >"
   end
 
-  def latitude_to_text
-    return "" if latitude.blank?
-    if latitude < 0
-      la = "%.4f S" % (latitude * -1)
+  def latitude_to_text   
+    if is_parent
+	    minlat=children.minimum("latitude")
+	    maxlat=children.maximum("latitude")	
+	    if minlat.present? and maxlat.present?
+		return printlat(minlat)+" to "+printlat(maxlat)
+	    else
+		return ""
+	    end
     else
-      la = "%.4f N" % latitude
+	    return printlat(latitude)
     end
-    la
   end
+  
+  def printlat(lat)
+   	    return "" if lat.blank?
+	    if lat < 0
+	      la = "%.4f South" % lat
+	    else
+	      la = "%.4f North" % lat
+	    end
+	    la
+  end  
 
   def longitude_to_text
-    return "" if longitude.blank?
-    if longitude < 0
-      lo = "%.4f W" % (longitude * -1)
+    if is_parent
+	    minlon=children.minimum("longitude")
+	    maxlon=children.maximum("longitude")	
+	    if minlon.present? and maxlon.present?
+		return printlon(minlon)+" to "+printlon(maxlon)
+	    else
+		return ""
+	    end
     else
-      lo = "%.4f E" % longitude.to_s
+	    return printlon(longitude)
     end
-    lo
+  end
+  
+  def printlon(lon)
+     return "" if lon.blank?
+    if lon < 0
+      lo = "%.4f West" % lon
+    else
+      lo = "%.4f East" % lon.to_s
+    end
+    lo 
   end
 
   def elevation_to_text
