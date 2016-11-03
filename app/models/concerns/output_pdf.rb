@@ -49,7 +49,8 @@ module OutputPdf
   end
 
   def igsn_qr_image
-    igsn_qr_data = Barby::QrCode.new(igsn+" | "+collection.collector+" | "+name).to_png(xdim: QRCODE_DIM, ydim: QRCODE_DIM)
+    collectornames=collectors.pluck(:name).uniq.join(", ")
+    igsn_qr_data = Barby::QrCode.new(igsn+" | "+collectornames+" | "+name).to_png(xdim: QRCODE_DIM, ydim: QRCODE_DIM)
     StringIO.new(igsn_qr_data).set_encoding("UTF-8")
   end
 
