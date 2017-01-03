@@ -9,7 +9,7 @@ class StagingsController < ApplicationController
     @stones=Hash.new
     @collections=Hash.new
     @places=Hash.new
-    @preparations=Hash.new    
+    @preparations=Hash.new
     
     Staging.all.each do |s|
        if s.writable?(current_user)
@@ -21,7 +21,7 @@ class StagingsController < ApplicationController
 	    box=findbox(staging)
 	    place=findplace(staging)
 	    collection=findcollection(staging)
-	    stone=findstone(staging, box[:id], place[:id], collection[:id])
+	    stone=findstone(staging, getboxbyname(staging), getlocationbyname(staging), getcampaignbyname(staging))	    
 #	    preparations=findpreparation(staging)
 	    @boxes[staging.id]=box
 	    @places[staging.id]=place
@@ -39,10 +39,22 @@ class StagingsController < ApplicationController
 	return [ret1, ret2, ret3]
   end
   
+  def getboxbyname(staging)
+          Box.where("name ILIKE ?","#{staging.sample_storageroom }%").take.try!(:id).try(:to_i)
+  end
+  
+  def getlocationbyname(staging)
+          Place.where("is_parent IS NOT TRUE AND name ILIKE ?","#{staging.sample_location }%").take.try!(:id).try(:to_i)
+  end
+
+  def getcampaignbyname(staging)
+          Collection.where("name ILIKE ?","#{staging.sample_campaign}%").take.try!(:id).try(:to_i)
+  end  
+  
   def findbox (staging)
 	 #search for box
 	type=BoxType.where("name ILIKE ?","#{staging.box_type }%").take.try!(:id).try(:to_i)
-	groupid=Group.where("name ILIKE ?","#{staging.box_group }%").take.try!(:id).try(:to_i)
+	groupid=Group.where("name = ?","#{staging.box_group}").take.try!(:id).try(:to_i)
 	parent=nil
 	if staging.box_parent.present?
 	        parent=Box.where("name ILIKE ?","#{staging.box_parent }%").take.try!(:id).try(:to_i)
@@ -59,12 +71,12 @@ class StagingsController < ApplicationController
 	landuse=Landuse.where("name ILIKE ?","#{staging.place_landuse }%").take.try!(:id).try(:to_i)
 	topographicpositon=TopographicPosition.where("name ILIKE ?","#{staging.place_topographic_positon }%").take.try!(:id).try(:to_i)	  
 	parent_global_id=Place.where("is_parent IS TRUE AND places.name ILIKE ?","#{staging.place_parent }%").joins(:record_property).take.try!(:global_id)
-
+	groupid=Group.where("name = ?","#{staging.place_group}").take.try!(:id).try(:to_i)
 
 	
 	ret={:name => staging.place_name, :parent_global_id=>parent_global_id, :longitude => staging.place_longitude, :latitude => staging.place_latitude, :elevation => staging.place_elevation,:topographic_position_id => topographicpositon,
 		:slope_description => staging.place_slopedescription, :aspect => staging.place_aspect, :vegetation_id => vegetation, :landuse_id => landuse, :description => staging.place_description, 
-		:lightsituation => staging.place_lightsituation}
+		:lightsituation => staging.place_lightsituation, :place_group_id =>groupid}
 
 	
 	return ret		
@@ -72,10 +84,10 @@ class StagingsController < ApplicationController
 
   def findcollection (staging)
 	  
-
+	groupid=Group.where("name = ?","#{staging.collection_group}").take.try!(:id).try(:to_i)
 	
 	ret={:name => staging.collection_name, :project => staging.collection_project, :timeseries =>staging.collection_timeseries, 
-		  :comment => staging.collection_comment, :samplingstrategy =>staging.collection_strategy, :weather_conditions => staging.collection_weather}
+		  :comment => staging.collection_comment, :samplingstrategy =>staging.collection_strategy, :weather_conditions => staging.collection_weather, :collection_group_id => groupid}
 
 
 	
@@ -96,7 +108,7 @@ def findstone (staging, box_id, place_id, collection_id)
 
 	stonecontainer_type_id=StonecontainerType.where("name ILIKE ?","#{staging.sample_container }%").take.try!(:id).try(:to_i)
 	
-
+	groupid=Group.where("name = ?","#{staging.sample_group}").take.try!(:id).try(:to_i)
 	
 	collectionmethod=Collectionmethod.where("name ILIKE ?","#{staging.sample_collectionmethod }%").take.try!(:id).try(:to_i)	
 	
@@ -109,7 +121,7 @@ def findstone (staging, box_id, place_id, collection_id)
         
 	ret={:name => staging.sample_name, :parent_id => parent_id, :igsn => staging.sample_igsn, :labname => staging.sample_labname, :date => staging.sample_date, :sampledepth => staging.sample_depth, :description => staging.sample_comment,
 		:material_id => material_id,  :classification_id => classification_id, :stonecontainer_type_id => stonecontainer_type_id, :quantity_initial => staging.sample_quantityinitial, :quantity_unit => staging.sample_unit, :quantity => staging.sample_quantity,  :box_id => box_id,
-		:place_id => place_id, :collection_id => collection_id, :collectionmethod_id => collectionmethod, :collector=>staging.sample_collector, :affiliation=>staging.sample_affiliation}
+		:place_id => place_id, :collection_id => collection_id, :collectionmethod_id => collectionmethod, :collector=>staging.sample_collector, :affiliation=>staging.sample_affiliation, :stone_group_id=>groupid}
 
 		
 		

@@ -1,5 +1,5 @@
 <%= form_for @stone, remote: true, format: :json, html: { class: "update", role: "form" } do |f| %>
-      <%= render partial: "new", locals: { stone: @stone, f: f, group_id: @stone.group_id} %>
+      <%= render partial: "new", locals: { stone: @stone, f: f, group_id: @stone.group_id, editview: true} %>
 <% end %>
 
 <%= javascript_tag do %>

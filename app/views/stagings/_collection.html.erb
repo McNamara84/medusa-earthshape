@@ -16,6 +16,8 @@
 			 :comment=>collectionhash[:comment], :samplingstrategy =>collectionhash[:samplingstrategy], :weather_conditions =>collectionhash[:weather_conditions]
 			})
 		end	
+		
+		group_id = collectionhash[:collection_group_id]
 	       %>
 	       
 		    <%=   f.fields_for :collection_create_attributes, collection do |r| %>
@@ -35,7 +37,7 @@
 					  <%= r.fields_for :record_property_attributes do |g| %>
 						<label class="small">Group</label>
 						<div >
-						 <%= g.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %>
+						 <%= g.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { selected:group_id, include_blank: true }, class: "form-control input-sm" %>
 						<%= g.hidden_field :user_id ,value: @current_user.id %>	
 			                            <%= g.hidden_field :guest_readable , value: "true" %>										
 						  </div>

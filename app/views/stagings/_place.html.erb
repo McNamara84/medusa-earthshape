@@ -18,6 +18,7 @@
                 else
                         place=Place.new();
 		end	
+		group_id = placehash[:place_group_id]
 	       %>
 	       
 	
@@ -50,7 +51,7 @@
 					  <%= r.fields_for :record_property_attributes do |g| %>
 						<label class="small">Group</label>
 						<div >
-						 <%= g.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %>
+						 <%= g.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { selected: group_id, include_blank: true }, class: "form-control input-sm" %>
 						<%= g.hidden_field :user_id ,value: @current_user.id %>
    		                                <%= r.hidden_field :guest_readable , value: "true" %>						
 						  </div>

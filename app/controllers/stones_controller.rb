@@ -67,7 +67,7 @@ class StonesController < ApplicationController
     igsn=IgsnHelper::Igsn.new(:user =>"user", :password=>"secret", :endpoint=>'https://doidb.wdc-terra.org/igsn')
     stone=Stone.find(params[:id])
     
-    igsn.mint(@stone.igsn,"http://url?igsn="+@stone.igsn.sub('10273/TEST/',''))    
+    igsn.mint(@stone.igsn,"http://url?igsn="+@stone.igsn.sub('10273/TEST/',''))
     igsn.upload_metadata(genmetadata)
 
     redirect_to stone_url(@stone)	  
@@ -84,7 +84,7 @@ class StonesController < ApplicationController
 		    stone.save
 	    end
 	    report= Stone.find(params[:id]).build_igsn_card
-	    send_data(report.generate, filename: "stone.pdf", type: "application/pdf")
+	    send_data(report.generate, filename: "sample.pdf", type: "application/pdf")
     else
 	    sample_owner_without_igsn_prefix
     end
@@ -108,17 +108,17 @@ class StonesController < ApplicationController
   def download_bundle_card
     method = (params[:a4] == "true") ? :build_a_four : :build_cards
     report = Stone.send(method, @stones)
-    send_data(report.generate, filename: "stones.pdf", type: "application/pdf")
+    send_data(report.generate, filename: "samples.pdf", type: "application/pdf")
   end
 
   def download_label
     stone = Stone.find(params[:id])
-    send_data(stone.build_label, filename: "stone_#{stone.id}.csv", type: "text/csv")
+    send_data(stone.build_label, filename: "sample_#{stone.name}.csv", type: "text/csv")
   end
 
   def download_bundle_label
     label = Stone.build_bundle_label(@stones)
-    send_data(label, filename: "stones.csv", type: "text/csv")
+    send_data(label, filename: "samples.csv", type: "text/csv")
   end
 
   private

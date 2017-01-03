@@ -40,7 +40,7 @@
 	  </div> 
 
 </fieldset>
-
+<% if defined?(editview).nil? %>
 <fieldset class="stonefieldset">
 <legend>Metadata Access</legend>
 
@@ -55,6 +55,7 @@
 		  <% end %>
 	</div>	
 </fieldset>
+<% end %>
 
 <div style="float:left; margin:10px">	
   	  <div class="form-group form-group-sm">

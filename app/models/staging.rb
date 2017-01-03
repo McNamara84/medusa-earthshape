@@ -34,21 +34,26 @@ class Staging < ActiveRecord::Base
         pass=0
         table.each do |row|
                 pass=pass+1
-                if pass < 3
+                if pass == 1
                         collection_name=row[0]
                         delcount=delcount+1
                         if collection_name.present? and collection_name.downcase=="campaign"
                                 validheader=true
                         end   
                 end
+                if pass == 2
+                        collection_name=row[0]
+                        if collection_name.present? and collection_name.downcase=="campaign"
+                                delcount=delcount+1
+                                validheader=true
+                        end
+                end
+
         end
                         
         if validheader
                 table.each_with_index do |row,index|
                 
-                logger.info validheader
-                logger.info delcount
-                logger.info index
                 
                      if index >= delcount
                   

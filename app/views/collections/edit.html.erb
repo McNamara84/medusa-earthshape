@@ -1,5 +1,5 @@
 <%= form_for @collection, remote: true, format: :json, html: { class: "update", role: "form" } do |f| %>
-      <%= render partial: "new", locals: { collection: @collection, f: f, group_id: @collection.group_id} %>
+      <%= render partial: "new", locals: { collection: @collection, f: f, group_id: @collection.group_id, editview: true} %>
 <% end %>
 
 

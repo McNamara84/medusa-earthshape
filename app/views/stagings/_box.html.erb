@@ -12,6 +12,9 @@
 		else
 			box=Box.new({:parent_id => boxhash[:parent_id], :box_type_id =>boxhash[:box_type_id], :name => boxhash[:name]})
 		end	
+		
+		group_id = boxhash[:box_group_id]
+
 	       %> 
 	            
 		    <%=   f.fields_for :box_create_attributes, box  do |r| %>
@@ -26,7 +29,7 @@
 						  <%= r.fields_for :record_property_attributes do |g| %>
 							<label class="small">Group</label>
 							<div >
-							 <%= g.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), {  include_blank: true }, class: "form-control input-sm" %>
+							 <%= g.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { selected: group_id, include_blank: true }, class: "form-control input-sm" %>
 							<%= g.hidden_field :user_id ,value: @current_user.id %>
 			                                <%= g.hidden_field :guest_readable , value: "true" %>							
 							  </div>
