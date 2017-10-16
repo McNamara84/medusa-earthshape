@@ -4,7 +4,7 @@ class BoxDecorator < Draper::Decorator
   delegate :as_json
   
   def name_with_id
-    h.content_tag(:span, nil, class: "glyphicon glyphicon-folder-close") + " #{name} < #{global_id} >"
+	h.content_tag(:span, nil, class: "glyphicon glyphicon-folder-close") + " #{name} < #{global_id} >"	
   end
 
   def primary_picture(width: 250, height: 250)

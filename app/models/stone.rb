@@ -82,12 +82,27 @@ class Stone < ActiveRecord::Base
   end
   
   def csvvalues
+  
+
         csv = [collection.try(:name), collection.project, collection.samplingstrategy, collection.weather_conditions, collection.timeseries, collection.comment, collection.group.try(:name)]
         csv = csv + [place.is_parent, place.try(:name), place.parent.try(:name), place.latitude, place.longitude, place.elevation, place.topographic_position.try(:name), place.vegetation.try(:name), place.landuse.try(:name), place.lightsituation, place.slope_description, place.aspect, place.description, place.group.try(:name) ]
         csv = csv + [box.try(:name), box.try(:box_type).try(:name), box.parent.try(:name), box.group.try(:name)]
         csv = csv + [name, parent.try(:name), igsn, collectionmethod.try(:name), classification.get_material, classification.try(:name), place.try(:name), collection.try(:name), sampledepth, date, quantityunit.try(:name), quantity_initial, quantity, labname, box.try(:name), stonecontainer_type.try(:name), description, group.try(:name)]
         csv = csv + [collectors.select(:name).distinct.map{|c| c.try(:name)}.join(","), collectors.select(:affiliation).map{|c| c.try(:affiliation)}.join(",")]
-        csv  
+        csv
+  
+  #                            :collection_name => row[0], :collection_project=> row[1], :collection_strategy => row[2], :collection_weather => row[3], :collection_timeseries => row[4], 
+   #                           :collection_comment => row[5], :collection_group => row[6], :place_is_parent => row[7], :place_name => row[8], :place_parent => row[9], 
+    #                          :place_latitude => row[10], :place_longitude => row[11],  :place_elevation => row[12], :place_topographic_positon => row[13], :place_vegetation => row[14], 
+     #                         :place_landuse => row[15], :place_lightsituation => row[16], :place_slopedescription => row[17], :place_aspect => row[18],  :place_description => row[19], 
+      #                        :place_group => row[20], :box_name => row[21], :box_type => row[22], :box_parent => row[23],  :box_group => row[24], 
+       #                       :sample_name => row[25], :sample_parent => row[26], :sample_igsn => row[27], :sample_collectionmethod => row[28], :sample_material => row[29], 
+        #                      :sample_classification => row[30], :sample_location => row[31], :sample_campaign => row[32], :sample_depth => row[33], :sample_date => row[34], 
+         #                     :sample_unit => row[35], :sample_quantityinitial => row[36], :sample_quantity => row[37], :sample_labname => row[38], :sample_storageroom => row[39], 
+          #                    :sample_container => row[40], :sample_comment => row[41], :sample_group => row[42], :sample_collector => row[43], :sample_affiliation => row[44], 
+           #                   :treatment_monitor1 => row[45], :treatment_monitor2 => row[46], :treatment_monitor3 => row[47], :treatment_preparation1 => row[48], :treatment_preparation2 => row[49], 
+            #                  :treatment_preparation3 => row[50], :treatment_strategy => row[51], :treatment_analyticalmethod => row[52], :treatment_comment => row[53]
+  
   end
 
   private

@@ -4,8 +4,8 @@ class StoneDecorator < Draper::Decorator
   delegate :as_json  
 
   def name_with_id
-    h.content_tag(:span, nil, class: "glyphicon glyphicon-cloud") + " #{name} < #{global_id} >"
-  end
+        h.content_tag(:span, nil, class: "glyphicon glyphicon-cloud") + " #{name} < #{global_id} >" 
+end
 
   def path
     nodes = []

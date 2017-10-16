@@ -9,7 +9,7 @@ class AnalysisDecorator < Draper::Decorator
   end
 
   def name_with_id
-    h.content_tag(:span, nil, class: "glyphicon glyphicon-stats") + " #{name} < #{global_id} >"
-  end
-
+		h.content_tag(:span, nil, class: "glyphicon glyphicon-stats") + " #{name} < #{global_id} >"
+		end
+		
 end
