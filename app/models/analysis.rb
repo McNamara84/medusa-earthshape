@@ -8,11 +8,12 @@ class Analysis < ActiveRecord::Base
   has_many :chemistries
   has_many :referrings, as: :referable, dependent: :destroy
   has_many :bibs, through: :referrings
-  belongs_to :stone
+  has_many :analysis_stones
+  has_many :stones, through: :analysis_stones
   belongs_to :device
   belongs_to :technique
 
-  validates :stone, existence: true, allow_nil: true
+#  validates :stones, existence: true, allow_nil: true
   validates :device, existence: true, allow_nil: true
   validates :technique, existence: true, allow_nil: true
   validates :name, presence: true, length: { maximum: 255 }
@@ -36,11 +37,14 @@ class Analysis < ActiveRecord::Base
   end
 
   def stone_global_id
-    stone.try!(:global_id)
+     nil
   end
 
   def stone_global_id=(global_id)
-    self.stone = Stone.joins(:record_property).where(record_properties: {global_id: global_id}).first
+    begin
+      self.stones << Stone.joins(:record_property).where(record_properties: {global_id: global_id}).first
+    rescue
+    end
   end
 
   def device_name=(name)
