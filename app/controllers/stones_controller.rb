@@ -64,14 +64,56 @@ class StonesController < ApplicationController
   end
 
   def igsn_register
-    igsn=IgsnHelper::Igsn.new(:user =>"user", :password=>"secret", :endpoint=>'https://doidb.wdc-terra.org/igsn')
-    stone=Stone.find(params[:id])
-    
-    igsn.mint(@stone.igsn,"http://url?igsn="+@stone.igsn.sub('10273/TEST/',''))
-    igsn.upload_metadata(genmetadata)
+
+    if current_user.admin?
+        igsn=IgsnHelper::Igsn.new(:user =>"user", :password=>"secret", :endpoint=>'https://doidb.wdc-terra.org/igsnaa')
+        stone=Stone.find(params[:id])
+
+	igsnparents= Array.new
+
+	begin 
+	  igsnparents << {stone: stone, igsn: stone.igsn, regmetadata: genregmetadata(stone), metadata: genmetadata(stone)}
+	  stone=stone.parent
+	end while stone
+
+	igsnsample=igsnparents.shift
+
+	#register parents
+	igsnparents.reverse_each do |stone| 
+	#send_data(metadata, filename: "igsn.xml", type: "text/xml")	
+		begin
+			logger.info "Looking up IGSN "+stone[:igsn]+"..."
+			igsn.resolve(stone[:igsn])
+			logger.info "...found "+stone[:igsn]
+		rescue  RestClient::ResourceNotFound => err
+			logger.info "Registering parent "+stone[:igsn]
+			igsn.mint(stone[:igsn],"http://dataservices.gfz-potsdam.de/igsn/esg/index.php?igsn="+stone[:igsn])
+			igsn.upload_regmetadata(stone[:regmetadata])
+			igsn.upload_metadata(stone[:igsn],stone[:metadata])
+		end
+	end
+
+	#register requested sample
+	logger.info "Registering "+igsnsample[:igsn]
+#	logger.info "Registering"+igsnsample[:regmetadata]
+#	logger.info "Registering"+igsnsample[:metadata]
+	igsn.mint(igsnsample[:igsn],"http://dataservices.gfz-potsdam.de/igsn/esg/index.php?igsn="+igsnsample[:igsn])
+
+        begin
+                igsn.upload_regmetadata(igsnsample[:regmetadata])
+                igsn.upload_metadata(igsnsample[:igsn],igsnsample[:metadata])
+        rescue
+                igsn.upload_metadata(igsnsample[:igsn],igsnsample[:metadata])
+                igsn.upload_regmetadata(igsnsample[:regmetadata])
+        end
+
+
+        solr=SolrHelper::Solr.new(:user=>"user",:password=>"secret")
+        solr.deltaupdate
+    end
 
     redirect_to stone_url(@stone)	  
-   end
+  end
 
   def download_card
     stone = Stone.find(params[:id])
@@ -106,7 +148,19 @@ class StonesController < ApplicationController
 
 
   def download_bundle_card
-    method = (params[:a4] == "true") ? :build_a_four : :build_cards
+  
+    @stones.each do |stone|
+        if stone.user.prefix.present?    
+	    if stone.igsn.blank? 
+		    stone.create_igsn(stone.user.prefix, stone) 
+		    stone.save
+	    end
+         else
+	    sample_owner_without_igsn_prefix
+        end
+    end
+    
+    method = (params[:a4] == "true") ? :build_igsn_a_four : :build_igsn_cards
     report = Stone.send(method, @stones)
     send_data(report.generate, filename: "samples.pdf", type: "application/pdf")
   end
@@ -141,6 +195,8 @@ class StonesController < ApplicationController
       :quantity, 
       :quantityunit_id,
       :tag_list,
+      :analysis_global_id,
+      :attachment_file_global_id,
       :parent_global_id,
       :parent_id,
       :box_global_id,
@@ -188,27 +244,74 @@ class StonesController < ApplicationController
     @stones = Stone.where(id: params[:ids])
   end
 
-def genmetadata
+def genregmetadata(stone)
+
+relatedidentifiers=''
+
+if stone.parent && stone.parent.igsn
+  relatedidentifiers='<relatedResourceIdentifiers><relatedIdentifier relatedIdentifierType="handle" relationType="IsPartOf">10273/'+stone.parent.igsn+'</relatedIdentifier></relatedResourceIdentifiers>'
+end
+
+return '<?xml version="1.0" encoding="UTF-8"?>
+<sample xmlns="http://igsn.org/schema/kernel-v.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://igsn.org/schema/kernel-v.1.0 http://doidb.wdc-terra.org/igsn/schemas/igsn.org/schema/1.0/igsn.xsd" >
+<sampleNumber identifierType="igsn" >10273/'+stone.igsn+'</sampleNumber>
+<registrant>
+<registrantName>GFZ Data Services</registrantName>
+</registrant>'+relatedidentifiers+'<log>
+<logElement event="submitted" timeStamp="2017-05-30T00:00:33.237+02:00" ></logElement>
+</log>
+</sample> '
+
+end
+
+def genmetadata(stone)
 	
-	igsn=@stone.igsn.sub('10273/TEST/','')
-	parentigsn=niltostring(@stone.try(:parent).try(:igsn)).sub('10273/TEST/','')
-	
-	material = niltostring(@stone.try(:classification).try(:parent).try(:parent).try(:name)).to_s
-	classification = niltostring(@stone.try(:classification).try(:parent).try(:name)).to_s
-	type = niltostring(@stone.try(:classification).try(:name)).to_s
-	
-	if material.blank?
-		material=classification
-		classification=type
-		type=''		
+	igsn=stone.igsn
+	parentigsn=niltostring(stone.try(:parent).try(:igsn))
+
+	building=niltostring(stone.box.get_building).encode(:xml => :text)
+
+	material = niltostring(stone.classification.get_material)
+	type=''
+	classification=''
+
+	if stone.classification.parent and stone.classification.parent.parent
+		classification = niltostring(stone.try(:classification).try(:parent).try(:name)).to_s
+		type = niltostring(stone.try(:classification).try(:name)).to_s
+        elsif stone.classification.parent
+	        classification = niltostring(stone.try(:classification).try(:name)).to_s
+        end
+
+	if material == 'rock'
+		material = 'Rock'
+		material_schema = 'http://vocabulary.odm2.org/medium/rock/'
+	elsif material == 'gas'
+		material = 'Gas'
+                material_schema = 'http://vocabulary.odm2.org/medium/gas/'
+	elsif material == 'vegetation' or material == 'fauna'
+		material = 'Biology'
+                material_schema = 'http://vocabulary.odm2.org/medium/organism/'
+	elsif material == 'sediment'
+		material = 'Sediment'
+                material_schema = 'http://vocabulary.odm2.org/medium/sediment/'
+	elsif material == 'soil'
+		material = 'Soil'
+                material_schema = 'http://vocabulary.odm2.org/medium/soil/'
+	elsif material ==  'other'
+		material = 'Other'
+                material_schema = 'http://vocabulary.odm2.org/medium/other/'
+	elsif material == 'water' and  classification == 'ice'
+		material = 'Ice'
+       	        material_schema = 'http://vocabulary.odm2.org/medium/ice/'
+	elsif material == 'water'
+		material = 'Liquid&gt;aqueous'
+               	material_schema = 'http://vocabulary.odm2.org/medium/liquidAqueous/'
 	end
-	if material.blank?
-		material=classification
-		classification=''
-	end
-	
-	latitude=@stone.try(:place).try(:latitude);
-	longitude=@stone.try(:place).try(:longitude)
+
+	classification= niltostring(stone.try(:classification).try(:full_name)).to_s
+
+	latitude=stone.try(:place).try(:latitude);
+	longitude=stone.try(:place).try(:longitude)
 	country=""
 	province=""	
 	if  !( latitude.blank? || longitude.blank?)
@@ -218,16 +321,16 @@ def genmetadata
 	end
  
 	prepstring=""
- 	Preparation.where(stone_id: @stone.id).find_each do |prep|
-		prepstring+='<description descriptionScheme="Preparation">'+prep.preparation_type.name 
+ 	Preparation.where(stone_id: stone.id).find_each do |prep|
+		prepstring+='<description descriptionScheme="Preparation">'+prep.preparation_type.name.encode(:xml => :text) 
 		if !prep.info.blank?
-			prepstring+=" ("+prep.info+")"
+			prepstring+=" ("+prep.info.encode(:xml => :text)+")"
 		end
 		prepstring+='</description>'
 	end
 	
 	bibstring=""
-	Referring.where(referable_id:@stone.id, referable_type: "Stone").each do |bibref|
+	Referring.where(referable_id:stone.id, referable_type: "Stone").each do |bibref|
 		bibitem=Bib.where(id: bibref.bib_id).take
 		if !bibitem.try(:doi).blank?
 			bibstring+='<relatedIdentifier relatedIdentifierType="DOI" relationType="isCitedBy">'+bibitem.doi+'</relatedIdentifier>'		
@@ -238,76 +341,82 @@ def genmetadata
 
 	
 	return '<?xml version="1.0" encoding="UTF-8"?>
-	<samples xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doidb.wdc-terra.org/igsnaa http://doidb.wdc-terra.org/igsnaa/doidb.wdc-terra.org/igsnaa/0.1/samplev2.xsd">
-	<sample>
-	<user_code>'+niltostring(@stone.try(:collection).try(:project))+'</user_code>
-	<sample_type>Core Sample</sample_type>
-	<name>'+@stone.name+'</name>
+<resource xmlns="http://pmd.gfz-potsdam.de/igsn/schemas/description/1.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.gfz-potsdam.de/igsn/schemas/description/1.3 http://pmd.gfz-potsdam.de/igsn/schemas/description/1.3/resource.xsd" type="Sample" >
+<identifier type="IGSN" >'+stone.igsn+'</identifier>
+<name>'+stone.name.encode(:xml => :text) +'</name>
+<parentIdentifier type="IGSN" >'+niltostring(stone.try(:parent).try(:igsn))+'</parentIdentifier>
+<registrant>
+<name>GFZ Data Services</name>
+<affiliation>
+<name>GFZ Potsdam</name>
+</affiliation>
+</registrant>
+<geoLocations>
+<geoLocation>
+<geometry type="Point" sridType="4326" >'+niltostring(stone.try(:place).try(:longitude)).to_s+' '+niltostring(stone.try(:place).try(:latitude)).to_s+'</geometry>
+</geoLocation>
+</geoLocations>
+<resourceTypes>
+<resourceType>http://vocabulary.odm2.org/samplingfeaturetype/specimen/</resourceType>
+</resourceTypes>
+<materials>
+<material>'+material_schema+'</material>
+</materials>
+<collectionMethods>
+<collectionMethod>Hand</collectionMethod>
+</collectionMethods>
+<sampleAccess>Public</sampleAccess>
+<supplementalMetadata>
+<record>
+	<sample xmlns="http://pmd.gfz-potsdam.de/igsn/schemas/description-ext/1.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.gfz-potsdam.de/igsn/schemas/description-ext/1.3 http://pmd.gfz-potsdam.de/igsn/schemas/description-ext/1.3/sample.xsd">
+	<user_code>'+niltostring(stone.try(:collection).try(:project))+'</user_code>
+	<sample_type>Specimen</sample_type>
+	<name>'+stone.name.encode(:xml => :text) +'</name>
 	<igsn>'+igsn+'</igsn>
 	<parent_igsn>'+parentigsn+'</parent_igsn>
 	<is_private>0</is_private>
-	<sample_request></sample_request>
-	<sampled_by></sampled_by>
-	<sample_purpose></sample_purpose>
-	<publish_date></publish_date>
-	<latitude>'+niltostring(@stone.try(:place).try(:latitude)).to_s+'</latitude>
-	<longitude>'+niltostring(@stone.try(:place).try(:longitude)).to_s+'</longitude>
+	<latitude>'+niltostring(stone.try(:place).try(:latitude)).to_s+'</latitude>
+	<longitude>'+niltostring(stone.try(:place).try(:longitude)).to_s+'</longitude>
 	<coordinate_system>WGS84</coordinate_system>
-	<elevation>'+niltostring(@stone.try(:place).try(:elevation)).to_s+'</elevation>
-	<elevation_end></elevation_end>
+	<elevation>'+niltostring(stone.try(:place).try(:elevation)).to_s+'</elevation>
 	<elevation_unit>m</elevation_unit>
-	<elevation_end_unit>m</elevation_end_unit>
-	<primary_location_type>'+niltostring(@stone.try(:place).try(:landuse)).to_s+'</primary_location_type>
-	<primary_location_name>'+niltostring(@stone.try(:place).try(:slope_description)).to_s+'</primary_location_name>
-	<location_description>'+niltostring(@stone.try(:place).try(:description)).to_s+'</location_description>
+	<primary_location_type>'+niltostring(stone.try(:place).try(:landuse)).try(:name).to_s+'</primary_location_type>
+	<primary_location_name>'+niltostring(stone.try(:place).try(:name)).to_s+'</primary_location_name>
+	<location_description>'+niltostring(stone.try(:place).try(:description)).to_s+'</location_description>
 	<locality/>
 	<locality_description/>
-	<country>'+country+'</country>
-	<province>'+province+'</province>
+	<country>'+niltostring(country).to_s+'</country>
+	<province>'+niltostring(province).to_s+'</province>
 	<county/>
 	<city></city>
-	<material>'+material+'</material>
-	<classification>'+classification+'</classification>
+	<material>'+niltostring(material).to_s+'</material>
+	<classification>'+niltostring(classification).to_s+'</classification>
 	<field_name>'+type+'</field_name>
-	<depth_min>'+niltostring(@stone.try(:collection).try(:depth_min)).to_s+'</depth_min>
-	<depth_max>'+niltostring(@stone.try(:collection).try(:depth_max)).to_s+'</depth_max>
-	<depth_scale>'+niltostring(@stone.try(:collection).try(:depth_unit))+'</depth_scale>
-	<size>'+niltostring(@stone.quantity).to_s+'</size>
-	<size_unit>'+niltostring(@stone.quantity_unit)+'</size_unit>
-	<!--age_min></age_min>
-	<age_max></age_max-->
-	<age_unit/>
-	<geological_age></geological_age>
-	<geological_unit/>
+	<depth_min>'+niltostring(stone.try(:sampledepth)).to_s+'</depth_min>
+	<depth_max>'+niltostring(stone.try(:sampledepth)).to_s+'</depth_max>
+	<depth_scale>m</depth_scale>
 	<descriptions>
-	<description>'+niltostring(@stone.description)+'</description>'+prepstring+'
+	<description>'+niltostring(stone.description).encode(:xml => :text)+'</description>
 	</descriptions>
-	<sample_image></sample_image>
-	<sample_image_path></sample_image_path>
-	<collection_method>'+niltostring(@stone.try(:collection).try(:collectionmethod).try(:name))+'</collection_method>
-	<collection_method_descr></collection_method_descr>
-	<length></length>
-	<length_unit></length_unit>
-	<cruise_field_prgrm>'+niltostring(@stone.try(:collection).try(:name))+'</cruise_field_prgrm>
-	<platform_type></platform_type>
-	<platform_name></platform_name>
-	<platform_descr></platform_descr>
-	<operator></operator>
-	<operator></operator>
-	<funding_agency></funding_agency>
-	<collector>'+niltostring(@stone.try(:collection).try(:collector))+'/'+niltostring(@stone.try(:collection).try(:affiliation))+'</collector>
-	<collection_start_date>'+niltostring(@stone.try(:collection).try(:collection_start)).to_s+'</collection_start_date>
-	<collection_end_date>'+niltostring(@stone.try(:collection).try(:collection_end)).to_s+'</collection_end_date>
+	<collection_method>'+niltostring(stone.try(:collectionmethod).try(:name)).encode(:xml => :text) +'</collection_method>
+	<cruise_field_prgrm>'+niltostring(stone.try(:collection).try(:name)).encode(:xml => :text) +'</cruise_field_prgrm>
+	<collector>'+niltostring(stone.try(:collectors).map(&:name).join(', ')).encode(:xml => :text) +'</collector>
+        <collector_detail>'+niltostring(stone.try(:collectors).map(&:affiliation).join(', ')).encode(:xml => :text) +'</collector_detail>
+	<collection_start_date>'+niltostring(stone.try(:date)).to_s+'</collection_start_date>
+	<collection_end_date>'+niltostring(stone.try(:date)).to_s+'</collection_end_date>
 	<collection_date_precision>day</collection_date_precision>
-	<current_archive>'+niltostring(@stone.labname)+'</current_archive>
+	<current_archive>'+niltostring(building).to_s.encode(:xml => :text) +'</current_archive>
 	<current_archive_contact></current_archive_contact>
 	<original_archive/>
 	<original_archive_contact/>
 	<launch_platform_name/>
 	<relatedIdentifiers>
-	'+bibstring+'
+	'+niltostring(bibstring).to_s+'
 	</relatedIdentifiers>
-	</sample></samples>'
+	</sample>
+</record>
+</supplementalMetadata>
+</resource>'
 
 end
 
