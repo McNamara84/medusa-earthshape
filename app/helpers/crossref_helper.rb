@@ -12,7 +12,7 @@ module CrossrefHelper
     attr_accessor :doi, :url, :xml
     
     def initialize(opts = {})
-      @base_url =  opts[:base_url] || 'http://crossref.org/openurl/?noredirect=true&format=unixref'      
+      @base_url =  opts[:base_url] || 'https://crossref.org/openurl/?noredirect=true&format=unixref'      
       @doi = opts[:doi]
       @pid = opts[:pid]
       @base_url += '&pid=' + @pid if @pid
