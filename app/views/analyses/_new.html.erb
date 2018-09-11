@@ -4,7 +4,8 @@
   <th><%= f.text_field :name, class: "form-control input-sm", size: 15 %></th>
   <th><%= f.text_field :operator, class: "form-control input-sm", size: 15 %></th>  
   <th><%= f.select :device_id, Device.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>
-  <th><%= f.text_field :stone_global_id, class: "form-control input-sm", size: 15 %></th>
+  <th><%= # f.text_field :stone_global_id, class: "form-control input-sm", size: 15
+   %></th>
   <th></th>
   <%= f.fields_for :record_property_attributes do |r| %>
   <%= th_if_expand @current_user.username %>

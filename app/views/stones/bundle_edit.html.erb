@@ -10,6 +10,11 @@
 <% end %>
 
 <%= form_for Stone.new, url: bundle_update_stones_path do |f| %>
+
+<% if params[:toggle_column] == "expand" %>
+<%= hidden_field_tag :toggle_column, params[:toggle_column] %>
+<% end %>
+
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
@@ -18,6 +23,12 @@
       <th>parent</th>
       <th>Labname</th>
       <th>IGSN</th>   
+     <%= th_if_expand do %>
+        Analysis
+      <% end %>
+     <%= th_if_expand do %>
+        File
+      <% end %>                 
       <th><%= Place.model_name.human %></th>        
      <%= th_if_expand do %>
 	 <%=  Stone.human_attribute_name("date")%>     
@@ -63,7 +74,26 @@
       </th>
       <th> <%= f.text_field :labname, class: "form-control input-sm" %></th>
       <th></th>
-      
+     <%= th_if_expand do %>
+	  <div class="input-group">
+   	    <%= f.select :analysis_global_id, Analysis.choose_global_id(@current_user), { include_blank: true }, class: "form-control input-sm" %>
+	    <span class="input-group-addon">
+	      <%= link_to analyses_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#stone_analysis_global_id" do %>
+	      <span class="glyphicon glyphicon-search"></span>
+	      <% end %>
+	    </span>
+	  </div>
+      <% end %>                 
+     <%= th_if_expand do %>
+	  <div class="input-group">
+   	    <%= f.select :attachment_file_global_id, AttachmentFile.choose_global_id(@current_user), { include_blank: true }, class: "form-control input-sm" %>
+	    <span class="input-group-addon">
+	      <%= link_to attachment_files_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#stone_attachment_file_global_id" do %>
+	      <span class="glyphicon glyphicon-search"></span>
+	      <% end %>
+	    </span>
+	  </div>
+      <% end %>                    
       <th>
     <div class="input-group">
     

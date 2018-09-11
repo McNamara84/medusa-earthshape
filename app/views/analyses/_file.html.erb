@@ -85,15 +85,17 @@
 	
         <div style="float:left; margin:5px">
 		    <label class="small" for="attachment-file-global-id">Link file from inventory</label>
-	  <div class="input-group">
 	  
-	    <%= text_field_tag :global_id, nil, id: "attachment-file-global-id", class: "form-control input-sm" %>
+	  <div class="input-group">
+            <%= select_tag :global_id, options_for_select(AttachmentFile.choose_global_id(@current_user)), { include_blank: true  , id: "attachment-file-global-id", class: "form-control input-sm"} %>	  
 	    <span class="input-group-addon">
 	      <%= link_to attachment_files_path(per_page: 5, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#attachment-file-global-id" do %>
 	      <span class="glyphicon glyphicon-search"></span>
 	      <% end %>
 	    </span>
-	  </div>
+	  </div>	  
+	  
+	  
 	</div>
         <div style="float:left; margin:5px;margin-top:25px">
           <%= button_tag title: "link attachment file by global id", class: "btn btn-default" do %>

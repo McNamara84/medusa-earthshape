@@ -5,10 +5,13 @@
 <table class="table table-condensed table-striped">
   <thead class="searchheader">
     <%= search_form_for @search do |f| %>
+<% if params[:toggle_column] == "expand" %>
+<%= hidden_field_tag :toggle_column, params[:toggle_column] %>
+<% end %>    
     <tr>
 	    <th></th><th colspan="6"><u> Search and filter <%= Stone.model_name.human%></u></th><th></th><th></th><th></th>
 	    <%= th_if_expand do %>    
-		<th></th><th></th><th></th><th></th><th></th>
+		<th></th><th></th><th></th><th></th><th></th><th></th><th></th>
 	    <%end%>
     </tr>
     <tr>
@@ -16,7 +19,13 @@
       <th><%= sort_link @search, :name, "name" %></th>
       <th><%= sort_link @search, :parent_name, "parent" %></th>
       <th><%= sort_link @search, :labname, "Labname" %></th>
-      <th><%= sort_link @search, :igsn, "IGSN" %></th>   
+      <th><%= sort_link @search, :igsn, "IGSN" %></th>  
+      <%= th_if_expand do %>
+         <%= sort_link @search, :analyses_name, "Analysis" %>   
+      <% end %>   
+      <%= th_if_expand do %>
+         <%= sort_link @search, :attachment_files_data_file_name, "File" %>   
+      <% end %>         
       <th><%= sort_link @search, :place_name, Place.model_name.human %></th>        
      <%= th_if_expand do %>
 	 <%= sort_link @search, :date, Stone.human_attribute_name("date")%>     
@@ -56,6 +65,12 @@
       <th><%= f.text_field :parent_name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
       <th><%= f.text_field :labname_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
       <th><%= f.text_field :igsn_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
+      <%= th_if_expand do %>      
+        <%= f.text_field :analyses_name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %>
+      <% end %>      
+      <%= th_if_expand do %>      
+        <%= f.text_field :attachment_files_data_file_name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %>
+      <% end %>            
       <th><%= f.text_field :place_name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
       <%= th_if_expand do %>      
 	<%= f.text_field :date_lteq, class: "form-control input-sm", placeholder: "min:", size: 15 %>
@@ -70,7 +85,7 @@
       <th><%= f.text_field :physical_form_name_cont, class: "form-control input-sm", size: 12 %></th>
  -->
  <th><%= f.text_field :classification_name_cont, class: "form-control input-sm", placeholder: "search:", size: 12 %></th>
- <% if false %>     
+<% if false %>     
 	<%= th_if_expand do %>
 		<%= f.select :tags_name_eq, ActsAsTaggableOn::Tag.order(:name).pluck(:name), { include_blank: true }, class: "form-control input-sm" %>
       <% end %>
@@ -80,7 +95,7 @@
       <% end %>
       <th><%= f.text_field :group_name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
       <%= th_if_expand do %>
- <% if false %>     
+<% if false %>     
         <%= f.select :record_property_published_eq, [true, false], { include_blank: true }, class: "form-control input-sm" %>
       <% end %>
 <% end %>      
@@ -99,6 +114,8 @@
       <th></th>      
       <th></th>    
       <th></th>               
+      <%= th_if_expand nil %>
+      <%= th_if_expand nil %>
       <%= th_if_expand do %>      
 	<%= f.text_field :date_gteq, class: "form-control input-sm", placeholder: "max:", size: 15 %>
       <% end %>           

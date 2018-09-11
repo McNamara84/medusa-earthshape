@@ -11,7 +11,7 @@
       <th><%= sort_link @search, :name, "name" %></th>
       <th><%= sort_link @search, :operator, "operator" %></th>      
       <th><%= sort_link @search, :device_name, "device" %></th>
-      <th><%= sort_link @search, :stone_name, "sample" %></th>
+      <th><%= sort_link @search, :stones_name, "sample" %></th>
       <th>summary</th>
       <%= th_if_expand do %>
         <%= sort_link @search, :user_username, "owner" %>
@@ -31,7 +31,7 @@
       <th><%= f.text_field :name_cont, class: "form-control input-sm", size: 15 %></th>
       <th><%= f.text_field :operator_cont, class: "form-control input-sm", size: 15 %></th>      
       <th><%= f.text_field :device_name_cont, class: "form-control input-sm", size: 12 %></th>
-      <th><%= f.text_field :stone_name_cont, class: "form-control input-sm", size: 15 %></th>
+      <th><%= f.text_field :stones_name_cont, class: "form-control input-sm", size: 15 %></th>
       <th></th>
       <%= th_if_expand do %>
         <%= f.text_field :user_username_cont, class: "form-control input-sm", size: 15 %>

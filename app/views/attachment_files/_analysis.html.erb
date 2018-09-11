@@ -3,6 +3,7 @@
     <tr>
       <th></th>
       <th>name</th>
+      <th>operator</th>
       <th>device</th>
       <th></th>
       <th>size</th>
@@ -18,6 +19,7 @@
             <%= check_box_tag("ids[]", analysis.id, false, {id: "ids_#{analysis.id}", class: "select-row"}) if can?(:update, analysis) %>
           </td>
           <td><%= link_to_if can?(:read, analysis), analysis.name, analysis %></td>
+          <td><%= analysis.try!(:operator) %></td>
           <td><%= analysis.device.try!(:name) %></td>
           <td></td>
           <td><%= analysis.chemistries.size %></td>
@@ -33,38 +35,58 @@
   </tbody>
   <tfoot>
     <tr>
+        <%= hidden_tabname_tag(__FILE__) %>
+        <th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th><th>Select all</th>
+    </tr>
+  </tfoot>
+</table>
+<%= link_to_function "edit", "$('#analysis-bundle-form').submit();", class: "btn btn-default" %>
+<hr>
+ <div style="clear:both">Create analysis</div>	
+
+
       <%= form_for Analysis.new, url: attachment_file_analyses_path(@attachment_file) do |f|%>
         <%= hidden_tabname_tag(__FILE__) %>
-        <th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th>
-        <th><%= f.text_field :name, class: "form-control input-sm" %></th>
-        <th><%= f.select :device_id, Device.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>
-        <th>
+        
+     <div class="form-group form-group-sm" style="width:200px;float:left">
+            <%= f.label :name,  class: "small" %>
+            <%= f.text_field :name, class: "form-control input-sm" %>
+     </div>          
+     <div class="form-group form-group-sm" style="width:200px;float:left;margin-left:10px">
+            <%= f.label :operator,  class: "small" %>
+            <%= f.text_field :operator, class: "form-control input-sm" %>
+     </div>           
+        
+   <div class="form-group form-group-sm" style="width:150px;float:left;margin-left:10px">
+    <%= f.label :device_id, class: "small" %>
+    <%= f.select :device_id, Device.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %>
+  </div> 
+
+  <div style="float:left;margin-left:10px;margin-top:17px">
           <%= f.button title:"add analysis file",class: "btn btn-default" do %>
             <span class="glyphicon glyphicon-save"></span>
           <% end %>
-        </th>
-        <th></th>
+</div>
+
       <% end %>
+
+
+ <div style="clear:both">Link analysis from inventory</div>	
+
       <%= form_tag link_by_global_id_attachment_file_analyses_path(@attachment_file),method: :post do %>
         <%= hidden_tabname_tag(__FILE__) %>
-        <th>
-	  <div class="input-group">
-	    <%= text_field_tag :global_id, nil, id: "analysis-global-id", class: "form-control input-sm" %>
+
+	  <div class="input-group" style="float:left;width:190px">
+   	    <%= select_tag :global_id, options_for_select(Analysis.choose_global_id(@current_user)), { include_blank: true  , id: "analysis-global-id", class: "form-control input-sm"} %>
 	    <span class="input-group-addon">
 	      <%= link_to analyses_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#analysis-global-id" do %>
 	      <span class="glyphicon glyphicon-search"></span>
 	      <% end %>
 	    </span>
-	  </div>
-	</th>
-        <th>
+	  </div>	  
+  <div style="float:left;margin-left:10px">
           <%= button_tag title: "link analysis by global id",class: "btn btn-default" do %>
             <span class="glyphicon glyphicon-save"></span>
           <% end %>
-        </th>
+  </div>
       <% end %>
-    </tr>
-  </tfoot>
-</table>
-<%= link_to_function "edit", "$('#analysis-bundle-form').submit();", class: "btn btn-default" %>
-

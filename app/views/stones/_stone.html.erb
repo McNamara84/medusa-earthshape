@@ -4,6 +4,16 @@
   <td><%= link_to stone.parent.name,stone.parent if stone.parent %></td>
   <td><%= stone.labname %></td>
   <td><%= stone.igsn%></td>  
+  <%= td_if_expand do %> 
+    <% stone.analyses.each do |analysis|%>
+       <%= link_to analysis.name,analysis %>
+    <% end %>
+  <% end %>   
+    <%= td_if_expand do %> 
+    <% stone.attachment_files.each do |file|%>
+       <%= link_to file.name,file %>
+    <% end %>
+  <% end %>   
   <td><%=  link_to stone.place.name, stone.place if stone.place %></td>
   
   <%= td_if_expand do %> 
