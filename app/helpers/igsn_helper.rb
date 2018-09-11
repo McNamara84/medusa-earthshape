@@ -5,7 +5,7 @@ require 'rest-client'
 module IgsnHelper
   VERSION = '0.0.4'
 class Igsn
-  ENDPOINT = 'https://doidb.wdc-terra.org/igsn'
+  ENDPOINT = 'https://doidb.wdc-terra.org/igsnaa'
 
   def initialize(opts = {})
     user=opts[:user]
@@ -16,19 +16,24 @@ class Igsn
   end
 
   def resolve(igsn)
-    @endpoint["igsn/#{igsn}"].get
+    suffix="igsn/10273/#{igsn}"
+    @endpoint["igsn/10273/#{igsn}"].get
   end
 
   def mint(igsn, url)
-    @endpoint['igsn'].post("igsn=#{igsn}\nurl=#{url}", content_type: 'text/plain;charset=UTF-8')
+    @endpoint["igsn"].post("igsn=10273/#{igsn}\nurl=#{url}", content_type: 'text/plain;charset=UTF-8')
   end
 
-  def upload_metadata(metadata)
-    @endpoint['metadata/'].put(metadata, content_type: 'application/xml;charset=UTF-8')
+  def upload_regmetadata(metadata)
+    @endpoint["metadata"].post(metadata, content_type: 'application/xml;charset=UTF-8')
+  end
+
+  def upload_metadata(igsn,metadata)
+    @endpoint["igsnmetadata/10273/#{igsn}"].post(metadata, content_type: 'application/xml;charset=UTF-8')
   end
 
   def metadata(igsn)
-    @endpoint["metadata/#{igsn}"].get
+    @endpoint["metadata/10273/#{igsn}"].get
   end
 end
 end
