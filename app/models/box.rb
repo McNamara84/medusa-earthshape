@@ -33,6 +33,14 @@ class Box < ActiveRecord::Base
     analyses
   end
 
+  def get_building()
+    if parent
+      return parent.get_building()
+    else
+      return name
+    end
+  end
+
   private
 
   def parent_id_cannot_self_children
