@@ -44,7 +44,7 @@
 
   <% if  @current_user.advanced then %>
   <hr>
-<div>Create Box for this File </div>
+<div style="clear:both">Create Box for this File </div>
       <%= form_for Box.new, url: attachment_file_boxes_path(@attachment_file) do |f|%>
         <%= hidden_tabname_tag(__FILE__) %>
     
@@ -91,7 +91,7 @@
       <% end %>
       <% end %>
 <hr>
-<div>Link Box</div>
+<div style="clear:both">Link Box</div>
       <%= form_tag link_by_global_id_attachment_file_boxes_path(@attachment_file), method: :post do %>
         <%= hidden_tabname_tag(__FILE__) %>
 	<div style="float:left; margin:10px">
