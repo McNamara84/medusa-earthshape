@@ -8,11 +8,17 @@
   
   <% if @stone.igsn.present? %>
 	  <span> IGSN: 
-		<%= @stone.igsn %>
-                (registration not yet available)
+		<%= link_to @stone.igsn, 'http://igsn.org/'+@stone.igsn %>
+<!--                (registration not yet available)-->
 <!--		<%= link_to igsn_register_stone_path(@stone), class: "btn btn-default", title:"register IGSN", id: "tag-button" do %>
 		  <span class="glyphicon glyphicon-tag"></span>
-		<% end %>-->
+		<% end %>
+-->
+
+		 <%= link_to igsn_register_stone_path(@stone), class: "btn btn-default", title:"register IGSN", id: "tag-button" do %>
+                  <span> Register/Update IGSN </span>
+                <% end %>
+
 	  </span>
    <%else %>
 	  <span> IGSN:
