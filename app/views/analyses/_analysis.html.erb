@@ -3,7 +3,11 @@
   <td><%= link_to analysis.name,analysis %></td>
   <td><%= analysis.operator %></td>  
   <td><%= analysis.device.try!(:name) %></td>
-  <td><%= link_to analysis.stone.name,analysis.stone if analysis.stone %></td>
+  <td>
+  <% analysis.stones.each do |stone|%>
+  <%= link_to stone.name,stone %>
+  <% end %>
+  </td>
   <td><%= raw(analysis.chemistry_summary) %></td>
   <%= td_if_expand analysis.user.try!(:username) %>
   <td><%= analysis.group.try!(:name) %></td>

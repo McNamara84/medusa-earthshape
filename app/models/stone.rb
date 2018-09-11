@@ -9,8 +9,8 @@ class Stone < ActiveRecord::Base
 
   acts_as_taggable
  #with_recursive
-
-  has_many :analyses
+  has_many :analysis_stones
+  has_many :analyses, through: :analysis_stones
   has_many :children, class_name: "Stone", foreign_key: :parent_id, dependent: :nullify
   has_many :stones, class_name: "Stone", foreign_key: :parent_id, dependent: :nullify  
   has_many :referrings, as: :referable, dependent: :destroy
@@ -71,8 +71,29 @@ class Stone < ActiveRecord::Base
       end
   end
 
+  def analysis_global_id
+    nil
+  end
 
+  def analysis_global_id=(global_id)
+    begin
+     self.analyses << Analysis.joins(:record_property).where(record_properties: {global_id: global_id}).first
+    rescue
+    end
+  end
+  def attachment_file_global_id
+    nil
+  end
 
+  def attachment_file_global_id=(global_id)
+    begin
+     logger.info global_id   
+     logger.info AttachmentFile.joins(:record_property).where(record_properties: {global_id: global_id}).first.inspect
+     self.attachment_files << AttachmentFile.joins(:record_property).where(record_properties: {global_id: global_id}).first
+    rescue
+    end
+  end
+  
   def self.csvlabels
       header = ["Campaign","Project","Sampling strategy","Weather conditions","Time Series","comment","group"]
       header = header + ["Is parent","Sitename","Parent","Latitude (WGS84)","Longitude (WGS84)","Elevation (m above sea level)","Topographic position","Vegetation","Landuse","Lightsituation","Hillslope","Aspect","Description","Group"]

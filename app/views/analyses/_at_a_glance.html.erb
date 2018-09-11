@@ -4,9 +4,11 @@
   <%= li_if_exist 'operator: ', @analysis.try!(:operator) %>
   <%= li_if_exist 'description: ', @analysis.try!(:description) %>
   <li>modified at <%= difference_from_now(@analysis.updated_at) -%></li>
-  <% if @analysis.stone %>
-    <li>sample: <%= link_to_if can?(:read, @analysis.stone), @analysis.stone.name,stone_path(@analysis.stone) %></li>
+  <li>samples:
+  <% @analysis.stones.each do |stone|%>
+  <%= link_to_if can?(:read, stone), stone.name, stone_path(stone) %>
   <% end %>
+  </li>
   <% unless @analysis.bibs.empty? %>
     <li>references:</li>
     <ul>
@@ -32,108 +34,4 @@
 </ul>
 
 
-<table class="table table-condensed table-striped">
-  <thead>
-    <tr>
-      <th></th>
-            <th><%=AttachmentFile.human_attribute_name("filetopic")%></th>
-      <th></th>
-      <th>name</th>
-      <th></th>
-      <th>type</th>
-      <th>global-id</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <%= form_tag bundle_edit_attachment_files_path, id: "attachment-file-bundle-form" do %>
-      <% @analysis.attachings.where(attachable_type: "Analysis").order("position ASC").each do |attaching| %>
-        <tr>
-          <% attachment_file = attaching.attachment_file %>
-          <td>
-            <%= check_box_tag("ids[]", attachment_file.id, false, {id: "ids_#{attachment_file.id}", class: "select-row"}) if can?(:update, attachment_file) %>
-          </td>
-          <td><%= attachment_file.filetopic.try!(:name) %></td>		  
-          <td><%= attachment_file.decorate.picture(width: 70, height: 70, type: :thumb) %></td>
-          <td><%= link_to_if can?(:read, attachment_file), attachment_file.data_file_name,attachment_file %></td>
-          <td>
-            <% if attachment_file.pdf? %>
-              <%= link_to(image_tag("icon_pdf_1.png", size: "24x24"), download_attachment_file_path(attachment_file.id), id: "file-#{attachment_file.id}-button") %>
-            <% end %>
-          </td>
-          <td><%= attachment_file.try!(:data_content_type) %></td>
-          <td><%= attachment_file.try!(:global_id) %></td> 
-          <td>
-            <%= link_to move_to_top_attaching_path(attaching) + tab_param(__FILE__), method: :move_to_top ,title: "move to top" do %>
-              <span class="glyphicon glyphicon-arrow-up"></span>
-            <% end %>
-          </td>
-          <td>
-            <%= link_to  analysis_attachment_file_path(@analysis,attachment_file) + tab_param(__FILE__), method: :delete ,title: "unlink attachment file",data: {confirm: t("confirm.unlink")} do %>
-              <span class="glyphicon glyphicon-remove"></span>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    <% end %>
-  </tbody>
-  <tfoot> 
-    	 <tr><th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th><th>Select All</th></tr>
-  </tfoot>
-</table>
-<%= link_to_function "edit", "$('#attachment-file-bundle-form').submit();", class: "btn btn-default" %>
 
-
-
-	  <div style="clear:both; margin:5px;border: 1px solid grey;">
-		      <%= form_for AttachmentFile.new, url: analysis_attachment_files_path(@analysis), multipart: true do |f|%>
-    
-			<%= hidden_tabname_tag(__FILE__) %>
-			<%= f.fields_for :record_property_attributes do |r| %>
-			  <%= r.hidden_field :user_id ,value: @current_user.id %>
-			<% end %>
-
-
-			<div style="float:left; margin:5px; width:300px" >
-				<label class="small" for="attachment_file_filetopic_id"><%=AttachmentFile.human_attribute_name("filetopic")%></label>
-				<%= f.select :filetopic_id, Filetopic.order(:name).pluck(:name, :id), { :prompt =>  '- required -'  }, class: "form-control input-sm" %>
-			</div>		
-			<div style="float:left; margin:5px" >
-				<label class="small" for="attachment_file_data">File upload</label>
-				<%= f.file_field :data %>
-			</div>
-			<div style="float:left; margin:5px;margin-top:25px">
-			  <%= f.button title:"add attachment file", class: "btn btn-default" do %>
-			    <span class="glyphicon glyphicon-save"></span>
-			  <% end %>
-			</div>
-
-		      <% end %>
-	  </div>
-	  
-	  <div style="clear:both; margin:5px;border: 1px solid grey;">
-      <%= form_tag link_by_global_id_analysis_attachment_files_path(@analysis), method: :post do %>
-
-        <%= hidden_tabname_tag(__FILE__) %>
-	
-        <div style="float:left; margin:5px">
-		    <label class="small" for="attachment-file-global-id">Link file from inventory</label>
-	  <div class="input-group">
-	  
-	    <%= text_field_tag :global_id, nil, id: "attachment-file-global-id", class: "form-control input-sm" %>
-	    <span class="input-group-addon">
-	      <%= link_to attachment_files_path(per_page: 5, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#attachment-file-global-id" do %>
-	      <span class="glyphicon glyphicon-search"></span>
-	      <% end %>
-	    </span>
-	  </div>
-	</div>
-        <div style="float:left; margin:5px;margin-top:25px">
-          <%= button_tag title: "link attachment file by global id", class: "btn btn-default" do %>
-            <span class="glyphicon glyphicon-save"></span>
-          <% end %>
-        </div>
-
-      <% end %>
-	  </div>
