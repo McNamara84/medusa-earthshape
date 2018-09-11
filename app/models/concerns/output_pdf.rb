@@ -85,6 +85,29 @@ module OutputPdf
       report
     end
 
+
+    def build_igsn_a_four(resources)
+      report = ThinReports::Report.new(layout: resources.first.report_template("bundle"))
+      divide_by_three(resources).each do |resource_1, resource_2, resource_3|
+        report.list.add_row do |row|
+          set_igsn_bundle_data(row, 1, resource_1)
+          set_igsn_bundle_data(row, 2, resource_2)
+          set_igsn_bundle_data(row, 3, resource_3)
+        end
+      end
+      report
+    end
+    
+    def build_igsn_cards(resources)
+      report = ThinReports::Report.new(layout: resources.first.report_template("igsn"))
+      resources.each do |resource|
+        report.start_new_page do |page|
+          resource.set_igsn_card_data(page)
+        end
+      end
+      report
+    end
+
     private
 
     def divide_by_three(resources)
@@ -98,6 +121,19 @@ module OutputPdf
       if resource
         row.item(targets[0]).value(resource.try(:name))
         row.item(targets[1]).value(resource.global_id)
+        row.item(targets[2]).src(resource.qr_image)
+        row.item(targets[3]).value(resource.primary_attachment_file_path)
+      else
+        targets.each { |target| row.item(target).hide }
+      end
+    end
+    
+    def set_igsn_bundle_data(row, num, resource)
+      targets = ["name_#{num}", "global_id_#{num}", "qr_code_#{num}", "image_#{num}"].map!(&:to_sym)
+      if resource
+        row.item(targets[0]).value(resource.try(:name))
+        row.item(targets[1]).style(:font_size, 15)
+        row.item(targets[1]).value("IGSN:"+resource.igsn)
         row.item(targets[2]).src(resource.qr_image)
         row.item(targets[3]).value(resource.primary_attachment_file_path)
       else
