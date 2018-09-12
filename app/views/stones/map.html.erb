@@ -1,6 +1,7 @@
 <%= @stone.place.try(:to_map) %>
 
 <script  type="text/javascript">
+/*
 if (typeof google != 'undefined'){
 	var handler = Gmaps.build('Google');
 	handler.buildMap({ provider: {}, internal: {id: 'map-canvas'}}, function(){	
@@ -13,6 +14,22 @@ if (typeof google != 'undefined'){
 	  handler.getMap().setZoom(2);	  
 	});
 }
+*/
+$( document ).ready(function() {
+	        var domelement=document.getElementById('map-canvas');
+	        var lat=domelement.getAttribute('data-lat');
+	        var lng=domelement.getAttribute('data-lng');	  		                
+
+        	var map=L.map('map-canvas',{ zoomControl:true }).setView([0,0],1);	
+        	       	
+		L.tileLayer( 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+		    subdomains: ['a','b','c']
+		}).addTo( map );
+		
+                L.marker([lat, lng]).addTo(map);                     
+});
+
 </script>
 
 <!--

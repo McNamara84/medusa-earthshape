@@ -1,6 +1,6 @@
 <div id="map-canvas" style="width: 300px; height: 300px;"/>
 <script  type="text/javascript">
-
+/*
 if (typeof google != 'undefined'){
 	var handler = Gmaps.build('Google');
 	handler.buildMap({ provider: {}, internal: {id: 'map-canvas'}}, function(){	
@@ -8,7 +8,24 @@ if (typeof google != 'undefined'){
 	  handler.bounds.extendWith(markers);
 	  handler.fitMapToBounds();
 	});
-}
+}*/
+
+$( document ).ready(function() {
+
+        	var map=L.map('map-canvas',{ zoomControl:true }).setView([0,0],1);	
+        	       	
+		L.tileLayer( 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+		    subdomains: ['a','b','c']
+		}).addTo( map );
+		
+		var markerjson = <%=raw @hash.to_json %>;
+                var i=0;
+                for (i=0; i<markerjson.length; i++){
+                        L.marker([markerjson[i]["lat"], markerjson[i]["lng"]]).addTo(map).bindPopup(markerjson[i]["infowindow"]);
+                }
+
+});
 </script>
 
 <!--
