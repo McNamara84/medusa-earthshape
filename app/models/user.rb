@@ -31,7 +31,9 @@ class User < ActiveRecord::Base
   protected
 
   def correct_igsn_prefix
-    errors.add(:prefix, 'The prefix must begin with "GF" and end with three characters, i.e. "GFABC" or "GFC12" ') unless prefix =~ %r{\AGF}
+    if prefix.present?
+	errors.add(:prefix, 'The prefix must begin with "GF" and end with three characters, i.e. "GFABC" or "GFC12" ') unless prefix =~ %r{\AGF}
+    end
   end
 
   def email_required?
