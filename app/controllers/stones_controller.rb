@@ -316,8 +316,10 @@ def genmetadata(stone)
 	province=""	
 	if  !( latitude.blank? || longitude.blank?)
 	 country_subdivisions = Geonames::WebService.country_subdivision "%0.2f" % latitude, "%0.2f" % longitude
-	 country=country_subdivisions[0].country_name
-	 province=country_subdivisions[0].admin_name_1
+         if !(country_subdivisions.empty?)
+	   country=country_subdivisions[0].country_name
+	   province=country_subdivisions[0].admin_name_1
+	 end
 	end
  
 	prepstring=""
@@ -421,8 +423,8 @@ def genmetadata(stone)
 end
 
 def niltostring(str)
-	
-	return str.blank? ? '' : str 
+ 	retstr= str.blank? ? '' : str 
+ 	return retstr.to_s.gsub('&','&amp;').gsub('<','&lt;').gsub('>','&gt;')
 end
 
 end
