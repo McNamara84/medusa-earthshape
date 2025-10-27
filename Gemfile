@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
-source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
+# source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
+# Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.2'
 
@@ -69,10 +70,10 @@ gem 'acts_as_taggable_on'
 gem 'exception_notification'
 gem 'settingslogic'
 gem 'validates_existence'
-#gem 'acts_as_mappable', git: 'git@devel.misasa.okayama-u.ac.jp:gems/actsasmappable.git'
-gem 'acts_as_mappable'
-#gem 'with_recursive', git: 'git@devel.misasa.okayama-u.ac.jp:gems/withrecursive.git'
-gem 'with_recursive'
+# Note: acts_as_mappable and with_recursive are from private gem server
+# These gems are temporarily disabled for Docker deployment as they are not publicly available
+# gem 'acts_as_mappable'
+# gem 'with_recursive'
 gem 'thinreports', '>= 0.8.0'
 gem 'bootstrap-sass'
 gem 'ransack'
