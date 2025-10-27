@@ -8,7 +8,7 @@ class Place < ActiveRecord::Base
   TEMPLATE_HEADER = "name,latitude(decimal degree),longitude(decimal degree),elevation(m),description\n"
   PERMIT_IMPORT_TYPES = ["text/plain", "text/csv", "application/csv", "application/vnd.ms-excel"]
 
-  acts_as_mappable
+  # acts_as_mappable # Temporarily disabled - gem not publicly available
 
   has_many :stones
   has_many :referrings, as: :referable, dependent: :destroy

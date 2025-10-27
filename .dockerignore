@@ -1,0 +1,60 @@
+# Git
+.git
+.gitignore
+
+# Docker
+.dockerignore
+docker-compose*.yml
+Dockerfile*
+
+# Documentation
+README.md
+README.rdoc
+*.md
+
+# Logs
+log/*
+*.log
+
+# Temporary files
+tmp/*
+!tmp/.keep
+
+# Environment files
+.env
+.env.*
+
+# Editor files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files
+spec/*
+test/*
+coverage/*
+
+# Development dependencies
+.bundle
+vendor/bundle
+node_modules
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+
+# Deployment
+config/deploy
+config/deploy.rb
+Capfile
+
+# Local configuration
+config/database.yml.example
+config/application.yml.example

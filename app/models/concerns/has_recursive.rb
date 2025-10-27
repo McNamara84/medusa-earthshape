@@ -1,7 +1,7 @@
 module HasRecursive
   extend ActiveSupport::Concern
   included do
-  	with_recursive
+  	# with_recursive # Temporarily disabled - gem not publicly available
   end
 
   def self_and_descendants
