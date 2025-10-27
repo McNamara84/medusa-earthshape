@@ -31,3 +31,18 @@
 public/system
 vendor/bundler
 db_dump
+
+# Docker
+.env
+docker-compose.override.yml
+
+# Editor and IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
