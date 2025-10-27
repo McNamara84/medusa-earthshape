@@ -4,11 +4,6 @@ set -e
 # Remove a potentially pre-existing server.pid for Rails
 rm -f /app/tmp/pids/server.pid
 
-# Clean up problematic gems from Gemfile.lock if they exist
-sed -i '/acts_as_mappable/d' /app/Gemfile.lock 2>/dev/null || true
-sed -i '/with_recursive/d' /app/Gemfile.lock 2>/dev/null || true
-sed -i '/dream.misasa.okayama-u.ac.jp/d' /app/Gemfile.lock 2>/dev/null || true
-
 # Wait for database to be ready
 echo "Waiting for database..."
 until PGPASSWORD=$DATABASE_PASSWORD psql -h "$DATABASE_HOST" -U "$DATABASE_USER" -d "$DATABASE_NAME" -c '\q' 2>/dev/null; do

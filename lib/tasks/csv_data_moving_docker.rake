@@ -1,4 +1,4 @@
-desc "csv data moving for Docker (using Ruby CSV parser instead of PostgreSQL COPY)"
+desc "CSV data moving for Docker (using Ruby CSV parser instead of PostgreSQL COPY)"
 
 task :csv_data_moving_docker => :environment do
   require 'csv'
@@ -74,7 +74,7 @@ task :csv_data_moving_docker => :environment do
       puts "  Loading #{rows.count} rows into #{table_name}..."
       
       # Get the model class
-      model_class = table_name.classify.constantize rescue nil
+      model_class = table_name.classify.constantize rescue NameError
       
       if model_class
         # Use ActiveRecord model if available
@@ -84,18 +84,22 @@ task :csv_data_moving_docker => :environment do
           record.save(validate: false)
         end
       else
-        # Fall back to raw SQL insert
+        # Fall back to raw SQL insert with proper quoting
         rows.each do |row|
-          columns = row.to_h.keys.join(", ")
+          columns = row.to_h.keys.map { |col| ActiveRecord::Base.connection.quote_column_name(col) }.join(", ")
           values = row.to_h.values.map { |v| ActiveRecord::Base.connection.quote(v) }.join(", ")
-          ActiveRecord::Base.connection.execute("INSERT INTO #{table_name} (#{columns}) VALUES (#{values})")
+          quoted_table = ActiveRecord::Base.connection.quote_table_name(table_name)
+          ActiveRecord::Base.connection.execute("INSERT INTO #{quoted_table} (#{columns}) VALUES (#{values})")
         end
       end
       
-      # Reset sequence
-      max_id = ActiveRecord::Base.connection.select_value("SELECT MAX(id) FROM #{table_name}").to_i
+      # Reset sequence with proper quoting
+      quoted_table = ActiveRecord::Base.connection.quote_table_name(table_name)
+      max_id = ActiveRecord::Base.connection.select_value("SELECT MAX(id) FROM #{quoted_table}").to_i
       if max_id > 0
-        ActiveRecord::Base.connection.execute("SELECT setval('#{table_name}_id_seq', #{max_id})")
+        sequence_name = "#{table_name}_id_seq"
+        quoted_sequence = ActiveRecord::Base.connection.quote_table_name(sequence_name)
+        ActiveRecord::Base.connection.execute("SELECT setval(#{ActiveRecord::Base.connection.quote(sequence_name)}, #{max_id})")
       end
       
       puts "  ✓ Loaded #{table_name}"
