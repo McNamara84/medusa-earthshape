@@ -5,12 +5,13 @@ describe AttachmentFile do
 
  describe "validates" do
     let(:user){FactoryGirl.create(:user)}
+    let(:filetopic){FactoryGirl.create(:filetopic)}
     before{User.current = user}
     describe "data" do
       before{obj.save}
       context "is presence" do
         let(:data) { fixture_file_upload("/files/test_image.jpg",'image/jpeg')}
-        let(:obj){AttachmentFile.new(data: data)}
+        let(:obj){AttachmentFile.new(data: data, filetopic: filetopic)}
         it { expect(obj).to be_valid }
       end
       context "is blank" do

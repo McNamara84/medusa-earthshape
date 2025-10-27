@@ -1,5 +1,6 @@
 FactoryGirl.define do
   factory :attachment_file do
+    association :filetopic, factory: :filetopic
     name "添付ファイル１"
     description "説明１"
     md5hash "abcde"

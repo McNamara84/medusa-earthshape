@@ -4,6 +4,12 @@ module HasRecursive
   	# with_recursive # Temporarily disabled - gem not publicly available
   end
 
+  # Fallback implementation when with_recursive gem is not available
+  # This provides basic functionality for hierarchical models
+  def descendants
+    children.flat_map { |child| [child] + child.descendants }
+  end
+
   def self_and_descendants
   	[self].concat(self.descendants.to_a)
   end
