@@ -24,7 +24,34 @@ Medusa is a comprehensive web-based sample management system designed for geolog
 
 ## Quick Start (Development)
 
-### Prerequisites
+### Option 1: Docker (Recommended for Local Testing)
+
+The easiest way to run Medusa locally is using Docker:
+
+**Windows (PowerShell):**
+```powershell
+.\start-docker.ps1
+```
+
+**Linux/Mac:**
+```bash
+docker compose up -d
+```
+
+**Access the application:**
+- URL: http://localhost:3000
+- Default login: `admin` / `admin123`
+
+**Stop the application:**
+```bash
+docker compose down
+```
+
+See [DOCKER.md](DOCKER.md) for detailed Docker documentation. Windows users should also check [DOCKER-WINDOWS.md](DOCKER-WINDOWS.md).
+
+### Option 2: Native Installation
+
+#### Prerequisites
 
 Install system dependencies:
 
