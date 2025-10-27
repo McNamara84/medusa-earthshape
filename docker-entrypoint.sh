@@ -33,34 +33,34 @@ if [ "$TABLE_COUNT" = "0" ] || [ "$TABLE_COUNT" = "" ]; then
   # Run database setup
   bundle exec rake db:schema:load
   
-  # Create admin user directly (bypassing CSV seed issues)
-  echo "Creating admin user..."
-  bundle exec rails runner "
-    unless User.exists?(username: 'admin')
-      admin = User.create!(
-        username: 'admin',
-        administrator: true,
-        email: 'admin@medusa-dev.local',
-        password: 'admin123',
-        password_confirmation: 'admin123'
-      )
-      admin_group = Group.create!(name: 'admin')
-      admin_group.users << admin
-      admin_box = Box.create!(name: 'admin')
-      admin_box.user = admin
-      admin_box.group = admin_group
-      admin.box_id = admin_box.id
-      admin.save!
-      puts '✓ Admin user created: admin / admin123'
-    else
-      puts '✓ Admin user already exists'
-    end
-  " || echo "Warning: Admin user creation failed, continuing anyway..."
-  
-  # Try to run seeds for CSV data (will skip if files missing)
+  # Run seeds to load CSV data and create admin user
   if [ -f "db/seeds.rb" ]; then
-    echo "Attempting to run database seeds..."
-    bundle exec rake db:seed 2>/dev/null || echo "Note: Seed data (CSV files) not loaded - not critical for development"
+    echo "Running database seeds (loading CSV data and creating admin user)..."
+    if bundle exec rake db:seed; then
+      echo "✓ Database seeded successfully"
+    else
+      echo "✗ Seeding failed, creating minimal admin user..."
+      # Fallback: Create admin user manually if seeding fails
+      bundle exec rails runner "
+        unless User.exists?(username: 'admin')
+          admin = User.create!(
+            username: 'admin',
+            administrator: true,
+            email: 'admin@medusa-dev.local',
+            password: 'admin123',
+            password_confirmation: 'admin123'
+          )
+          admin_group = Group.create!(name: 'admin')
+          admin_group.users << admin
+          admin_box = Box.create!(name: 'admin')
+          admin_box.user = admin
+          admin_box.group = admin_group
+          admin.box_id = admin_box.id
+          admin.save!
+          puts '✓ Admin user created: admin / admin123'
+        end
+      "
+    fi
   fi
 else
   echo "Database already set up, running migrations..."
