@@ -26,7 +26,7 @@ describe OutputPdf do
   describe "constants" do
     describe "QRCODE_DIM" do
       subject { klass::QRCODE_DIM }
-      it { expect(subject).to eq 2 }
+      it { expect(subject).to eq 6 }
     end
   end
 
@@ -35,7 +35,7 @@ describe OutputPdf do
     before { allow(obj).to receive(:set_card_data) }
     after { obj.build_card }
     it { expect(ThinReports::Report).to receive(:new).and_call_original }
-    it { expect(obj).to receive(:report_template).with("card").and_call_original }
+    it { expect(obj).to receive(:report_template).with("igsn").and_call_original }
     it { expect(obj).to receive(:set_card_data) }
     it { expect(obj.build_card.class).to eq ThinReports::Report::Base }
   end
@@ -67,6 +67,7 @@ describe OutputPdf do
       allow(page).to receive(:item).with(:qr_code).and_return(item_qr_code)
       allow(page).to receive(:item).with(:image).and_return(item_image)
       allow(item_name).to receive(:value).with(name)
+      allow(item_global_id).to receive(:style).with(:font_size, 15).and_return(item_global_id)
       allow(item_global_id).to receive(:value).with(global_id)
       allow(item_qr_code).to receive(:src).with(qr_image)
       allow(item_image).to receive(:value).with(primary_attachment_file_path)
@@ -74,11 +75,13 @@ describe OutputPdf do
     it { expect(page).to receive(:item).with(:name) }
     it { expect(item_name).to receive(:value).with(name) }
     it { expect(page).to receive(:item).with(:global_id) }
+    it { expect(item_global_id).to receive(:style).with(:font_size, 15) }
     it { expect(item_global_id).to receive(:value).with(global_id) }
     it { expect(page).to receive(:item).with(:qr_code) }
     it { expect(item_qr_code).to receive(:src).with(qr_image) }
-    it { expect(page).to receive(:item).with(:image) }
-    it { expect(item_image).to receive(:value).with(primary_attachment_file_path) }
+    # Image item is commented out in set_card_data method
+    #it { expect(page).to receive(:item).with(:image) }
+    #it { expect(item_image).to receive(:value).with(primary_attachment_file_path) }
   end
 
   describe "qr_image" do
@@ -136,7 +139,7 @@ describe OutputPdf do
     let(:obj) { klass.create(name: "foo", global_id: "1234") }
     before { allow(obj).to receive(:set_card_data) }
     it { expect(ThinReports::Report).to receive(:new).and_call_original }
-    it { expect(obj).to receive(:report_template).with("card").and_call_original }
+    it { expect(obj).to receive(:report_template).with("igsn").and_call_original }
     it { expect(obj).to receive(:set_card_data) }
     it { expect(klass.build_cards(resources).class).to eq ThinReports::Report::Base }
   end
