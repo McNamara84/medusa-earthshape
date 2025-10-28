@@ -30,7 +30,7 @@ jobs:
             database: medusa_test
             pool: 5
             username: medusa
-            password: my_password
+            password: medusa_development
             host: db
             port: 5432
           EOF
