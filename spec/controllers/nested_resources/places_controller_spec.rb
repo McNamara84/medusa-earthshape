@@ -7,7 +7,8 @@ describe NestedResources::PlacesController do
   let(:child) { FactoryGirl.create(child_name) }
   let(:user) { FactoryGirl.create(:user) }
   let(:url){"where_i_came_from"}
-  let(:attributes) { {name: name} }
+  # Place.initialize requires latitude and longitude to be strings (not nil) for gsub!
+  let(:attributes) { {name: name, latitude: "1.0", longitude: "2.0", elevation: "0", is_parent: true} }
   let(:name){"child_name"}
   before { request.env["HTTP_REFERER"]  = url }
   before { sign_in user }

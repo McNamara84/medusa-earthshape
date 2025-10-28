@@ -222,7 +222,11 @@ describe Analysis do
     let(:chemistry){FactoryGirl.create(:chemistry)}
     let(:obj) { FactoryGirl.create(:analysis) }
     let(:obj2) { FactoryGirl.create(:analysis) }
-    let(:obj3) { FactoryGirl.create(:analysis, stone_id: stone.id) }
+    let(:obj3) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone
+      analysis
+    end
     let(:objs){ [obj,obj2, stone]}
     let(:objs2){ [obj,obj2,box]}
     before do

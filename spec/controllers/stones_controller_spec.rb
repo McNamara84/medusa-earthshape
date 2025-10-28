@@ -9,9 +9,21 @@ describe StonesController do
     let(:stone_1) { FactoryGirl.create(:stone, name: "hoge") }
     let(:stone_2) { FactoryGirl.create(:stone, name: "stone_2") }
     let(:stone_3) { FactoryGirl.create(:stone, name: "stone_3") }
-    let(:analysis_1) { FactoryGirl.create(:analysis, stone_id: stone_1.id) }
-    let(:analysis_2) { FactoryGirl.create(:analysis, stone_id: stone_2.id) }
-    let(:analysis_3) { FactoryGirl.create(:analysis, stone_id: stone_3.id) }
+    let(:analysis_1) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone_1
+      analysis
+    end
+    let(:analysis_2) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone_2
+      analysis
+    end
+    let(:analysis_3) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone_3
+      analysis
+    end
     before do
       stone_1;stone_2;stone_3
       get :index
@@ -43,9 +55,21 @@ describe StonesController do
   
   describe "GET show", :current => true do
     let(:stone) { FactoryGirl.create(:stone) }
-    let(:analysis_1) { FactoryGirl.create(:analysis, stone_id: stone.id) }
-    let(:analysis_2) { FactoryGirl.create(:analysis, stone_id: stone.id) }
-    let(:analysis_3) { FactoryGirl.create(:analysis, stone_id: stone.id) }
+    let(:analysis_1) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone
+      analysis
+    end
+    let(:analysis_2) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone
+      analysis
+    end
+    let(:analysis_3) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone
+      analysis
+    end
     before do
       analysis_1;analysis_2;analysis_3;
     end

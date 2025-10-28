@@ -22,9 +22,21 @@ describe PlacesController do
     let(:stone_1) { FactoryGirl.create(:stone, name: "hoge", place_id: place_1.id) }
     let(:stone_2) { FactoryGirl.create(:stone, name: "stone_2", place_id: place_2.id) }
     let(:stone_3) { FactoryGirl.create(:stone, name: "stone_3", place_id: place_3.id) }
-    let(:analysis_1) { FactoryGirl.create(:analysis, stone_id: stone_1.id) }
-    let(:analysis_2) { FactoryGirl.create(:analysis, stone_id: stone_2.id) }
-    let(:analysis_3) { FactoryGirl.create(:analysis, stone_id: stone_3.id) }
+    let(:analysis_1) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone_1
+      analysis
+    end
+    let(:analysis_2) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone_2
+      analysis
+    end
+    let(:analysis_3) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone_3
+      analysis
+    end
 
     before do
       place_1
