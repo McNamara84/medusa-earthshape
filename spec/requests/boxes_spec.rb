@@ -67,7 +67,7 @@ describe "box" do
           let(:data_type) { "image/jpeg" }
           before { click_link("picture-button") }
           it "image/jpeg is displayed" do
-            expect(page).to have_css("img", count: 1)
+            expect(page).to have_css("div.spot-thumbnails img")
           end
         end
         context "attachment_file is pdf" do

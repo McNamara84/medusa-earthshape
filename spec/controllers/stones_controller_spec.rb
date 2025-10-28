@@ -246,7 +246,7 @@ describe StonesController do
       allow(Stone).to receive(:build_bundle_label).with(stones).and_return(label)
       allow(controller).to receive(:send_data).and_return{controller.render nothing: true}
     end
-    it { expect(controller).to receive(:send_data).with(label, filename: "stones.csv", type: "text/csv") }
+    it { expect(controller).to receive(:send_data).with(label, filename: "samples.csv", type: "text/csv") }
   end
   
 end

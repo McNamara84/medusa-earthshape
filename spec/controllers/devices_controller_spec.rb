@@ -5,20 +5,24 @@ describe DevicesController do
   before { sign_in user }
   
   describe "GET index" do
-    let(:device_1) { FactoryGirl.create(:device, name: "hoge") }
-    let(:device_2) { FactoryGirl.create(:device, name: "device_2") }
-    let(:device_3) { FactoryGirl.create(:device, name: "device_3") }
+    # Use unique names to avoid collisions with other tests
+    # timestamp is evaluated once and cached for all let blocks
+    let(:timestamp) { Time.now.to_i.to_s }
+    let(:device_1) { FactoryGirl.create(:device, name: "hoge_#{timestamp}") }
+    let(:device_2) { FactoryGirl.create(:device, name: "devicetest_#{timestamp}_2") }
+    let(:device_3) { FactoryGirl.create(:device, name: "devicetest_#{timestamp}_3") }
+    let(:search_term) { "devicetest_#{timestamp}" }
     let(:params) { {q: query, page: 2, per_page: 1} }
     before do
       device_1;device_2;device_3
       get :index, params
     end
     context "sort condition is present" do
-      let(:query) { {"name_cont" => "device", "s" => "updated_at DESC"} }
+      let(:query) { {"name_cont" => search_term, "s" => "updated_at DESC"} }
       it { expect(assigns(:devices)).to eq [device_2] }
     end
     context "sort condition is nil" do
-      let(:query) { {"name_cont" => "device"} }
+      let(:query) { {"name_cont" => search_term} }
       it { expect(assigns(:devices)).to eq [device_3] }
     end
   end

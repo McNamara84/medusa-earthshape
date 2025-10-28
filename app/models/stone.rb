@@ -43,9 +43,10 @@ class Stone < ActiveRecord::Base
   validate :parent_id_cannot_self_children, if: ->(stone) { stone.parent_id }
 	  
 
-  # def to_pml
-  #   [self].to_pml
-  # end
+  def to_pml
+    # Sort analyses by id descending for consistent PML output
+    analyses.order(id: :desc).to_pml
+  end
 
   def copy_associations (parent)
 	Preparation.where(stone_id: parent.id).find_each do |parentprep|

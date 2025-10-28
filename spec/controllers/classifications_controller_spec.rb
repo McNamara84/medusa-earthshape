@@ -11,7 +11,8 @@ describe ClassificationsController do
     let(:classifications){ Classification.all }
     before do
       classification_1;classification_2;classification_3
-      get :index
+      # Request all records without pagination by setting very high per_page
+      get :index, per_page: 1000
     end
     it { expect(assigns(:classifications).size).to eq classifications.size }
   end

@@ -11,7 +11,8 @@ describe MeasurementItemsController do
     let(:measurement_items){ MeasurementItem.all }
     before do
       measurement_item_1;measurement_item_2;measurement_item_3
-      get :index
+      # Request all records without pagination by setting very high per_page
+      get :index, per_page: 1000
     end
     it { expect(assigns(:measurement_items).size).to eq measurement_items.size }
   end

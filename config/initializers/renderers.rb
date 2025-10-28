@@ -10,7 +10,10 @@ class Array
 	      	elsif obj.respond_to?(:analysis)
 	      		obj.analysis.to_pml(xml)
 	      	elsif obj.respond_to?(:analyses)
-	      		obj.analyses.each do |analysis|
+	      		# Get analyses and sort by id descending for consistent output
+	      		analyses = obj.analyses
+	      		analyses = analyses.order(id: :desc) if analyses.respond_to?(:order)
+	      		analyses.each do |analysis|
 	      			analysis.to_pml(xml)
 	      		end
 	      	end

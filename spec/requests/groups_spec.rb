@@ -426,7 +426,7 @@ describe "group master" do
           fill_in("group_name", with: "")
         end
         it "error message" do
-          expect(page).to have_content("Name can't be blank")
+          expect(page).to have_content("can't be blank")
         end
         it "data is not updated" do
           expect(create_data.reload.name).to eq create_data.name

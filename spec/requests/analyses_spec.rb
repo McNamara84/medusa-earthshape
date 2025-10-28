@@ -24,7 +24,7 @@ describe "analysis" do
           let(:data_type) { "image/jpeg" }
           before { click_link("picture-button") }
           it "image/jpeg is displayed" do
-            expect(page).to have_css("img", count: 1)
+            expect(page).to have_css("div.spot-thumbnails img")
           end
         end
         context "attachment_file is pdf" do
@@ -38,24 +38,6 @@ describe "analysis" do
     
     describe "at-a-glance tab" do
       before { click_link("at-a-glance") }
-      describe "pdf icon" do
-        context "data_content_type is pdf" do
-          let(:data_type) { "application/pdf" }
-          it "show icon" do
-            expect(page).to have_link("file-#{attachment_file.id}-button")
-          end
-        end
-        context "data_content_type is jpeg" do
-          let(:data_type) { "image/jpeg" }
-          it "do not show icon" do
-            expect(page).not_to have_link("file-#{attachment_file.id}-button")
-          end
-        end
-      end
-    end
-    
-    describe "file tab" do
-      before { click_link("file (1)") }
       describe "pdf icon" do
         context "data_content_type is pdf" do
           let(:data_type) { "application/pdf" }

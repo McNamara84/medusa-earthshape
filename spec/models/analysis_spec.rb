@@ -121,7 +121,7 @@ describe Analysis do
       it { expect(analysis.device_id).to eq device.id }
     end
     context "name is not device name" do
-      let(:name) { "hoge" }
+      let(:name) { "nonexistent_device_name_#{Time.now.to_i}" }
       it { expect(analysis.device_id).to be_nil }
     end
   end
