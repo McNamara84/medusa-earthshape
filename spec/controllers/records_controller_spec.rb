@@ -73,7 +73,11 @@ describe RecordsController do
     end
     context "record found pml " do
       let(:stone) { FactoryGirl.create(:stone) }
-      let(:analysis){ FactoryGirl.create(:analysis, stone_id: stone.id ) }
+      let(:analysis) do
+        analysis = FactoryGirl.create(:analysis)
+        analysis.stones << stone
+        analysis
+      end
       before do
         stone
         analysis
@@ -110,9 +114,21 @@ describe RecordsController do
     let(:root) { FactoryGirl.create(:stone, name: "root") }
     let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
     let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
-    let(:analysis_1){ FactoryGirl.create(:analysis, stone_id: root.id ) }
-    let(:analysis_2){ FactoryGirl.create(:analysis, stone_id: child_1.id ) }
-    let(:analysis_3){ FactoryGirl.create(:analysis, stone_id: child_1_1.id ) }
+    let(:analysis_1) do
+      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1.stones << root
+      analysis_1
+    end
+    let(:analysis_2) do
+      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2.stones << child_1
+      analysis_2
+    end
+    let(:analysis_3) do
+      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3.stones << child_1_1
+      analysis_3
+    end
     before do
       root;child_1;child_1_1;
       analysis_1;analysis_2;analysis_3;
@@ -137,9 +153,21 @@ describe RecordsController do
     let(:root) { FactoryGirl.create(:stone, name: "root") }
     let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
     let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
-    let(:analysis_1){ FactoryGirl.create(:analysis, stone_id: root.id ) }
-    let(:analysis_2){ FactoryGirl.create(:analysis, stone_id: child_1.id ) }
-    let(:analysis_3){ FactoryGirl.create(:analysis, stone_id: child_1_1.id ) }
+    let(:analysis_1) do
+      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1.stones << root
+      analysis_1
+    end
+    let(:analysis_2) do
+      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2.stones << child_1
+      analysis_2
+    end
+    let(:analysis_3) do
+      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3.stones << child_1_1
+      analysis_3
+    end
     before do
       root;child_1;child_1_1;
       analysis_1;analysis_2;analysis_3;
@@ -164,9 +192,21 @@ describe RecordsController do
     let(:root) { FactoryGirl.create(:stone, name: "root") }
     let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
     let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
-    let(:analysis_1){ FactoryGirl.create(:analysis, stone_id: root.id ) }
-    let(:analysis_2){ FactoryGirl.create(:analysis, stone_id: child_1.id ) }
-    let(:analysis_3){ FactoryGirl.create(:analysis, stone_id: child_1_1.id ) }
+    let(:analysis_1) do
+      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1.stones << root
+      analysis_1
+    end
+    let(:analysis_2) do
+      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2.stones << child_1
+      analysis_2
+    end
+    let(:analysis_3) do
+      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3.stones << child_1_1
+      analysis_3
+    end
     before do
       root;child_1;child_1_1;
       analysis_1;analysis_2;analysis_3;
@@ -193,9 +233,21 @@ describe RecordsController do
     let(:root) { FactoryGirl.create(:stone, name: "root") }
     let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
     let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
-    let(:analysis_1){ FactoryGirl.create(:analysis, stone_id: root.id ) }
-    let(:analysis_2){ FactoryGirl.create(:analysis, stone_id: child_1.id ) }
-    let(:analysis_3){ FactoryGirl.create(:analysis, stone_id: child_1_1.id ) }
+    let(:analysis_1) do
+      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1.stones << root
+      analysis_1
+    end
+    let(:analysis_2) do
+      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2.stones << child_1
+      analysis_2
+    end
+    let(:analysis_3) do
+      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3.stones << child_1_1
+      analysis_3
+    end
     before do
       root;child_1;child_1_1;
       analysis_1;analysis_2;analysis_3;
@@ -222,9 +274,21 @@ describe RecordsController do
     let(:root) { FactoryGirl.create(:stone, name: "root") }
     let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
     let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
-    let(:analysis_1){ FactoryGirl.create(:analysis, stone_id: root.id ) }
-    let(:analysis_2){ FactoryGirl.create(:analysis, stone_id: child_1.id ) }
-    let(:analysis_3){ FactoryGirl.create(:analysis, stone_id: child_1_1.id ) }
+    let(:analysis_1) do
+      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1.stones << root
+      analysis_1
+    end
+    let(:analysis_2) do
+      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2.stones << child_1
+      analysis_2
+    end
+    let(:analysis_3) do
+      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3.stones << child_1_1
+      analysis_3
+    end
     before do
       root;child_1;child_1_1;
       analysis_1;analysis_2;analysis_3;
@@ -247,9 +311,21 @@ describe RecordsController do
     let(:root) { FactoryGirl.create(:stone, name: "root") }
     let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
     let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
-    let(:analysis_1){ FactoryGirl.create(:analysis, stone_id: root.id ) }
-    let(:analysis_2){ FactoryGirl.create(:analysis, stone_id: child_1.id ) }
-    let(:analysis_3){ FactoryGirl.create(:analysis, stone_id: child_1_1.id ) }
+    let(:analysis_1) do
+      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1.stones << root
+      analysis_1
+    end
+    let(:analysis_2) do
+      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2.stones << child_1
+      analysis_2
+    end
+    let(:analysis_3) do
+      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3.stones << child_1_1
+      analysis_3
+    end
     before do
       root;child_1;child_1_1;
       analysis_1;analysis_2;analysis_3;
@@ -276,9 +352,25 @@ describe RecordsController do
     let(:child_1_2){ FactoryGirl.create(:stone, parent_id: child_1.id) }
     let(:child_1_3){ FactoryGirl.create(:stone, parent_id: child_1.id) }
 
-    let(:analysis_1){ FactoryGirl.create(:analysis, stone_id: child_1_1.id ) }
-    let(:analysis_2){ FactoryGirl.create(:analysis, stone_id: child_1_2.id ) }
-    let(:analysis_3){ FactoryGirl.create(:analysis, stone_id: child_1_3.id ) }
+    let(:analysis_1) do
+
+      analysis_1 = FactoryGirl.create(:analysis)
+
+      analysis_1.stones << child_1_1
+
+      analysis_1
+
+    end
+    let(:analysis_2) do
+      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2.stones << child_1_2
+      analysis_2
+    end
+    let(:analysis_3) do
+      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3.stones << child_1_3
+      analysis_3
+    end
     before do
       root;child_1;child_1_1;child_1_2;child_1_3;
       analysis_1;analysis_2;analysis_3;
@@ -306,9 +398,25 @@ describe RecordsController do
     let(:child_1_2){ FactoryGirl.create(:stone, parent_id: child_1.id) }
     let(:child_1_3){ FactoryGirl.create(:stone, parent_id: child_1.id) }
 
-    let(:analysis_1){ FactoryGirl.create(:analysis, stone_id: child_1_1.id ) }
-    let(:analysis_2){ FactoryGirl.create(:analysis, stone_id: child_1_2.id ) }
-    let(:analysis_3){ FactoryGirl.create(:analysis, stone_id: child_1_3.id ) }
+    let(:analysis_1) do
+
+      analysis_1 = FactoryGirl.create(:analysis)
+
+      analysis_1.stones << child_1_1
+
+      analysis_1
+
+    end
+    let(:analysis_2) do
+      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2.stones << child_1_2
+      analysis_2
+    end
+    let(:analysis_3) do
+      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3.stones << child_1_3
+      analysis_3
+    end
     before do
       root;child_1;child_1_1;child_1_2;child_1_3;
       analysis_1;analysis_2;analysis_3;
@@ -338,9 +446,25 @@ describe RecordsController do
     let(:child_1_2){ FactoryGirl.create(:stone, parent_id: child_1.id) }
     let(:child_1_3){ FactoryGirl.create(:stone, parent_id: child_1.id) }
 
-    let(:analysis_1){ FactoryGirl.create(:analysis, stone_id: child_1_1.id ) }
-    let(:analysis_2){ FactoryGirl.create(:analysis, stone_id: child_1_2.id ) }
-    let(:analysis_3){ FactoryGirl.create(:analysis, stone_id: child_1_3.id ) }
+    let(:analysis_1) do
+
+      analysis_1 = FactoryGirl.create(:analysis)
+
+      analysis_1.stones << child_1_1
+
+      analysis_1
+
+    end
+    let(:analysis_2) do
+      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2.stones << child_1_2
+      analysis_2
+    end
+    let(:analysis_3) do
+      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3.stones << child_1_3
+      analysis_3
+    end
     before do
       root;child_1;child_1_1;child_1_2;child_1_3;
       analysis_1;analysis_2;analysis_3;

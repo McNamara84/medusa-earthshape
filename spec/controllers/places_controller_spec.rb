@@ -101,9 +101,21 @@ describe PlacesController do
     let(:stone_1) { FactoryGirl.create(:stone, name: "hoge", place_id: obj.id) }
     let(:stone_2) { FactoryGirl.create(:stone, name: "stone_2", place_id: obj.id) }
     let(:stone_3) { FactoryGirl.create(:stone, name: "stone_3", place_id: obj.id) }
-    let(:analysis_1) { FactoryGirl.create(:analysis, stone_id: stone_1.id) }
-    let(:analysis_2) { FactoryGirl.create(:analysis, stone_id: stone_2.id) }
-    let(:analysis_3) { FactoryGirl.create(:analysis, stone_id: stone_3.id) }
+    let(:analysis_1) do
+      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1.stones << stone_1
+      analysis_1
+    end
+    let(:analysis_2) do
+      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2.stones << stone_2
+      analysis_2
+    end
+    let(:analysis_3) do
+      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3.stones << stone_3
+      analysis_3
+    end
     before do
       stone_1;stone_2;stone_3;      
       analysis_1;analysis_2;analysis_3;
