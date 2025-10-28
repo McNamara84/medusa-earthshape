@@ -43,9 +43,10 @@ class Stone < ActiveRecord::Base
   validate :parent_id_cannot_self_children, if: ->(stone) { stone.parent_id }
 	  
 
-  # def to_pml
-  #   [self].to_pml
-  # end
+  def to_pml
+    # Sort analyses by id descending for consistent PML output
+    analyses.order(id: :desc).to_pml
+  end
 
   def copy_associations (parent)
 	Preparation.where(stone_id: parent.id).find_each do |parentprep|
@@ -129,6 +130,10 @@ class Stone < ActiveRecord::Base
   private
   
   def parent_id_cannot_self_children
+    # Reload children association to ensure we have current data from database
+    # This is necessary because descendants() uses the children association,
+    # which may be cached with stale data
+    children.reload if children.loaded?
     invalid_ids = descendants.map(&:id).unshift(self.id)
     if invalid_ids.include?(self.parent_id)
       errors.add(:parent_id, " make loop.")

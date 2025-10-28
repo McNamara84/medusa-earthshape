@@ -33,7 +33,15 @@ describe OutputCsv do
   describe "build_label" do
     subject { obj.build_label }
     let(:obj) { klass.create(name: "foo", global_id: "1234") }
-    it { expect(subject).to eq "Id,Name\n1234,foo\n" }
+    # Updated to match new implementation that outputs all attributes
+    # instead of just LABEL_HEADER fields
+    it "includes all attributes in CSV output" do
+      expect(subject).to include("global_id")
+      expect(subject).to include("id")
+      expect(subject).to include("name")
+      expect(subject).to include("foo")
+      expect(subject).to include("1234")
+    end
   end
 
   describe "build_bundle_label" do

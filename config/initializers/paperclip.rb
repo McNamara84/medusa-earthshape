@@ -2,7 +2,9 @@ require 'paperclip/railtie'
 module Paperclip
   module Interpolations
     def id_partition(attachment_file, style_name)
-      ("%08d" % attachment_file.instance.id).scan(/\d{4}/).join("/")
+      id = attachment_file.instance.id
+      return "0000/0000" if id.nil?
+      ("%08d" % id).scan(/\d{4}/).join("/")
     end
 
     def basename_with_style(attachment_file, style_name)

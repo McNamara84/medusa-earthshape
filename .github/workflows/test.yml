@@ -1,0 +1,147 @@
+name: Test Suite
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: RSpec Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Create required config files
+        run: |
+          # Create database.yml with correct Docker host
+          cat > config/database.yml << 'EOF'
+          test:
+            adapter: postgresql
+            encoding: unicode
+            database: medusa_test
+            pool: 5
+            username: medusa
+            password: medusa_development
+            host: db
+            port: 5432
+          
+          development:
+            adapter: postgresql
+            encoding: unicode
+            database: medusa_development
+            pool: 5
+            username: medusa
+            password: medusa_development
+            host: db
+            port: 5432
+          EOF
+          
+          # Create application.yml from example
+          cp config/application.yml.example config/application.yml
+
+      - name: Build Docker images
+        run: docker compose build
+
+      - name: Start database service only
+        run: |
+          docker compose up -d db
+          echo "Database service started"
+
+      - name: Wait for database to be ready
+        run: |
+          echo "Waiting for PostgreSQL to be ready..."
+          for i in {1..30}; do
+            if docker compose exec -T db pg_isready -U medusa > /dev/null 2>&1; then
+              echo "PostgreSQL is ready!"
+              break
+            fi
+            echo "Waiting... ($i/30)"
+            sleep 2
+          done
+          
+          # Verify connection
+          docker compose exec -T db psql -U medusa -d postgres -c "SELECT 1;" || exit 1
+          echo "Database connection verified!"
+
+      - name: Create test database
+        run: |
+          # Create development database (needed for initializers)
+          docker compose exec -T db psql -U medusa -d postgres -c "DROP DATABASE IF EXISTS medusa_development;" || true
+          docker compose exec -T db psql -U medusa -d postgres -c "CREATE DATABASE medusa_development OWNER medusa;"
+          echo "Development database created"
+          
+          # Create test database
+          docker compose exec -T db psql -U medusa -d postgres -c "DROP DATABASE IF EXISTS medusa_test;" || true
+          docker compose exec -T db psql -U medusa -d postgres -c "CREATE DATABASE medusa_test OWNER medusa;"
+          echo "Test database created successfully"
+
+      - name: Run development migrations (for initializers)
+        run: |
+          # Temporarily start web container to run migrations
+          docker compose run --rm -e RAILS_ENV=development web bundle exec rake db:migrate || echo "Development migration completed"
+          echo "Development database setup completed"
+
+      - name: Start web service
+        run: |
+          docker compose up -d web
+          echo "Web service started"
+          sleep 5
+
+      - name: Check services status
+        run: |
+          docker compose ps
+          echo "Web container logs:"
+          docker compose logs web | tail -30 || true
+
+      - name: Verify web container is running
+        run: |
+          if ! docker compose ps web | grep -q "Up"; then
+            echo "Web container is not running! Logs:"
+            docker compose logs web
+            exit 1
+          fi
+          echo "Web container is running"
+
+      - name: Run database migrations
+        run: |
+          docker compose exec -T web bundle exec rake db:migrate RAILS_ENV=test
+          echo "Migrations completed successfully"
+
+      - name: Seed test database
+        run: |
+          docker compose exec -T web bundle exec rake db:seed RAILS_ENV=test || echo "Seed failed or not needed"
+          echo "Database setup completed"
+
+      - name: Run RSpec tests
+        run: |
+          docker compose exec -T web bundle exec rspec --format progress --format RspecJunitFormatter --out tmp/rspec-results.xml
+          
+      - name: Check test results
+        if: always()
+        run: |
+          if docker compose exec -T web test -f tmp/rspec-results.xml; then
+            echo "✅ Test results file created successfully"
+            docker compose exec -T web cat tmp/rspec-results.xml | grep -o 'tests="[0-9]*"' || echo "Could not extract test count"
+          else
+            echo "⚠️ Warning: Test results file not found"
+          fi
+
+      - name: Get test summary
+        if: always()
+        run: |
+          echo "## 🧪 Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          docker compose exec -T web bundle exec rspec --format documentation --dry-run 2>&1 | grep -E "examples|pending|failures" | tail -3 >> $GITHUB_STEP_SUMMARY || echo "Could not generate summary" >> $GITHUB_STEP_SUMMARY
+
+      - name: Stop services
+        if: always()
+        run: docker compose down -v

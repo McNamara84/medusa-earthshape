@@ -105,8 +105,25 @@ class RecordsController < ApplicationController
 
 # /records/xxxx-xxx/families
   def families
-    @records = @record.respond_to?(:families) ? @record.families : []
+    # Get family nodes (parent + self + siblings + children)
+    family_nodes = @record.respond_to?(:families) ? @record.families : [@record]
+    
+    # For PML format, we need analyses. For JSON/XML, return the family nodes themselves
+    @records = family_nodes
+    
     respond_with @records do |format|
+      # PML format needs analyses with sample information
+      format.pml do
+        if family_nodes.first.respond_to?(:analyses)
+          # Collect unique analysis IDs first to avoid loading duplicate records
+          analysis_ids = family_nodes.flat_map { |node| node.respond_to?(:analyses) ? node.analyses.pluck(:id) : [] }.uniq
+          analyses = Analysis.where(id: analysis_ids)
+          render pml: analyses
+        else
+          render pml: @records
+        end
+      end
+      # JSON/XML return the family nodes (Stones/Boxes) themselves
       format.json { render json: @records.map(&:record_property), methods: [:datum_attributes] }
       format.xml { render xml: @records.map(&:record_property), methods: [:datum_attributes] }
     end

@@ -7,7 +7,26 @@ describe NestedResources::StonesController do
   let(:child) { FactoryGirl.create(child_name) }
   let(:user) { FactoryGirl.create(:user) }
   let(:url){"where_i_came_from"}
-  let(:attributes) { {name: name} }
+  let(:place) { FactoryGirl.create(:place) }
+  let(:box) { FactoryGirl.create(:box) }
+  let(:collection) { FactoryGirl.create(:collection) }
+  let(:stonecontainer_type) { FactoryGirl.create(:stonecontainer_type) }
+  let(:classification) { FactoryGirl.create(:classification) }
+  let(:physical_form) { FactoryGirl.create(:physical_form) }
+  let(:attributes) do
+    {
+      name: name,
+      place_id: place.id,
+      box_id: box.id,
+      collection_id: collection.id,
+      stonecontainer_type_id: stonecontainer_type.id,
+      classification_id: classification.id,
+      physical_form_id: physical_form.id,
+      date: Date.today,
+      quantity_initial: 1,
+      sampledepth: 0
+    }
+  end
   let(:name){"child_name"}
   before { request.env["HTTP_REFERER"]  = url }
   before { sign_in user }

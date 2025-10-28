@@ -5,10 +5,26 @@ describe Stone do
     let(:stone1) { FactoryGirl.create(:stone) }
     let(:stone2) { FactoryGirl.create(:stone) }
     let(:stones) { [stone1] }
-    let(:analysis_1) { FactoryGirl.create(:analysis, stone_id: stone1.id)}
-    let(:analysis_2) { FactoryGirl.create(:analysis, stone_id: stone1.id)}
-    let(:analysis_3) { FactoryGirl.create(:analysis, stone_id: stone2.id)}
-    let(:analysis_4) { FactoryGirl.create(:analysis, stone_id: stone2.id)}
+    let(:analysis_1) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone1
+      analysis
+    end
+    let(:analysis_2) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone1
+      analysis
+    end
+    let(:analysis_3) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone2
+      analysis
+    end
+    let(:analysis_4) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone2
+      analysis
+    end
     before do
       stone1
       stone2

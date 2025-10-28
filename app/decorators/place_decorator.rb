@@ -24,9 +24,9 @@ class PlaceDecorator < Draper::Decorator
   def printlat(lat)
    	    return "" if lat.blank?
 	    if lat < 0
-	      la = "%.4f South" % lat
+	      la = "%.4f S" % lat.abs
 	    else
-	      la = "%.4f North" % lat
+	      la = "%.4f N" % lat
 	    end
 	    la
   end  
@@ -48,9 +48,9 @@ class PlaceDecorator < Draper::Decorator
   def printlon(lon)
      return "" if lon.blank?
     if lon < 0
-      lo = "%.4f West" % lon
+      lo = "%.4f W" % lon.abs
     else
-      lo = "%.4f East" % lon.to_s
+      lo = "%.4f E" % lon
     end
     lo 
   end

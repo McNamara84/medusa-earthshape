@@ -60,7 +60,9 @@ describe ApplicationHelper do
     end
     context "time is 27 hour ago" do
       let(:time) { now - ((60*60*27)) }
-      it { expect(subject).to eq time.to_date }
+      it "returns yesterday with time" do
+        expect(subject).to match(/yesterday, \d+:\d+/)
+      end
     end
   end
 

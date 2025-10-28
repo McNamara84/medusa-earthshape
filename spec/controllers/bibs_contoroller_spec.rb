@@ -31,7 +31,8 @@ describe BibsController do
   
   describe "POST create" do
     describe "with valid attributes" do
-      let(:attributes) { {name: "bib_name", author_ids: ["#{author_id}"]} }
+      # doi parameter is required (controller checks doi.empty? without nil check)
+      let(:attributes) { {name: "bib_name", author_ids: ["#{author_id}"], doi: ""} }
       let(:author_id) { FactoryGirl.create(:author, name: "name_1").id }
       it { expect { post :create, bib: attributes }.to change(Bib, :count).by(1) }
       it "assigns a newly created bib as @bib" do
@@ -41,7 +42,7 @@ describe BibsController do
       end
     end
     describe "with invalid attributes" do
-      let(:attributes) { {name: "", author_ids: [""]} }
+      let(:attributes) { {name: "", author_ids: [""], doi: ""} }
       before { allow_any_instance_of(Bib).to receive(:save).and_return(false) }
       it { expect { post :create, bib: attributes }.not_to change(Bib, :count) }
       it "assigns a newly created bib as @bib" do

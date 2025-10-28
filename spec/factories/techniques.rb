@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :technique do
-    name "double spike"
+    sequence(:name) { |n| "double_spike_#{n}" }
   end
 end

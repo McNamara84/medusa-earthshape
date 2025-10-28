@@ -130,21 +130,15 @@ describe Box do
     end
 
     context "many analysis" do
-      let(:analysis){FactoryGirl.create(:analysis)}
       let(:stone1){FactoryGirl.create(:stone)}
       let(:stone2){FactoryGirl.create(:stone)}
       before do
         obj.stones.clear
         obj.stones << stone1
         obj.stones << stone2
-        stone1.analyses << analysis
-        stone1.analyses << analysis
-        stone1.analyses << analysis
-        stone1.analyses << analysis
-        stone1.analyses << analysis
-        stone2.analyses << analysis
-        stone2.analyses << analysis
-        stone2.analyses << analysis
+        # Create unique analyses for each stone
+        5.times { stone1.analyses << FactoryGirl.create(:analysis) }
+        3.times { stone2.analyses << FactoryGirl.create(:analysis) }
       end
       it { expect(subject.count).to eq (stone1.analyses.size + stone2.analyses.size)}
       it { expect(subject).to eq (stone1.analyses + stone2.analyses)}

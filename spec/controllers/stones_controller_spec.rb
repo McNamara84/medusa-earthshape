@@ -9,9 +9,21 @@ describe StonesController do
     let(:stone_1) { FactoryGirl.create(:stone, name: "hoge") }
     let(:stone_2) { FactoryGirl.create(:stone, name: "stone_2") }
     let(:stone_3) { FactoryGirl.create(:stone, name: "stone_3") }
-    let(:analysis_1) { FactoryGirl.create(:analysis, stone_id: stone_1.id) }
-    let(:analysis_2) { FactoryGirl.create(:analysis, stone_id: stone_2.id) }
-    let(:analysis_3) { FactoryGirl.create(:analysis, stone_id: stone_3.id) }
+    let(:analysis_1) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone_1
+      analysis
+    end
+    let(:analysis_2) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone_2
+      analysis
+    end
+    let(:analysis_3) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone_3
+      analysis
+    end
     before do
       stone_1;stone_2;stone_3
       get :index
@@ -43,9 +55,21 @@ describe StonesController do
   
   describe "GET show", :current => true do
     let(:stone) { FactoryGirl.create(:stone) }
-    let(:analysis_1) { FactoryGirl.create(:analysis, stone_id: stone.id) }
-    let(:analysis_2) { FactoryGirl.create(:analysis, stone_id: stone.id) }
-    let(:analysis_3) { FactoryGirl.create(:analysis, stone_id: stone.id) }
+    let(:analysis_1) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone
+      analysis
+    end
+    let(:analysis_2) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone
+      analysis
+    end
+    let(:analysis_3) do
+      analysis = FactoryGirl.create(:analysis)
+      analysis.stones << stone
+      analysis
+    end
     before do
       analysis_1;analysis_2;analysis_3;
     end
@@ -73,12 +97,31 @@ describe StonesController do
   end
   
   describe "POST create" do
-    let(:attributes) { {name: "stone_name"} }
+    let(:place) { FactoryGirl.create(:place) }
+    let(:box) { FactoryGirl.create(:box) }
+    let(:collection) { FactoryGirl.create(:collection) }
+    let(:stonecontainer_type) { FactoryGirl.create(:stonecontainer_type) }
+    let(:classification) { FactoryGirl.create(:classification) }
+    let(:physical_form) { FactoryGirl.create(:physical_form) }
+    let(:attributes) do
+      {
+        name: "stone_name",
+        place_id: place.id,
+        box_id: box.id,
+        collection_id: collection.id,
+        stonecontainer_type_id: stonecontainer_type.id,
+        classification_id: classification.id,
+        physical_form_id: physical_form.id,
+        date: Date.today,
+        quantity_initial: 1,
+        sampledepth: 0
+      }
+    end
     it { expect { post :create, stone: attributes }.to change(Stone, :count).by(1) }
     describe "assigns as @stone" do
       before { post :create, stone: attributes }
       it { expect(assigns(:stone)).to be_persisted }
-      it { expect(assigns(:stone).name).to eq attributes[:name]}
+      it { expect(assigns(:stone).name).to eq "stone_name"}
     end
   end
   
@@ -203,7 +246,7 @@ describe StonesController do
       allow(Stone).to receive(:build_bundle_label).with(stones).and_return(label)
       allow(controller).to receive(:send_data).and_return{controller.render nothing: true}
     end
-    it { expect(controller).to receive(:send_data).with(label, filename: "stones.csv", type: "text/csv") }
+    it { expect(controller).to receive(:send_data).with(label, filename: "samples.csv", type: "text/csv") }
   end
   
 end

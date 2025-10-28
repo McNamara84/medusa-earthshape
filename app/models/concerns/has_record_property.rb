@@ -96,7 +96,7 @@ module HasRecordProperty
   def blood_path
     items = []
     if self.respond_to?(:parent) && self.parent
-      items << "/#{self.ancestors.map(&:name).join('/')}"
+      items << "/#{self.ancestors.reverse.map(&:name).join('/')}"
     else
       items << ""
     end
@@ -122,7 +122,7 @@ module HasRecordProperty
 
     tokens = []
     tokens << path
-    tokens << "<#{self.class.model_name.human.downcase}: #{global_id}>"
+    tokens << "<#{self.class.name.downcase}: #{global_id}>"
     tokens << "<link: " + links.join(" ") + ">"
     tokens << "<last-modified: #{updated_at}>"
     tokens << "<created: #{created_at}>"        
