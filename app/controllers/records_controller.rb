@@ -105,7 +105,16 @@ class RecordsController < ApplicationController
 
 # /records/xxxx-xxx/families
   def families
-    @records = @record.respond_to?(:families) ? @record.families : []
+    # Get family nodes (parent + self + siblings + children)
+    family_nodes = @record.respond_to?(:families) ? @record.families : [@record]
+    
+    # For hierarchical models (Stone/Box), get all analyses from family nodes
+    if family_nodes.first.respond_to?(:analyses)
+      @records = family_nodes.flat_map { |node| node.respond_to?(:analyses) ? node.analyses.to_a : [] }.uniq
+    else
+      @records = family_nodes
+    end
+    
     respond_with @records do |format|
       format.json { render json: @records.map(&:record_property), methods: [:datum_attributes] }
       format.xml { render xml: @records.map(&:record_property), methods: [:datum_attributes] }

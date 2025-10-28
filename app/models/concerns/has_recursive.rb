@@ -31,18 +31,12 @@ module HasRecursive
   end
   
   def families
-    # For Stone/Box: Returns analyses of parent + self + siblings + children
-    # This provides a "family view" showing the immediate hierarchy context
+    # For Stone/Box: Returns the family stones (parent + self + siblings + children)
+    # This provides nodes for hierarchical tree rendering
     family_nodes = []
     family_nodes << parent if parent.present?
     family_nodes += self_and_siblings.to_a
     family_nodes += children.to_a if respond_to?(:children)
-    
-    # Get all analyses for these nodes
-    if respond_to?(:analyses)
-      family_nodes.flat_map { |node| node.respond_to?(:analyses) ? node.analyses.to_a : [] }.uniq
-    else
-      []
-    end
+    family_nodes.uniq
   end
 end
