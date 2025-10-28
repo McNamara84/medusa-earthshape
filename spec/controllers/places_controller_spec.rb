@@ -130,7 +130,7 @@ describe PlacesController do
   end
 
   describe "POST create" do
-    let(:attributes) { {name: "place_name"} }
+    let(:attributes) { {name: "place_name", latitude: "1.0", longitude: "2.0", elevation: "0", is_parent: true} }
     it { expect {post :create ,place: attributes}.to change(Place, :count).by(1) }
     context "create" do
       before{post :create ,place: attributes}
@@ -140,7 +140,7 @@ describe PlacesController do
 
   describe "PUT update" do
     let(:obj){FactoryGirl.create(:place) }
-    let(:attributes) { {name: "update_name"} }
+    let(:attributes) { {name: "update_name", latitude: "1.0", longitude: "2.0", elevation: "0"} }
     it { expect {put :update ,id: obj.id,place: attributes}.to change(Place, :count).by(0) }
     before do
       obj
