@@ -33,6 +33,16 @@ jobs:
             password: medusa_development
             host: db
             port: 5432
+          
+          development:
+            adapter: postgresql
+            encoding: unicode
+            database: medusa_development
+            pool: 5
+            username: medusa
+            password: medusa_development
+            host: db
+            port: 5432
           EOF
           
           # Create application.yml from example
@@ -41,8 +51,10 @@ jobs:
       - name: Build Docker images
         run: docker compose build
 
-      - name: Start services
-        run: docker compose up -d
+      - name: Start database service only
+        run: |
+          docker compose up -d db
+          echo "Database service started"
 
       - name: Wait for database to be ready
         run: |
@@ -62,10 +74,42 @@ jobs:
 
       - name: Create test database
         run: |
-          # Create database directly via psql instead of rake
-          docker compose exec -T db psql -U medusa -d postgres -c "DROP DATABASE IF EXISTS medusa_test;"
+          # Create development database (needed for initializers)
+          docker compose exec -T db psql -U medusa -d postgres -c "DROP DATABASE IF EXISTS medusa_development;" || true
+          docker compose exec -T db psql -U medusa -d postgres -c "CREATE DATABASE medusa_development OWNER medusa;"
+          echo "Development database created"
+          
+          # Create test database
+          docker compose exec -T db psql -U medusa -d postgres -c "DROP DATABASE IF EXISTS medusa_test;" || true
           docker compose exec -T db psql -U medusa -d postgres -c "CREATE DATABASE medusa_test OWNER medusa;"
           echo "Test database created successfully"
+
+      - name: Run development migrations (for initializers)
+        run: |
+          # Temporarily start web container to run migrations
+          docker compose run --rm -e RAILS_ENV=development web bundle exec rake db:migrate || echo "Development migration completed"
+          echo "Development database setup completed"
+
+      - name: Start web service
+        run: |
+          docker compose up -d web
+          echo "Web service started"
+          sleep 5
+
+      - name: Check services status
+        run: |
+          docker compose ps
+          echo "Web container logs:"
+          docker compose logs web | tail -30 || true
+
+      - name: Verify web container is running
+        run: |
+          if ! docker compose ps web | grep -q "Up"; then
+            echo "Web container is not running! Logs:"
+            docker compose logs web
+            exit 1
+          fi
+          echo "Web container is running"
 
       - name: Run database migrations
         run: |
