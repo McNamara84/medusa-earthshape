@@ -25,7 +25,7 @@ describe "box" do
         let(:data_type) { "image/jpeg" }
         it "new spot label is properly displayed" do
           expect(page).to have_content("new spot with link(ID")
-          #new spot with link(ID) feildのvalueオプションが存在しないため空であることの検証は行っていない
+          # new spot with link(ID) field has no value option, so empty state verification is not performed
           expect(page).to have_link("record-property-search")
           expect(page).to have_button("add new spot")
         end
@@ -58,7 +58,7 @@ describe "box" do
         end
       end
       describe "new spot" do
-        pending "new spot新規作成時の実装が困難のためpending" do
+        pending "new spot creation implementation is difficult, pending" do
         end
       end
 

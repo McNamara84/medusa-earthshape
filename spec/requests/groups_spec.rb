@@ -23,12 +23,12 @@ describe "group master" do
     end
     
     it "other field display" do
-      #name feildのvalueオプションが存在しないため空であることの検証は行っていない
+      # name field has no value option, so empty state verification is not performed
       expect(page).to have_field("q_updated_at_gteq", with: "")
       expect(page).to have_field("q_updated_at_lteq_end_of_day", with: "")
       expect(page).to have_field("q_created_at_gteq", with: "")
       expect(page).to have_field("q_created_at_lteq_end_of_day", with: "")
-      #group_nameのfeildのvalueオプションが存在しないため空であることの検証は行っていない
+      # group_name field has no value option, so empty state verification is not performed
       expect(page).to have_button("save-button")
       expect(page).not_to have_button("update")
       expect(page).not_to have_link("cancel")
@@ -49,7 +49,7 @@ describe "group master" do
         FactoryGirl.create(:group, name: "#{name}2")
         FactoryGirl.create(:group, name: "hoge")
       end
-      let(:name) { "グループ" }
+      let(:name) { "Group" }
       context "value that is not registered" do
         let(:fill_in_search_condition) { fill_in("q_name_cont", with: "abcd") }
         it "input keep content" do
@@ -94,8 +94,7 @@ describe "group master" do
           context "input from" do
             let(:fill_in_search_condition) { fill_in("q_updated_at_gteq", with: "9999-12-31") }
             it "input keep content" do
-              #TODO nameのtext_feildのvalueがないため""(空文字)でのマッチングができない
-              #expect(page).to have_field("q_name_cont", with: "")
+              # TODO: name text_field has no value attribute, cannot match with ""
               expect(page).to have_field("q_updated_at_gteq", with: "9999-12-31")
               expect(page).to have_field("q_updated_at_lteq_end_of_day", with: "")
               expect(page).to have_field("q_created_at_gteq", with: "")
@@ -108,7 +107,7 @@ describe "group master" do
           context "input to" do
             let(:fill_in_search_condition) { fill_in("q_updated_at_lteq_end_of_day", with: "1000-12-31") }
             it "input keep content" do
-              #nameのtext_feildのvalueがないため""(空文字)でのマッチングができない
+              # name text_field has no value attribute, cannot match with ""
               expect(page).to have_field("q_updated_at_gteq", with: "")
               expect(page).to have_field("q_updated_at_lteq_end_of_day", with: "1000-12-31")
               expect(page).to have_field("q_created_at_gteq", with: "")
@@ -124,7 +123,7 @@ describe "group master" do
               fill_in("q_updated_at_lteq_end_of_day", with: "9999-12-31")
             end
             it "input keep content" do
-              # nameのtext_feildのvalueオプションが存在しないため空であることの検証は行っていない
+              # name text_field has no value attribute, cannot verify empty state
               expect(page).to have_field("q_updated_at_gteq", with: "9999-12-31")
               expect(page).to have_field("q_updated_at_lteq_end_of_day", with: "9999-12-31")
               expect(page).to have_field("q_created_at_gteq", with: "")
@@ -139,7 +138,7 @@ describe "group master" do
           context "input from" do
             let(:fill_in_search_condition) { fill_in("q_updated_at_gteq", with: updated_at_1) }
             it "input keep content" do
-              #nameのtext_feildのvalueオプションが存在しないため空であることの検証は行っていない
+              # name text_field has no value attribute, cannot verify empty state
               expect(page).to have_field("q_updated_at_gteq", with: updated_at_1)
               expect(page).to have_field("q_updated_at_lteq_end_of_day", with: "")
               expect(page).to have_field("q_created_at_gteq", with: "")
@@ -151,7 +150,7 @@ describe "group master" do
           context "input to" do
             let(:fill_in_search_condition) { fill_in("q_updated_at_lteq_end_of_day", with: updated_at_2) }
             it "input keep content" do
-              #nameのtext_feildのvalueオプションが存在しないため空であることの検証は行っていない
+              # name text_field has no value attribute, cannot verify empty state
               expect(page).to have_field("q_updated_at_gteq", with: "")
               expect(page).to have_field("q_updated_at_lteq_end_of_day", with: updated_at_2)
               expect(page).to have_field("q_created_at_gteq", with: "")
@@ -167,7 +166,7 @@ describe "group master" do
                fill_in("q_updated_at_lteq_end_of_day", with: updated_at_2) 
             end
             it "input keep content" do
-              #nameのtext_feildのvalueオプションが存在しないため空であることの検証は行っていない
+              # name text_field has no value attribute, cannot verify empty state
               expect(page).to have_field("q_updated_at_gteq", with: updated_at_1)
               expect(page).to have_field("q_updated_at_lteq_end_of_day", with: updated_at_2)
               expect(page).to have_field("q_created_at_gteq", with: "")
@@ -183,7 +182,7 @@ describe "group master" do
           context "input from" do
             let(:fill_in_search_condition) { fill_in("q_created_at_gteq", with: "9999-12-31") }
             it "input keep content" do
-              #nameのtext_feildのvalueオプションが存在しないため空であることの検証は行っていない
+              # name text_field has no value attribute, cannot verify empty state
               expect(page).to have_field("q_updated_at_gteq", with: "")
               expect(page).to have_field("q_updated_at_lteq_end_of_day", with: "")
               expect(page).to have_field("q_created_at_gteq", with: "9999-12-31")
@@ -196,7 +195,7 @@ describe "group master" do
           context "input to" do
             let(:fill_in_search_condition) { fill_in("q_created_at_lteq_end_of_day", with: "1000-12-31") }
             it "input keep content" do
-              #nameのtext_feildのvalueオプションが存在しないため空であることの検証は行っていない
+              # name text_field has no value attribute, cannot verify empty state
               expect(page).to have_field("q_updated_at_gteq", with: "")
               expect(page).to have_field("q_updated_at_lteq_end_of_day", with: "")
               expect(page).to have_field("q_created_at_gteq", with: "")
@@ -212,7 +211,7 @@ describe "group master" do
               fill_in("q_created_at_lteq_end_of_day", with: "9999-12-31")
             end
             it "input keep content" do
-              #nameのtext_feildのvalueオプションが存在しないため空であることの検証は行っていない
+              # name text_field has no value attribute, cannot verify empty state
               expect(page).to have_field("q_updated_at_gteq", with: "")
               expect(page).to have_field("q_updated_at_lteq_end_of_day", with: "")
               expect(page).to have_field("q_created_at_gteq", with: "9999-12-31")
@@ -227,7 +226,7 @@ describe "group master" do
           context "input from" do
             let(:fill_in_search_condition) { fill_in("q_created_at_gteq", with: created_at_1) }
             it "input keep content" do
-              #nameのtext_feildのvalueオプションが存在しないため空であることの検証は行っていない
+              # name text_field has no value attribute, cannot verify empty state
               expect(page).to have_field("q_updated_at_gteq", with: "")
               expect(page).to have_field("q_updated_at_lteq_end_of_day", with: "")
               expect(page).to have_field("q_created_at_gteq", with: created_at_1)
@@ -239,7 +238,7 @@ describe "group master" do
           context "input to" do
             let(:fill_in_search_condition) { fill_in("q_created_at_lteq_end_of_day", with: created_at_2) }
             it "input keep content" do
-              #nameのtext_feildのvalueオプションが存在しないため空であることの検証は行っていない
+              # name text_field has no value attribute, cannot verify empty state
               expect(page).to have_field("q_updated_at_gteq", with: "")
               expect(page).to have_field("q_updated_at_lteq_end_of_day", with: "")
               expect(page).to have_field("q_created_at_gteq", with: "")
@@ -254,7 +253,7 @@ describe "group master" do
                fill_in("q_created_at_lteq_end_of_day", with: created_at_2)
             end
             it "input keep content" do
-              #nameのtext_feildのvalueオプションが存在しないため空であることの検証は行っていない
+              # name text_field has no value attribute, cannot verify empty state
               expect(page).to have_field("q_updated_at_gteq", with: "")
               expect(page).to have_field("q_updated_at_lteq_end_of_day", with: "")
               expect(page).to have_field("q_created_at_gteq", with: created_at_1)
@@ -273,7 +272,7 @@ describe "group master" do
            fill_in("q_created_at_lteq_end_of_day", with: created_at_3) 
         end
         it "input keep content" do
-          #nameのtext_feildのvalueオプションが存在しないため空であることの検証は行っていない
+          # name text_field has no value attribute, cannot verify empty state
           expect(page).to have_field("q_updated_at_gteq", with: updated_at_1)
           expect(page).to have_field("q_updated_at_lteq_end_of_day", with: updated_at_3)
           expect(page).to have_field("q_created_at_gteq", with: created_at_1)
@@ -291,9 +290,9 @@ describe "group master" do
       group_2
       group_3
     end
-    let(:group_1) { FactoryGirl.create(:group, name: "グループ1", created_at: created_at_1, updated_at: updated_at_1) }
-    let(:group_2) { FactoryGirl.create(:group, name: "グループ2", created_at: created_at_2, updated_at: updated_at_2) }
-    let(:group_3) { FactoryGirl.create(:group, name: "グループ3", created_at: created_at_3, updated_at: updated_at_3) }
+    let(:group_1) { FactoryGirl.create(:group, name: "Group1", created_at: created_at_1, updated_at: updated_at_1) }
+    let(:group_2) { FactoryGirl.create(:group, name: "Group2", created_at: created_at_2, updated_at: updated_at_2) }
+    let(:group_3) { FactoryGirl.create(:group, name: "Group3", created_at: created_at_3, updated_at: updated_at_3) }
     let(:created_at_1) { (DateTime.now - 3).strftime("%Y-%m-%d") }
     let(:created_at_2) { (DateTime.now - 2).strftime("%Y-%m-%d") }
     let(:created_at_3) { (DateTime.now - 1).strftime("%Y-%m-%d") }
@@ -321,7 +320,7 @@ describe "group master" do
     end
     describe "updated_at" do
       context "ascending order" do
-         #画面遷移時updated_atはデフォルトで昇順のソートリンクが付いている
+         # By default, updated_at has ascending sort link on page load
         it "ascending order display" do
           expect(page).to have_css("tbody tr:eq(1) td:eq(4)", text: group_1.updated_at.strftime("%Y-%m-%d"))
           expect(page).to have_css("tbody tr:eq(2) td:eq(4)", text: group_2.updated_at.strftime("%Y-%m-%d"))
@@ -360,20 +359,20 @@ describe "group master" do
   end
   
   describe "create", js: true do
-    pending "テスト内で新規作成ボタンを押下時にモーダルウィンドウが表示されない" do
-      #TODO　テスト内で新規作成ボタンを押下時にモーダルウィンドウが表示されないため検証保留
+    pending "Modal window does not display when clicking create button in test" do
+      # TODO: Modal window does not display when clicking create button in test, verification pending
       before do
         new_record_condition
         click_button("save-button")
       end
-      context "新規レコード作成が失敗した場合" do
+      context "new record creation failed" do
         let(:new_record_condition) { fill_in("group_name", with: "") }
-        it "ダイアログの内容が表示されていること" do
+        it "dialog content is displayed" do
         end
       end
-      context "新規レコード作成が成功した場合" do
+      context "new record creation succeeded" do
         let(:new_record_condition) { fill_in("group_name", with: "test") }
-        it "ダイアログの内容が表示されていること" do
+        it "dialog content is displayed" do
         end
       end
     end
