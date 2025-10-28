@@ -60,8 +60,5 @@ RUN chmod +x /usr/bin/docker-entrypoint.sh
 # Expose port 3000
 EXPOSE 3000
 
-# Set entrypoint
-ENTRYPOINT ["docker-entrypoint.sh"]
-
-# Default command
+# Default command (can be overridden by docker-compose.yml)
 CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
