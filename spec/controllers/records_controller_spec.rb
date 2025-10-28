@@ -356,13 +356,9 @@ describe RecordsController do
     let(:child_1_3){ FactoryGirl.create(:stone, parent_id: child_1.id) }
 
     let(:analysis_1) do
-
       analysis_1 = FactoryGirl.create(:analysis)
-
       analysis_1.stones << child_1_1
-
       analysis_1
-
     end
     let(:analysis_2) do
       analysis_2 = FactoryGirl.create(:analysis)

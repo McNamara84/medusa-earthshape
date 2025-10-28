@@ -51,8 +51,10 @@ class Analysis < ActiveRecord::Base
   def stone_id=(id)
     stones.clear
     stones << Stone.find(id) unless id.nil? || id == 0
-  rescue ActiveRecord::RecordNotFound
-    # Ignore if stone not found
+  rescue ActiveRecord::RecordNotFound => e
+    # Log warning for data integrity - attempting to assign non-existent stone
+    Rails.logger.warn("Analysis#stone_id=: Stone ID #{id} not found (Analysis: #{self.id || 'new'})")
+    # Continue without raising to maintain backward compatibility
   end
 
   def stone_global_id

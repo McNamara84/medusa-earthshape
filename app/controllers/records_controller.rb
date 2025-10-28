@@ -115,7 +115,9 @@ class RecordsController < ApplicationController
       # PML format needs analyses with sample information
       format.pml do
         if family_nodes.first.respond_to?(:analyses)
-          analyses = family_nodes.flat_map { |node| node.respond_to?(:analyses) ? node.analyses.to_a : [] }.uniq
+          # Collect unique analysis IDs first to avoid loading duplicate records
+          analysis_ids = family_nodes.flat_map { |node| node.respond_to?(:analyses) ? node.analyses.pluck(:id) : [] }.uniq
+          analyses = Analysis.where(id: analysis_ids)
           render pml: analyses
         else
           render pml: @records

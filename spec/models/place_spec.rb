@@ -63,22 +63,24 @@ describe Place do
       end
       context "content_type is 'text/csv'" do
         let(:content_type) { 'text/csv' }
-        # FIXME: CSV import fails because imported places don't have parent/topographic_position
-        # This is a bug in the import logic - it should either set is_parent=true or provide required fields
+        # TODO: Fix CSV import validation failure - imported places need either:
+        #   1. is_parent=true flag set, OR
+        #   2. parent_id and topographic_position_id provided
+        # This is a known bug in Place.import_csv method. Track as GitHub issue.
         pending "CSV import needs to handle validation requirements" do
           expect(subject).to be_present
         end
       end
       context "content_type is 'text/plain'" do
         let(:content_type) { 'text/plain' }
-        # FIXME: CSV import fails because imported places don't have parent/topographic_position
+        # TODO: Same CSV import validation issue as text/csv above
         pending "CSV import needs to handle validation requirements" do
           expect(subject).to be_present
         end
       end
       context "content_type is 'application/csv'" do
         let(:content_type) { 'application/csv' }
-        # FIXME: CSV import fails because imported places don't have parent/topographic_position
+        # TODO: Same CSV import validation issue as text/csv above
         pending "CSV import needs to handle validation requirements" do
           expect(subject).to be_present
         end

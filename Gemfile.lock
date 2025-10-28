@@ -34,8 +34,8 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
     acts_as_list (0.4.0)
-      activerecord (>= 3.0)
       actionpack (~> 4.0)
+      activerecord (>= 3.0)
       activerecord (~> 4.0)
       railties (~> 4.0)
     acts_as_taggable_on (3.0.0.rc2)
@@ -267,6 +267,8 @@ GEM
       rspec-expectations (= 3.0.0.beta1)
       rspec-mocks (= 3.0.0.beta1)
     rspec-support (3.0.0.beta1)
+    rspec_junit_formatter (0.5.1)
+      rspec-core (>= 2, < 4, != 2.12.0)
     rubyzip (1.1.0)
     sass (3.2.14)
     sass-rails (4.0.1)
@@ -333,9 +335,9 @@ GEM
       rack (>= 1.0)
     websocket-driver (0.3.2)
     whenever (0.9.0)
+      activerecord (~> 4.0)
       activesupport (>= 2.3.4)
       chronic (>= 0.6.3)
-      activerecord (~> 4.0)
     xpath (2.0.0)
       nokogiri (~> 1.3)
     yard (0.8.7.4)
@@ -386,6 +388,7 @@ DEPENDENCIES
   ransack
   rqrcode
   rspec-rails (>= 3.0.0.beta1)
+  rspec_junit_formatter
   rubyzip
   sass-rails (~> 4.0.0)
   sdoc
@@ -401,4 +404,4 @@ DEPENDENCIES
   whenever
 
 BUNDLED WITH
-   1.11.2
+   1.17.3

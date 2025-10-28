@@ -2,6 +2,10 @@ require 'matrix'
 class AttachmentFile < ActiveRecord::Base
   include HasRecordProperty
 
+  # Paperclip configuration for file attachments
+  # :id_partition creates directory structure from ID (e.g., ID 123456 -> 000/123/456)
+  # NOTE: When ID is nil (unsaved record), Paperclip generates '000/000/000' placeholder path.
+  #       This is normal Paperclip behavior and gets replaced with actual path after save.
   has_attached_file :data,
 #                    styles: { thumb: "160x120>", tiny: "50x50" },
                     path: ":rails_root/public/system/:class/:id_partition/:basename_with_style.:extension",
