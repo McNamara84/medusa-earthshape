@@ -108,14 +108,20 @@ class RecordsController < ApplicationController
     # Get family nodes (parent + self + siblings + children)
     family_nodes = @record.respond_to?(:families) ? @record.families : [@record]
     
-    # For hierarchical models (Stone/Box), get all analyses from family nodes
-    if family_nodes.first.respond_to?(:analyses)
-      @records = family_nodes.flat_map { |node| node.respond_to?(:analyses) ? node.analyses.to_a : [] }.uniq
-    else
-      @records = family_nodes
-    end
+    # For PML format, we need analyses. For JSON/XML, return the family nodes themselves
+    @records = family_nodes
     
     respond_with @records do |format|
+      # PML format needs analyses with sample information
+      format.pml do
+        if family_nodes.first.respond_to?(:analyses)
+          analyses = family_nodes.flat_map { |node| node.respond_to?(:analyses) ? node.analyses.to_a : [] }.uniq
+          render pml: analyses
+        else
+          render pml: @records
+        end
+      end
+      # JSON/XML return the family nodes (Stones/Boxes) themselves
       format.json { render json: @records.map(&:record_property), methods: [:datum_attributes] }
       format.xml { render xml: @records.map(&:record_property), methods: [:datum_attributes] }
     end

@@ -11,8 +11,11 @@ describe RecordsController do
     let(:bib) { FactoryGirl.create(:bib) }
     let(:place) { FactoryGirl.create(:place) }
     let(:attachment_file) { FactoryGirl.create(:attachment_file) }
-    let(:allcount){Stone.count + Box.count + Analysis.count + Bib.count + Place.count + AttachmentFile.count}
+    # Count only record_properties that are readable by current user
+    # instead of all objects in the database
+    let(:allcount) { RecordProperty.readables(user).where.not(datum_type: ["Chemistry", "Spot", "Staging"]).count }
     before do
+      User.current = user  # Ensure User.current is set for record_property creation
       stone
       box
       analysis
