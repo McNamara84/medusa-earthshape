@@ -1,5 +1,7 @@
 # Medusa - EarthShape Sample Management System
 
+[![Test Suite](https://github.com/McNamara84/medusa-earthshape/actions/workflows/test.yml/badge.svg)](https://github.com/McNamara84/medusa-earthshape/actions/workflows/test.yml)
+
 Medusa is a comprehensive web-based sample management system designed for geological and earth science research. It manages hierarchical collections of physical samples (stones), their containers (boxes), sampling locations (places), and analytical chemistry data.
 
 ## Features

@@ -102,6 +102,7 @@ group :test do
   gem 'simplecov-rcov', :require => false
   gem 'ci_reporter'
   gem 'factory_girl_rails'
+  gem 'rspec_junit_formatter' # For CI test result reporting
 end
 
 gem 'active_link_to'
