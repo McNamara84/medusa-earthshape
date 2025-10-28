@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :device do
-    name "EPMA"
+    sequence(:name) { |n| "EPMA_#{n}" }
   end
 end

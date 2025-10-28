@@ -97,12 +97,31 @@ describe StonesController do
   end
   
   describe "POST create" do
-    let(:attributes) { {name: "stone_name"} }
+    let(:place) { FactoryGirl.create(:place) }
+    let(:box) { FactoryGirl.create(:box) }
+    let(:collection) { FactoryGirl.create(:collection) }
+    let(:stonecontainer_type) { FactoryGirl.create(:stonecontainer_type) }
+    let(:classification) { FactoryGirl.create(:classification) }
+    let(:physical_form) { FactoryGirl.create(:physical_form) }
+    let(:attributes) do
+      {
+        name: "stone_name",
+        place_id: place.id,
+        box_id: box.id,
+        collection_id: collection.id,
+        stonecontainer_type_id: stonecontainer_type.id,
+        classification_id: classification.id,
+        physical_form_id: physical_form.id,
+        date: Date.today,
+        quantity_initial: 1,
+        sampledepth: 0
+      }
+    end
     it { expect { post :create, stone: attributes }.to change(Stone, :count).by(1) }
     describe "assigns as @stone" do
       before { post :create, stone: attributes }
       it { expect(assigns(:stone)).to be_persisted }
-      it { expect(assigns(:stone).name).to eq attributes[:name]}
+      it { expect(assigns(:stone).name).to eq "stone_name"}
     end
   end
   

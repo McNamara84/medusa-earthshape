@@ -115,12 +115,12 @@ describe AnalysesController do
   end
 
   describe "POST create" do
-    let(:attributes) { {name: "obj_name"} }
+    let(:attributes) { {name: "obj_name", operator: "Test Operator"} }
     it { expect { post :create, analysis: attributes }.to change(Analysis, :count).by(1) }
     describe "assigns as @analysis" do
       before{ post :create, analysis: attributes }
       it{ expect(assigns(:analysis)).to be_persisted }
-      it { expect(assigns(:analysis).name).to eq attributes[:name] }
+      it { expect(assigns(:analysis).name).to eq "obj_name" }
     end
   end
 

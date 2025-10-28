@@ -7,7 +7,7 @@ describe NestedResources::AnalysesController do
   let(:child) { FactoryGirl.create(child_name) }
   let(:user) { FactoryGirl.create(:user) }
   let(:url){"where_i_came_from"}
-  let(:attributes) { {name: name} }
+  let(:attributes) { {name: name, operator: "Test Operator"} }
   let(:name){"child_name"}
   before { request.env["HTTP_REFERER"]  = url }
   before { sign_in user }

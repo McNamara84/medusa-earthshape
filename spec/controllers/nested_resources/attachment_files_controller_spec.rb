@@ -8,7 +8,8 @@ describe NestedResources::AttachmentFilesController do
   let(:child) { FactoryGirl.create(child_name) }
   let(:user) { FactoryGirl.create(:user) }
   let(:url){"where_i_came_from"}
-  let(:attributes) { {data: data} }
+  let(:filetopic) { FactoryGirl.create(:filetopic) }
+  let(:attributes) { {data: data, filetopic_id: filetopic.id} }
   let(:data){fixture_file_upload("/files/test_image.jpg",'image/jpeg')}
   before { request.env["HTTP_REFERER"]  = url }
   before { sign_in user }
