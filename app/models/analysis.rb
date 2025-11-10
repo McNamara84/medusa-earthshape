@@ -19,15 +19,19 @@ class Analysis < ActiveRecord::Base
   validates :name, presence: true, length: { maximum: 255 }
   validates :operator, presence: true, length: { maximum: 255 }
 
-  MeasurementCategory.all.each do |mc|
-    comma mc.name.to_sym do
-      name "name"
-      name "device_name"
-      name "technique_name"
-      name "description"
-      name "operator"
-      name "stone_global_id"
-      mc.export_headers.map { |header| name header }
+  # Deferred loading of MeasurementCategory comma definitions
+  # to avoid autoloading issues in Rails 4.2
+  def self.define_comma_formats
+    MeasurementCategory.all.each do |mc|
+      comma mc.name.to_sym do
+        name "name"
+        name "device_name"
+        name "technique_name"
+        name "description"
+        name "operator"
+        name "stone_global_id"
+        mc.export_headers.map { |header| name header }
+      end
     end
   end
 
@@ -213,9 +217,9 @@ class Analysis < ActiveRecord::Base
   end
 
   def get_spot
-    spots =  Spot.find_all_by_target_uid(global_id)
+    spots = Spot.where(target_uid: global_id)
     return if spots.empty?
-    spots[0]
+    spots.first
   end 
 
 end

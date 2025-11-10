@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   
   validates :username, presence: true, length: {maximum: 255}, uniqueness: true
   validates :box, existence: true, allow_nil: true
-  validate :correct_igsn_prefix, allow_nil: true
+  validate :correct_igsn_prefix, if: -> { prefix.present? }  # Rails 4.2: use :if instead of :allow_nil
 
   alias_attribute :admin?, :administrator
   
@@ -26,6 +26,10 @@ class User < ActiveRecord::Base
   
   def as_json(options = {})
     super({:methods => :box_global_id}.merge(options))
+  end
+
+  def box_global_id
+    box&.global_id
   end
 
   protected

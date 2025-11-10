@@ -1,11 +1,10 @@
-# Use Ruby 2.2.10 (last stable 2.2.x version)
-FROM ruby:2.2.10
+# Use Ruby 2.3.8 (last stable 2.3.x version)
+FROM ruby:2.3.8
 
-# Fix for Debian Jessie (archived repositories)
-RUN echo "deb http://archive.debian.org/debian/ jessie main" > /etc/apt/sources.list && \
-    echo "deb http://archive.debian.org/debian-security/ jessie/updates main" >> /etc/apt/sources.list && \
-    echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until && \
-    echo 'APT::Get::AllowUnauthenticated "true";' >> /etc/apt/apt.conf.d/99allow-unauth
+# Fix for Debian Stretch (archived repositories since 2023)
+RUN echo "deb http://archive.debian.org/debian/ stretch main" > /etc/apt/sources.list && \
+    echo "deb http://archive.debian.org/debian-security/ stretch/updates main" >> /etc/apt/sources.list && \
+    echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
 
 # Install system dependencies
 RUN apt-get update -qq && apt-get install -y --force-yes \

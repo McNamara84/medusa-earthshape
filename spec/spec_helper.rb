@@ -27,6 +27,7 @@ RSpec.configure do |config|
   # config.mock_with :rr
   
   config.include Capybara::DSL
+  config.include Devise::Test::ControllerHelpers, type: :controller  # Devise 4.x support
 
   config.include ControllerSpecHelper, type: :controller
   config.include RequestSpecHelper, type: :request

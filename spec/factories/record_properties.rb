@@ -12,6 +12,6 @@ FactoryGirl.define do
     guest_writable false
     global_id "グローバルID１"
     published false
-    published_at DateTime.now.strftime("%Y-%m-%d %H:%M:%S")
+    published_at { DateTime.now }
   end
 end
