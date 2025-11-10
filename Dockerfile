@@ -1,5 +1,5 @@
-# Use Ruby 2.1.10 (last stable 2.1.x version)
-FROM ruby:2.1.10
+# Use Ruby 2.2.10 (last stable 2.2.x version)
+FROM ruby:2.2.10
 
 # Fix for Debian Jessie (archived repositories)
 RUN echo "deb http://archive.debian.org/debian/ jessie main" > /etc/apt/sources.list && \
