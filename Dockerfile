@@ -1,5 +1,5 @@
-# Use Ruby 2.3.8 (last stable 2.3.x version)
-FROM ruby:2.3.8
+# Use Ruby 2.4.10 (last stable 2.4.x version)
+FROM ruby:2.4.10
 
 # Fix for Debian Stretch (archived repositories since 2023)
 RUN echo "deb http://archive.debian.org/debian/ stretch main" > /etc/apt/sources.list && \
@@ -22,7 +22,7 @@ RUN apt-get update -qq && apt-get install -y --force-yes \
 # Set working directory
 WORKDIR /app
 
-# Install bundler 1.17.3 (compatible with Ruby 2.1)
+# Install bundler 1.17.3 (compatible with Ruby 2.3-2.4)
 RUN gem install bundler -v '1.17.3'
 
 # Copy Gemfile and Gemfile.lock

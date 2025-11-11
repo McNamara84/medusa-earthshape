@@ -18,7 +18,8 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'  # Updated for Rails 4.2
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-gem 'therubyracer', platforms: :ruby
+# gem 'therubyracer', platforms: :ruby  # Incompatible with Ruby 2.4+
+gem 'mini_racer', platforms: :ruby  # Modern replacement, easier to compile
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
