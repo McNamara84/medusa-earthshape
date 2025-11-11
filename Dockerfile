@@ -15,6 +15,8 @@ RUN apt-get update -qq && apt-get install -y --force-yes \
     imagemagick \
     libmagickwand-dev \
     git \
+    phantomjs \
+    xvfb \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory

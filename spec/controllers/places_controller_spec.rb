@@ -227,18 +227,20 @@ describe PlacesController do
   end
   
   describe "GET download_bundle_label" do
-    after { get :download_bundle_label, ids: params_ids }
     let(:place) { FactoryGirl.create(:place) }
     let(:params_ids) { [place.id.to_s] }
     let(:label) { double(:label) }
     let(:places) { Place.all }
     before do
       place
-      allow(Place).to receive(:where).with(id: params_ids).and_return(places)
-      allow(Place).to receive(:build_bundle_label).with(places).and_return(label)
-      allow(controller).to receive(:send_data).and_return(nil)
+      allow(Place).to receive(:where).and_return(places)
+      allow(Place).to receive(:build_bundle_label).and_return(label)
     end
-    it { expect(controller).to receive(:send_data).with(label, filename: "places.csv", type: "text/csv") }
+    it "sends bundle label data" do
+      allow(controller).to receive(:send_data) { controller.response_body = '' }
+      expect(controller).to receive(:send_data).with(label, filename: "places.csv", type: "text/csv")
+      get :download_bundle_label, ids: params_ids
+    end
   end
 
   describe "POST import" do

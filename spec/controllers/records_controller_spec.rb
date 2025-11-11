@@ -519,7 +519,7 @@ describe RecordsController do
     end
   end
   
-  describe "GET casteml" do
+  describe "casteml" do
     let(:obj) { FactoryGirl.create(:stone) }
     let(:analysis_1){ FactoryGirl.create(:analysis, :stone_id => obj.id )}
     let(:analysis_2){ FactoryGirl.create(:analysis, :stone_id => obj.id )}
@@ -529,8 +529,11 @@ describe RecordsController do
       analysis_1
       analysis_2      
     end
-    after{get :casteml, id: obj.global_id }
-    it { expect(controller).to receive(:send_data).with(casteml, {type: "application/xml", filename: obj.global_id + ".pml", disposition: "attached"}) }
+    it "sends casteml data" do
+      allow(controller).to receive(:send_data) { controller.response_body = '' }
+      expect(controller).to receive(:send_data).with(casteml, {type: "application/xml", filename: obj.global_id + ".pml", disposition: "attached"})
+      get :casteml, id: obj.global_id
+    end
   end
 
   describe "DELETE destroy" do

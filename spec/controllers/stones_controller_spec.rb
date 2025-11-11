@@ -235,18 +235,20 @@ describe StonesController do
   end
   
   describe "download_bundle_label" do
-    after { get :download_bundle_label, ids: params_ids }
     let(:stone) { FactoryGirl.create(:stone) }
     let(:params_ids) { [stone.id.to_s] }
     let(:label) { double(:label) }
     let(:stones) { Stone.all }
     before do
       stone
-      allow(Stone).to receive(:where).with(id: params_ids).and_return(stones)
-      allow(Stone).to receive(:build_bundle_label).with(stones).and_return(label)
-      allow(controller).to receive(:send_data).and_return(nil)
+      allow(Stone).to receive(:where).and_return(stones)
+      allow(Stone).to receive(:build_bundle_label).and_return(label)
     end
-    it { expect(controller).to receive(:send_data).with(label, filename: "samples.csv", type: "text/csv") }
+    it "sends bundle label data" do
+      allow(controller).to receive(:send_data) { controller.response_body = '' }
+      expect(controller).to receive(:send_data).with(label, filename: "samples.csv", type: "text/csv")
+      get :download_bundle_label, ids: params_ids
+    end
   end
   
 end

@@ -219,15 +219,21 @@ describe AnalysesController do
     let(:obj2) { FactoryGirl.create(:analysis) }
     let(:objs){ [obj,obj2]}
     let(:castemls){Analysis.to_castemls(objs)}
-    after{get :castemls, ids: objs.map {|obj| obj.id} }
-    it { expect(controller).to receive(:send_data).with(castemls, filename: "my-great-analysis.pml", type: "application/xml", disposition: "attached") }
+    it "sends castemls data" do
+      allow(controller).to receive(:send_data) { controller.response_body = '' }
+      expect(controller).to receive(:send_data).with(castemls, filename: "my-great-analysis.pml", type: "application/xml", disposition: "attached")
+      get :castemls, ids: objs.map {|obj| obj.id}
+    end
   end
 
   describe "GET casteml", :current => true do
     let(:obj) { FactoryGirl.create(:analysis) }
     let(:casteml){Analysis.to_castemls([obj])}
-    after{get :casteml, id: obj.id }
-    it { expect(controller).to receive(:send_data).with(casteml, filename: obj.global_id + ".pml", type: "application/xml", disposition: "attached") }
+    it "sends casteml data" do
+      allow(controller).to receive(:send_data) { controller.response_body = '' }
+      expect(controller).to receive(:send_data).with(casteml, filename: obj.global_id + ".pml", type: "application/xml", disposition: "attached")
+      get :casteml, id: obj.id
+    end
   end
 
 

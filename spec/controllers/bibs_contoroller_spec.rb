@@ -120,18 +120,18 @@ describe BibsController do
   end
   
   describe "GET download_to_tex" do
-    after { get :download_to_tex, ids: params_ids }
     let(:bib) { FactoryGirl.create(:bib) }
     let(:params_ids) { [bib.id.to_s] }
     let(:tex) { double(:tex) }
-    let(:bibs) { Bib.all }
     before do
       bib
-      allow(Bib).to receive(:where).with(id: params_ids).and_return(bibs)
-      allow(Bib).to receive(:build_bundle_tex).with(bibs).and_return(tex)
-      allow(controller).to receive(:send_data).and_return(nil)
+      allow(Bib).to receive(:build_bundle_tex).and_return(tex)
     end
-    it { expect(controller).to receive(:send_data).with(tex, filename: "bibs.bib", type: "text") }
+    it "sends tex data" do
+      allow(controller).to receive(:send_data) { controller.response_body = '' }
+      expect(controller).to receive(:send_data).with(tex, filename: "bibs.bib", type: "text")
+      get :download_to_tex, ids: params_ids
+    end
   end
 
 end
