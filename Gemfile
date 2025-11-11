@@ -88,9 +88,9 @@ group :development, :test do
   gem 'pry-doc'
   gem 'pry-stack_explorer'
   gem 'pry-byebug'
-  gem 'rspec-rails', '>= 3.0.0.beta1'
+  gem 'rspec-rails', '~> 3.5.0'  # Updated from beta1 - stable version compatible with Rails 4.2 & Rake 13
   gem 'spring'
-  gem 'guard-rspec', require: false
+  gem 'guard-rspec', '>= 4.7.0', require: false  # Updated to support RSpec 3.5+
   gem 'capistrano'
   gem 'capistrano-rails'
   gem 'capistrano-rbenv'
