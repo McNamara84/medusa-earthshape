@@ -2,8 +2,10 @@ source 'https://rubygems.org'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.11.3'  # Updated from 4.0.2 for Ruby 2.3 compatibility
-gem 'loofah', '~> 2.3.1'  # Lock to older version compatible with nokogiri 1.6.x
+gem 'rails', '~> 5.0.7'  # Upgraded from 4.2.11.3 for Ruby 2.6+ compatibility
+gem 'nokogiri', '~> 1.10.10'  # Lock to version compatible with Ruby 2.5 (1.13+ requires Ruby 2.6+)
+gem 'loofah', '~> 2.3.1'  # Lock to older version compatible with nokogiri 1.10
+gem 'psych', '~> 3.3.0'  # Lock to version 3.x for mini_racer compatibility (4.x+ have safe_load issues with libv8-node)
 
 # Use postgresql as the database for Active Record
 gem 'pg'
@@ -68,7 +70,7 @@ gem 'geonames'
 gem 'rubyzip'
 #gem 'oai'
 gem 'comma'
-gem 'acts_as_taggable_on'
+gem 'acts-as-taggable-on', git: 'https://github.com/mbleigh/acts-as-taggable-on', tag: 'v4.0.0'  # Rails 4.0-5.2 compatible bridge version (was acts_as_taggable_on 3.0.0.rc2)
 gem 'exception_notification'
 gem 'settingslogic'
 gem 'validates_existence'
@@ -80,8 +82,9 @@ gem 'thinreports', '>= 0.8.0'
 gem 'bootstrap-sass'
 gem 'ransack'
 gem 'whenever', require: false
-gem 'acts_as_list'
+gem 'acts_as_list', '~> 1.0'  # Updated for Rails 5 compatibility (was 0.4.0)
 gem 'builder'
+gem 'ffi', '~> 1.15.0'  # Lock to version compatible with RubyGems 3.0.x (1.17+ requires RubyGems 3.3.22+)
 gem 'test-unit', '~> 3.0'  # Required for rspec-rails with Ruby 2.2+
 group :development, :test do
   gem 'rak'
@@ -90,7 +93,8 @@ group :development, :test do
   gem 'pry-stack_explorer'
   gem 'pry-byebug'
   gem 'rspec-rails', '~> 3.5.0'  # Updated from beta1 - stable version compatible with Rails 4.2 & Rake 13
-  gem 'spring'
+  gem 'rails-controller-testing'  # Required for Rails 5.0+ (assigns, assert_template)
+  gem 'spring', '~> 2.1.0'  # Lock to version compatible with Ruby 2.5 (v4+ requires Ruby 2.7+)
   gem 'guard-rspec', '>= 4.7.0', require: false  # Updated to support RSpec 3.5+
   gem 'capistrano'
   gem 'capistrano-rails'
