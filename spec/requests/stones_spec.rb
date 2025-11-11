@@ -59,7 +59,8 @@ describe "stone" do
       end
 
       describe "new spot" do
-        pending "new spot creation implementation is difficult, pending" do
+        # Skip to avoid "FIXED" error
+        xit "new spot creation implementation is difficult, pending" do
         end
       end
 

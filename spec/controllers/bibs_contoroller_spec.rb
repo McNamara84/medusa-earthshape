@@ -129,7 +129,7 @@ describe BibsController do
       bib
       allow(Bib).to receive(:where).with(id: params_ids).and_return(bibs)
       allow(Bib).to receive(:build_bundle_tex).with(bibs).and_return(tex)
-      allow(controller).to receive(:send_data).and_return{controller.render nothing: true}
+      allow(controller).to receive(:send_data).and_return{controller.render(body: nil)}
     end
     it { expect(controller).to receive(:send_data).with(tex, filename: "bibs.bib", type: "text") }
   end

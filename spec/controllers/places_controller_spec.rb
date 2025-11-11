@@ -222,8 +222,8 @@ describe PlacesController do
     # send_data
   end
   
-  # send_data test returns unexpected object.
-  pending "GET download_label" do
+  # send_data test returns unexpected object. Skip to avoid "FIXED" error.
+  xit "GET download_label" do
   end
   
   describe "GET download_bundle_label" do
@@ -236,7 +236,7 @@ describe PlacesController do
       place
       allow(Place).to receive(:where).with(id: params_ids).and_return(places)
       allow(Place).to receive(:build_bundle_label).with(places).and_return(label)
-      allow(controller).to receive(:send_data).and_return{controller.render nothing: true}
+      allow(controller).to receive(:send_data).and_return{controller.render(body: nil)}
     end
     it { expect(controller).to receive(:send_data).with(label, filename: "places.csv", type: "text/csv") }
   end
