@@ -213,7 +213,7 @@ describe StonesController do
       stone
       allow(stone).to receive(:build_card).and_return(double(:report))
       allow(double(:report)).to receive(:generate).and_return(double(:generate))
-      allow(controller).to receive(:send_data).and_return{controller.render(body: nil)}
+      allow(controller).to receive(:send_data).and_return(nil)
     end
     it { expect(controller).to receive(:send_data).with(double(:generate), filename: "stone.pdf", type: "application/pdf") }
   end
@@ -229,7 +229,7 @@ describe StonesController do
     before do
       stone
       allow(stone).to receive(:build_label).and_return(double(:build_label))
-      allow(controller).to receive(:send_data).and_return{controller.render(body: nil)}
+      allow(controller).to receive(:send_data).and_return(nil)
     end
     it { expect(controller).to receive(:send_data).with(double(:build_label), filename: "Stone_#{stone.id}.csv", type: "text/csv") }
   end
@@ -244,7 +244,7 @@ describe StonesController do
       stone
       allow(Stone).to receive(:where).with(id: params_ids).and_return(stones)
       allow(Stone).to receive(:build_bundle_label).with(stones).and_return(label)
-      allow(controller).to receive(:send_data).and_return{controller.render(body: nil)}
+      allow(controller).to receive(:send_data).and_return(nil)
     end
     it { expect(controller).to receive(:send_data).with(label, filename: "samples.csv", type: "text/csv") }
   end

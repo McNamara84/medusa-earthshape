@@ -530,7 +530,7 @@ describe RecordsController do
       analysis_2      
     end
     after{get :casteml, id: obj.global_id }
-    it { expect(controller).to receive(:send_data).with(casteml, {type: "application/xml", filename: obj.global_id + ".pml", disposition: "attached"}).and_return{controller.render(body: nil)} }
+    it { expect(controller).to receive(:send_data).with(casteml, {type: "application/xml", filename: obj.global_id + ".pml", disposition: "attached"}) }
   end
 
   describe "DELETE destroy" do

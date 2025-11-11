@@ -77,7 +77,7 @@ describe AttachmentFilesController do
     let(:attachment_file) { FactoryGirl.create(:attachment_file) }
     before do
       attachment_file
-      allow(controller).to receive(:send_file).and_return{controller.render(body: nil)}
+      allow(controller).to receive(:send_file).and_return(nil)
     end
     it { expect(controller).to receive(:send_file).with(attachment_file.data.path, filename: attachment_file.data_file_name, type: attachment_file.data_content_type) }
   end

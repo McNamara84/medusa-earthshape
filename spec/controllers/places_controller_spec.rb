@@ -236,7 +236,7 @@ describe PlacesController do
       place
       allow(Place).to receive(:where).with(id: params_ids).and_return(places)
       allow(Place).to receive(:build_bundle_label).with(places).and_return(label)
-      allow(controller).to receive(:send_data).and_return{controller.render(body: nil)}
+      allow(controller).to receive(:send_data).and_return(nil)
     end
     it { expect(controller).to receive(:send_data).with(label, filename: "places.csv", type: "text/csv") }
   end
