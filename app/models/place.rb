@@ -26,6 +26,17 @@ class Place < ActiveRecord::Base
 	RecordProperty.readables(user).where(datum_type:  self).where("datum_id IN (?)",  ids).order(:name).pluck(:name, :global_id)
    }
    
+   # Virtual attribute for forms: allows setting parent via global_id
+   def parent_global_id
+     parent&.global_id
+   end
+   
+   def parent_global_id=(global_id)
+     return if global_id.blank?
+     record_property = RecordProperty.find_by_global_id(global_id)
+     self.parent_id = record_property&.datum_id if record_property&.datum_type == 'Place'
+   end
+   
    validates :name, presence: true, length: { maximum: 255 }
    with_options unless: :is_parent? do |childvalidations|
 	   childvalidations.validates :latitude, presence: true, length: { maximum: 255 }

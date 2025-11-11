@@ -18,6 +18,17 @@ class Box < ActiveRecord::Base
   belongs_to :parent, class_name: "Box", foreign_key: :parent_id
   belongs_to :box_type
 
+  # Virtual attribute for forms: allows setting parent via global_id
+  def parent_global_id
+    parent&.global_id
+  end
+  
+  def parent_global_id=(global_id)
+    return if global_id.blank?
+    record_property = RecordProperty.find_by_global_id(global_id)
+    self.parent_id = record_property&.datum_id if record_property&.datum_type == 'Box'
+  end
+
   validates :box_type, existence: true, allow_nil: true
   validates :parent_id, existence: true, allow_nil: true
   validates :name, presence: true, length: { maximum: 255 }, uniqueness: { scope: :parent_id }

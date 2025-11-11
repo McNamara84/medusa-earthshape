@@ -27,6 +27,47 @@ class Stone < ActiveRecord::Base
   belongs_to :collectionmethod
   has_many :preparations, dependent: :destroy
 
+  # Virtual attributes for forms: allows setting relationships via global_id
+  def parent_global_id
+    parent&.global_id
+  end
+  
+  def parent_global_id=(global_id)
+    return if global_id.blank?
+    record_property = RecordProperty.find_by_global_id(global_id)
+    self.parent_id = record_property&.datum_id if record_property&.datum_type == 'Stone'
+  end
+  
+  def place_global_id
+    place&.global_id
+  end
+  
+  def place_global_id=(global_id)
+    return if global_id.blank?
+    record_property = RecordProperty.find_by_global_id(global_id)
+    self.place_id = record_property&.datum_id if record_property&.datum_type == 'Place'
+  end
+  
+  def box_global_id
+    box&.global_id
+  end
+  
+  def box_global_id=(global_id)
+    return if global_id.blank?
+    record_property = RecordProperty.find_by_global_id(global_id)
+    self.box_id = record_property&.datum_id if record_property&.datum_type == 'Box'
+  end
+  
+  def collection_global_id
+    collection&.global_id
+  end
+  
+  def collection_global_id=(global_id)
+    return if global_id.blank?
+    record_property = RecordProperty.find_by_global_id(global_id)
+    self.collection_id = record_property&.datum_id if record_property&.datum_type == 'Collection'
+  end
+
   accepts_nested_attributes_for :collectors, allow_destroy: true, reject_if: lambda {|attributes| attributes['name'].blank?}
 
   validates :box, presence: true
