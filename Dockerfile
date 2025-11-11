@@ -1,5 +1,5 @@
-# Use Ruby 2.4.10 (last stable 2.4.x version)
-FROM ruby:2.4.10
+# Use Ruby 2.5.9 (last stable 2.5.x version)
+FROM ruby:2.5.9
 
 # Fix for Debian Stretch (archived repositories since 2023)
 RUN echo "deb http://archive.debian.org/debian/ stretch main" > /etc/apt/sources.list && \
