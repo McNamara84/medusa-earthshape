@@ -17,16 +17,30 @@ module HasRecordProperty
 
     scope :readables, ->(user) { includes(:record_property).joins(:record_property).merge(RecordProperty.readables(user)) }
     scope :choose_global_id, ->(user) { RecordProperty.readables(user).where(datum_type:  self).order(:name).pluck(:name, :global_id) }
-    scope :choose_id, ->(user) { includes(:record_property).joins(:record_property).merge(RecordProperty.readables(user)).order(:name).pluck(:name, :id) }      
+    scope :choose_id, ->(user) { includes(:record_property).joins(:record_property).merge(RecordProperty.readables(user)).order(:name).pluck(:name, :id) }
+    
+    # Rails 5.0+: Override to_xml AFTER ActiveModel::Serializers::Xml is included
+    # This ensures our custom to_xml takes precedence
+    def to_xml(options = {})
+      # Delegated attributes via delegate don't work with :methods option in Rails 5.0+
+      # We need to manually include global_id in the XML output
+      options = options.dup
+      
+      # First, generate the base XML
+      base_xml = super(options)
+      
+      # If record_property exists and has a global_id, inject it into the XML
+      if record_property && record_property.global_id.present?
+        # Insert global-id element before the closing tag
+        base_xml.sub!(/<\/#{self.class.name.underscore.dasherize}>/, 
+                      "  <global-id>#{record_property.global_id}</global-id>\n</#{self.class.name.underscore.dasherize}>")
+      end
+      
+      base_xml
+    end      
   end
 
   def as_json(options = {})
-    super({:methods => :global_id}.merge(options))
-  end
-
-
-  def to_xml(options = {})
-    #self.to_json(:methods => :global_id)
     super({:methods => :global_id}.merge(options))
   end
 

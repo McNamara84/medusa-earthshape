@@ -86,7 +86,9 @@ describe OutputPdf do
 
   describe "qr_image" do
     after { obj.qr_image }
-    before { allow_any_instance_of(StringIO).to receive(:set_encoding).and_return(string_io) }
+    # Rails 5.0+: any_instance stubbing with and_return can cause issues with multiple calls
+    # Use a block instead to return a new double each time
+    before { allow_any_instance_of(StringIO).to receive(:set_encoding) { string_io } }
     let(:obj) { klass.create(name: "foo", global_id: global_id) }
     let(:global_id) { "1234" }
     let(:string_io) { double(:string_io) }
