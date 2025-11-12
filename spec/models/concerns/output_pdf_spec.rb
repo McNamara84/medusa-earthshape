@@ -85,18 +85,33 @@ describe OutputPdf do
   end
 
   describe "qr_image" do
-    after { obj.qr_image }
-    # Rails 5.0+: any_instance stubbing with and_return can cause issues with multiple calls
-    # Use a block instead to return a new double each time
-    before { allow_any_instance_of(StringIO).to receive(:set_encoding) { string_io } }
+    # Rails 5.0+: Multiple tests with after hook cause "already received" errors
+    # Don't use after hook - call method explicitly in test that needs return value
     let(:obj) { klass.create(name: "foo", global_id: global_id) }
     let(:global_id) { "1234" }
-    let(:string_io) { double(:string_io) }
     let(:dim) { klass::QRCODE_DIM }
-    it { expect(Barby::QrCode).to receive(:new).with(global_id).and_call_original }
-    it { expect_any_instance_of(Barby::QrCode).to receive(:to_png).with({xdim: dim, ydim: dim}).and_call_original }
-    it { expect_any_instance_of(StringIO).to receive(:set_encoding).with("UTF-8") }
-    it { expect(obj.qr_image).to eq string_io }
+    
+    it "should create QrCode with global_id" do
+      expect(Barby::QrCode).to receive(:new).with(global_id).and_call_original
+      obj.qr_image
+    end
+    
+    it "should call to_png with correct dimensions" do
+      expect_any_instance_of(Barby::QrCode).to receive(:to_png).with({xdim: dim, ydim: dim}).and_call_original
+      obj.qr_image
+    end
+    
+    it "should call set_encoding with UTF-8" do
+      # Rails 5.0+: ChunkyPNG internally creates StringIOs and calls set_encoding with different encodings
+      # We can't mock all StringIO instances, so just verify our code returns correct result
+      result = obj.qr_image
+      expect(result).to be_a(StringIO)
+      expect(result.external_encoding.to_s).to eq("UTF-8")
+    end
+    
+    it "should return a StringIO object" do
+      expect(obj.qr_image).to be_a(StringIO)
+    end
   end
 
   describe "primary_attachment_file_path" do
