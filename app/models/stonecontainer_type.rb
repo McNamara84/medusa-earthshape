@@ -1,2 +1,2 @@
-class StonecontainerType < ActiveRecord::Base
+class StonecontainerType < ApplicationRecord
 end

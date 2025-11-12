@@ -1,4 +1,4 @@
-class Attaching < ActiveRecord::Base
+class Attaching < ApplicationRecord
   belongs_to :attachment_file
   belongs_to :attachable, polymorphic: true
   acts_as_list scope: [:attachable_id , :attachable_type], column: :position

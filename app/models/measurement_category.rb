@@ -1,4 +1,4 @@
-class MeasurementCategory < ActiveRecord::Base
+class MeasurementCategory < ApplicationRecord
   has_many :category_measurement_items, dependent: :destroy
   has_many :measurement_items, -> { order('category_measurement_items.position') }, through: :category_measurement_items
   belongs_to :unit

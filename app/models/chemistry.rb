@@ -1,4 +1,4 @@
-class Chemistry < ActiveRecord::Base
+class Chemistry < ApplicationRecord
   include HasRecordProperty
 
   belongs_to :analysis

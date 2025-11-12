@@ -1,4 +1,4 @@
-class Stone < ActiveRecord::Base
+class Stone < ApplicationRecord
   include HasRecordProperty
   include HasViewSpot
   include OutputPdf
@@ -16,15 +16,15 @@ class Stone < ActiveRecord::Base
   has_many :referrings, as: :referable, dependent: :destroy
   has_many :bibs, through: :referrings
   has_many :collectors
-  belongs_to :parent, class_name: "Stone", foreign_key: :parent_id
-  belongs_to :box
-  belongs_to :place
-  belongs_to :classification
-  belongs_to :physical_form
-  belongs_to :stonecontainer_type
-  belongs_to :collection
-  belongs_to :quantityunit
-  belongs_to :collectionmethod
+  belongs_to :parent, class_name: "Stone", foreign_key: :parent_id, optional: true
+  belongs_to :box, optional: true
+  belongs_to :place, optional: true
+  belongs_to :classification, optional: true
+  belongs_to :physical_form, optional: true
+  belongs_to :stonecontainer_type, optional: true
+  belongs_to :collection, optional: true
+  belongs_to :quantityunit, optional: true
+  belongs_to :collectionmethod, optional: true
   has_many :preparations, dependent: :destroy
 
   # Virtual attributes for forms: allows setting relationships via global_id
@@ -86,7 +86,8 @@ class Stone < ActiveRecord::Base
 
   def to_pml
     # Sort analyses by id descending for consistent PML output
-    analyses.order(id: :desc).to_pml
+    # Rails 5.0+: Convert to Array before calling to_pml
+    analyses.order(id: :desc).to_a.to_pml
   end
 
   def copy_associations (parent)

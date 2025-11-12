@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   has_many :group_members, dependent: :destroy
   has_many :groups, through: :group_members
   has_many :record_properties
-  belongs_to :box
+  belongs_to :box, optional: true
   
   validates :username, presence: true, length: {maximum: 255}, uniqueness: true
   validates :box, existence: true, allow_nil: true

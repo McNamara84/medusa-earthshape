@@ -1,22 +1,22 @@
 require 'spec_helper'
 
 describe "place" do
-  before do
-    login login_user
-    place.attachment_files << attachment_file
-    create_data
-    visit places_path
-  end
   let(:login_user) { FactoryGirl.create(:user) }
-  let(:create_data) {}
   
   describe "place detail screen" do
-    before { click_link(place.name) }
-    let(:create_data) do 
-      place.create_record_property(user_id: login_user.id) 
+    let(:place) do
+      # Rails 5.0: Set User.current before creating place to ensure proper record_property
+      User.current = login_user
+      FactoryGirl.create(:place)
     end
-    let(:place) { FactoryGirl.create(:place) }
     let(:attachment_file) { FactoryGirl.create(:attachment_file, data_file_name: "file_name", data_content_type: data_type) }
+    
+    before do
+      # Rails 5.0: Login first, then create data, then visit show page directly
+      login login_user
+      place.attachment_files << attachment_file
+      visit place_path(place)
+    end
     
     describe "at-a-glance tab" do
       before { click_link("at-a-glance") }

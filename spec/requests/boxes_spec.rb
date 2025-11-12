@@ -1,23 +1,24 @@
 require 'spec_helper'
 
 describe "box" do
-  before do
-    login login_user
-    create_data
-    visit boxes_path
-  end
   let(:login_user) { FactoryGirl.create(:user) }
-  let(:create_data) {}
   
   describe "box detail screen" do
-    before { click_link(box.name) }
-    let(:create_data) do
-      box.attachment_files << attachment_file
-      box.create_record_property(user_id: login_user.id) 
+    let(:box) do
+      # Rails 5.0: Set User.current before creating box to ensure proper record_property
+      User.current = login_user
+      FactoryGirl.create(:box)
     end
-    let(:box) { FactoryGirl.create(:box) }
     let(:attachment_file) { FactoryGirl.create(:attachment_file, data_file_name: "file_name", data_content_type: data_type) }
     let(:data_type) { "image/jpeg" }
+    let(:skip_attachment) { false }
+    
+    before do
+      # Rails 5.0: Login first, then create data, then visit show page directly
+      login login_user
+      box.attachment_files << attachment_file unless skip_attachment
+      visit box_path(box)
+    end
 
     describe "view spot" do
       context "picture-button is display" do
@@ -32,10 +33,7 @@ describe "box" do
       end
       context "picture-button is not display" do
         context "no attachment_file" do
-          let(:create_data) do
-            box
-            box.create_record_property(user_id: login_user.id)
-          end
+          let(:skip_attachment) { true }
           it "picture-button not display" do
             expect(page).to have_no_link("picture-button")
           end

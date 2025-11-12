@@ -1,4 +1,4 @@
-class Bib < ActiveRecord::Base
+class Bib < ApplicationRecord
   include HasRecordProperty
   include HasViewSpot
   include OutputPdf

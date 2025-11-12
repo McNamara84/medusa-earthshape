@@ -1,4 +1,4 @@
-class CategoryMeasurementItem < ActiveRecord::Base
+class CategoryMeasurementItem < ApplicationRecord
   belongs_to :measurement_item
   belongs_to :measurement_category
   acts_as_list scope: :measurement_category, column: :position

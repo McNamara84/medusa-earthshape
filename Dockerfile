@@ -1,13 +1,13 @@
 # Use Ruby 2.5.9 (last stable 2.5.x version)
 FROM ruby:2.5.9
 
-# Fix for Debian Stretch (archived repositories since 2023)
-RUN echo "deb http://archive.debian.org/debian/ stretch main" > /etc/apt/sources.list && \
-    echo "deb http://archive.debian.org/debian-security/ stretch/updates main" >> /etc/apt/sources.list && \
-    echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
+# Fix Debian Buster repositories (EOL - moved to archive)
+RUN sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list && \
+    sed -i 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list && \
+    sed -i '/stretch-updates/d' /etc/apt/sources.list
 
-# Install system dependencies
-RUN apt-get update -qq && apt-get install -y --force-yes \
+# Install system dependencies including PhantomJS from Debian repos
+RUN apt-get update -qq && apt-get install -y \
     build-essential \
     libpq-dev \
     nodejs \
@@ -15,8 +15,8 @@ RUN apt-get update -qq && apt-get install -y --force-yes \
     imagemagick \
     libmagickwand-dev \
     git \
-    phantomjs \
     xvfb \
+    phantomjs \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory

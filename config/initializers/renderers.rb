@@ -13,6 +13,8 @@ class Array
 	      		# Get analyses and sort by id descending for consistent output
 	      		analyses = obj.analyses
 	      		analyses = analyses.order(id: :desc) if analyses.respond_to?(:order)
+	      		# Rails 5.0+: Convert to Array before iterating
+	      		analyses = analyses.to_a if analyses.respond_to?(:to_a)
 	      		analyses.each do |analysis|
 	      			analysis.to_pml(xml)
 	      		end
@@ -25,5 +27,7 @@ end
 
 ActionController::Renderers.add :pml do |object, options|
 	self.content_type ||= Mime::PML
+	# Rails 5.0+: Convert ActiveRecord::Relation to Array before calling to_pml
+	object = object.to_a if object.respond_to?(:to_a) && !object.is_a?(Array)
 	object.respond_to?(:to_pml) ? object.to_pml : object
 end

@@ -1,7 +1,10 @@
 module HasRecordProperty
   extend ActiveSupport::Concern
 
+  # Rails 5.0+: ActiveModel::Serializers::Xml is not included by default
+  # Only include if the model needs to_xml functionality
   included do
+    include ActiveModel::Serializers::Xml if defined?(ActiveModel::Serializers::Xml)
     has_one :record_property, as: :datum, dependent: :destroy
     has_one :user, through: :record_property
     has_one :group, through: :record_property

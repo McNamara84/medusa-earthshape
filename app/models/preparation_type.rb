@@ -1,4 +1,4 @@
-class PreparationType < ActiveRecord::Base
+class PreparationType < ApplicationRecord
   has_many :children, class_name: "PreparationType", foreign_key: :parent_id
   belongs_to :parent, class_name: "PreparationType", foreign_key: :parent_id
 

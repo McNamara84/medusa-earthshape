@@ -1,4 +1,4 @@
-class RecordProperty < ActiveRecord::Base
+class RecordProperty < ApplicationRecord
   belongs_to :user
   belongs_to :group
   belongs_to :datum, polymorphic: true

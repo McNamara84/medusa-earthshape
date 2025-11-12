@@ -1,4 +1,4 @@
-class Spot < ActiveRecord::Base
+class Spot < ApplicationRecord
   include HasRecordProperty
 
   belongs_to :attachment_file

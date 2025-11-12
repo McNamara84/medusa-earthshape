@@ -34,10 +34,10 @@ describe OutputPdf do
     let(:obj) { klass.create(name: "foo", global_id: "1234") }
     before { allow(obj).to receive(:set_card_data) }
     after { obj.build_card }
-    it { expect(ThinReports::Report).to receive(:new).and_call_original }
+    it { expect(Thinreports::Report).to receive(:new).and_call_original }
     it { expect(obj).to receive(:report_template).with("igsn").and_call_original }
     it { expect(obj).to receive(:set_card_data) }
-    it { expect(obj.build_card.class).to eq ThinReports::Report::Base }
+    it { expect(obj.build_card.class).to eq Thinreports::Report::Base }
   end
 
   describe "report_template" do
@@ -126,11 +126,11 @@ describe OutputPdf do
     before do
       allow(obj).to receive(:primary_attachment_file_path)
     end
-    it { expect(ThinReports::Report).to receive(:new).and_call_original }
+    it { expect(Thinreports::Report).to receive(:new).and_call_original }
     it { expect(obj).to receive(:report_template).with("bundle").and_call_original }
     it { expect(klass).to receive(:divide_by_three).with(resources).and_call_original }
     it { expect(klass).to receive(:set_bundle_data).exactly(3).times }
-    it { expect(klass.build_a_four(resources).class).to eq ThinReports::Report::Base }
+    it { expect(klass.build_a_four(resources).class).to eq Thinreports::Report::Base }
   end
 
   describe "build_cards" do
@@ -138,10 +138,10 @@ describe OutputPdf do
     let(:resources) { [obj] }
     let(:obj) { klass.create(name: "foo", global_id: "1234") }
     before { allow(obj).to receive(:set_card_data) }
-    it { expect(ThinReports::Report).to receive(:new).and_call_original }
+    it { expect(Thinreports::Report).to receive(:new).and_call_original }
     it { expect(obj).to receive(:report_template).with("igsn").and_call_original }
     it { expect(obj).to receive(:set_card_data) }
-    it { expect(klass.build_cards(resources).class).to eq ThinReports::Report::Base }
+    it { expect(klass.build_cards(resources).class).to eq Thinreports::Report::Base }
   end
 
   describe "divide_by_three" do

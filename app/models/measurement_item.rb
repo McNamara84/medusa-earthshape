@@ -1,4 +1,4 @@
-class MeasurementItem < ActiveRecord::Base
+class MeasurementItem < ApplicationRecord
   has_many :chemistries, dependent: :destroy
   has_many :category_measurement_items, dependent: :destroy
   has_many :measurement_categories, through: :category_measurement_items

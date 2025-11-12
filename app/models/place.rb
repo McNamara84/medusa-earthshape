@@ -1,4 +1,4 @@
-class Place < ActiveRecord::Base
+class Place < ApplicationRecord
   include HasRecordProperty
   include OutputPdf
   include OutputCsv
@@ -14,12 +14,12 @@ class Place < ActiveRecord::Base
   has_many :referrings, as: :referable, dependent: :destroy
   has_many :bibs, through: :referrings
   has_many :collectors, through: :stones  
-  belongs_to :landuse
-  belongs_to :vegetation
-  belongs_to :topographic_position  
+  belongs_to :landuse, optional: true
+  belongs_to :vegetation, optional: true
+  belongs_to :topographic_position, optional: true
    has_many :children, class_name: "Place", foreign_key: :parent_id, dependent: :nullify
    has_many :places,    class_name: "Place", foreign_key: :parent_id, dependent: :nullify     
-   belongs_to :parent,  class_name: "Place", foreign_key: :parent_id  
+   belongs_to :parent,  class_name: "Place", foreign_key: :parent_id, optional: true  
    
    scope :choose_parent_global_id, ->(user) { 
 	ids=Place.where(is_parent: true).map(&:id)		 

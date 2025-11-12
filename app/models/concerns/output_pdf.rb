@@ -1,12 +1,14 @@
+# ThinReports is loaded in config/initializers/thinreports.rb
+require 'barby/barcode/qr_code'
+require 'barby/outputter/png_outputter'
+
 module OutputPdf
   extend ActiveSupport::Concern
 
-  require 'barby/barcode/qr_code'
-  require 'barby/outputter/png_outputter'
   QRCODE_DIM = 6
 
   def build_card
-    report = ThinReports::Report.new(layout: report_template("igsn"))
+    report = Thinreports::Report.new(layout: report_template("igsn"))
     report.start_new_page do |page|
       set_card_data(page)
     end
@@ -14,7 +16,7 @@ module OutputPdf
   end
 
   def build_igsn_card
-    report = ThinReports::Report.new(layout: report_template("igsn"))
+    report = Thinreports::Report.new(layout: report_template("igsn"))
     report.start_new_page do |page|
       set_igsn_card_data(page)
     end
@@ -64,7 +66,7 @@ module OutputPdf
 
   module ClassMethods
     def build_a_four(resources)
-      report = ThinReports::Report.new(layout: resources.first.report_template("bundle"))
+      report = Thinreports::Report.new(layout: resources.first.report_template("bundle"))
       divide_by_three(resources).each do |resource_1, resource_2, resource_3|
         report.list.add_row do |row|
           set_bundle_data(row, 1, resource_1)
@@ -76,7 +78,7 @@ module OutputPdf
     end
 
     def build_cards(resources)
-      report = ThinReports::Report.new(layout: resources.first.report_template("igsn"))
+      report = Thinreports::Report.new(layout: resources.first.report_template("igsn"))
       resources.each do |resource|
         report.start_new_page do |page|
           resource.set_card_data(page)

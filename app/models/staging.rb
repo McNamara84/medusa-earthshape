@@ -1,4 +1,4 @@
-class Staging < ActiveRecord::Base
+class Staging < ApplicationRecord
   include HasRecordProperty	
   PERMIT_IMPORT_TYPES = ["text/plain", "text/csv", "text/comma-separated-values","application/csv", "application/vnd.ms-excel"]
 

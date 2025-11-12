@@ -1,4 +1,4 @@
-class Analysis < ActiveRecord::Base
+class Analysis < ApplicationRecord
   include HasRecordProperty
   include HasViewSpot
   include HasAttachmentFile
@@ -10,8 +10,8 @@ class Analysis < ActiveRecord::Base
   has_many :bibs, through: :referrings
   has_many :analysis_stones
   has_many :stones, through: :analysis_stones
-  belongs_to :device
-  belongs_to :technique
+  belongs_to :device, optional: true
+  belongs_to :technique, optional: true
 
 #  validates :stones, existence: true, allow_nil: true
   validates :device, existence: true, allow_nil: true

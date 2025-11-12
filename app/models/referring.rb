@@ -1,4 +1,4 @@
-class Referring < ActiveRecord::Base
+class Referring < ApplicationRecord
   belongs_to :bib
   belongs_to :referable, polymorphic: true
 

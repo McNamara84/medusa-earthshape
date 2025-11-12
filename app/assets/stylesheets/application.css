@@ -10,7 +10,7 @@
  *
  *= require_self
  *= require_tree .
- *= require jquery.ui.datepicker
+ *= require jquery-ui/datepicker
  */
 
 .navbar-nav .active {font-weight:bold; text-decoration:underline}

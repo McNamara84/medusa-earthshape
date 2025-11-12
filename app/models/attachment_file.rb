@@ -1,5 +1,5 @@
 require 'matrix'
-class AttachmentFile < ActiveRecord::Base
+class AttachmentFile < ApplicationRecord
   include HasRecordProperty
 
   # Paperclip configuration for file attachments
@@ -10,6 +10,10 @@ class AttachmentFile < ActiveRecord::Base
 #                    styles: { thumb: "160x120>", tiny: "50x50" },
                     path: ":rails_root/public/system/:class/:id_partition/:basename_with_style.:extension",
                     url: "#{Rails.application.config.relative_url_root}/system/:class/:id_partition/:basename_with_style.:extension"
+  
+  # Paperclip 6.1+ requires explicit content type validation
+  validates_attachment_content_type :data, content_type: /.*/
+  
   alias_attribute :name, :data_file_name
 
   has_many :spots, dependent: :destroy

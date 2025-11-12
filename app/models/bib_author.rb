@@ -1,4 +1,4 @@
-class BibAuthor < ActiveRecord::Base
+class BibAuthor < ApplicationRecord
   belongs_to :bib
   belongs_to :author
   

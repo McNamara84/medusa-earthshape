@@ -1,4 +1,4 @@
-class PreparationForClassification < ActiveRecord::Base
+class PreparationForClassification < ApplicationRecord
   belongs_to :classification
   belongs_to :preparation_type
   

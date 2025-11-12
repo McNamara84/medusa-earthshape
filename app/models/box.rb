@@ -1,4 +1,4 @@
-class Box < ActiveRecord::Base
+class Box < ApplicationRecord
   include HasRecordProperty
   include HasViewSpot
   include OutputPdf
@@ -15,8 +15,8 @@ class Box < ActiveRecord::Base
   has_many :children, class_name: "Box", foreign_key: :parent_id, dependent: :nullify
   has_many :referrings, as: :referable, dependent: :destroy
   has_many :bibs, through: :referrings
-  belongs_to :parent, class_name: "Box", foreign_key: :parent_id
-  belongs_to :box_type
+  belongs_to :parent, class_name: "Box", foreign_key: :parent_id, optional: true
+  belongs_to :box_type, optional: true
 
   # Virtual attribute for forms: allows setting parent via global_id
   def parent_global_id
