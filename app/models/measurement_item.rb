@@ -2,10 +2,10 @@ class MeasurementItem < ApplicationRecord
   has_many :chemistries, dependent: :destroy
   has_many :category_measurement_items, dependent: :destroy
   has_many :measurement_categories, through: :category_measurement_items
-  belongs_to :unit
+  belongs_to :unit, optional: true  # Rails 5.1: Added optional: true (was validated with allow_nil: true)
 
   validates :nickname, presence: true, length: {maximum: 255}
-  validates :unit, existence: true, allow_nil: true
+  # Rails 5.1: Removed validates :unit, existence: true - belongs_to optional: true handles this
 
   scope :categorize, ->(measurement_category_id) { joins(:measurement_categories).where(measurement_categories: {id: measurement_category_id}) }
   

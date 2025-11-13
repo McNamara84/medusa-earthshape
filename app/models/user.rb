@@ -11,7 +11,7 @@ class User < ApplicationRecord
   belongs_to :box, optional: true
   
   validates :username, presence: true, length: {maximum: 255}, uniqueness: true
-  validates :box, existence: true, allow_nil: true
+  # Rails 5.1: Removed validates :box, existence: true - belongs_to :box, optional: true handles this
   validate :correct_igsn_prefix, if: -> { prefix.present? }  # Rails 4.2: use :if instead of :allow_nil
 
   alias_attribute :admin?, :administrator

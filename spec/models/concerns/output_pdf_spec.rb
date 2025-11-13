@@ -4,7 +4,7 @@ class OutputPdfSpec < ActiveRecord::Base
   include OutputPdf
 end
 
-class OutputPdfSpecMigration < ActiveRecord::Migration
+class OutputPdfSpecMigration < ActiveRecord::Migration[4.2]
   def self.up
     create_table :output_pdf_specs do |t|
       t.string :name

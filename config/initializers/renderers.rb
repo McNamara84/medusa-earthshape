@@ -26,7 +26,7 @@ class Array
 end
 
 ActionController::Renderers.add :pml do |object, options|
-	self.content_type ||= Mime::PML
+	self.content_type ||= Mime[:pml]
 	# Rails 5.0+: Convert ActiveRecord::Relation to Array before calling to_pml
 	object = object.to_a if object.respond_to?(:to_a) && !object.is_a?(Array)
 	object.respond_to?(:to_pml) ? object.to_pml : object

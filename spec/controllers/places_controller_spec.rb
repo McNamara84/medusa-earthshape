@@ -51,7 +51,7 @@ describe PlacesController do
     end
     describe "search" do
       before do
-        get :index, params
+        get :index, params: params
       end
       context "name search" do
         let(:query) { {"name_cont" => "place"} }
@@ -68,7 +68,7 @@ describe PlacesController do
     end
     describe "sort" do
       before do
-        get :index, params
+        get :index, params: params
       end
 
       let(:params) { {q: query, page: 2, per_page: 1} }
@@ -121,13 +121,13 @@ describe PlacesController do
       analysis_1;analysis_2;analysis_3;
     end
     context "without format" do    
-      before{get :show,id:obj.id}
+      before{get :show, params: {id: obj.id}}
       it{expect(assigns(:place)).to eq obj}
       it{expect(response).to render_template("show") }
     end
 
     context "with format 'pml'" do
-      before { get :show, id: obj.id, format: 'pml' }
+      before { get :show, params: {id: obj.id}, format: 'pml' }
       it { expect(response.body).to include("\<sample_global_id\>#{stone_1.global_id}") }    
       it { expect(response.body).to include("\<sample_global_id\>#{stone_2.global_id}") }    
       it { expect(response.body).to include("\<sample_global_id\>#{stone_3.global_id}") }    
@@ -137,15 +137,15 @@ describe PlacesController do
 
   describe "GET edit" do
     let(:place) { FactoryGirl.create(:place) }
-    before { get :edit, id: place.id }
+    before { get :edit, params: {id: place.id} }
     it { expect(assigns(:place)).to eq place }
   end
 
   describe "POST create" do
     let(:attributes) { {name: "place_name", latitude: "1.0", longitude: "2.0", elevation: "0", is_parent: true} }
-    it { expect {post :create ,place: attributes}.to change(Place, :count).by(1) }
+    it { expect {post :create, params: {place: attributes}}.to change(Place, :count).by(1) }
     context "create" do
-      before{post :create ,place: attributes}
+      before{post :create, params: {place: attributes}}
       it{expect(assigns(:place).name).to eq attributes[:name]}
     end
   end
@@ -153,24 +153,24 @@ describe PlacesController do
   describe "PUT update" do
     let(:obj){FactoryGirl.create(:place) }
     let(:attributes) { {name: "update_name", latitude: "1.0", longitude: "2.0", elevation: "0"} }
-    it { expect {put :update ,id: obj.id,place: attributes}.to change(Place, :count).by(0) }
+    it { expect {put :update, params: {id: obj.id, place: attributes}}.to change(Place, :count).by(0) }
     before do
       obj
-      put :update, id: obj.id, place: attributes
+      put :update, params: {id: obj.id, place: attributes}
     end
     it{expect(assigns(:place).name).to eq attributes[:name]}
   end
 
   describe "GET map" do
     let(:obj){FactoryGirl.create(:place) }
-    before{get :map,id:obj.id}
+    before{get :map, params: {id: obj.id}}
     it{expect(assigns(:place)).to eq obj}
     it{expect(response).to render_template("map") }
   end
 
   describe "GET property" do
     let(:obj){FactoryGirl.create(:place) }
-    before{get :property,id:obj.id}
+    before{get :property, params: {id: obj.id}}
     it{expect(assigns(:place)).to eq obj}
     it{expect(response).to render_template("property") }
   end
@@ -178,7 +178,7 @@ describe PlacesController do
   describe "DELETE destroy" do
     let(:obj){FactoryGirl.create(:place) }
     before { obj }
-    it { expect{delete :destroy,id: obj.id}.to change(Place, :count).by(-1) }
+    it { expect{delete :destroy, params: {id: obj.id}}.to change(Place, :count).by(-1) }
   end
 
   describe "POST bundle_edit" do
@@ -190,7 +190,7 @@ describe PlacesController do
       obj1
       obj2
       obj3
-      post :bundle_edit, ids: ids
+      post :bundle_edit, params: {ids: ids}
     end
     it {expect(assigns(:places).include?(obj1)).to be_truthy}
     it {expect(assigns(:places).include?(obj2)).to be_truthy}
@@ -208,7 +208,7 @@ describe PlacesController do
       obj1
       obj2
       obj3
-      post :bundle_update, ids: ids,place: attributes
+      post :bundle_update, params: {ids: ids, place: attributes}
       obj1.reload
       obj2.reload
       obj3.reload
@@ -239,7 +239,7 @@ describe PlacesController do
     it "sends bundle label data" do
       allow(controller).to receive(:send_data) { controller.response_body = '' }
       expect(controller).to receive(:send_data).with(label, filename: "places.csv", type: "text/csv")
-      get :download_bundle_label, ids: params_ids
+      get :download_bundle_label, params: {ids: params_ids}
     end
   end
 
@@ -248,14 +248,14 @@ describe PlacesController do
     context "return raise" do
       before do
         allow(Place).to receive(:import_csv).with(data.to_s).and_raise("error")
-        post :import, data: data
+        post :import, params: {data: data}
       end
       it { expect(response).to render_template("import_invalid") }
     end
     context "return no error" do
       before do
         allow(Place).to receive(:import_csv).with(data.to_s).and_return(import_result)
-        post :import, data: data
+        post :import, params: {data: data}
       end
       context "import success" do
         let(:import_result) { true }

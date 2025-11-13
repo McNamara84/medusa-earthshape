@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.7'  # Upgraded from 4.2.11.3 for Ruby 2.6+ compatibility
+gem 'rails', '~> 5.1.7'  # Upgraded from 5.0.7 - Rails 5.1 LTS version
 gem 'nokogiri', '~> 1.10.10'  # Lock to version compatible with Ruby 2.5 (1.13+ requires Ruby 2.6+)
 gem 'loofah', '~> 2.3.1'  # Lock to older version compatible with nokogiri 1.10
 gem 'psych', '~> 3.3.0'  # Lock to version 3.x for mini_racer compatibility (4.x+ have safe_load issues with libv8-node)
@@ -17,7 +17,7 @@ gem 'sass-rails', '~> 5.0'  # Updated for Rails 4.2
 gem 'uglifier', '>= 1.3.0'
 
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.1.0'  # Updated for Rails 4.2
+gem 'coffee-rails', '~> 4.2'  # Updated for Rails 5.1 compatibility
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby  # Incompatible with Ruby 2.4+
@@ -31,7 +31,7 @@ gem 'jquery-ui-rails'
 # gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.2'
+gem 'jbuilder', '~> 2.7'  # Updated for Rails 5.1 (Mime::JSON fix)
 #gem 'active_model_serializers'
 
 group :doc do
@@ -51,6 +51,9 @@ end
 # Use unicorn as the app server
 gem 'unicorn'
 
+# Use puma for Capybara request specs (Rails 5.1+ default)
+gem 'puma', '~> 5.6'  # Lock to 5.x for Capybara 3.35.3 compatibility (6.x changed Events API)
+
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
 
@@ -58,7 +61,7 @@ gem 'unicorn'
 # gem 'debugger', group: [:development, :test]
 
 gem 'devise'
-gem 'cancan'
+gem 'cancancan', '~> 1.10'  # Rails 5.1: Replaced cancan with cancancan (maintained fork)
 gem 'kaminari'
 gem 'draper'
 gem 'paperclip'
@@ -73,7 +76,7 @@ gem 'comma'
 gem 'acts-as-taggable-on', git: 'https://github.com/mbleigh/acts-as-taggable-on', tag: 'v4.0.0'  # Rails 4.0-5.2 compatible bridge version (was acts_as_taggable_on 3.0.0.rc2)
 gem 'exception_notification'
 gem 'settingslogic'
-gem 'validates_existence'
+# gem 'validates_existence'  # Rails 5.1: Removed - incompatible with Rails 5.1+ (belongs_to validation now built-in)
 # Note: acts_as_mappable and with_recursive are from private gem server
 # These gems are temporarily disabled for Docker deployment as they are not publicly available
 # gem 'acts_as_mappable'

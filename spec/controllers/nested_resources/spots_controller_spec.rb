@@ -15,7 +15,7 @@ describe NestedResources::SpotsController do
   before { child }
 
   describe "POST create" do
-    let(:method){post :create, parent_resource: parent_name, attachment_file_id: parent, spot: attributes, association_name: :spots}
+    let(:method){ post :create, params: {parent_resource: parent_name, attachment_file_id: parent, spot: attributes, association_name: :spots} }
     before{child}
     it { expect{method}.to change(Spot, :count).by(1) }
     context "validate" do
@@ -32,7 +32,7 @@ describe NestedResources::SpotsController do
     end
   end
   describe "PUT update" do
-    let(:method){put :update, parent_resource: parent_name, attachment_file_id: parent, id: child_id, association_name: :spots}
+    let(:method){ put :update, params: {parent_resource: parent_name, attachment_file_id: parent, id: child_id, association_name: :spots} }
     let(:child_id){child.id}
     it { expect {method}.to change(Spot, :count).by(0) }
     context "present child" do
@@ -47,7 +47,7 @@ describe NestedResources::SpotsController do
   end
 
   describe "DELETE destory" do
-    let(:method){delete :destroy, parent_resource: parent_name, attachment_file_id: parent, id: child_id, association_name: :spots}
+    let(:method){ delete :destroy, params: {parent_resource: parent_name, attachment_file_id: parent, id: child_id, association_name: :spots} }
     before { parent.spots << child}
     let(:child_id){child.id}
     it { expect {method}.to change(Spot, :count).by(-1) }
@@ -62,4 +62,4 @@ describe NestedResources::SpotsController do
     end
   end
 
-end
+end

@@ -11,7 +11,7 @@ describe UnitsController do
     let(:params) { {q: query, page: 2, per_page: 1} }
     before do
       unit_1;unit_2;unit_3
-      get :index, params
+      get :index, params: params
     end
     context "sort condition is present" do
       let(:query) { {"name_cont" => "unit", "s" => "updated_at DESC"} }
@@ -28,7 +28,7 @@ describe UnitsController do
     let(:unit) { FactoryGirl.create(:unit) }
     before do
       unit
-      get :show, id: unit.id, format: :json
+      get :show, params: {id: unit.id}, format: :json
     end
     it { expect(response.body).to eq(unit.to_json) }
   end
@@ -37,7 +37,7 @@ describe UnitsController do
     let(:unit) { FactoryGirl.create(:unit) }
     before do
       unit
-      get :edit, id: unit.id
+      get :edit, params: {id: unit.id}
     end
     it { expect(assigns(:unit)).to eq unit }
   end
@@ -45,9 +45,9 @@ describe UnitsController do
   describe "POST create" do
     describe "with valid attributes" do
       let(:attributes) { {name: "unit_name", conversion: 1, html: "html", text: "text"} }
-      it { expect { post :create, unit: attributes }.to change(Unit, :count).by(1) }
+      it { expect { post :create, params: {unit: attributes} }.to change(Unit, :count).by(1) }
       it "assigns a newly created unit as @unit" do
-        post :create, unit: attributes
+        post :create, params: {unit: attributes}
         expect(assigns(:unit)).to be_persisted
         expect(assigns(:unit).name).to eq(attributes[:name])
         expect(assigns(:unit).conversion).to eq(attributes[:conversion])
@@ -58,9 +58,9 @@ describe UnitsController do
     describe "with invalid attributes" do
       let(:attributes) { {name: ""} }
       before { allow_any_instance_of(Unit).to receive(:save).and_return(false) }
-      it { expect { post :create, unit: attributes }.not_to change(Unit, :count) }
+      it { expect { post :create, params: {unit: attributes} }.not_to change(Unit, :count) }
       it "assigns a newly but unsaved unit as @unit" do
-        post :create, unit: attributes
+        post :create, params: {unit: attributes}
         expect(assigns(:unit)).to be_new_record
         expect(assigns(:unit).name).to eq(attributes[:name])
       end
@@ -71,7 +71,7 @@ describe UnitsController do
     let(:unit) { FactoryGirl.create(:unit, name: "unit") }
     before do
       unit
-      put :update, id: unit.id, unit: attributes
+      put :update, params: {id: unit.id, unit: attributes}
     end
     describe "with valid attributes" do
       let(:attributes) { {name: "update_name"} }
@@ -91,7 +91,7 @@ describe UnitsController do
   describe "DELETE destroy" do
     let(:unit) { FactoryGirl.create(:unit, name: "unit") }
     before { unit }
-    it { expect { delete :destroy, id: unit.id }.to change(Unit, :count).by(-1) }
+    it { expect { delete :destroy, params: {id: unit.id} }.to change(Unit, :count).by(-1) }
   end
 
-end
+end

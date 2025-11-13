@@ -1,6 +1,19 @@
 #!/bin/bash
 set -e
 
+# Start Xvfb (virtual display) for PhantomJS/Poltergeist tests
+# Run in background and save PID for cleanup
+export DISPLAY=:99
+Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+XVFB_PID=$!
+
+# Function to cleanup on exit
+cleanup() {
+  echo "Shutting down Xvfb..."
+  kill $XVFB_PID 2>/dev/null || true
+}
+trap cleanup EXIT
+
 # Remove a potentially pre-existing server.pid for Rails
 rm -f /app/tmp/pids/server.pid
 

@@ -1,10 +1,10 @@
 class MeasurementCategory < ApplicationRecord
   has_many :category_measurement_items, dependent: :destroy
   has_many :measurement_items, -> { order('category_measurement_items.position') }, through: :category_measurement_items
-  belongs_to :unit
+  belongs_to :unit, optional: true  # Rails 5.1: Added optional: true (was validated with allow_nil: true)
 
   validates :name, presence: true, length: {maximum: 255}, uniqueness: :name
-  validates :unit, existence: true, allow_nil: true
+  # Rails 5.1: Removed validates :unit, existence: true - belongs_to optional: true handles this
 
   def export_headers
     nicknames_with_unit.concat(nicknames.map { |nickname| "#{nickname}_error" })

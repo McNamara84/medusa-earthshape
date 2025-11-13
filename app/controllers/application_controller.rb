@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from CanCan::AccessDenied, with: :deny_access
 
-  before_filter :basic_authentication, unless: :format_html_or_signed_in?
+  before_action :basic_authentication, unless: :format_html_or_signed_in?  # Rails 5.1: before_filter → before_action
 
   def basic_authentication
     authenticate_or_request_with_http_basic do |name, password|
@@ -64,7 +64,7 @@ class ApplicationController < ActionController::Base
   def deny_access
     respond_to do |format|
       format.html { render "parts/access_denied", status: :forbidden }
-      format.all { render nothing: true, status: :forbidden }
+      format.all { head :forbidden }
     end
   end
 

@@ -3,11 +3,9 @@ class Chemistry < ApplicationRecord
 
   belongs_to :analysis
   belongs_to :measurement_item
-  belongs_to :unit
+  belongs_to :unit, optional: true  # Rails 5.1: Added optional: true (was validated with allow_nil: true)
 
-  validates :analysis, existence: true
-  validates :measurement_item, existence: true
-  validates :unit, existence: true, allow_nil: true
+  # Rails 5.1: Removed validates :analysis/:measurement_item/:unit, existence: true - belongs_to handles this
   validates :value, numericality: true
   validates :uncertainty, numericality: true, allow_nil: true
 

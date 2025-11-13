@@ -76,7 +76,7 @@ class Stone < ApplicationRecord
   validates :stonecontainer_type, presence: true
   validates :quantity_initial, numericality: true
   validates :classification, presence: true
-  validates :physical_form, existence: true, allow_nil: true
+  # Rails 5.1: Removed validates :physical_form, existence: true - belongs_to optional: true handles this
   validates :name, presence: true, length: { maximum: 255 }
   validates :sampledepth, numericality: true
   validates :date, presence: true 

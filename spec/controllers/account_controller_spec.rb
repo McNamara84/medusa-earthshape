@@ -53,7 +53,7 @@ describe AccountsController do
     let(:stone){FactoryGirl.create(:stone)}
     before do
       stone
-      get :find_by_global_id ,global_id: stone.record_property.global_id
+      get :find_by_global_id, params: {global_id: stone.record_property.global_id}
     end
     context "administrator" do
       it { expect(response).to redirect_to(record_path(stone.record_property.global_id)) }
@@ -67,7 +67,7 @@ describe AccountsController do
 
   describe "PUT update" do
     before do
-      put :update, user: attributes
+      put :update, params: {user: attributes}
     end
     describe "with valid attributes password change " do
       let(:attributes) { {username: "update_name",description: "update description",password: "yyyy",password_confirmation: "yyyy"} }

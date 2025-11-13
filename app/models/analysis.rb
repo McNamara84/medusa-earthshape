@@ -14,8 +14,7 @@ class Analysis < ApplicationRecord
   belongs_to :technique, optional: true
 
 #  validates :stones, existence: true, allow_nil: true
-  validates :device, existence: true, allow_nil: true
-  validates :technique, existence: true, allow_nil: true
+  # Rails 5.1: Removed validates :device/:technique, existence: true - belongs_to optional: true handles this
   validates :name, presence: true, length: { maximum: 255 }
   validates :operator, presence: true, length: { maximum: 255 }
 

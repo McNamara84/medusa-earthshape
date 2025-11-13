@@ -3,7 +3,7 @@ class Spot < ApplicationRecord
 
   belongs_to :attachment_file
 
-  validates :attachment_file, existence: true
+  # Rails 5.1: Removed validates :attachment_file, existence: true - belongs_to (required by default) handles this
   validates :spot_x, presence: true
   validates :spot_y, presence: true
 

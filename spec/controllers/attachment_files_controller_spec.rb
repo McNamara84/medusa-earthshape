@@ -18,20 +18,20 @@ describe AttachmentFilesController do
   
   describe "GET show" do
     let(:attachment_file) { FactoryGirl.create(:attachment_file) }
-    before { get :show, id: attachment_file.id }
+    before { get :show, params: {id: attachment_file.id} }
     it { expect(assigns(:attachment_file)).to eq attachment_file }
   end
 
   describe "GET show" do
     let(:attachment_file) { FactoryGirl.create(:attachment_file) }
-    before { get :show, id: attachment_file.id, format: 'json' }
+    before { get :show, params: {id: attachment_file.id}, format: 'json' }
     it { expect(assigns(:attachment_file)).to eq attachment_file }
     it { expect(response.body).to include("\"global_id\":\"#{attachment_file.global_id}\"") }
   end
   
   describe "GET edit" do
     let(:attachment_file) { FactoryGirl.create(:attachment_file) }
-    before { get :edit, id: attachment_file.id }
+    before { get :edit, params: {id: attachment_file.id} }
     it { expect(assigns(:attachment_file)).to eq attachment_file }
   end
   
@@ -39,9 +39,9 @@ describe AttachmentFilesController do
     let(:md5hash){ Digest::MD5.hexdigest(File.open("spec/fixtures/files/test_image.jpg", 'rb').read) }
     let(:filetopic) { FactoryGirl.create(:filetopic) }
     let(:attributes) { {data: fixture_file_upload("/files/test_image.jpg",'image/jpeg'), filetopic_id: filetopic.id} }
-    it { expect { post :create, attachment_file: attributes, format: 'json' }.to change(AttachmentFile, :count).by(1) }
+    it { expect { post :create, params: {attachment_file: attributes}, format: 'json' }.to change(AttachmentFile, :count).by(1) }
     describe "assigns as @attachment_file" do
-      before { post :create, attachment_file: attributes, format: 'json' }
+      before { post :create, params: {attachment_file: attributes}, format: 'json' }
       it { expect(assigns(:attachment_file)).to be_persisted }
       it { expect(assigns(:attachment_file).md5hash).to eq md5hash}
     end
@@ -55,7 +55,7 @@ describe AttachmentFilesController do
     let(:attachment_file) { FactoryGirl.create(:attachment_file,name: "test") }
     before do
       attachment_file
-      get :property,id: attachment_file.id
+      get :property, params: {id: attachment_file.id}
     end
     it {expect(assigns(:attachment_file)).to eq attachment_file}
   end
@@ -64,7 +64,7 @@ describe AttachmentFilesController do
     let(:attachment_file) { FactoryGirl.create(:attachment_file,name: "test") }
     before do
       attachment_file
-      get :picture,id: attachment_file.id
+      get :picture, params: {id: attachment_file.id}
     end
     it {expect(assigns(:attachment_file)).to eq attachment_file}
   end
@@ -80,7 +80,7 @@ describe AttachmentFilesController do
     it "sends the file" do
       allow(controller).to receive(:send_file) { controller.response_body = '' }
       expect(controller).to receive(:send_file).with(attachment_file.data.path, filename: attachment_file.data_file_name, type: attachment_file.data_content_type)
-      get :download, id: attachment_file.id
+      get :download, params: {id: attachment_file.id}
     end
   end
 
@@ -93,7 +93,7 @@ describe AttachmentFilesController do
       obj1
       obj2
       obj3
-      post :bundle_edit, ids: ids
+      post :bundle_edit, params: {ids: ids}
     end
     it {expect(assigns(:attachment_files).include?(obj1)).to be_truthy}
     it {expect(assigns(:attachment_files).include?(obj2)).to be_truthy}
@@ -111,7 +111,7 @@ describe AttachmentFilesController do
       obj1
       obj2
       obj3
-      post :bundle_update, ids: ids,attachment_file: attributes
+      post :bundle_update, params: {ids: ids, attachment_file: attributes}
       obj1.reload
       obj2.reload
       obj3.reload
@@ -121,4 +121,4 @@ describe AttachmentFilesController do
     it {expect(obj3.description).to eq obj3description}
   end
 
-end
+end

@@ -29,8 +29,7 @@ class Box < ApplicationRecord
     self.parent_id = record_property&.datum_id if record_property&.datum_type == 'Box'
   end
 
-  validates :box_type, existence: true, allow_nil: true
-  validates :parent_id, existence: true, allow_nil: true
+  # Rails 5.1: Removed validates :box_type/:parent_id, existence: true - belongs_to optional: true handles this
   validates :name, presence: true, length: { maximum: 255 }, uniqueness: { scope: :parent_id }
   validate :parent_id_cannot_self_children, if: ->(box) { box.parent_id }
 

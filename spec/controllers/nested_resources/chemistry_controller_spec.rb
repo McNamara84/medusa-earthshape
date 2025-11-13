@@ -20,7 +20,7 @@ describe NestedResources::ChemistriesController do
   before { child }
 
   describe "GET multiple_new" do
-    let(:method){get :multiple_new,parent_resourece: :analysis,analysis_id: parent,measurement_category_id: mesurement_category_id}
+    let(:method){get :multiple_new, params: {parent_resourece: :analysis, analysis_id: parent, measurement_category_id: mesurement_category_id}}
     context "error measurement_category_id" do
       let(:mesurement_category_id){0}
       before{method}
@@ -37,7 +37,7 @@ describe NestedResources::ChemistriesController do
   end
 
   describe "POST multiple_create" do
-    let(:method){post :multiple_create, parent_resource: :analysis, analysis_id: parent, chemistries: attributes}
+    let(:method){ post :multiple_create, params: {parent_resource: :analysis, analysis_id: parent, chemistries: attributes} }
     let(:measurement_item){FactoryGirl.create(:measurement_item) }
     let(:measurement_item2){FactoryGirl.create(:measurement_item) }
     let(:attributes) {[{measurement_item_id: measurement_item.id,unit_id: unit.id,value: 1,uncertainty: 1},{measurement_item_id: measurement_item2.id,unit_id: unit.id,value: 2,uncertainty: 2}] }
@@ -51,7 +51,7 @@ describe NestedResources::ChemistriesController do
   end
 
   describe "POST create" do
-    let(:method){post :create, parent_resource: parent_name, analysis_id: parent, chemistry: attributes, association_name: :chemistries}
+    let(:method){ post :create, params: {parent_resource: parent_name, analysis_id: parent, chemistry: attributes, association_name: :chemistries} }
     before{child}
     it { expect{method}.to change(Chemistry, :count).by(1) }
     context "validate" do
@@ -69,7 +69,7 @@ describe NestedResources::ChemistriesController do
   end
 
   describe "PUT update" do
-    let(:method){put :update, parent_resource: parent_name, analysis_id: parent, id: child_id, association_name: :chemistries}
+    let(:method){ put :update, params: {parent_resource: parent_name, analysis_id: parent, id: child_id, association_name: :chemistries} }
     let(:child_id){child.id}
     it { expect {method}.to change(Chemistry, :count).by(0) }
     context "present child" do
@@ -83,7 +83,7 @@ describe NestedResources::ChemistriesController do
     end
   end
   describe "DELETE destory" do
-    let(:method){delete :destroy, parent_resource: parent_name, analysis_id: parent, id: child_id, association_name: :chemistries}
+    let(:method){ delete :destroy, params: {parent_resource: parent_name, analysis_id: parent, id: child_id, association_name: :chemistries} }
     before { parent.chemistries << child}
     let(:child_id){child.id}
     it { expect {method}.to change(Chemistry, :count).by(-1) }

@@ -62,7 +62,7 @@ describe RecordsController do
       let(:stone) { FactoryGirl.create(:stone) }
       before do
         stone
-        get :show, id: stone.record_property.global_id ,format: :json
+        get :show, params: {id: stone.record_property.global_id}, format: :json
       end
       it { expect(response.body).to include(stone.to_json) }
     end
@@ -70,7 +70,7 @@ describe RecordsController do
       let(:stone) { FactoryGirl.create(:stone) }
       before do
         stone
-        get :show, id: stone.record_property.global_id ,format: :html
+        get :show, params: {id: stone.record_property.global_id}, format: :html
       end
       it { expect(response).to  redirect_to(controller: "stones",action: "show",id:stone.id) }
     end
@@ -84,28 +84,28 @@ describe RecordsController do
       before do
         stone
         analysis
-        get :show, id: stone.record_property.global_id ,format: :pml
+        get :show, params: {id: stone.record_property.global_id}, format: :pml
       end
       it { expect(response.body).to include("\<sample_global_id\>#{stone.global_id}") }    
 
     end
     context "record not found json" do
       before do
-        get :show, id: "not_found_id" ,format: :json
+        get :show, params: {id: "not_found_id"}, format: :json
       end
       it { expect(response.body).to be_blank }
       it { expect(response.status).to eq 404 }
     end
     context "record not found html" do
       before do
-        get :show, id: "not_found_id" ,format: :html
+        get :show, params: {id: "not_found_id"}, format: :html
       end
       it { expect(response).to render_template("record_not_found") }
       it { expect(response.status).to eq 404 }
     end
     context "record not found pml" do
       before do
-        get :show, id: "not_found_id" ,format: :pml
+        get :show, params: {id: "not_found_id"}, format: :pml
       end
       it { expect(response.body).to be_blank }
       it { expect(response.status).to eq 404 }
@@ -138,14 +138,14 @@ describe RecordsController do
     end
     context "with format pml" do
       before do
-        get :ancestors, id: child_1_1.record_property.global_id, format: :pml
+        get :ancestors, params: {id: child_1_1.record_property.global_id}, format: :pml
       end
       it { expect(response.body).to include("\<sample_global_id\>#{root.global_id}") }    
       it { expect(response.body).to include("\<sample_global_id\>#{child_1.global_id}") }    
     end
     context "with format json" do
       before do
-        get :ancestors, id: child_1_1.record_property.global_id, format: :json
+        get :ancestors, params: {id: child_1_1.record_property.global_id}, format: :json
       end
       it { expect(response.body).to include("\"global_id\":\"#{root.global_id}\"") }
       it { expect(response.body).to include("\"global_id\":\"#{child_1.global_id}\"") }    
@@ -177,14 +177,14 @@ describe RecordsController do
     end
     context "with format pml" do
       before do
-        get :descendants, id: root.record_property.global_id, format: :pml
+        get :descendants, params: {id: root.record_property.global_id}, format: :pml
       end
       it { expect(response.body).to include("\<sample_global_id\>#{child_1_1.global_id}") }    
       it { expect(response.body).to include("\<sample_global_id\>#{child_1.global_id}") }    
     end
     context "with format json" do
       before do
-        get :descendants, id: root.record_property.global_id, format: :json
+        get :descendants, params: {id: root.record_property.global_id}, format: :json
       end
       it { expect(response.body).to include("\"global_id\":\"#{child_1_1.global_id}\"") }
       it { expect(response.body).to include("\"global_id\":\"#{child_1.global_id}\"") }    
@@ -216,7 +216,7 @@ describe RecordsController do
     end
     context "with format pml" do
       before do
-        get :self_and_descendants, id: root.record_property.global_id, format: :pml
+        get :self_and_descendants, params: {id: root.record_property.global_id}, format: :pml
       end
       it { expect(response.body).to include("\<sample_global_id\>#{root.global_id}") }    
       it { expect(response.body).to include("\<sample_global_id\>#{child_1_1.global_id}") }    
@@ -224,7 +224,7 @@ describe RecordsController do
     end
     context "with format json" do
       before do
-        get :self_and_descendants, id: root.record_property.global_id, format: :json
+        get :self_and_descendants, params: {id: root.record_property.global_id}, format: :json
       end
       it { expect(response.body).to include("\"global_id\":\"#{root.global_id}\"") }      
       it { expect(response.body).to include("\"global_id\":\"#{child_1_1.global_id}\"") }
@@ -257,7 +257,7 @@ describe RecordsController do
     end
     context "with format pml" do
       before do
-        get :families, id: child_1.record_property.global_id, format: :pml
+        get :families, params: {id: child_1.record_property.global_id}, format: :pml
       end
       it { expect(response.body).to include("\<sample_global_id\>#{root.global_id}") }    
       it { expect(response.body).to include("\<sample_global_id\>#{child_1_1.global_id}") }    
@@ -265,7 +265,7 @@ describe RecordsController do
     end
     context "with format json" do
       before do
-        get :families, id: child_1.record_property.global_id, format: :json
+        get :families, params: {id: child_1.record_property.global_id}, format: :json
       end
       it { expect(response.body).to include("\"global_id\":\"#{root.global_id}\"") }      
       it { expect(response.body).to include("\"global_id\":\"#{child_1_1.global_id}\"") }
@@ -298,13 +298,13 @@ describe RecordsController do
     end
     context "with format pml" do
       before do
-        get :root, id: child_1_1.record_property.global_id, format: :pml
+        get :root, params: {id: child_1_1.record_property.global_id}, format: :pml
       end
       it { expect(response.body).to include("\<sample_global_id\>#{root.global_id}") }    
     end
     context "with format json" do
       before do
-        get :root, id: child_1_1.record_property.global_id, format: :json
+        get :root, params: {id: child_1_1.record_property.global_id}, format: :json
       end
       it { expect(response.body).to include("\"global_id\":\"#{root.global_id}\"") }
     end
@@ -335,13 +335,13 @@ describe RecordsController do
     end
     context "with format pml" do
       before do
-        get :parent, id: child_1_1.record_property.global_id, format: :pml
+        get :parent, params: {id: child_1_1.record_property.global_id}, format: :pml
       end
       it { expect(response.body).to include("\<sample_global_id\>#{child_1.global_id}") }    
     end
     context "with format json" do
       before do
-        get :parent, id: child_1_1.record_property.global_id, format: :json
+        get :parent, params: {id: child_1_1.record_property.global_id}, format: :json
       end
       it { expect(response.body).to include("\"global_id\":\"#{child_1.global_id}\"") }
     end
@@ -376,14 +376,14 @@ describe RecordsController do
     end
     context "with format pml" do
       before do
-        get :siblings, id: child_1_1.record_property.global_id, format: :pml
+        get :siblings, params: {id: child_1_1.record_property.global_id}, format: :pml
       end
       it { expect(response.body).to include("\<sample_global_id\>#{child_1_2.global_id}") }    
       it { expect(response.body).to include("\<sample_global_id\>#{child_1_3.global_id}") }    
     end
     context "with format json" do
       before do
-        get :siblings, id: child_1_1.record_property.global_id, format: :json
+        get :siblings, params: {id: child_1_1.record_property.global_id}, format: :json
       end
       it { expect(response.body).to include("\"global_id\":\"#{child_1_2.global_id}\"") }
       it { expect(response.body).to include("\"global_id\":\"#{child_1_3.global_id}\"") }
@@ -422,7 +422,7 @@ describe RecordsController do
     end
     context "with format pml" do
       before do
-        get :daughters, id: child_1.record_property.global_id, format: :pml
+        get :daughters, params: {id: child_1.record_property.global_id}, format: :pml
       end
       it { expect(response.body).to include("\<sample_global_id\>#{child_1_1.global_id}") }    
       it { expect(response.body).to include("\<sample_global_id\>#{child_1_2.global_id}") }    
@@ -430,7 +430,7 @@ describe RecordsController do
     end
     context "with format json" do
       before do
-        get :daughters, id: child_1.record_property.global_id, format: :json
+        get :daughters, params: {id: child_1.record_property.global_id}, format: :json
       end
       it { expect(response.body).to include("\"global_id\":\"#{child_1_1.global_id}\"") }      
       it { expect(response.body).to include("\"global_id\":\"#{child_1_2.global_id}\"") }
@@ -470,7 +470,7 @@ describe RecordsController do
     end
     context "with format pml" do
       before do
-        get :self_and_siblings, id: child_1_1.record_property.global_id, format: :pml
+        get :self_and_siblings, params: {id: child_1_1.record_property.global_id}, format: :pml
       end
       it { expect(response.body).to include("\<sample_global_id\>#{child_1_1.global_id}") }    
       it { expect(response.body).to include("\<sample_global_id\>#{child_1_2.global_id}") }    
@@ -478,7 +478,7 @@ describe RecordsController do
     end
     context "with format json" do
       before do
-        get :self_and_siblings, id: child_1_1.record_property.global_id, format: :json
+        get :self_and_siblings, params: {id: child_1_1.record_property.global_id}, format: :json
       end
       it { expect(response.body).to include("\"global_id\":\"#{child_1_1.global_id}\"") }      
       it { expect(response.body).to include("\"global_id\":\"#{child_1_2.global_id}\"") }
@@ -491,7 +491,7 @@ describe RecordsController do
       let(:stone) { FactoryGirl.create(:stone) }
       before do
         stone
-        get :property, id: stone.record_property.global_id ,format: :json
+        get :property, params: {id: stone.record_property.global_id}, format: :json
       end
       it { expect(response.body).to eq(stone.record_property.to_json) }
     end
@@ -499,20 +499,20 @@ describe RecordsController do
       let(:stone) { FactoryGirl.create(:stone) }
       before do
         stone
-        get :property, id: stone.record_property.global_id ,format: :html
+        get :property, params: {id: stone.record_property.global_id}, format: :html
       end
       pending { expect(response).to render_template("") }
     end
     context "record not found json" do
       before do
-        get :property, id: "not_found_id" ,format: :json
+        get :property, params: {id: "not_found_id"}, format: :json
       end
       it { expect(response.body).to be_blank }
       it { expect(response.status).to eq 404 }
     end
     context "record not found html" do
       before do
-        get :property, id: "not_found_id" ,format: :html
+        get :property, params: {id: "not_found_id"}, format: :html
       end
       it { expect(response).to render_template("record_not_found") }
       it { expect(response.status).to eq 404 }
@@ -532,13 +532,13 @@ describe RecordsController do
     it "sends casteml data" do
       allow(controller).to receive(:send_data) { controller.response_body = '' }
       expect(controller).to receive(:send_data).with(casteml, {type: "application/xml", filename: obj.global_id + ".pml", disposition: "attached"})
-      get :casteml, id: obj.global_id
+      get :casteml, params: {id: obj.global_id}
     end
   end
 
   describe "DELETE destroy" do
     let(:stone) { FactoryGirl.create(:stone) }
     before { stone }
-    it { expect { delete :destroy, id: stone.record_property.global_id }.to change(RecordProperty, :count).by(-1) }
+    it { expect { delete :destroy, params: {id: stone.record_property.global_id} }.to change(RecordProperty, :count).by(-1) }
   end
-end
+end

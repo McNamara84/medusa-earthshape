@@ -19,13 +19,13 @@ describe BibsController do
   
   describe "GET show" do
     let(:bib) { FactoryGirl.create(:bib) }
-    before { get :show, id: bib.id }
+    before { get :show, params: {id: bib.id} }
     it{ expect(assigns(:bib)).to eq bib }
   end
   
   describe "GET edit" do
     let(:bib) { FactoryGirl.create(:bib) }
-    before { get :edit, id: bib.id }
+    before { get :edit, params: {id: bib.id} }
     it{ expect(assigns(:bib)).to eq bib }
   end
   
@@ -34,9 +34,9 @@ describe BibsController do
       # doi parameter is required (controller checks doi.empty? without nil check)
       let(:attributes) { {name: "bib_name", author_ids: ["#{author_id}"], doi: ""} }
       let(:author_id) { FactoryGirl.create(:author, name: "name_1").id }
-      it { expect { post :create, bib: attributes }.to change(Bib, :count).by(1) }
+      it { expect { post :create, params: {bib: attributes} }.to change(Bib, :count).by(1) }
       it "assigns a newly created bib as @bib" do
-        post :create, bib: attributes
+        post :create, params: {bib: attributes}
         expect(assigns(:bib)).to be_persisted
         expect(assigns(:bib).name).to eq(attributes[:name])
       end
@@ -44,9 +44,9 @@ describe BibsController do
     describe "with invalid attributes" do
       let(:attributes) { {name: "", author_ids: [""], doi: ""} }
       before { allow_any_instance_of(Bib).to receive(:save).and_return(false) }
-      it { expect { post :create, bib: attributes }.not_to change(Bib, :count) }
+      it { expect { post :create, params: {bib: attributes} }.not_to change(Bib, :count) }
       it "assigns a newly created bib as @bib" do
-        post :create, bib: attributes
+        post :create, params: {bib: attributes}
         expect(assigns(:bib)).to be_new_record
         expect(assigns(:bib).name).to eq(attributes[:name])
       end
@@ -56,7 +56,7 @@ describe BibsController do
   describe "PUT update" do
     before do
       bib
-      put :update, id: bib.id, bib: attributes
+      put :update, params: {id: bib.id, bib: attributes}
     end
     let(:bib) { FactoryGirl.create(:bib) }
     let(:attributes) { {name: "update_name"} }
@@ -67,18 +67,18 @@ describe BibsController do
   describe "DELETE destroy" do
     let(:bib) { FactoryGirl.create(:bib) }
     before { bib }
-    it { expect { delete :destroy, id: bib.id }.to change(Bib, :count).by(-1) }
+    it { expect { delete :destroy, params: {id: bib.id} }.to change(Bib, :count).by(-1) }
   end
   
   describe "GET picture" do
     let(:bib) { FactoryGirl.create(:bib) }
-    before { get :picture, id: bib.id }
+    before { get :picture, params: {id: bib.id} }
     it { expect(assigns(:bib)).to eq bib }
   end
   
   describe "GET property" do
     let(:bib) { FactoryGirl.create(:bib) }
-    before { get :property, id: bib.id }
+    before { get :property, params: {id: bib.id} }
     it { expect(assigns(:bib)).to eq bib }
   end
 
@@ -91,7 +91,7 @@ describe BibsController do
       obj1
       obj2
       obj3
-      post :bundle_edit, ids: ids
+      post :bundle_edit, params: {ids: ids}
     end
     it {expect(assigns(:bibs).include?(obj1)).to be_truthy}
     it {expect(assigns(:bibs).include?(obj2)).to be_truthy}
@@ -109,7 +109,7 @@ describe BibsController do
       obj1
       obj2
       obj3
-      post :bundle_update, ids: ids,bib: attributes
+      post :bundle_update, params: {ids: ids, bib: attributes}
       obj1.reload
       obj2.reload
       obj3.reload
@@ -130,8 +130,8 @@ describe BibsController do
     it "sends tex data" do
       allow(controller).to receive(:send_data) { controller.response_body = '' }
       expect(controller).to receive(:send_data).with(tex, filename: "bibs.bib", type: "text")
-      get :download_to_tex, ids: params_ids
+      get :download_to_tex, params: {ids: params_ids}
     end
   end
 
-end
+end

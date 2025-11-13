@@ -131,6 +131,8 @@ class Bib < ApplicationRecord
   end
   
   def author_valid?
-    errors[:author] = "can't be blank"
+    msg = "can't be blank"
+    errors.add(:author, msg)  # Rails 5.1: errors.add() instead of errors[:key] =
+    msg  # Return string for test compatibility
   end
 end
