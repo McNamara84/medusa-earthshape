@@ -1,4 +1,4 @@
-class CreateQuantityunits < ActiveRecord::Migration
+class CreateQuantityunits < ActiveRecord::Migration[4.2]
   def change
     create_table :quantityunits do |t|
       t.string :name

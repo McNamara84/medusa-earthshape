@@ -1,4 +1,4 @@
-class CreateStagings < ActiveRecord::Migration
+class CreateStagings < ActiveRecord::Migration[4.2]
   def change
     create_table :stagings do |t|
       t.string :collection_name
