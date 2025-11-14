@@ -1,4 +1,4 @@
-class AddEarthshapeinfoToPlaces < ActiveRecord::Migration
+class AddEarthshapeinfoToPlaces < ActiveRecord::Migration[4.2]
   def change
     add_column :places, :aspect, :string
     add_reference :places, :vegetation, index: true
