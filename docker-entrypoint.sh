@@ -7,6 +7,9 @@ export DISPLAY=:99
 Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 XVFB_PID=$!
 
+# Wait for Xvfb to be ready
+sleep 2
+
 # Function to cleanup on exit
 cleanup() {
   echo "Shutting down Xvfb..."
