@@ -1,2 +1,2 @@
 --color
---exclude-pattern "spec/requests/**/*_spec.rb"
+--exclude-pattern "spec/{requests,features}/**/*_spec.rb"
