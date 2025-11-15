@@ -96,10 +96,10 @@ group :development, :test do
   gem 'pry-doc'
   gem 'pry-stack_explorer'
   gem 'pry-byebug'
-  gem 'rspec-rails', '~> 3.5.0'  # Updated from beta1 - stable version compatible with Rails 4.2 & Rake 13
+  gem 'rspec-rails', '~> 3.9.0'  # Rails 5.2 compatible, Ruby 2.5+ support - fixes controller test hanging
   gem 'rails-controller-testing'  # Required for Rails 5.0+ (assigns, assert_template)
   gem 'spring', '~> 2.1.0'  # Lock to version compatible with Ruby 2.5 (v4+ requires Ruby 2.7+)
-  gem 'guard-rspec', '>= 4.7.0', require: false  # Updated to support RSpec 3.5+
+  gem 'guard-rspec', '>= 4.7.3', require: false  # Updated to support RSpec 3.9+
   gem 'capistrano'
   gem 'capistrano-rails'
   gem 'capistrano-rbenv'
