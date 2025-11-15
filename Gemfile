@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.1.7'  # Upgraded from 5.0.7 - Rails 5.1 LTS version
+gem 'rails', '~> 5.2.8', '>= 5.2.8.1'  # Upgraded from 5.1.7 - Rails 5.2 final LTS version
 gem 'nokogiri', '~> 1.10.10'  # Lock to version compatible with Ruby 2.5 (1.13+ requires Ruby 2.6+)
 gem 'loofah', '~> 2.3.1'  # Lock to older version compatible with nokogiri 1.10
 gem 'psych', '~> 3.3.0'  # Lock to version 3.x for mini_racer compatibility (4.x+ have safe_load issues with libv8-node)
@@ -89,6 +89,7 @@ gem 'acts_as_list', '~> 1.0'  # Updated for Rails 5 compatibility (was 0.4.0)
 gem 'builder'
 gem 'ffi', '~> 1.15.0'  # Lock to version compatible with RubyGems 3.0.x (1.17+ requires RubyGems 3.3.22+)
 gem 'test-unit', '~> 3.0'  # Required for rspec-rails with Ruby 2.2+
+gem 'bootsnap', '>= 1.1.0', require: false  # Rails 5.2: Speeds up boot time
 group :development, :test do
   gem 'rak'
   gem 'pry-rails'
