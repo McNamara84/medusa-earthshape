@@ -4,14 +4,6 @@ GIT
   specs:
     alchemist (0.1.8)
 
-GIT
-  remote: https://github.com/mbleigh/acts-as-taggable-on
-  revision: 080a922e145dca2ae1ba4bd6d4f0db19d8b64deb
-  tag: v4.0.0
-  specs:
-    acts-as-taggable-on (4.0.0)
-      activerecord (>= 4.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -63,6 +55,8 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    acts-as-taggable-on (6.5.0)
+      activerecord (>= 5.0, < 6.1)
     acts_as_list (1.1.0)
       activerecord (>= 4.2)
     addressable (2.8.7)
@@ -462,7 +456,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_link_to
-  acts-as-taggable-on!
+  acts-as-taggable-on (~> 6.5.0)
   acts_as_list (~> 1.0)
   alchemist!
   barby

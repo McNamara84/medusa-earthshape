@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_02_26_094630) do
+ActiveRecord::Schema.define(version: 2025_11_15_071606) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "analyses", force: :cascade do |t|
+  create_table "analyses", id: :serial, force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.integer "stone_id"
@@ -29,14 +29,14 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["technique_id"], name: "index_analyses_on_technique_id"
   end
 
-  create_table "analysis_stones", force: :cascade do |t|
+  create_table "analysis_stones", id: :serial, force: :cascade do |t|
     t.integer "stone_id"
     t.integer "analysis_id"
     t.index ["analysis_id"], name: "index_analysis_stones_on_analysis_id"
     t.index ["stone_id"], name: "index_analysis_stones_on_stone_id"
   end
 
-  create_table "attachings", force: :cascade do |t|
+  create_table "attachings", id: :serial, force: :cascade do |t|
     t.integer "attachment_file_id"
     t.integer "attachable_id"
     t.string "attachable_type"
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["attachment_file_id"], name: "index_attachings_on_attachment_file_id"
   end
 
-  create_table "attachment_files", force: :cascade do |t|
+  create_table "attachment_files", id: :serial, force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.string "md5hash"
@@ -64,20 +64,20 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["filetopic_id"], name: "index_attachment_files_on_filetopic_id"
   end
 
-  create_table "authors", force: :cascade do |t|
+  create_table "authors", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "bib_authors", force: :cascade do |t|
+  create_table "bib_authors", id: :serial, force: :cascade do |t|
     t.integer "bib_id"
     t.integer "author_id"
     t.index ["author_id"], name: "index_bib_authors_on_author_id"
     t.index ["bib_id"], name: "index_bib_authors_on_bib_id"
   end
 
-  create_table "bibs", force: :cascade do |t|
+  create_table "bibs", id: :serial, force: :cascade do |t|
     t.string "entry_type"
     t.string "abbreviation"
     t.string "name"
@@ -95,12 +95,12 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.datetime "updated_at"
   end
 
-  create_table "box_types", force: :cascade do |t|
+  create_table "box_types", id: :serial, force: :cascade do |t|
     t.string "name"
     t.text "description"
   end
 
-  create_table "boxes", force: :cascade do |t|
+  create_table "boxes", id: :serial, force: :cascade do |t|
     t.string "name"
     t.integer "parent_id"
     t.integer "position"
@@ -112,7 +112,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["parent_id"], name: "index_boxes_on_parent_id"
   end
 
-  create_table "category_measurement_items", force: :cascade do |t|
+  create_table "category_measurement_items", id: :serial, force: :cascade do |t|
     t.integer "measurement_item_id"
     t.integer "measurement_category_id"
     t.integer "position"
@@ -120,7 +120,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["measurement_item_id"], name: "index_category_measurement_items_on_measurement_item_id"
   end
 
-  create_table "chemistries", force: :cascade do |t|
+  create_table "chemistries", id: :serial, force: :cascade do |t|
     t.integer "analysis_id", null: false
     t.integer "measurement_item_id"
     t.string "info"
@@ -135,7 +135,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["measurement_item_id"], name: "index_chemistries_on_measurement_item_id"
   end
 
-  create_table "classifications", force: :cascade do |t|
+  create_table "classifications", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "full_name"
     t.text "description"
@@ -145,13 +145,13 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["parent_id"], name: "index_classifications_on_parent_id"
   end
 
-  create_table "collectionmethods", force: :cascade do |t|
+  create_table "collectionmethods", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "collections", force: :cascade do |t|
+  create_table "collections", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "collector"
     t.date "collection_start"
@@ -171,7 +171,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["collectionmethod_id"], name: "index_collections_on_collectionmethod_id"
   end
 
-  create_table "collectors", force: :cascade do |t|
+  create_table "collectors", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "affiliation"
     t.integer "stone_id"
@@ -180,19 +180,19 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["stone_id"], name: "index_collectors_on_stone_id"
   end
 
-  create_table "devices", force: :cascade do |t|
+  create_table "devices", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "filetopics", force: :cascade do |t|
+  create_table "filetopics", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "global_qrs", force: :cascade do |t|
+  create_table "global_qrs", id: :serial, force: :cascade do |t|
     t.integer "record_property_id"
     t.string "file_name"
     t.string "content_type"
@@ -202,32 +202,32 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["record_property_id"], name: "index_global_qrs_on_record_property_id"
   end
 
-  create_table "group_members", force: :cascade do |t|
+  create_table "group_members", id: :serial, force: :cascade do |t|
     t.integer "group_id", null: false
     t.integer "user_id", null: false
     t.index ["group_id"], name: "index_group_members_on_group_id"
     t.index ["user_id"], name: "index_group_members_on_user_id"
   end
 
-  create_table "groups", force: :cascade do |t|
+  create_table "groups", id: :serial, force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "landuses", force: :cascade do |t|
+  create_table "landuses", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "measurement_categories", force: :cascade do |t|
+  create_table "measurement_categories", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "description"
     t.integer "unit_id"
   end
 
-  create_table "measurement_items", force: :cascade do |t|
+  create_table "measurement_items", id: :serial, force: :cascade do |t|
     t.string "nickname"
     t.text "description"
     t.string "display_in_html"
@@ -235,12 +235,12 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.integer "unit_id"
   end
 
-  create_table "physical_forms", force: :cascade do |t|
+  create_table "physical_forms", id: :serial, force: :cascade do |t|
     t.string "name"
     t.text "description"
   end
 
-  create_table "places", force: :cascade do |t|
+  create_table "places", id: :serial, force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.float "latitude"
@@ -263,7 +263,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["vegetation_id"], name: "index_places_on_vegetation_id"
   end
 
-  create_table "preparation_for_classifications", force: :cascade do |t|
+  create_table "preparation_for_classifications", id: :serial, force: :cascade do |t|
     t.integer "classification_id", null: false
     t.integer "preparation_type_id", null: false
     t.datetime "created_at"
@@ -272,7 +272,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["preparation_type_id"], name: "index_preparation_for_classifications_on_preparation_type_id"
   end
 
-  create_table "preparation_types", force: :cascade do |t|
+  create_table "preparation_types", id: :serial, force: :cascade do |t|
     t.string "name"
     t.boolean "creates_siblings"
     t.datetime "created_at"
@@ -282,7 +282,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.integer "parent_id"
   end
 
-  create_table "preparations", force: :cascade do |t|
+  create_table "preparations", id: :serial, force: :cascade do |t|
     t.string "info"
     t.integer "preparation_type_id"
     t.integer "stone_id"
@@ -292,13 +292,13 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["stone_id"], name: "index_preparations_on_stone_id"
   end
 
-  create_table "quantityunits", force: :cascade do |t|
+  create_table "quantityunits", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "record_properties", force: :cascade do |t|
+  create_table "record_properties", id: :serial, force: :cascade do |t|
     t.integer "datum_id"
     t.string "datum_type"
     t.integer "user_id"
@@ -320,7 +320,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["user_id"], name: "index_record_properties_on_user_id"
   end
 
-  create_table "referrings", force: :cascade do |t|
+  create_table "referrings", id: :serial, force: :cascade do |t|
     t.integer "bib_id"
     t.integer "referable_id"
     t.string "referable_type"
@@ -331,12 +331,12 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["referable_id"], name: "index_referrings_on_referable_id"
   end
 
-  create_table "search_maps", force: :cascade do |t|
+  create_table "search_maps", id: :serial, force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "spots", force: :cascade do |t|
+  create_table "spots", id: :serial, force: :cascade do |t|
     t.integer "attachment_file_id"
     t.string "name"
     t.text "description"
@@ -354,7 +354,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["attachment_file_id"], name: "index_spots_on_attachment_file_id"
   end
 
-  create_table "stagings", force: :cascade do |t|
+  create_table "stagings", id: :serial, force: :cascade do |t|
     t.string "collection_name"
     t.string "collection_project"
     t.boolean "collection_timeseries"
@@ -414,13 +414,13 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.string "collection_strategy"
   end
 
-  create_table "stonecontainer_types", force: :cascade do |t|
+  create_table "stonecontainer_types", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "stones", force: :cascade do |t|
+  create_table "stones", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "stone_type"
     t.text "description"
@@ -451,7 +451,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["stonecontainer_type_id"], name: "index_stones_on_stonecontainer_type_id"
   end
 
-  create_table "taggings", force: :cascade do |t|
+  create_table "taggings", id: :serial, force: :cascade do |t|
     t.integer "tag_id"
     t.string "taggable_type"
     t.integer "taggable_id"
@@ -459,27 +459,36 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.integer "tagger_id"
     t.string "context", limit: 128
     t.datetime "created_at"
+    t.index ["context"], name: "index_taggings_on_context"
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
+    t.index ["tag_id"], name: "index_taggings_on_tag_id"
+    t.index ["taggable_id", "taggable_type", "context"], name: "taggings_taggable_context_idx"
+    t.index ["taggable_id", "taggable_type", "tagger_id", "context"], name: "taggings_idy"
+    t.index ["taggable_id"], name: "index_taggings_on_taggable_id"
+    t.index ["taggable_type"], name: "index_taggings_on_taggable_type"
+    t.index ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type"
+    t.index ["tagger_id"], name: "index_taggings_on_tagger_id"
   end
 
-  create_table "tags", force: :cascade do |t|
+  create_table "tags", id: :serial, force: :cascade do |t|
     t.string "name"
+    t.integer "taggings_count", default: 0
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
-  create_table "techniques", force: :cascade do |t|
+  create_table "techniques", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "topographic_positions", force: :cascade do |t|
+  create_table "topographic_positions", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "units", force: :cascade do |t|
+  create_table "units", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -488,7 +497,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.string "text", limit: 10, null: false
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :serial, force: :cascade do |t|
     t.string "email"
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -514,7 +523,7 @@ ActiveRecord::Schema.define(version: 2018_02_26_094630) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
-  create_table "vegetations", force: :cascade do |t|
+  create_table "vegetations", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"

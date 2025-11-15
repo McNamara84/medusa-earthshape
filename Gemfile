@@ -73,7 +73,7 @@ gem 'geonames'
 gem 'rubyzip'
 #gem 'oai'
 gem 'comma'
-gem 'acts-as-taggable-on', git: 'https://github.com/mbleigh/acts-as-taggable-on', tag: 'v4.0.0'  # Rails 4.0-5.2 compatible bridge version (was acts_as_taggable_on 3.0.0.rc2)
+gem 'acts-as-taggable-on', '~> 6.5.0'  # Rails 5.2 compatible (v4.0.0 has class_name bug with Rails 5.2)
 gem 'exception_notification'
 gem 'settingslogic'
 # gem 'validates_existence'  # Rails 5.1: Removed - incompatible with Rails 5.1+ (belongs_to validation now built-in)
