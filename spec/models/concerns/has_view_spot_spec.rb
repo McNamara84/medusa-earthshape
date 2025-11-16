@@ -4,7 +4,7 @@ class HasViewSpotSpec < ActiveRecord::Base
   include HasViewSpot
 end
 
-class HasViewSpotSpecMigration < ActiveRecord::Migration
+class HasViewSpotSpecMigration < ActiveRecord::Migration[4.2]
   def self.up
     create_table :has_view_spot_specs do |t|
       t.string :name

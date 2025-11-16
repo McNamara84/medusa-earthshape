@@ -84,15 +84,15 @@ describe BoxesController do
       analysis_1;analysis_2;analysis_3;
     end
     context "without format" do
-      before { get :show, id: box.id }
+      before { get :show, params: {id: box.id} }
       it { expect(assigns(:box)).to eq box }
     end
     context "with format 'json'", :current => true do
-      before { get :show, id: box.id, format: 'json' }
+      before { get :show, params: {id: box.id}, format: 'json' }
       it { expect(response.body).to include("global_id") }
     end
     context "with format 'pml'", :current => true do
-      before { get :show, id: box.id, format: 'pml' }
+      before { get :show, params: {id: box.id}, format: 'pml' }
       it { expect(response.body).to include("\<sample_global_id\>#{stone_1.global_id}") }    
       it { expect(response.body).to include("\<sample_global_id\>#{stone_2.global_id}") }    
       it { expect(response.body).to include("\<sample_global_id\>#{stone_3.global_id}") }    
@@ -103,15 +103,15 @@ describe BoxesController do
 
   describe "GET edit" do
     let(:box) { FactoryGirl.create(:box) }
-    before { get :edit, id: box.id }
+    before { get :edit, params: {id: box.id} }
     it { expect(assigns(:box)).to eq box }
   end
 
   describe "POST create" do
     let(:attributes) { {name: "box_name"} }
-    it { expect { post :create, box: attributes }.to change(Box, :count).by(1) }
+    it { expect { post :create, params: {box: attributes} }.to change(Box, :count).by(1) }
     describe "assigns as @box" do
-      before { post :create, box: attributes }
+      before { post :create, params: {box: attributes} }
       it { expect(assigns(:box)).to be_persisted }
       it { expect(assigns(:box).name).to eq attributes[:name]}
     end
@@ -120,7 +120,7 @@ describe BoxesController do
   describe "PUT update", :current => true do
     before do
       box
-      put :update, id: box.id, box: attributes
+      put :update, params: {id: box.id, box: attributes}
     end
     let(:box) { FactoryGirl.create(:box) }
 
@@ -143,24 +143,24 @@ describe BoxesController do
   describe "DELETE destroy" do
     let(:box) { FactoryGirl.create(:box) }
     before { box }
-    it { expect { delete :destroy, id: box.id }.to change(Box, :count).by(-1) }
+    it { expect { delete :destroy, params: {id: box.id} }.to change(Box, :count).by(-1) }
   end
 
   describe "GET family" do
     let(:box) { FactoryGirl.create(:box) }
-    before { get :family, id: box.id }
+    before { get :family, params: {id: box.id} }
     it { expect(assigns(:box)).to eq box }
   end
 
   describe "GET picture" do
     let(:box) { FactoryGirl.create(:box) }
-    before { get :picture, id: box.id }
+    before { get :picture, params: {id: box.id} }
     it { expect(assigns(:box)).to eq box }
   end
 
   describe "GET property" do
     let(:box) { FactoryGirl.create(:box) }
-    before { get :property, id: box.id }
+    before { get :property, params: {id: box.id} }
     it { expect(assigns(:box)).to eq box }
   end
 
@@ -173,7 +173,7 @@ describe BoxesController do
       obj1
       obj2
       obj3
-      post :bundle_edit, ids: ids
+      post :bundle_edit, params: {ids: ids}
     end
     it {expect(assigns(:boxes).include?(obj1)).to be_truthy}
     it {expect(assigns(:boxes).include?(obj2)).to be_truthy}
@@ -191,7 +191,7 @@ describe BoxesController do
       obj1
       obj2
       obj3
-      post :bundle_update, ids: ids,box: attributes
+      post :bundle_update, params: {ids: ids, box: attributes}
       obj1.reload
       obj2.reload
       obj3.reload
@@ -201,4 +201,4 @@ describe BoxesController do
     it {expect(obj3.path).to eq obj3path}
   end
 
-end
+end

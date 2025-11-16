@@ -1,5 +1,5 @@
-class GlobalQr < ActiveRecord::Base
+class GlobalQr < ApplicationRecord
   belongs_to :record_property
 
-  validates :record_property, existence: true
+  # Rails 5.1: Removed validates :record_property, existence: true - belongs_to (required by default) handles this
 end

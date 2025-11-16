@@ -4,7 +4,7 @@ class HasRecordPropertySpec < ActiveRecord::Base
   include HasRecordProperty
 end
 
-class HasRecordPropertySpecMigration < ActiveRecord::Migration
+class HasRecordPropertySpecMigration < ActiveRecord::Migration[4.2]
   def self.up
     create_table :has_record_property_specs do |t|
       t.string :name

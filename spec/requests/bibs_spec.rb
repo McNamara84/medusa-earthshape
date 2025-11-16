@@ -1,22 +1,20 @@
 require 'spec_helper'
 
 describe "bib master" do
-  before do
-    login login_user
-    create_data
-    visit bibs_path
-  end
   let(:login_user) { FactoryGirl.create(:user) }
-  let(:create_data) {}
   
   describe "bib detail screen" do
-    before { click_link(bib.name) }
-    let(:create_data) do
-      bib.attachment_files << attachment_file 
-      bib.create_record_property(user_id: login_user.id) 
+    let(:bib) do
+      User.current = login_user
+      FactoryGirl.create(:bib)
     end
-    let(:bib) { FactoryGirl.create(:bib) }
     let(:attachment_file) { FactoryGirl.create(:attachment_file, data_file_name: "file_name", data_content_type: data_type) }
+    
+    before do
+      login login_user
+      bib.attachment_files << attachment_file
+      visit bib_path(bib)
+    end
     
     describe "view spot" do
       describe "thumbnail" do

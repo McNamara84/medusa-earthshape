@@ -1,2 +1,2 @@
-class SearchMap < ActiveRecord::Base
+class SearchMap < ApplicationRecord
 end

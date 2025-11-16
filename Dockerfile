@@ -1,14 +1,13 @@
-# Use Ruby 2.1.10 (last stable 2.1.x version)
-FROM ruby:2.1.10
+# Use Ruby 2.5.9 (last stable 2.5.x version)
+FROM ruby:2.5.9
 
-# Fix for Debian Jessie (archived repositories)
-RUN echo "deb http://archive.debian.org/debian/ jessie main" > /etc/apt/sources.list && \
-    echo "deb http://archive.debian.org/debian-security/ jessie/updates main" >> /etc/apt/sources.list && \
-    echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until && \
-    echo 'APT::Get::AllowUnauthenticated "true";' >> /etc/apt/apt.conf.d/99allow-unauth
+# Fix Debian Buster repositories (EOL - moved to archive)
+RUN sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list && \
+    sed -i 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list && \
+    sed -i '/stretch-updates/d' /etc/apt/sources.list
 
-# Install system dependencies
-RUN apt-get update -qq && apt-get install -y --force-yes \
+# Install system dependencies including PhantomJS from Debian repos
+RUN apt-get update -qq && apt-get install -y \
     build-essential \
     libpq-dev \
     nodejs \
@@ -16,12 +15,14 @@ RUN apt-get update -qq && apt-get install -y --force-yes \
     imagemagick \
     libmagickwand-dev \
     git \
+    xvfb \
+    phantomjs \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Install bundler 1.17.3 (compatible with Ruby 2.1)
+# Install bundler 1.17.3 (compatible with Ruby 2.3-2.4)
 RUN gem install bundler -v '1.17.3'
 
 # Copy Gemfile and Gemfile.lock

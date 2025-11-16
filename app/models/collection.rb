@@ -1,4 +1,4 @@
-class Collection < ActiveRecord::Base
+class Collection < ApplicationRecord
   include HasRecordProperty
   include HasAttachmentFile
 #  belongs_to :collectionmethod

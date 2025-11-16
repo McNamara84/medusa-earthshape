@@ -1,2 +1,2 @@
-class Quantityunit < ActiveRecord::Base
+class Quantityunit < ApplicationRecord
 end

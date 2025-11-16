@@ -12,7 +12,7 @@ describe MeasurementItemsController do
     before do
       measurement_item_1;measurement_item_2;measurement_item_3
       # Request all records without pagination by setting very high per_page
-      get :index, per_page: 1000
+      get :index, params: {per_page: 1000}
     end
     it { expect(assigns(:measurement_items).size).to eq measurement_items.size }
   end
@@ -22,7 +22,7 @@ describe MeasurementItemsController do
     let(:measurement_item) { FactoryGirl.create(:measurement_item) }
     before do
       measurement_item
-      get :show, id: measurement_item.id, format: :json
+      get :show, params: {id: measurement_item.id}, format: :json
     end
     it { expect(response.body).to eq(measurement_item.to_json) }
   end
@@ -31,7 +31,7 @@ describe MeasurementItemsController do
     let(:measurement_item) { FactoryGirl.create(:measurement_item) }
     before do
       measurement_item
-      get :edit, id: measurement_item.id
+      get :edit, params: {id: measurement_item.id}
     end
     it { expect(assigns(:measurement_item)).to eq measurement_item }
   end
@@ -39,9 +39,9 @@ describe MeasurementItemsController do
   describe "POST create" do
     describe "with valid attributes" do
       let(:attributes) { {nickname: "measurement_item_nickname", description: "new descripton"} }
-      it { expect { post :create, measurement_item: attributes }.to change(MeasurementItem, :count).by(1) }
+      it { expect { post :create, params: {measurement_item: attributes} }.to change(MeasurementItem, :count).by(1) }
       context "assigns a newly created measurement_item as @measurement_item" do
-        before {post :create, measurement_item: attributes}
+        before { post :create, params: {measurement_item: attributes} }
         it{expect(assigns(:measurement_item)).to be_persisted}
         it{expect(assigns(:measurement_item).nickname).to eq(attributes[:nickname])}
         it{expect(assigns(:measurement_item).description).to eq(attributes[:description])}
@@ -50,9 +50,9 @@ describe MeasurementItemsController do
     describe "with invalid attributes" do
       let(:attributes) { {nickname: ""} }
       before { allow_any_instance_of(MeasurementItem).to receive(:save).and_return(false) }
-      it { expect { post :create, measurement_item: attributes }.not_to change(MeasurementItem, :count) }
+      it { expect { post :create, params: {measurement_item: attributes} }.not_to change(MeasurementItem, :count) }
       context "assigns a newly but unsaved measurement_item as @measurement_item" do
-        before {post :create, measurement_item: attributes}
+        before { post :create, params: {measurement_item: attributes} }
         it{expect(assigns(:measurement_item)).to be_new_record}
         it{expect(assigns(:measurement_item).nickname).to eq(attributes[:nickname])}
         it{expect(assigns(:measurement_item).description).to eq(attributes[:description])}
@@ -64,7 +64,7 @@ describe MeasurementItemsController do
     let(:measurement_item) { FactoryGirl.create(:measurement_item, nickname: "measurement_item", description: "description") }
     before do
       measurement_item
-      put :update, id: measurement_item.id, measurement_item: attributes
+      put :update, params: {id: measurement_item.id, measurement_item: attributes}
     end
     describe "with valid attributes" do
       let(:attributes) { {nickname: "update_nickname",description: "update description"} }
@@ -86,6 +86,6 @@ describe MeasurementItemsController do
   describe "DELETE destroy" do
     let(:measurement_item) { FactoryGirl.create(:measurement_item, nickname: "measurement_item", description: "description") }
     before{ measurement_item }
-    it { expect { delete :destroy,id: measurement_item.id }.to change(MeasurementItem, :count).by(-1) }
+    it { expect { delete :destroy, params: {id: measurement_item.id} }.to change(MeasurementItem, :count).by(-1) }
   end
 end

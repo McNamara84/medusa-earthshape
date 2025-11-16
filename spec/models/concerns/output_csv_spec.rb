@@ -4,7 +4,7 @@ class OutputCsvSpec < ActiveRecord::Base
   include OutputCsv
 end
 
-class OutputCsvSpecMigration < ActiveRecord::Migration
+class OutputCsvSpecMigration < ActiveRecord::Migration[4.2]
   def self.up
     create_table :output_csv_specs do |t|
       t.string :name

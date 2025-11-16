@@ -4,7 +4,7 @@ class OutputPdfSpec < ActiveRecord::Base
   include OutputPdf
 end
 
-class OutputPdfSpecMigration < ActiveRecord::Migration
+class OutputPdfSpecMigration < ActiveRecord::Migration[4.2]
   def self.up
     create_table :output_pdf_specs do |t|
       t.string :name
@@ -34,10 +34,10 @@ describe OutputPdf do
     let(:obj) { klass.create(name: "foo", global_id: "1234") }
     before { allow(obj).to receive(:set_card_data) }
     after { obj.build_card }
-    it { expect(ThinReports::Report).to receive(:new).and_call_original }
+    it { expect(Thinreports::Report).to receive(:new).and_call_original }
     it { expect(obj).to receive(:report_template).with("igsn").and_call_original }
     it { expect(obj).to receive(:set_card_data) }
-    it { expect(obj.build_card.class).to eq ThinReports::Report::Base }
+    it { expect(obj.build_card.class).to eq Thinreports::Report::Base }
   end
 
   describe "report_template" do
@@ -85,16 +85,33 @@ describe OutputPdf do
   end
 
   describe "qr_image" do
-    after { obj.qr_image }
-    before { allow_any_instance_of(StringIO).to receive(:set_encoding).and_return(string_io) }
+    # Rails 5.0+: Multiple tests with after hook cause "already received" errors
+    # Don't use after hook - call method explicitly in test that needs return value
     let(:obj) { klass.create(name: "foo", global_id: global_id) }
     let(:global_id) { "1234" }
-    let(:string_io) { double(:string_io) }
     let(:dim) { klass::QRCODE_DIM }
-    it { expect(Barby::QrCode).to receive(:new).with(global_id).and_call_original }
-    it { expect_any_instance_of(Barby::QrCode).to receive(:to_png).with({xdim: dim, ydim: dim}).and_call_original }
-    it { expect_any_instance_of(StringIO).to receive(:set_encoding).with("UTF-8") }
-    it { expect(obj.qr_image).to eq string_io }
+    
+    it "should create QrCode with global_id" do
+      expect(Barby::QrCode).to receive(:new).with(global_id).and_call_original
+      obj.qr_image
+    end
+    
+    it "should call to_png with correct dimensions" do
+      expect_any_instance_of(Barby::QrCode).to receive(:to_png).with({xdim: dim, ydim: dim}).and_call_original
+      obj.qr_image
+    end
+    
+    it "should call set_encoding with UTF-8" do
+      # Rails 5.0+: ChunkyPNG internally creates StringIOs and calls set_encoding with different encodings
+      # We can't mock all StringIO instances, so just verify our code returns correct result
+      result = obj.qr_image
+      expect(result).to be_a(StringIO)
+      expect(result.external_encoding.to_s).to eq("UTF-8")
+    end
+    
+    it "should return a StringIO object" do
+      expect(obj.qr_image).to be_a(StringIO)
+    end
   end
 
   describe "primary_attachment_file_path" do
@@ -126,11 +143,11 @@ describe OutputPdf do
     before do
       allow(obj).to receive(:primary_attachment_file_path)
     end
-    it { expect(ThinReports::Report).to receive(:new).and_call_original }
+    it { expect(Thinreports::Report).to receive(:new).and_call_original }
     it { expect(obj).to receive(:report_template).with("bundle").and_call_original }
     it { expect(klass).to receive(:divide_by_three).with(resources).and_call_original }
     it { expect(klass).to receive(:set_bundle_data).exactly(3).times }
-    it { expect(klass.build_a_four(resources).class).to eq ThinReports::Report::Base }
+    it { expect(klass.build_a_four(resources).class).to eq Thinreports::Report::Base }
   end
 
   describe "build_cards" do
@@ -138,10 +155,10 @@ describe OutputPdf do
     let(:resources) { [obj] }
     let(:obj) { klass.create(name: "foo", global_id: "1234") }
     before { allow(obj).to receive(:set_card_data) }
-    it { expect(ThinReports::Report).to receive(:new).and_call_original }
+    it { expect(Thinreports::Report).to receive(:new).and_call_original }
     it { expect(obj).to receive(:report_template).with("igsn").and_call_original }
     it { expect(obj).to receive(:set_card_data) }
-    it { expect(klass.build_cards(resources).class).to eq ThinReports::Report::Base }
+    it { expect(klass.build_cards(resources).class).to eq Thinreports::Report::Base }
   end
 
   describe "divide_by_three" do

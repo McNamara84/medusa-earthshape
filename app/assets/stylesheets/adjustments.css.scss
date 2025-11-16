@@ -2,5 +2,5 @@
 	color: #000;
 	color: rgba(0,0,0,0);
 	width: 24px;
-	background: asset-url("csv.png", image) 0 0
+	background: asset-url("csv.png") 0 0  /* Sass-Rails 5.x: removed 'image' parameter */
 }

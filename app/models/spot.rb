@@ -1,14 +1,14 @@
-class Spot < ActiveRecord::Base
+class Spot < ApplicationRecord
   include HasRecordProperty
 
   belongs_to :attachment_file
 
-  validates :attachment_file, existence: true
+  # Rails 5.1: Removed validates :attachment_file, existence: true - belongs_to (required by default) handles this
   validates :spot_x, presence: true
   validates :spot_y, presence: true
 
-  before_validation :generate_name, if: "name.blank?"
-  before_validation :generate_stroke_width, if: "stroke_width.blank?"
+  before_validation :generate_name, if: -> { name.blank? }  # Rails 5.2: String callbacks deprecated
+  before_validation :generate_stroke_width, if: -> { stroke_width.blank? }  # Rails 5.2: String callbacks deprecated
 
   def generate_name
     if target_uid.blank? 

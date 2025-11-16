@@ -1,4 +1,4 @@
-class AddParentinfoToPreparationTypes < ActiveRecord::Migration
+class AddParentinfoToPreparationTypes < ActiveRecord::Migration[4.2]
   def change
     add_column :preparation_types, :full_name, :string
     add_column :preparation_types, :description, :text

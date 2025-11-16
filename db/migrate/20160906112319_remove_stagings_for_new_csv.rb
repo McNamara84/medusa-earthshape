@@ -1,4 +1,4 @@
-class RemoveStagingsForNewCsv < ActiveRecord::Migration
+class RemoveStagingsForNewCsv < ActiveRecord::Migration[4.2]
   def change
   remove_column :stagings, :collection_collector
   remove_column :stagings, :collection_affiliation

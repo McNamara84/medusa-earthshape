@@ -7,7 +7,7 @@ FactoryGirl.define do
     data_file_name "file_name_1.jpg"
     data_content_type "image/jpg"
     data_file_size 12345
-    data_updated_at DateTime.now.strftime("%Y-%m-%d %H:%M:%S")
+    data_updated_at { DateTime.now }
     original_geometry "123x123"
     affine_matrix [1,0,0,0,1,0,0,0,1]
   end

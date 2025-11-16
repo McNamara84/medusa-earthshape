@@ -42,7 +42,7 @@
     </tr>
   </tfoot>
 </table>
-<%= link_to_function "bundle edit", "$('#box-bundle-form').submit();", class: "btn btn-default" %>
+<%= link_to "bundle edit", "#", onclick: "$('#box-bundle-form').submit();; return false;", class: "btn btn-default" %>
  <hr style="clear:both">   
   <div style="clear:both">Enter Child to this Storageroom/Box </div>
 <div>

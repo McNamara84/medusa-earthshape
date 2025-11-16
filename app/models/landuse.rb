@@ -1,3 +1,3 @@
-class Landuse < ActiveRecord::Base
+class Landuse < ApplicationRecord
   belongs_to :place
 end

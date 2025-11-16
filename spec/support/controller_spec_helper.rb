@@ -1,5 +1,5 @@
 module ControllerSpecHelper
-  include Devise::TestHelpers
+  # Devise helpers are now included via RSpec.configure in spec_helper.rb
   
   def sign_in(resource_or_scope, resource=nil)
     super

@@ -1,4 +1,4 @@
-class CreateLanduses < ActiveRecord::Migration
+class CreateLanduses < ActiveRecord::Migration[4.2]
   def change
     create_table :landuses do |t|
       t.string :name
