@@ -10,7 +10,8 @@ describe PlaceDecorator do
   let(:latitude) { 0.0 }
   let(:longitude) { 0.0 }
   let(:elevation) { 0.0 }
-  let(:place){FactoryGirl.create(:place, latitude: latitude, longitude: longitude, elevation: elevation).decorate}
+  let(:place){FactoryGirl.create(:place, latitude: latitude, longitude: longitude, elevation: elevation)}
+  let(:place_decorated){place.decorate}
   before{User.current = user}
 
   describe ".latitude_to_text" do
@@ -64,7 +65,7 @@ describe PlaceDecorator do
   end
 
   describe ".stones_summary" do
-    subject{ place.stones_summary }
+    subject{ place_decorated.stones_summary }
     context "count 0" do
       before{place.stones.clear}
       it {expect(subject).to eq " [0]"}
@@ -89,7 +90,7 @@ describe PlaceDecorator do
       it {expect(subject).to eq "123, 456,  ... [3]"}
     end
     context "length 11" do
-      subject{ place.stones_summary(11) }
+      subject{ place_decorated.stones_summary(11) }
       before do
         FactoryGirl.create(:stone, name: "123", place: place)
         FactoryGirl.create(:stone, name: "456", place: place)
@@ -98,7 +99,7 @@ describe PlaceDecorator do
       it {expect(subject).to eq "123, 456, 7 ... [3]"}
     end
     context "length no limit" do
-      subject{ place.stones_summary(nil) }
+      subject{ place_decorated.stones_summary(nil) }
       before do
         FactoryGirl.create(:stone, name: "123", place: place)
         FactoryGirl.create(:stone, name: "456", place: place)
@@ -109,7 +110,7 @@ describe PlaceDecorator do
   end
 
   describe ".stones_count" do
-    subject{ place.stones_count }
+    subject{ place_decorated.stones_count }
     context "count 0" do
       before{place.stones.clear}
       it {expect(subject).to eq ""}
