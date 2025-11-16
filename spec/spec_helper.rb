@@ -24,7 +24,9 @@ RSpec.configure do |config|
   # Include Devise test helpers FIRST, then custom helpers
   # This ensures ControllerSpecHelper.sign_in can call super
   config.include Devise::Test::ControllerHelpers, type: :controller
-  config.include Capybara::DSL
+  # CRITICAL: Only include Capybara::DSL for request specs, NOT controller specs
+  # Including globally causes controller specs to hang indefinitely
+  config.include Capybara::DSL, type: :request
   
   config.include ControllerSpecHelper, type: :controller
   config.include RequestSpecHelper, type: :request

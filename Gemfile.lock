@@ -121,6 +121,10 @@ GEM
     crass (1.0.6)
     crossref (0.0.4)
       nokogiri (>= 1.2.3)
+    database_cleaner-active_record (2.2.2)
+      activerecord (>= 5.a)
+      database_cleaner-core (~> 2.0)
+    database_cleaner-core (2.0.1)
     datacite_doi_ify (1.1.0)
       rest-client (~> 1.7)
     debug_inspector (1.2.0)
@@ -474,6 +478,7 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   comma
   crossref
+  database_cleaner-active_record
   datacite_doi_ify
   devise
   draper
