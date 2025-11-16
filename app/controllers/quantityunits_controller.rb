@@ -5,7 +5,7 @@ class QuantityunitsController < ApplicationController
   layout "admin"
 
   def index
-    @search = Quantityunit.search(params[:q].to_h)
+    @search = Quantityunit.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @quantityunits = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @quantityunits

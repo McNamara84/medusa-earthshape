@@ -5,7 +5,7 @@ class BoxTypesController < ApplicationController
   layout "admin"
 
   def index
-    @search = BoxType.search(params[:q].to_h)
+    @search = BoxType.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @box_types = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @box_types

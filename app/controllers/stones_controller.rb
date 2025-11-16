@@ -5,7 +5,7 @@ class StonesController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @search = Stone.readables(current_user).search(params[:q].to_h)
+    @search = Stone.readables(current_user).search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @stones = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @stones

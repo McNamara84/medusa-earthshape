@@ -5,7 +5,7 @@ class UnitsController < ApplicationController
   layout "admin"
 
   def index
-    @search = Unit.search(params[:q].to_h)
+    @search = Unit.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @units = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @units

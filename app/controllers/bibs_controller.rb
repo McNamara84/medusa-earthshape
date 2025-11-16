@@ -5,7 +5,7 @@ class BibsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @search = Bib.readables(current_user).search(params[:q].to_h)
+    @search = Bib.readables(current_user).search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @bibs = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @bibs

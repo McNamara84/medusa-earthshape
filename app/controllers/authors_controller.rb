@@ -5,7 +5,7 @@ class AuthorsController < ApplicationController
   layout "admin"
   
   def index
-    @search = Author.search(params[:q].to_h)
+    @search = Author.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @authors = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @authors

@@ -5,7 +5,7 @@ class MeasurementCategoriesController < ApplicationController
   layout "admin"
 
   def index
-    @search = MeasurementCategory.search(params[:q].to_h)
+    @search = MeasurementCategory.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @measurement_categories = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @measurement_categories
