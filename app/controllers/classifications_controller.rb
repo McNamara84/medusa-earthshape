@@ -5,7 +5,7 @@ class ClassificationsController < ApplicationController
   layout "admin"
 
   def index
-    @search = Classification.search(params[:q])
+    @search = Classification.search(params[:q].to_h)
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @classifications = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @classifications

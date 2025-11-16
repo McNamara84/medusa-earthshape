@@ -5,8 +5,8 @@ class AttachmentFilesController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @search = AttachmentFile.readables(current_user).search(params[:q])
-    @search.sorts = "updated_at DESC" if @search.sorts.empty?
+    @search = AttachmentFile.readables(current_user).search(params[:q].to_h)
+    @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @attachment_files = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @attachment_files
   end

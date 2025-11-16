@@ -5,7 +5,7 @@ class PreparationTypesController < ApplicationController
   layout "admin"
 
   def index
-    @search = PreparationType.search(params[:q])
+    @search = PreparationType.search(params[:q].to_h)
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @preparation_types = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @preparation_type

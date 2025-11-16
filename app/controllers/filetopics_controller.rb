@@ -5,7 +5,7 @@ class FiletopicsController < ApplicationController
   layout "admin"
 
   def index
-    @search = Filetopic.search(params[:q])
+    @search = Filetopic.search(params[:q].to_h)
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @filetopics = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @filetopics

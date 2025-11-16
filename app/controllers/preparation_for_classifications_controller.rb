@@ -4,8 +4,8 @@ class PreparationForClassificationsController < ApplicationController
   load_and_authorize_resource
   layout "admin"
 
-  def index   
-    @search = PreparationForClassification.search(params[:q])
+  def index
+    @search = PreparationForClassification.search(params[:q].to_h)
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @preparation_for_classifications = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @preparation_for_classification   

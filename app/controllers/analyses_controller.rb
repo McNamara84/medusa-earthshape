@@ -5,8 +5,8 @@ class AnalysesController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @search = Analysis.readables(current_user).search(params[:q])
-    @search.sorts = "updated_at DESC" if @search.sorts.empty?
+    @search = Analysis.readables(current_user).search(params[:q].to_h)
+    @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @analyses = @search.result.includes([:stones, :device, chemistries: :measurement_item]).page(params[:page]).per(params[:per_page])
     respond_with @analyses
   end

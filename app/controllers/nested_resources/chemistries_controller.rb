@@ -40,8 +40,10 @@ class NestedResources::ChemistriesController < ApplicationController
   end
 
   def destroy
-    @chemistry.destroy
-    @parent.chemistries.delete(@chemistry)
+    # Rails 5.2: Unwrap decorator before association operations
+    chemistry_model = @chemistry.is_a?(Draper::Decorator) ? @chemistry.object : @chemistry
+    chemistry_model.destroy
+    @parent.chemistries.delete(chemistry_model)
     respond_with @chemistry, location: adjust_url_by_requesting_tab(request.referer)
   end
 

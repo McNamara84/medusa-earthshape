@@ -23,8 +23,10 @@ class NestedResources::SpotsController < ApplicationController
   end
 
   def destroy
-    @spot.destroy
-    @parent.spots.delete(@spot)
+    # Rails 5.2: Unwrap decorator before association operations
+    spot_model = @spot.is_a?(Draper::Decorator) ? @spot.object : @spot
+    spot_model.destroy
+    @parent.spots.delete(spot_model)
     respond_with @spot, location: adjust_url_by_requesting_tab(request.referer)
   end
 

@@ -4,7 +4,8 @@ require 'spec_helper'
 # Problem: Multiple before blocks evaluating let variables with nested FactoryGirl.create
 # causes deadlock in Rails 5.2. Issue tracked for Rails 6.0 upgrade.
 # Skipped: 2025-11-16
-describe NestedResources::SpotsController, :skip do
+# Testing 2025-11-16: Re-enable after HasRecordProperty fix
+describe NestedResources::SpotsController do
   let(:parent_name){:attachment_file}
   let(:child_name){:spot}
   let(:parent) { FactoryGirl.create(parent_name) }

@@ -12,3 +12,10 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 # application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.
 # Rails.application.config.assets.precompile += %w( admin.js admin.css )
+
+# Rails 5.2: Add Bootstrap font paths for Glyphicons
+Rails.application.config.assets.precompile += %w( bootstrap/glyphicons-halflings-regular.eot 
+                                                    bootstrap/glyphicons-halflings-regular.woff2 
+                                                    bootstrap/glyphicons-halflings-regular.woff 
+                                                    bootstrap/glyphicons-halflings-regular.ttf 
+                                                    bootstrap/glyphicons-halflings-regular.svg )
