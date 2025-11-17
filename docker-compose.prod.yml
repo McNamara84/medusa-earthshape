@@ -7,12 +7,36 @@ services:
       POSTGRES_DB: medusa_development
     volumes:
       - postgres_data_prod:/var/lib/postgresql
-    ports:
-      - "5432:5432"
     networks:
       - default
       - traefik
     restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@medusa.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'True'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - db
+    networks:
+      - default
+      - traefik
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pgadmin-router.rule=Host(`env.rz-vm182.gfz.de`) && PathPrefix(`/pgadmin`)"
+      - "traefik.http.routers.pgadmin-router.entrypoints=https"
+      - "traefik.http.routers.pgadmin-router.middlewares=pgadmin-stripprefix"
+      - "traefik.http.routers.pgadmin-router.service=pgadmin-service"
+      - "traefik.http.middlewares.pgadmin-stripprefix.stripprefix.prefixes=/pgadmin"
+      - "traefik.http.services.pgadmin-service.loadbalancer.server.port=80"
+      - "traefik.docker.network=traefik"
+
   web:
     build: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0 -p 80"
@@ -45,6 +69,7 @@ services:
       - "traefik.docker.network=traefik"
 volumes:
   postgres_data_prod:
+  pgadmin_data:
   bundle_cache:
   node_modules:
 networks:
