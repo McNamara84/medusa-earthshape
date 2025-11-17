@@ -55,15 +55,15 @@ describe PlacesController do
       end
       context "name search" do
         let(:query) { {"name_cont" => "place"} }
-        it { expect(assigns(:places)).to eq [place_2, place_1] }
+        it { expect(assigns(:places).to_a).to match_array [place_2, place_1] }
       end
       context "owner search" do
         let(:query) { {"user_username_cont" => "test"} }
-        it { expect(assigns(:places)).to eq [place_3, place_2] }
+        it { expect(assigns(:places).to_a).to match_array [place_3, place_2] }
       end
       context "group search" do
         let(:query) { {"group_name_cont" => "group"} }
-        it { expect(assigns(:places)).to eq [place_3, place_1] }
+        it { expect(assigns(:places).to_a).to match_array [place_3, place_1] }
       end
     end
     describe "sort" do
