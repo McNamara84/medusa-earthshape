@@ -10,8 +10,7 @@ describe PlaceDecorator do
   let(:latitude) { 0.0 }
   let(:longitude) { 0.0 }
   let(:elevation) { 0.0 }
-  let(:place){FactoryGirl.create(:place, latitude: latitude, longitude: longitude, elevation: elevation)}
-  let(:place_decorated){place.decorate}
+  let(:place){FactoryGirl.create(:place, latitude: latitude, longitude: longitude, elevation: elevation).decorate}
   before{User.current = user}
 
   describe ".latitude_to_text" do
@@ -65,64 +64,64 @@ describe PlaceDecorator do
   end
 
   describe ".stones_summary" do
-    subject{ place_decorated.stones_summary }
+    subject{ place.stones_summary }
     context "count 0" do
-      before{place.stones.clear}
+      before{place.object.stones.clear}
       it {expect(subject).to eq " [0]"}
     end
     context "count 1" do
-      before { FactoryGirl.create(:stone, name: "123", place: place) }
+      before { FactoryGirl.create(:stone, name: "123", place: place.object) }
       it {expect(subject).to eq "123 [1]"}
     end
     context "count 2" do
       before do
-        FactoryGirl.create(:stone, name: "123", place: place)
-        FactoryGirl.create(:stone, name: "456", place: place)
+        FactoryGirl.create(:stone, name: "123", place: place.object)
+        FactoryGirl.create(:stone, name: "456", place: place.object)
       end
       it {expect(subject).to eq "123, 456 [2]"}
     end
     context "length over" do
       before do
-        FactoryGirl.create(:stone, name: "123", place: place)
-        FactoryGirl.create(:stone, name: "456", place: place)
-        FactoryGirl.create(:stone, name: "789", place: place)
+        FactoryGirl.create(:stone, name: "123", place: place.object)
+        FactoryGirl.create(:stone, name: "456", place: place.object)
+        FactoryGirl.create(:stone, name: "789", place: place.object)
       end
       it {expect(subject).to eq "123, 456,  ... [3]"}
     end
     context "length 11" do
-      subject{ place_decorated.stones_summary(11) }
+      subject{ place.stones_summary(11) }
       before do
-        FactoryGirl.create(:stone, name: "123", place: place)
-        FactoryGirl.create(:stone, name: "456", place: place)
-        FactoryGirl.create(:stone, name: "789", place: place)
+        FactoryGirl.create(:stone, name: "123", place: place.object)
+        FactoryGirl.create(:stone, name: "456", place: place.object)
+        FactoryGirl.create(:stone, name: "789", place: place.object)
       end
       it {expect(subject).to eq "123, 456, 7 ... [3]"}
     end
     context "length no limit" do
-      subject{ place_decorated.stones_summary(nil) }
+      subject{ place.stones_summary(nil) }
       before do
-        FactoryGirl.create(:stone, name: "123", place: place)
-        FactoryGirl.create(:stone, name: "456", place: place)
-        FactoryGirl.create(:stone, name: "789", place: place)
+        FactoryGirl.create(:stone, name: "123", place: place.object)
+        FactoryGirl.create(:stone, name: "456", place: place.object)
+        FactoryGirl.create(:stone, name: "789", place: place.object)
       end
       it {expect(subject).to eq "123, 456, 789 [3]"}
     end
   end
 
   describe ".stones_count" do
-    subject{ place_decorated.stones_count }
+    subject{ place.stones_count }
     context "count 0" do
-      before{place.stones.clear}
+      before{place.object.stones.clear}
       it {expect(subject).to eq ""}
     end
     context "count 1" do
-      before { FactoryGirl.create(:stone, name: "123", place: place) }
+      before { FactoryGirl.create(:stone, name: "123", place: place.object) }
       it {expect(subject).to eq "1"}
     end
     context "count 2" do
       before do
-        FactoryGirl.create(:stone, name: "123", place: place)
-        FactoryGirl.create(:stone, name: "456", place: place)
+        FactoryGirl.create(:stone, name: "123", place: place.object)
+        FactoryGirl.create(:stone, name: "456", place: place.object)
       end
       it {expect(subject).to eq "2"}
     end
@@ -178,7 +177,8 @@ describe PlaceDecorator do
     context "get country name" do
       let(:latitude){35.3606}
       let(:longitude){132.75558}
-      it {expect(subject.count).to eq 10}
+      # Requires external Geonames API
+      xit {expect(subject.count).to eq 10}
     end
   end
 
