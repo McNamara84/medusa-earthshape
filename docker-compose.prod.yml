@@ -19,6 +19,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_CONFIG_SERVER_MODE: 'True'
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      SCRIPT_NAME: /pgadmin
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     depends_on:
@@ -31,9 +32,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.pgadmin-router.rule=Host(`env.rz-vm182.gfz.de`) && PathPrefix(`/pgadmin`)"
       - "traefik.http.routers.pgadmin-router.entrypoints=https"
-      - "traefik.http.routers.pgadmin-router.middlewares=pgadmin-stripprefix"
       - "traefik.http.routers.pgadmin-router.service=pgadmin-service"
-      - "traefik.http.middlewares.pgadmin-stripprefix.stripprefix.prefixes=/pgadmin"
       - "traefik.http.services.pgadmin-service.loadbalancer.server.port=80"
       - "traefik.docker.network=traefik"
 
