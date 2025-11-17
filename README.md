@@ -524,9 +524,9 @@ Developed for the EarthShape project - A collaborative research initiative in ea
 
 ## Recent Updates
 
-**November 2025**: Successfully upgraded from Rails 4.0.2 to Rails 6.0.6.1
-- Complete upgrade path: Rails 4.0 → 4.2 → 5.0 → 5.1 → 5.2 → 6.0
+**November 2025**: Successfully upgraded from Rails 4.0.2 to Rails 6.1.7.10 (LTS)
+- Complete upgrade path: Rails 4.0 → 4.2 → 5.0 → 5.1 → 5.2 → 6.0 → 6.1
 - Ruby upgraded: 2.1.10 → 2.3.8 → 2.4.10 → 2.5.9
 - 100% test suite passing (1318 tests)
-- All functionality verified through manual browser testing
+- CI/CD verified on GitHub Actions
 - See `UPGRADE-PLAN.md` for detailed upgrade history
