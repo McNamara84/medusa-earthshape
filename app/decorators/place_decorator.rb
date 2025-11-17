@@ -84,9 +84,13 @@ class PlaceDecorator < Draper::Decorator
       country_subdivisions = Geonames::WebService.country_subdivision "%0.2f" % latitude, "%0.2f" % longitude
       return "" if country_subdivisions.blank?
       country_subdivisions[0].country_name
-    rescue => e
-      # Handle Geonames API errors (network, parsing, rate limits, etc.)
-      Rails.logger.warn("Geonames API error in country_name: #{e.message}")
+    rescue REXML::ParseException, Errno::ECONNREFUSED, Errno::ETIMEDOUT, SocketError, Net::OpenTimeout, Net::ReadTimeout => e
+      # Handle specific Geonames API errors: XML parsing, network connectivity, timeouts
+      Rails.logger.warn("Geonames API error in country_name: #{e.class} - #{e.message}")
+      ""
+    rescue StandardError => e
+      # Catch any other unexpected errors to prevent breaking the decorator
+      Rails.logger.error("Unexpected error in country_name: #{e.class} - #{e.message}")
       ""
     end
   end
@@ -99,9 +103,13 @@ class PlaceDecorator < Draper::Decorator
     begin
       geonames = Geonames::WebService.find_nearby "%0.2f" % latitude, "%0.2f" % longitude,{radius: 100,maxRows: 10,style: "FULL"}
       geonames
-    rescue => e
-      # Handle Geonames API errors (network, parsing, rate limits, etc.)
-      Rails.logger.warn("Geonames API error in nearby_geonames: #{e.message}")
+    rescue REXML::ParseException, Errno::ECONNREFUSED, Errno::ETIMEDOUT, SocketError, Net::OpenTimeout, Net::ReadTimeout => e
+      # Handle specific Geonames API errors: XML parsing, network connectivity, timeouts
+      Rails.logger.warn("Geonames API error in nearby_geonames: #{e.class} - #{e.message}")
+      []
+    rescue StandardError => e
+      # Catch any other unexpected errors to prevent breaking the decorator
+      Rails.logger.error("Unexpected error in nearby_geonames: #{e.class} - #{e.message}")
       []
     end
   end

@@ -4,18 +4,18 @@ include ActionDispatch::TestProcess
 describe AttachmentFile do
 
  describe "validates" do
-    let(:user){FactoryGirl.create(:user)}
-    let(:filetopic){FactoryGirl.create(:filetopic)}
-    before{User.current = user}
+    let(:user) { FactoryGirl.create(:user) }
+    let(:filetopic) { FactoryGirl.create(:filetopic) }
+    before { User.current = user }
     describe "data" do
       before{obj.save}
       context "is presence" do
         let(:data) { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg'), 'image/jpeg') }
-        let(:obj){AttachmentFile.new(data: data, filetopic: filetopic)}
+        let(:obj) { AttachmentFile.new(data: data, filetopic: filetopic) }
         it { expect(obj).to be_valid }
       end
       context "is blank" do
-        let(:obj){AttachmentFile.new()}
+        let(:obj) { AttachmentFile.new() }
         it { expect(obj).not_to be_valid }
       end
     end

@@ -75,12 +75,13 @@ class RecordProperty < ApplicationRecord
     record_properties = self.arel_table
     group_members = GroupMember.arel_table
     
-    # Build subquery: SELECT 1 FROM group_members WHERE user_id = ? AND group_id = record_properties.group_id
+    # Build subquery: SELECT * FROM group_members WHERE user_id = ? AND group_id = record_properties.group_id
+    # Using Arel.star instead of Arel.sql('1') for better type safety
     subquery = GroupMember.where(
       group_members[:user_id].eq(user.id).and(
         group_members[:group_id].eq(record_properties[:group_id])
       )
-    ).select(Arel.sql('1')).arel
+    ).select(Arel.star).arel
     
     record_properties[:group_readable].eq(true).and(
       Arel::Nodes::Exists.new(subquery)
