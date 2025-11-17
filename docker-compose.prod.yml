@@ -6,10 +6,7 @@ services:
       POSTGRES_PASSWORD: medusa_development
       POSTGRES_DB: medusa_development
     volumes:
-      - postgres_data_prod:/var/lib/postgresql/data
-    tmpfs:
-      - /tmp
-      - /run/postgresql
+      - postgres_data_prod:/var/lib/postgresql
     networks:
       - default
       - traefik
