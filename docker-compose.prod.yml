@@ -38,13 +38,13 @@ services:
       - default
       - traefik
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.esm-router.rule=Host(`env.rz-vm182.gfz.de`) && PathPrefix(`/esm`)"
       - "traefik.http.routers.esm-router.entrypoints=https"
       - "traefik.http.routers.esm-router.middlewares=esm-stripprefix"
-      - "traefik.http.routers.esm-router.service=esm-service"
+      - "traefik.http.middlewares.esm-stripprefix.stripprefix.prefixes=/esm"
       - "traefik.http.services.esm-service.loadbalancer.server.port=80"
       - "traefik.docker.network=traefik"
-      - "traefik.http.middlewares.esm-stripprefix.stripprefix.prefixes=/esm"
 volumes:
   postgres_data:
   bundle_cache:
