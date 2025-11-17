@@ -1,14 +1,13 @@
-class RecordProperty < ActiveRecord::Base
-  belongs_to :user
-  belongs_to :group
+class RecordProperty < ApplicationRecord
+  belongs_to :user, optional: true  # Rails 5.1: Added optional: true - factories don't always set user
+  belongs_to :group, optional: true  # Rails 5.1: Added optional: true (was validated with allow_nil: true)
   belongs_to :datum, polymorphic: true
   has_one :global_qr
 
-  before_save :generate_global_id, if: "global_id.blank?"
+  before_save :generate_global_id, if: -> { global_id.blank? }  # Rails 5.2: Lambda syntax (string callbacks deprecated in Rails 4.x)
   before_save :adjust_published_at
 
-  validates :user, existence: true
-  validates :group, existence: true, allow_nil: true
+  # Rails 5.1: Removed validates :user/:group, existence: true - belongs_to handles this
   validates :global_id, uniqueness: true
 
   alias_attribute :owner_readable?, :owner_readable

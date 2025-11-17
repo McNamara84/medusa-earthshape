@@ -1,3 +1,3 @@
-class Vegetation < ActiveRecord::Base
+class Vegetation < ApplicationRecord
   belongs_to :place
 end

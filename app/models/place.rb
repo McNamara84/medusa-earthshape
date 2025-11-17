@@ -1,4 +1,4 @@
-class Place < ActiveRecord::Base
+class Place < ApplicationRecord
   include HasRecordProperty
   include OutputPdf
   include OutputCsv
@@ -14,17 +14,29 @@ class Place < ActiveRecord::Base
   has_many :referrings, as: :referable, dependent: :destroy
   has_many :bibs, through: :referrings
   has_many :collectors, through: :stones  
-  belongs_to :landuse
-  belongs_to :vegetation
-  belongs_to :topographic_position  
+  belongs_to :landuse, optional: true
+  belongs_to :vegetation, optional: true
+  belongs_to :topographic_position, optional: true
    has_many :children, class_name: "Place", foreign_key: :parent_id, dependent: :nullify
    has_many :places,    class_name: "Place", foreign_key: :parent_id, dependent: :nullify     
-   belongs_to :parent,  class_name: "Place", foreign_key: :parent_id  
+   belongs_to :parent,  class_name: "Place", foreign_key: :parent_id, optional: true  
    
    scope :choose_parent_global_id, ->(user) { 
-	ids=Place.where(is_parent: true).map(&:id)		 
-	RecordProperty.readables(user).where(datum_type:  self).where("datum_id IN (?)",  ids).order(:name).pluck(:name, :global_id)
+	ids = Place.where(is_parent: true).pluck(:id)
+	return [] if ids.empty?
+	RecordProperty.readables(user).where(datum_type: self).where(datum_id: ids).order(:name).pluck(:name, :global_id)
    }
+   
+   # Virtual attribute for forms: allows setting parent via global_id
+   def parent_global_id
+     parent&.global_id
+   end
+   
+   def parent_global_id=(global_id)
+     return if global_id.blank?
+     record_property = RecordProperty.find_by(global_id: global_id)
+     self.parent_id = record_property&.datum_id if record_property&.datum_type == 'Place'
+   end
    
    validates :name, presence: true, length: { maximum: 255 }
    with_options unless: :is_parent? do |childvalidations|
@@ -58,59 +70,28 @@ class Place < ActiveRecord::Base
     analyses
   end
 
-
-  def initialize(*args)	  
-	if args.length > 0					  
-		attributes=args[0]
-		attributes[:latitude].gsub!(/\s+/i,'')
-		attributes[:latitude].gsub!(/,/i,'.')
-		attributes[:longitude].gsub!(/\s+/i,'')		
-		attributes[:longitude].gsub!(/,/i,'.')		
-		super(attributes)		
-		
-		if attributes[:latitude].downcase =~ /s/ and self.latitude > 0
-			self.latitude= - self.latitude
-		end
-		    
-		if attributes[:longitude].downcase =~ /w/ and self.longitude > 0
-			self.longitude= - self.longitude
-		end	
-	else
-		super
-	end
+  # Rails 5.2 compatibility: Use attribute writers instead of custom initialize
+  def latitude=(value)
+    return super(value) unless value.is_a?(String) && value.present?
+    
+    cleaned = value.gsub(/\s+/i, '').gsub(/,/i, '.')
+    numeric_value = cleaned.to_f
+    # Handle Southern hemisphere indicator
+    numeric_value = -numeric_value.abs if cleaned.downcase =~ /s/
+    super(numeric_value)
   end
 
-  
-  def update_attributes(*args)
-	if args.length > 0					  
-		attributes=args[0]
-		
-		if attributes[:latitude].present?
-			attributes[:latitude].gsub!(/\s+/i,'')
-			attributes[:latitude].gsub!(/,/i,'.')
-		end
-		if attributes[:longitude].present?
-			attributes[:longitude].gsub!(/\s+/i,'')		
-			attributes[:longitude].gsub!(/,/i,'.')	
-		end
-		super(attributes)		
-		
-		if attributes[:latitude].present? and attributes[:latitude].downcase =~ /s/ and self.latitude > 0
-			self.latitude= - self.latitude
-		end
-		    
-		if attributes[:longitude].present? and attributes[:longitude].downcase =~ /w/ and self.longitude > 0
-			self.longitude= - self.longitude
-		end	
-		
-		self.save
-
-	else
-		super
-	end
-	
-	
+  def longitude=(value)
+    return super(value) unless value.is_a?(String) && value.present?
+    
+    cleaned = value.gsub(/\s+/i, '').gsub(/,/i, '.')
+    numeric_value = cleaned.to_f
+    # Handle Western hemisphere indicator
+    numeric_value = -numeric_value.abs if cleaned.downcase =~ /w/
+    super(numeric_value)
   end
+
+  # Note: update_attributes removed - coordinate cleaning now handled by latitude=/longitude= setters
   
   def validate_stringlatlon(lat, lon)
 	if is_parent.blank?

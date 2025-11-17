@@ -5,7 +5,7 @@ class PreparationsController < ApplicationController
   layout "admin"
 
   def index
-    @search = Preparation.search(params[:q])
+    @search = Preparation.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @preparations = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @preparations
@@ -26,7 +26,7 @@ class PreparationsController < ApplicationController
   end
 
   def update
-    @preparation.update_attributes(preparation_params)
+    @preparation.update(preparation_params)
     redirect_to preparations_path	  
   end
 

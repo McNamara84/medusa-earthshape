@@ -1,4 +1,4 @@
-class Analysis < ActiveRecord::Base
+class Analysis < ApplicationRecord
   include HasRecordProperty
   include HasViewSpot
   include HasAttachmentFile
@@ -10,24 +10,27 @@ class Analysis < ActiveRecord::Base
   has_many :bibs, through: :referrings
   has_many :analysis_stones
   has_many :stones, through: :analysis_stones
-  belongs_to :device
-  belongs_to :technique
+  belongs_to :device, optional: true
+  belongs_to :technique, optional: true
 
 #  validates :stones, existence: true, allow_nil: true
-  validates :device, existence: true, allow_nil: true
-  validates :technique, existence: true, allow_nil: true
+  # Rails 5.1: Removed validates :device/:technique, existence: true - belongs_to optional: true handles this
   validates :name, presence: true, length: { maximum: 255 }
   validates :operator, presence: true, length: { maximum: 255 }
 
-  MeasurementCategory.all.each do |mc|
-    comma mc.name.to_sym do
-      name "name"
-      name "device_name"
-      name "technique_name"
-      name "description"
-      name "operator"
-      name "stone_global_id"
-      mc.export_headers.map { |header| name header }
+  # Deferred loading of MeasurementCategory comma definitions
+  # to avoid autoloading issues in Rails 4.2
+  def self.define_comma_formats
+    MeasurementCategory.all.each do |mc|
+      comma mc.name.to_sym do
+        name "name"
+        name "device_name"
+        name "technique_name"
+        name "description"
+        name "operator"
+        name "stone_global_id"
+        mc.export_headers.map { |header| name header }
+      end
     end
   end
 
@@ -213,9 +216,9 @@ class Analysis < ActiveRecord::Base
   end
 
   def get_spot
-    spots =  Spot.find_all_by_target_uid(global_id)
+    spots = Spot.where(target_uid: global_id)
     return if spots.empty?
-    spots[0]
+    spots.first
   end 
 
 end

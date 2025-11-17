@@ -5,7 +5,7 @@ class TopographicPositionsController < ApplicationController
   layout "admin_lab"
 
   def index
-    @search = TopographicPosition.search(params[:q])
+    @search = TopographicPosition.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @topographic_positions = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @topographic_positions
@@ -26,7 +26,7 @@ class TopographicPositionsController < ApplicationController
   end
 
   def update
-    @topographic_position.update_attributes(topographic_position_params)
+    @topographic_position.update(topographic_position_params)
     redirect_to topographic_positions_path	  
   end
 

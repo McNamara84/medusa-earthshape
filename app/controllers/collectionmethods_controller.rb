@@ -5,7 +5,7 @@ class CollectionmethodsController < ApplicationController
   layout "admin"
 
   def index
-    @search = Collectionmethod.search(params[:q])
+    @search = Collectionmethod.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @collectionmethods = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @collectionmethods
@@ -26,7 +26,7 @@ class CollectionmethodsController < ApplicationController
   end
 
   def update
-    @collectionmethod.update_attributes(collectionmethod_params)
+    @collectionmethod.update(collectionmethod_params)
     redirect_to collectionmethods_path	  
   end
 

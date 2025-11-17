@@ -5,7 +5,7 @@ class AttachmentFilesController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @search = AttachmentFile.readables(current_user).search(params[:q])
+    @search = AttachmentFile.readables(current_user).search(params[:q]&.permit! || {})
     @search.sorts = "updated_at DESC" if @search.sorts.empty?
     @attachment_files = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @attachment_files
@@ -34,8 +34,8 @@ class AttachmentFilesController < ApplicationController
   end
 
   def update
-    @attachment_file.update_attributes(attachment_file_params)
-    respond_with @attachment_file
+    @attachment_file.update(attachment_file_params)
+    respond_with(@attachment_file)
   end
 
   def property
@@ -61,7 +61,7 @@ class AttachmentFilesController < ApplicationController
   end
 
   def bundle_update
-    @attachment_files.each { |attachment_file| attachment_file.update_attributes(attachment_file_params.only_presence) }
+    @attachment_files.each { |attachment_file| attachment_file.update(attachment_file_params.only_presence) }
     render :bundle_edit
   end
 

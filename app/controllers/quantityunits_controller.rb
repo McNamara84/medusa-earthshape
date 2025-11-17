@@ -5,7 +5,7 @@ class QuantityunitsController < ApplicationController
   layout "admin"
 
   def index
-    @search = Quantityunit.search(params[:q])
+    @search = Quantityunit.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @quantityunits = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @quantityunits
@@ -26,7 +26,7 @@ class QuantityunitsController < ApplicationController
   end
 
   def update
-    @quantityunit.update_attributes(quantityunit_params)
+    @quantityunit.update(quantityunit_params)
     redirect_to quantityunit_path	  
   end
 

@@ -6,7 +6,7 @@ class CollectionsController < ApplicationController
 #  layout "admin_lab"
 
   def index
-    @search = Collection.search(params[:q])
+    @search = Collection.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @collections = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @collections
@@ -45,7 +45,7 @@ class CollectionsController < ApplicationController
   end
 
   def update
-    @collection.update_attributes(collection_params)
+    @collection.update(collection_params)
     redirect_to @collection	  
   end
 
@@ -55,7 +55,7 @@ class CollectionsController < ApplicationController
   end
   
   def bundle_update
-    @collections.each { |collection| collection.update_attributes(collection_params.only_presence) }
+    @collections.each { |collection| collection.update(collection_params.only_presence) }
     render :bundle_edit
   end  
 

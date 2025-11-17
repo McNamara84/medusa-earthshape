@@ -5,7 +5,7 @@ class BoxesController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @search = Box.readables(current_user).search(params[:q])
+    @search = Box.readables(current_user).search(params[:q]&.permit! || {})
     @search.sorts = "updated_at DESC" if @search.sorts.empty?
     @boxes = @search.result.includes(:box_type).page(params[:page]).per(params[:per_page])
     respond_with @boxes
@@ -26,8 +26,8 @@ class BoxesController < ApplicationController
   end
 
   def update
-    @box.update_attributes(box_params)
-    respond_with @box
+    @box.update(box_params)
+    respond_with(@box)
   end
 
   def destroy
@@ -52,7 +52,7 @@ class BoxesController < ApplicationController
   end
 
   def bundle_update
-    @boxes.each { |box| box.update_attributes(box_params.only_presence) }
+    @boxes.each { |box| box.update(box_params.only_presence) }
     render :bundle_edit
   end
 

@@ -1,7 +1,6 @@
-class PreparationForClassification < ActiveRecord::Base
+class PreparationForClassification < ApplicationRecord
   belongs_to :classification
   belongs_to :preparation_type
   
-  validates :classification, existence: true, allow_nil: false
-  validates :preparation_type, existence: true, allow_nil: false
+  # Rails 5.1: Removed validates :classification/:preparation_type, existence: true - belongs_to (required by default) handles this
 end

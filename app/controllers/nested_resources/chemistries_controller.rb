@@ -40,24 +40,41 @@ class NestedResources::ChemistriesController < ApplicationController
   end
 
   def destroy
-    @chemistry.destroy
-    @parent.chemistries.delete(@chemistry)
+    # Rails 5.2: Unwrap decorator before association operations
+    chemistry_model = @chemistry.is_a?(Draper::Decorator) ? @chemistry.object : @chemistry
+    chemistry_model.destroy
+    @parent.chemistries.delete(chemistry_model)
     respond_with @chemistry, location: adjust_url_by_requesting_tab(request.referer)
   end
 
   private
 
   def chemistries_params
-#TODO permitのパラメータチェックの仕方を調べる
-    params.require(:chemistries)
-
-#    params.require(:chemistries).permit([
-#        :measurement_item_id,
-#        :value,
-#        :uncertainty,
-#        :unit_id
-#      ]
-#    )
+    # Rails 4.2 requires proper strong parameters for arrays
+    params.require(:chemistries).map do |chemistry|
+      chemistry.permit(
+        :measurement_item_id,
+        :info,
+        :value,
+        :label,
+        :description,
+        :uncertainty,
+        :unit_id,
+        record_property_attributes: [
+          :global_id,
+          :user_id,
+          :group_id,
+          :owner_readable,
+          :owner_writable,
+          :group_readable,
+          :group_writable,
+          :guest_readable,
+          :guest_writable,
+          :published,
+          :published_at
+        ]
+      )
+    end
   end
 
   def chemistry_params

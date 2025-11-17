@@ -5,7 +5,7 @@ class AnalysesController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @search = Analysis.readables(current_user).search(params[:q])
+    @search = Analysis.readables(current_user).search(params[:q]&.permit! || {})
     @search.sorts = "updated_at DESC" if @search.sorts.empty?
     @analyses = @search.result.includes([:stones, :device, chemistries: :measurement_item]).page(params[:page]).per(params[:per_page])
     respond_with @analyses
@@ -35,8 +35,8 @@ class AnalysesController < ApplicationController
   end
 
   def update
-    @analysis.update_attributes(analysis_params)
-    respond_with @analysis
+    @analysis.update(analysis_params)
+    respond_with(@analysis)
   end
 
   def picture
@@ -57,7 +57,7 @@ class AnalysesController < ApplicationController
   end
 
   def bundle_update
-    @analyses.each { |analysis| analysis.update_attributes(analysis_params.only_presence) }
+    @analyses.each { |analysis| analysis.update(analysis_params.only_presence) }
     render :bundle_edit
   end
 

@@ -7,7 +7,7 @@ describe ChemistriesController do
   describe "GET edit" do
     let(:obj) { FactoryGirl.create(:chemistry) }
     before do
-      get :edit, id: obj.id, format: :html
+      get :edit, params: {id: obj.id}, format: :html
     end
     it { expect(assigns(:chemistry)).to eq obj }
   end
@@ -15,7 +15,7 @@ describe ChemistriesController do
   describe "PUT update" do
     let(:obj) { FactoryGirl.create(:chemistry, description: "chemistry") }
     before do
-      put :update, id: obj.id, chemistry: attributes
+      put :update, params: {id: obj.id, chemistry: attributes}
     end
     describe "with valid attributes" do
       let(:attributes) { {description: "update_description"} }

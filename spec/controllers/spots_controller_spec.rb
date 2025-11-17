@@ -6,13 +6,13 @@ describe SpotsController do
   
   describe "GET edit" do
     let(:obj) { FactoryGirl.create(:spot) }
-    before{ get :edit, id: obj.id, format: :html}
+    before{ get :edit, params: {id: obj.id}, format: :html }
     it { expect(assigns(:spot)).to eq obj }
   end
   
   describe "PUT update" do
     let(:obj) { FactoryGirl.create(:spot, name: "spot") }
-    before{ put :update, id: obj.id, spot: attributes}
+    before{ put :update, params: {id: obj.id, spot: attributes} }
     describe "with valid attributes" do
       let(:attributes) { {name: "update_name"} }
       it { expect(assigns(:spot)).to eq obj }
@@ -30,13 +30,13 @@ describe SpotsController do
   
   describe "GET property" do
     let(:spot) { FactoryGirl.create(:spot) }
-    before { get :property, id: spot.id }
+    before { get :property, params: {id: spot.id} }
     it { expect(assigns(:spot)).to eq spot }
   end
   
   describe "GET picture" do
     let(:spot) { FactoryGirl.create(:spot) }
-    before { get :picture, id: spot.id }
+    before { get :picture, params: {id: spot.id} }
     it { expect(assigns(:spot)).to eq spot }
   end
   

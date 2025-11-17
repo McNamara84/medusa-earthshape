@@ -1,4 +1,4 @@
-class Box < ActiveRecord::Base
+class Box < ApplicationRecord
   include HasRecordProperty
   include HasViewSpot
   include OutputPdf
@@ -15,11 +15,21 @@ class Box < ActiveRecord::Base
   has_many :children, class_name: "Box", foreign_key: :parent_id, dependent: :nullify
   has_many :referrings, as: :referable, dependent: :destroy
   has_many :bibs, through: :referrings
-  belongs_to :parent, class_name: "Box", foreign_key: :parent_id
-  belongs_to :box_type
+  belongs_to :parent, class_name: "Box", foreign_key: :parent_id, optional: true
+  belongs_to :box_type, optional: true
 
-  validates :box_type, existence: true, allow_nil: true
-  validates :parent_id, existence: true, allow_nil: true
+  # Virtual attribute for forms: allows setting parent via global_id
+  def parent_global_id
+    parent&.global_id
+  end
+  
+  def parent_global_id=(global_id)
+    return if global_id.blank?
+    record_property = RecordProperty.find_by(global_id: global_id)
+    self.parent_id = record_property&.datum_id if record_property&.datum_type == 'Box'
+  end
+
+  # Rails 5.1: Removed validates :box_type/:parent_id, existence: true - belongs_to optional: true handles this
   validates :name, presence: true, length: { maximum: 255 }, uniqueness: { scope: :parent_id }
   validate :parent_id_cannot_self_children, if: ->(box) { box.parent_id }
 

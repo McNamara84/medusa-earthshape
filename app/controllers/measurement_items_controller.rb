@@ -5,7 +5,7 @@ class MeasurementItemsController < ApplicationController
   layout "admin"
 
   def index
-    @search = MeasurementItem.search(params[:q])
+    @search = MeasurementItem.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @measurement_items = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @measurement_items
@@ -26,7 +26,7 @@ class MeasurementItemsController < ApplicationController
   end
 
   def update
-    @measurement_item.update_attributes(measurement_item_params)
+    @measurement_item.update(measurement_item_params)
     respond_with(@measurement_item, location: measurement_items_path)
 
   end

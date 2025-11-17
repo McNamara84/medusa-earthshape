@@ -20,12 +20,12 @@ describe AttachingsController do
   describe "POST move_to_top" do
     before{request.env["HTTP_REFERER"]  = "where_i_came_from"}
     context "not count change" do
-      it { expect { post :move_to_top, id: attaching2.id  }.to change(Attaching, :count).by(0) }
+      it { expect { post :move_to_top, params: {id: attaching2.id} }.to change(Attaching, :count).by(0) }
     end
     
     context " move to top" do
       before do
-        post :move_to_top, id: attaching2.id
+        post :move_to_top, params: {id: attaching2.id}
         attaching1.reload
         attaching2.reload
       end
@@ -43,7 +43,7 @@ describe AttachingsController do
     let(:base_url){"http://wwww.test.co.jp/"}
     before do
       request.env["HTTP_REFERER"]  = url
-      post :move_to_top, id: attaching2.id,tab: tab 
+      post :move_to_top, params: {id: attaching2.id, tab: tab} 
     end
     context "add none param" do
       let(:tab){""}

@@ -47,25 +47,25 @@ describe AnalysesController do
     describe "with query" do
       context "without format" do
         before do
-          get :index, :q => {:name_cont => 'xxx'}
+          get :index, params: {:q => {:name_cont => 'xxx'}}
         end
         it { expect(assigns(:analyses).count).to eq 0 }
       end
       context "with format json" do
         before do
-          get :index, :q => {:name_cont => 'xxx'}, :format => 'json'
+          get :index, params: {:q => {:name_cont => 'xxx'}, :format => 'json'}
         end
         it { expect(response.body).to eq [].to_json }
       end
       context "with format xml" do
         before do
-          get :index, :q => {:name_cont => 'xxx'}, :format => 'xml'
+          get :index, params: {:q => {:name_cont => 'xxx'}, :format => 'xml'}
         end
         it { expect(response.body).to eq [].to_xml }
       end
       context "with format pml" do
         before do
-          get :index, :q => {:name_cont => 'xxx'}, :format => 'pml'
+          get :index, params: {:q => {:name_cont => 'xxx'}, :format => 'pml'}
         end
         it { expect(response.body).to eq [].to_pml }
       end
@@ -76,7 +76,7 @@ describe AnalysesController do
   end
 
   describe "GET show" do
-    let(:method){get :show, id: id}
+    let(:method){ get :show, params: {id: id} }
     let(:obj) { FactoryGirl.create(:analysis) }
     context "record found" do
       let(:id){obj.id}
@@ -91,7 +91,7 @@ describe AnalysesController do
       let(:id){obj.id}
       before do
         #get :show, id: id, format: 'pml'
-        get :show, id: id ,format: :pml
+        get :show, params: {id: id}, format: :pml
 
       end
       it{ expect(assigns(:analysis)).to eq obj }
@@ -101,7 +101,7 @@ describe AnalysesController do
   end
 
   describe "GET edit" do
-    let(:method){get :edit, id: id}
+    let(:method){ get :edit, params: {id: id} }
     let(:obj) { FactoryGirl.create(:analysis) }
     context "record found" do
       let(:id){obj.id}
@@ -116,16 +116,16 @@ describe AnalysesController do
 
   describe "POST create" do
     let(:attributes) { {name: "obj_name", operator: "Test Operator"} }
-    it { expect { post :create, analysis: attributes }.to change(Analysis, :count).by(1) }
+    it { expect { post :create, params: {analysis: attributes} }.to change(Analysis, :count).by(1) }
     describe "assigns as @analysis" do
-      before{ post :create, analysis: attributes }
+      before{ post :create, params: {analysis: attributes} }
       it{ expect(assigns(:analysis)).to be_persisted }
       it { expect(assigns(:analysis).name).to eq "obj_name" }
     end
   end
 
   describe "PUT update" do
-    let(:method){put :update, id: id, analysis: attributes}
+    let(:method){ put :update, params: {id: id, analysis: attributes} }
     let(:obj) { FactoryGirl.create(:analysis) }
     let(:attributes) { {name: "update_name"} }
     context "record found" do
@@ -149,7 +149,7 @@ describe AnalysesController do
       obj1
       obj2
       obj3
-      post :bundle_edit, ids: ids
+      post :bundle_edit, params: {ids: ids}
     end
     it {expect(assigns(:analyses).include?(obj1)).to be_truthy}
     it {expect(assigns(:analyses).include?(obj2)).to be_truthy}
@@ -167,7 +167,7 @@ describe AnalysesController do
       obj1
       obj2
       obj3
-      post :bundle_update, ids: ids,analysis: attributes
+      post :bundle_update, params: {ids: ids, analysis: attributes}
       obj1.reload
       obj2.reload
       obj3.reload
@@ -179,13 +179,13 @@ describe AnalysesController do
 
   describe "GET picture" do
     let(:obj) { FactoryGirl.create(:analysis) }
-    before { get :picture, id: obj.id }
+    before { get :picture, params: {id: obj.id} }
     it { expect(assigns(:analysis)).to eq obj }
   end
 
   describe "GET property" do
     let(:obj) { FactoryGirl.create(:analysis) }
-    before { get :property, id: obj.id }
+    before { get :property, params: {id: obj.id} }
     it { expect(assigns(:analysis)).to eq obj }
   end
 
@@ -193,7 +193,7 @@ describe AnalysesController do
     let(:data) { double(:upload_data) }
     before do
       allow(Analysis).to receive(:import_csv).with(data.to_s).and_return(import_result)
-      post :import, data: data
+      post :import, params: {data: data}
     end
     context "import success" do
       let(:import_result) { true }
@@ -209,7 +209,7 @@ describe AnalysesController do
     let(:obj) { FactoryGirl.create(:analysis) }
     let(:obj2) { FactoryGirl.create(:analysis) }
     let(:objs){ [obj,obj2]}
-    before { get :table, ids: objs.map {|obj| obj.id} }
+    before { get :table, params: {ids: objs.map {|obj| obj.id} } }
     it { expect(assigns(:analyses)).to eq objs }
     it { expect(response).to render_template("table") }
   end
@@ -219,15 +219,21 @@ describe AnalysesController do
     let(:obj2) { FactoryGirl.create(:analysis) }
     let(:objs){ [obj,obj2]}
     let(:castemls){Analysis.to_castemls(objs)}
-    after{get :castemls, ids: objs.map {|obj| obj.id} }
-    it { expect(controller).to receive(:send_data).with(castemls, filename: "my-great-analysis.pml", type: "application/xml", disposition: "attached").and_return{controller.render nothing: true} }
+    it "sends castemls data" do
+      allow(controller).to receive(:send_data) { controller.response_body = '' }
+      expect(controller).to receive(:send_data).with(castemls, filename: "my-great-analysis.pml", type: "application/xml", disposition: "attached")
+      get :castemls, params: {ids: objs.map {|obj| obj.id}}
+    end
   end
 
   describe "GET casteml", :current => true do
     let(:obj) { FactoryGirl.create(:analysis) }
     let(:casteml){Analysis.to_castemls([obj])}
-    after{get :casteml, id: obj.id }
-    it { expect(controller).to receive(:send_data).with(casteml, filename: obj.global_id + ".pml", type: "application/xml", disposition: "attached").and_return{controller.render nothing: true} }
+    it "sends casteml data" do
+      allow(controller).to receive(:send_data) { controller.response_body = '' }
+      expect(controller).to receive(:send_data).with(casteml, filename: obj.global_id + ".pml", type: "application/xml", disposition: "attached")
+      get :casteml, params: {id: obj.id}
+    end
   end
 
 

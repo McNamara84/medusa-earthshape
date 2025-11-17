@@ -27,7 +27,7 @@ describe MeasurementCategoriesController do
       obj 
       obj.measurement_items << measurement_item_1
       obj.measurement_items << measurement_item_2
-      get :show, id: obj.id, format: :json
+      get :show, params: {id: obj.id}, format: :json
     end
     it { expect(response.body).to eq(obj.to_json) }
     it { expect(response.body).to include("\"measurement_item_ids\":[#{measurement_item_1.id},#{measurement_item_2.id}]") }    
@@ -39,7 +39,7 @@ describe MeasurementCategoriesController do
     let(:obj) { FactoryGirl.create(:measurement_category) }
     before do
       obj
-      get :edit, id: obj.id
+      get :edit, params: {id: obj.id}
     end
     it { expect(assigns(:measurement_category)).to eq obj }
   end
@@ -47,9 +47,9 @@ describe MeasurementCategoriesController do
   describe "POST create" do
     describe "with valid attributes" do
       let(:attributes) { {name: "measurement_category_name", description: "new descripton"} }
-      it { expect { post :create, measurement_category: attributes }.to change(MeasurementCategory, :count).by(1) }
+      it { expect { post :create, params: {measurement_category: attributes} }.to change(MeasurementCategory, :count).by(1) }
       context "assigns a newly created measurement_category as @measurement_category" do
-        before {post :create, measurement_category: attributes}
+        before { post :create, params: {measurement_category: attributes} }
         it{expect(assigns(:measurement_category)).to be_persisted}
         it{expect(assigns(:measurement_category).name).to eq(attributes[:name])}
         it{expect(assigns(:measurement_category).description).to eq(attributes[:description])}
@@ -58,9 +58,9 @@ describe MeasurementCategoriesController do
     describe "with invalid attributes" do
       let(:attributes) { {name: ""} }
       before { allow_any_instance_of(MeasurementCategory).to receive(:save).and_return(false) }
-      it { expect { post :create, measurement_category: attributes }.not_to change(MeasurementCategory, :count) }
+      it { expect { post :create, params: {measurement_category: attributes} }.not_to change(MeasurementCategory, :count) }
       context "assigns a newly but unsaved measurement_category as @measurement_category" do
-        before {post :create, measurement_category: attributes}
+        before { post :create, params: {measurement_category: attributes} }
         it{expect(assigns(:measurement_category)).to be_new_record}
         it{expect(assigns(:measurement_category).name).to eq(attributes[:name])}
         it{expect(assigns(:measurement_category).description).to eq(attributes[:description])}
@@ -72,7 +72,7 @@ describe MeasurementCategoriesController do
     let(:obj) { FactoryGirl.create(:measurement_category, name: "measurement_category", description: "description") }
     before do
       obj
-      put :update, id: obj.id, measurement_category: attributes
+      put :update, params: {id: obj.id, measurement_category: attributes}
     end
     describe "with valid attributes" do
       let(:attributes) { {name: "update_name",description: "update description"} }
@@ -98,10 +98,10 @@ describe MeasurementCategoriesController do
       obj
       obj.measurement_items << measurement_item
     end 
-    it { expect { post :duplicate, id: obj.id }.to change(MeasurementCategory, :count).by(1) }
+    it { expect { post :duplicate, params: {id: obj.id} }.to change(MeasurementCategory, :count).by(1) }
     describe "with invalid attributes" do
       before do
-        post :duplicate, id: obj.id
+        post :duplicate, params: {id: obj.id}
       end
       it { expect(assigns(:measurement_category).name).to eq "aaa duplicate"}
       it { expect(assigns(:measurement_category).description).to eq "description"}
@@ -114,6 +114,6 @@ describe MeasurementCategoriesController do
   describe "DELETE destroy" do
     let(:obj) { FactoryGirl.create(:measurement_category) }
     before{ obj  }
-    it { expect { delete :destroy,id: obj.id }.to change(MeasurementCategory, :count).by(-1) }
+    it { expect { delete :destroy, params: {id: obj.id} }.to change(MeasurementCategory, :count).by(-1) }
   end
 end

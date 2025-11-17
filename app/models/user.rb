@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -8,11 +8,11 @@ class User < ActiveRecord::Base
   has_many :group_members, dependent: :destroy
   has_many :groups, through: :group_members
   has_many :record_properties
-  belongs_to :box
+  belongs_to :box, optional: true
   
   validates :username, presence: true, length: {maximum: 255}, uniqueness: true
-  validates :box, existence: true, allow_nil: true
-  validate :correct_igsn_prefix, allow_nil: true
+  # Rails 5.1: Removed validates :box, existence: true - belongs_to :box, optional: true handles this
+  validate :correct_igsn_prefix, if: -> { prefix.present? }  # Rails 5.2: use :if with lambda instead of :allow_nil
 
   alias_attribute :admin?, :administrator
   
@@ -26,6 +26,10 @@ class User < ActiveRecord::Base
   
   def as_json(options = {})
     super({:methods => :box_global_id}.merge(options))
+  end
+
+  def box_global_id
+    box&.global_id
   end
 
   protected

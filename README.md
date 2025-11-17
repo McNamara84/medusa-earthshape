@@ -18,8 +18,9 @@ Medusa is a comprehensive web-based sample management system designed for geolog
 
 ## System Requirements
 
-- **Ruby**: 2.1.x or higher (Rails 4.0.2)
-- **Database**: PostgreSQL 9.3 or higher
+- **Ruby**: 2.5.9 (Rails 5.2.8.1)
+- **Rails**: 5.2.8.1
+- **Database**: PostgreSQL 9.6 or higher
 - **Server**: Linux/Unix-based system (tested on Ubuntu/Debian)
 - **Web Server**: Apache 2.4+ with mod_proxy (or Nginx)
 - **Application Server**: Unicorn
@@ -65,7 +66,7 @@ sudo apt-get install -y git ruby ruby-dev build-essential \
   imagemagick libmagickwand-dev
 
 # Install bundler
-gem install bundler -v '~> 1.17'
+gem install bundler -v '~> 2.1'
 ```
 
 ### Installation
@@ -134,10 +135,10 @@ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
 source ~/.bashrc
 
-# Install Ruby 2.1.10 (or higher)
-rbenv install 2.1.10
-rbenv global 2.1.10
-gem install bundler -v '~> 1.17'
+# Install Ruby 2.5.9
+rbenv install 2.5.9
+rbenv global 2.5.9
+gem install bundler -v '~> 2.1'
 ```
 
 #### 2. Setup PostgreSQL Database
@@ -509,7 +510,7 @@ curl -u username:password -X POST \
 
 ## License
 
-[Specify your license here]
+TODO
 
 ## Support
 
@@ -520,7 +521,3 @@ For issues and questions:
 ## Credits
 
 Developed for the EarthShape project - A collaborative research initiative in earth science.
-
----
-
-**Last Updated:** October 2025

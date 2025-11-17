@@ -5,7 +5,7 @@ class BibsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @search = Bib.readables(current_user).search(params[:q])
+    @search = Bib.readables(current_user).search(params[:q]&.permit! || {})
     @search.sorts = "updated_at DESC" if @search.sorts.empty?
     @bibs = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @bibs
@@ -65,7 +65,7 @@ class BibsController < ApplicationController
   end
 
   def update
-    @bib.update_attributes(bib_params)
+    @bib.update(bib_params)
     respond_with @bib
   end
   
@@ -87,7 +87,7 @@ class BibsController < ApplicationController
   end
 
   def bundle_update
-    @bibs.each { |bib| bib.update_attributes(bib_params.only_presence) }
+    @bibs.each { |bib| bib.update(bib_params.only_presence) }
     render :bundle_edit
   end
 

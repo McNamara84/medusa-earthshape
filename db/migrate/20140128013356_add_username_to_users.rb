@@ -1,9 +1,9 @@
-class AddUsernameToUsers < ActiveRecord::Migration
+class AddUsernameToUsers < ActiveRecord::Migration[4.2]
   def up
     change_table :users do |t|
       t.string :username
     end
-    User.all.each { |user| user.update_attributes(username: user.email.split("@").first) }
+    User.all.each { |user| user.update(username: user.email.split("@").first) }
     change_table :users do |t|
       t.change :username, :string, null: false
       t.index :username, unique: true

@@ -12,7 +12,7 @@ describe ClassificationsController do
     before do
       classification_1;classification_2;classification_3
       # Request all records without pagination by setting very high per_page
-      get :index, per_page: 1000
+      get :index, params: {per_page: 1000}
     end
     it { expect(assigns(:classifications).size).to eq classifications.size }
   end
@@ -22,7 +22,7 @@ describe ClassificationsController do
     let(:classification) { FactoryGirl.create(:classification) }
     before do
       classification
-      get :show, id: classification.id, format: :json
+      get :show, params: {id: classification.id}, format: :json
     end
     it { expect(response.body).to eq(classification.to_json) }
   end
@@ -31,7 +31,7 @@ describe ClassificationsController do
     let(:classification) { FactoryGirl.create(:classification) }
     before do
       classification
-      get :edit, id: classification.id
+      get :edit, params: {id: classification.id}
     end
     it { expect(assigns(:classification)).to eq classification }
   end
@@ -39,9 +39,9 @@ describe ClassificationsController do
   describe "POST create" do
     describe "with valid attributes" do
       let(:attributes) { {name: "classification_name", description: "new descripton"} }
-      it { expect { post :create, classification: attributes }.to change(Classification, :count).by(1) }
+      it { expect { post :create, params: {classification: attributes} }.to change(Classification, :count).by(1) }
       context "assigns a newly created classification as @classification" do
-        before {post :create, classification: attributes}
+        before { post :create, params: {classification: attributes} }
         it{expect(assigns(:classification)).to be_persisted}
         it{expect(assigns(:classification).name).to eq(attributes[:name])}
         it{expect(assigns(:classification).description).to eq(attributes[:description])}
@@ -50,9 +50,9 @@ describe ClassificationsController do
     describe "with invalid attributes" do
       let(:attributes) { {name: ""} }
       before { allow_any_instance_of(Classification).to receive(:save).and_return(false) }
-      it { expect { post :create, classification: attributes }.not_to change(Classification, :count) }
+      it { expect { post :create, params: {classification: attributes} }.not_to change(Classification, :count) }
       context "assigns a newly but unsaved classification as @classification" do
-        before {post :create, classification: attributes}
+        before { post :create, params: {classification: attributes} }
         it{expect(assigns(:classification)).to be_new_record}
         it{expect(assigns(:classification).name).to eq(attributes[:name])}
         it{expect(assigns(:classification).description).to eq(attributes[:description])}
@@ -64,7 +64,7 @@ describe ClassificationsController do
     let(:classification) { FactoryGirl.create(:classification, name: "classification", description: "description") }
     before do
       classification
-      put :update, id: classification.id, classification: attributes
+      put :update, params: {id: classification.id, classification: attributes}
     end
     describe "with valid attributes" do
       let(:attributes) { {name: "update_name",description: "update description"} }
@@ -86,6 +86,6 @@ describe ClassificationsController do
   describe "DELETE destroy" do
     let(:classification) { FactoryGirl.create(:classification, name: "classification", description: "description") }
     before{ classification }
-    it { expect { delete :destroy,id: classification.id }.to change(Classification, :count).by(-1) }
+    it { expect { delete :destroy, params: {id: classification.id} }.to change(Classification, :count).by(-1) }
   end
 end

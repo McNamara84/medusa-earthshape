@@ -5,7 +5,7 @@ class ClassificationsController < ApplicationController
   layout "admin"
 
   def index
-    @search = Classification.search(params[:q])
+    @search = Classification.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @classifications = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @classifications
@@ -26,7 +26,7 @@ class ClassificationsController < ApplicationController
   end
 
   def update
-    @classification.update_attributes(classification_params)
+    @classification.update(classification_params)
     respond_with(@classification, location: classifications_path)
 
   end

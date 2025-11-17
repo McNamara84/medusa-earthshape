@@ -5,7 +5,7 @@ class StonesController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @search = Stone.readables(current_user).search(params[:q])
+    @search = Stone.readables(current_user).search(params[:q]&.permit! || {})
     @search.sorts = "updated_at DESC" if @search.sorts.empty?
     @stones = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @stones
@@ -29,8 +29,8 @@ class StonesController < ApplicationController
   end
 
   def update
-    @stone.update_attributes(stone_params)
-    respond_with @stone
+    @stone.update(stone_params)
+    respond_with(@stone)
   end
   
   def destroy
@@ -59,7 +59,7 @@ class StonesController < ApplicationController
   end
 
   def bundle_update
-    @stones.each { |stone| stone.update_attributes(stone_params.only_presence) }
+    @stones.each { |stone| stone.update(stone_params.only_presence) }
     render :bundle_edit
   end
 
@@ -181,7 +181,7 @@ class StonesController < ApplicationController
   def sample_owner_without_igsn_prefix
     respond_to do |format|
       format.html { render "parts/sample_owner_without_igsn_prefix", status: :unprocessable_entity }
-      format.all { render nothing: true, status: :unprocessable_entity }
+      format.all { head :unprocessable_entity }
     end
   end
 

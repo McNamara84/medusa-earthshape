@@ -11,7 +11,7 @@ describe TechniquesController do
     let(:params) { {q: query, page: 2, per_page: 1} }
     before do
       technique_1;technique_2;technique_3
-      get :index, params
+      get :index, params: params
     end
     context "sort condition is present" do
       let(:query) { {"name_cont" => "technique", "s" => "updated_at DESC"} }
@@ -28,7 +28,7 @@ describe TechniquesController do
     let(:technique) { FactoryGirl.create(:technique) }
     before do
       technique
-      get :show, id: technique.id, format: :json
+      get :show, params: {id: technique.id}, format: :json
     end
     it { expect(response.body).to eq(technique.to_json) }
   end
@@ -37,7 +37,7 @@ describe TechniquesController do
     let(:technique) { FactoryGirl.create(:technique) }
     before do
       technique
-      get :edit, id: technique.id
+      get :edit, params: {id: technique.id}
     end
     it { expect(assigns(:technique)).to eq technique }
   end
@@ -45,9 +45,9 @@ describe TechniquesController do
   describe "POST create" do
     describe "with valid attributes" do
       let(:attributes) { {name: "technique_name"} }
-      it { expect { post :create, technique: attributes }.to change(Technique, :count).by(1) }
+      it { expect { post :create, params: {technique: attributes} }.to change(Technique, :count).by(1) }
       it "assigns a newly created technique as @technique" do
-        post :create, technique: attributes
+        post :create, params: {technique: attributes}
         expect(assigns(:technique)).to be_persisted
         expect(assigns(:technique).name).to eq(attributes[:name])
       end
@@ -55,9 +55,9 @@ describe TechniquesController do
     describe "with invalid attributes" do
       let(:attributes) { {name: ""} }
       before { allow_any_instance_of(Technique).to receive(:save).and_return(false) }
-      it { expect { post :create, technique: attributes }.not_to change(Technique, :count) }
+      it { expect { post :create, params: {technique: attributes} }.not_to change(Technique, :count) }
       it "assigns a newly but unsaved technique as @technique" do
-        post :create, technique: attributes
+        post :create, params: {technique: attributes}
         expect(assigns(:technique)).to be_new_record
         expect(assigns(:technique).name).to eq(attributes[:name])
       end
@@ -68,7 +68,7 @@ describe TechniquesController do
     let(:technique) { FactoryGirl.create(:technique, name: "technique") }
     before do
       technique
-      put :update, id: technique.id, technique: attributes
+      put :update, params: {id: technique.id, technique: attributes}
     end
     describe "with valid attributes" do
       let(:attributes) { {name: "update_name"} }
@@ -88,7 +88,7 @@ describe TechniquesController do
   describe "DELETE destroy" do
     let(:technique) { FactoryGirl.create(:technique, name: "technique") }
     before { technique }
-    it { expect { delete :destroy, id: technique.id }.to change(Technique, :count).by(-1) }
+    it { expect { delete :destroy, params: {id: technique.id} }.to change(Technique, :count).by(-1) }
   end
   
 end

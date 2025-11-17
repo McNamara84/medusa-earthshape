@@ -1,7 +1,7 @@
-class Classification < ActiveRecord::Base
+class Classification < ApplicationRecord
   has_many :stones
   has_many :children, class_name: "Classification", foreign_key: :parent_id
-  belongs_to :parent, class_name: "Classification", foreign_key: :parent_id
+  belongs_to :parent, class_name: "Classification", foreign_key: :parent_id, optional: true
 
   validates :name, presence: true, length: {maximum: 255}
 
@@ -17,7 +17,7 @@ class Classification < ActiveRecord::Base
   end
 
   def reflection_child_full_name
-    children(force_reload: true).map { |child| child.save }
+    children.reload.map { |child| child.save }
   end
 
   def get_material()

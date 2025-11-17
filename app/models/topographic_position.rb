@@ -1,3 +1,3 @@
-class TopographicPosition < ActiveRecord::Base
-  belongs_to :place
+class TopographicPosition < ApplicationRecord
+  belongs_to :place, optional: true
 end

@@ -4,8 +4,8 @@ class PreparationForClassificationsController < ApplicationController
   load_and_authorize_resource
   layout "admin"
 
-  def index   
-    @search = PreparationForClassification.search(params[:q])
+  def index
+    @search = PreparationForClassification.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @preparation_for_classifications = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @preparation_for_classification   
@@ -26,7 +26,7 @@ class PreparationForClassificationsController < ApplicationController
   end
 
   def update
-    @preparation_for_classification.update_attributes(preparation_for_classification_params)
+    @preparation_for_classification.update(preparation_for_classification_params)
     redirect_to preparation_for_classifications_path	  
   end
 

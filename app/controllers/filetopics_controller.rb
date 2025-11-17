@@ -5,7 +5,7 @@ class FiletopicsController < ApplicationController
   layout "admin"
 
   def index
-    @search = Filetopic.search(params[:q])
+    @search = Filetopic.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @filetopics = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @filetopics
@@ -26,7 +26,7 @@ class FiletopicsController < ApplicationController
   end
 
   def update
-    @filetopic.update_attributes(filetopic_params)
+    @filetopic.update(filetopic_params)
     redirect_to filetopic_path	  
   end
 

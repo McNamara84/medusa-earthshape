@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   layout "admin"
 
   def index
-    @search = User.search(params[:q])
+    @search = User.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @users = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @users
@@ -34,7 +34,7 @@ class UsersController < ApplicationController
     pa = user_params
     pa.delete(:password) if pa[:password].blank?
     pa.delete(:password_confirmation) if pa[:password_confirmation].blank?
-    @user.update_attributes(pa)
+    @user.update(pa)
     respond_with(@user, location: users_path)
   end
   

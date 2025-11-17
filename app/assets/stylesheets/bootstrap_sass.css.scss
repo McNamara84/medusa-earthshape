@@ -1,3 +1,6 @@
+// Rails 5.2: Configure Bootstrap font paths before import
+$icon-font-path: "bootstrap/";
+
 @import "bootstrap";
 
 .form-group.form-group-sm {

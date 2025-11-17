@@ -1,3 +1,3 @@
-class Collectionmethod < ActiveRecord::Base
+class Collectionmethod < ApplicationRecord
 	 has_many :stones
 end

@@ -4,7 +4,7 @@ class SearchMapsController < ApplicationController
   # GET /search_maps
   # GET /search_maps.json
   def index
-    @search = Stone.readables(current_user).search(params[:q])
+    @search = Stone.readables(current_user).search(params[:q]&.permit! || {})
     @stones=@search.result.page(params[:page]).per(params[:per_page])
     placeids=@search.result.map(&:place_id).uniq
     @places=Place.where(id: placeids).where.not('latitude' => nil).where.not('longitude' => nil)

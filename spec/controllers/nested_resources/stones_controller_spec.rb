@@ -34,7 +34,7 @@ describe NestedResources::StonesController do
   before { child }
 
   describe "POST create" do
-    let(:method){post :create, parent_resource: parent_name, bib_id: parent, stone: attributes, association_name: :stones}
+    let(:method){ post :create, params: {parent_resource: parent_name, bib_id: parent, stone: attributes, association_name: :stones} }
     before{child}
     it { expect{method}.to change(Stone, :count).by(1) }
     context "validate" do
@@ -52,7 +52,7 @@ describe NestedResources::StonesController do
   end
 
   describe "PUT update" do
-    let(:method){put :update, parent_resource: parent_name, bib_id: parent, id: child_id, association_name: :stones}
+    let(:method){ put :update, params: {parent_resource: parent_name, bib_id: parent, id: child_id, association_name: :stones} }
     let(:child_id){child.id}
     it { expect {method}.to change(Stone, :count).by(0) }
     context "present child" do
@@ -67,7 +67,7 @@ describe NestedResources::StonesController do
   end
 
   describe "DELETE destory" do
-    let(:method){delete :destroy, parent_resource: parent_name, bib_id: parent, id: child_id, association_name: :stones}
+    let(:method){ delete :destroy, params: {parent_resource: parent_name, bib_id: parent, id: child_id, association_name: :stones} }
     before { parent.stones << child}
     let(:child_id){child.id}
     it { expect {method}.to change(Stone, :count).by(0) }
@@ -83,7 +83,7 @@ describe NestedResources::StonesController do
   end
 
   describe "PUT update" do
-    let(:method){put :update, parent_resource: parent_name, bib_id: parent, id: child_id, association_name: :stones}
+    let(:method){ put :update, params: {parent_resource: parent_name, bib_id: parent, id: child_id, association_name: :stones} }
     let(:child_id){child.id}
     it { expect {method}.to change(Stone, :count).by(0) }
     context "present child" do
@@ -97,7 +97,7 @@ describe NestedResources::StonesController do
     end
   end
   describe "DELETE destory" do
-    let(:method){delete :destroy, parent_resource: parent_name, bib_id: parent, id: child_id, association_name: :stones}
+    let(:method){ delete :destroy, params: {parent_resource: parent_name, bib_id: parent, id: child_id, association_name: :stones} }
     before { parent.stones << child}
     let(:child_id){child.id}
     it { expect {method}.to change(Stone, :count).by(0) }
@@ -113,7 +113,7 @@ describe NestedResources::StonesController do
   end
 
   describe "POST link_by_global_id" do
-    let(:method){post :link_by_global_id, parent_resource: parent_name,bib_id: parent.id, global_id: global_id , association_name: :stones}
+    let(:method){ post :link_by_global_id, params: {parent_resource: parent_name, bib_id: parent.id, global_id: global_id, association_name: :stones} }
     context "present child" do
       let(:global_id){child.global_id}
       before { method }
@@ -129,14 +129,14 @@ describe NestedResources::StonesController do
       before { allow(Stone).to receive(:joins).and_raise }
       context "format html" do
         before do
-          post :link_by_global_id, parent_resource: parent_name.to_s, bib_id: parent.id, global_id: child.global_id, format: :html
+          post :link_by_global_id, params: {parent_resource: parent_name.to_s, bib_id: parent.id, global_id: child.global_id}, format: :html
         end
         it { expect(response.body).to render_template("parts/duplicate_global_id") }
         it { expect(response.status).to eq 422 }
       end
       context "format json" do
         before do
-          post :link_by_global_id, parent_resource: parent_name.to_s, bib_id: parent.id, global_id: child.global_id, format: :json
+          post :link_by_global_id, params: {parent_resource: parent_name.to_s, bib_id: parent.id, global_id: child.global_id}, format: :json
         end
         it { expect(response.body).to be_blank }
         it { expect(response.status).to eq 422 }

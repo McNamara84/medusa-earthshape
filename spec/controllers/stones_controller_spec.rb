@@ -74,17 +74,17 @@ describe StonesController do
       analysis_1;analysis_2;analysis_3;
     end
     context "without format" do
-      before { get :show, id: stone.id }
+      before { get :show, params: {id: stone.id} }
       it { expect(assigns(:stone)).to eq stone }
     end
 
     context "with format 'json'" do
-      before { get :show, id: stone.id, format: 'json' }
+      before { get :show, params: {id: stone.id}, format: 'json' }
       it { expect(response.body).to include("\"global_id\":") }    
     end
 
     context "with format 'pml'" do
-      before { get :show, id: stone.id, format: 'pml' }
+      before { get :show, params: {id: stone.id}, format: 'pml' }
       it { expect(response.body).to include("\<sample_global_id\>#{stone.global_id}") }    
     end
 
@@ -92,7 +92,7 @@ describe StonesController do
   
   describe "GET edit" do
     let(:stone) { FactoryGirl.create(:stone) }
-    before { get :edit, id: stone.id }
+    before { get :edit, params: {id: stone.id} }
     it { expect(assigns(:stone)).to eq stone }
   end
   
@@ -117,9 +117,9 @@ describe StonesController do
         sampledepth: 0
       }
     end
-    it { expect { post :create, stone: attributes }.to change(Stone, :count).by(1) }
+    it { expect { post :create, params: {stone: attributes} }.to change(Stone, :count).by(1) }
     describe "assigns as @stone" do
-      before { post :create, stone: attributes }
+      before { post :create, params: {stone: attributes} }
       it { expect(assigns(:stone)).to be_persisted }
       it { expect(assigns(:stone).name).to eq "stone_name"}
     end
@@ -132,7 +132,7 @@ describe StonesController do
     let(:stone) { FactoryGirl.create(:stone) }
     let(:attributes) { {name: "update_name"} }
     context "witout format" do
-      before { put :update, id: stone.id, stone:attributes }
+      before { put :update, params: {id: stone.id, stone:attributes} }
       it { expect(assigns(:stone)).to eq stone }
       it { expect(assigns(:stone).name).to eq attributes[:name] }
     end
@@ -141,30 +141,30 @@ describe StonesController do
   describe "DELETE destroy" do
     let(:stone) { FactoryGirl.create(:stone) }
     before { stone }
-    it { expect { delete :destroy, id: stone.id }.to change(Stone, :count).by(-1) }
+    it { expect { delete :destroy, params: {id: stone.id} }.to change(Stone, :count).by(-1) }
   end
   
   describe "GET family" do
     let(:stone) { FactoryGirl.create(:stone) }
-    before { get :family, id: stone.id }
+    before { get :family, params: {id: stone.id} }
     it { expect(assigns(:stone)).to eq stone }
   end
   
   describe "GET picture" do
     let(:stone) { FactoryGirl.create(:stone) }
-    before { get :picture, id: stone.id }
+    before { get :picture, params: {id: stone.id} }
     it { expect(assigns(:stone)).to eq stone }
   end
   
   describe "GET map" do
     let(:stone) { FactoryGirl.create(:stone) }
-    before { get :map, id: stone.id }
+    before { get :map, params: {id: stone.id} }
     it { expect(assigns(:stone)).to eq stone }
   end
   
   describe "GET property" do
     let(:stone) { FactoryGirl.create(:stone) }
-    before { get :property, id: stone.id }
+    before { get :property, params: {id: stone.id} }
     it { expect(assigns(:stone)).to eq stone }
   end
 
@@ -177,7 +177,7 @@ describe StonesController do
       obj1
       obj2
       obj3
-      post :bundle_edit, ids: ids
+      post :bundle_edit, params: {ids: ids}
     end
     it {expect(assigns(:stones).include?(obj1)).to be_truthy}
     it {expect(assigns(:stones).include?(obj2)).to be_truthy}
@@ -195,7 +195,7 @@ describe StonesController do
       obj1
       obj2
       obj3
-      post :bundle_update, ids: ids,stone: attributes
+      post :bundle_update, params: {ids: ids, stone: attributes}
       obj1.reload
       obj2.reload
       obj3.reload
@@ -207,13 +207,13 @@ describe StonesController do
 
   # send_data test returns unexpected object.
   pending "GET download_card" do
-    after { get :download_card, id: stone.id }
+    after { get :download_card, params: {id: stone.id} }
     let(:stone) { FactoryGirl.create(:stone) }
     before do
       stone
       allow(stone).to receive(:build_card).and_return(double(:report))
       allow(double(:report)).to receive(:generate).and_return(double(:generate))
-      allow(controller).to receive(:send_data).and_return{controller.render nothing: true}
+      allow(controller).to receive(:send_data).and_return(nil)
     end
     it { expect(controller).to receive(:send_data).with(double(:generate), filename: "stone.pdf", type: "application/pdf") }
   end
@@ -224,29 +224,31 @@ describe StonesController do
   
   # send_data test returns unexpected object.
   pending "GET download_label" do
-    after { get :download_label, id: stone.id }
+    after { get :download_label, params: {id: stone.id} }
     let(:stone) { FactoryGirl.create(:stone) }
     before do
       stone
       allow(stone).to receive(:build_label).and_return(double(:build_label))
-      allow(controller).to receive(:send_data).and_return{controller.render nothing: true}
+      allow(controller).to receive(:send_data).and_return(nil)
     end
     it { expect(controller).to receive(:send_data).with(double(:build_label), filename: "Stone_#{stone.id}.csv", type: "text/csv") }
   end
   
   describe "download_bundle_label" do
-    after { get :download_bundle_label, ids: params_ids }
     let(:stone) { FactoryGirl.create(:stone) }
     let(:params_ids) { [stone.id.to_s] }
     let(:label) { double(:label) }
     let(:stones) { Stone.all }
     before do
       stone
-      allow(Stone).to receive(:where).with(id: params_ids).and_return(stones)
-      allow(Stone).to receive(:build_bundle_label).with(stones).and_return(label)
-      allow(controller).to receive(:send_data).and_return{controller.render nothing: true}
+      allow(Stone).to receive(:where).and_return(stones)
+      allow(Stone).to receive(:build_bundle_label).and_return(label)
     end
-    it { expect(controller).to receive(:send_data).with(label, filename: "samples.csv", type: "text/csv") }
+    it "sends bundle label data" do
+      allow(controller).to receive(:send_data) { controller.response_body = '' }
+      expect(controller).to receive(:send_data).with(label, filename: "samples.csv", type: "text/csv")
+      get :download_bundle_label, params: {ids: params_ids}
+    end
   end
   
 end

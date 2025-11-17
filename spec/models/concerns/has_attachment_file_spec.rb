@@ -4,7 +4,7 @@ class HasAttachmentFileSpec < ActiveRecord::Base
   include HasAttachmentFile
 end
 
-class HasAttachmentFileSpecMigration < ActiveRecord::Migration
+class HasAttachmentFileSpecMigration < ActiveRecord::Migration[4.2]
   def self.up
     create_table :has_attachment_file_specs do |t|
       t.string :name

@@ -195,7 +195,8 @@ describe Analysis do
     it { expect(subject).to eq [object_1, object_2] }
   end
 
-  pending "set_object" do
+  # Skip to avoid "FIXED" error - test needs implementation
+  xit "set_object" do
   end
 
   describe "#to_castemls" do

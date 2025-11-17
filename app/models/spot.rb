@@ -1,20 +1,20 @@
-class Spot < ActiveRecord::Base
+class Spot < ApplicationRecord
   include HasRecordProperty
 
   belongs_to :attachment_file
 
-  validates :attachment_file, existence: true
+  # Rails 5.1: Removed validates :attachment_file, existence: true - belongs_to (required by default) handles this
   validates :spot_x, presence: true
   validates :spot_y, presence: true
 
-  before_validation :generate_name, if: "name.blank?"
-  before_validation :generate_stroke_width, if: "stroke_width.blank?"
+  before_validation :generate_name, if: -> { name.blank? }  # Rails 5.2: Lambda syntax (string callbacks deprecated in Rails 4.x)
+  before_validation :generate_stroke_width, if: -> { stroke_width.blank? }  # Rails 5.2: Lambda syntax (string callbacks deprecated in Rails 4.x)
 
   def generate_name
     if target_uid.blank? 
       self.name = "untitled point #{attachment_file.spots.size + 1}"
     else
-      record_property = RecordProperty.find_by_global_id(target_uid)
+      record_property = RecordProperty.find_by(global_id: target_uid)
       if record_property.blank? || record_property.datum.blank?
         self.name = target_uid
       else

@@ -11,7 +11,7 @@ describe AuthorsController do
     let(:params) { {q: query, page: 2, per_page: 1} }
     before do
       author_1;author_2;author_3
-      get :index, params
+      get :index, params: params
     end
     context "sort condition is present" do
       let(:query) { {"name_cont" => "author", "s" => "updated_at DESC"} }
@@ -28,7 +28,7 @@ describe AuthorsController do
     let(:author) { FactoryGirl.create(:author) }
     before do
       author
-      get :show, id: author.id, format: :json
+      get :show, params: {id: author.id}, format: :json
     end
     it { expect(response.body).to eq(author.to_json) }
   end
@@ -37,7 +37,7 @@ describe AuthorsController do
     let(:author) { FactoryGirl.create(:author) }
     before do
       author
-      get :edit, id: author.id
+      get :edit, params: {id: author.id}
     end
     it { expect(assigns(:author)).to eq author }
   end
@@ -45,9 +45,9 @@ describe AuthorsController do
   describe "POST create" do
     describe "with valid attributes" do
       let(:attributes) { {name: "author_name"} }
-      it { expect { post :create, author: attributes }.to change(Author, :count).by(1) }
+      it { expect { post :create, params: {author: attributes} }.to change(Author, :count).by(1) }
       it "assigns a newly created author as @author" do
-        post :create, author: attributes
+        post :create, params: {author: attributes}
         expect(assigns(:author)).to be_persisted
         expect(assigns(:author).name).to eq(attributes[:name])
       end
@@ -55,9 +55,9 @@ describe AuthorsController do
     describe "with invalid attributes" do
       let(:attributes) { {name: ""} }
       before { allow_any_instance_of(Author).to receive(:save).and_return(false) }
-      it { expect { post :create, author: attributes }.not_to change(Author, :count) }
+      it { expect { post :create, params: {author: attributes} }.not_to change(Author, :count) }
       it "assigns a newly but unsaved author as @author" do
-        post :create, author: attributes
+        post :create, params: {author: attributes}
         expect(assigns(:author)).to be_new_record
         expect(assigns(:author).name).to eq(attributes[:name])
       end
@@ -68,7 +68,7 @@ describe AuthorsController do
     let(:author) { FactoryGirl.create(:author, name: "author") }
     before do
       author
-      put :update, id: author.id, author: attributes
+      put :update, params: {id: author.id, author: attributes}
     end
     describe "with valid attributes" do
       let(:attributes) { {name: "update_name"} }
@@ -88,7 +88,7 @@ describe AuthorsController do
   describe "DELETE destroy" do
     let(:author) { FactoryGirl.create(:author, name: "author") }
     before { author }
-    it { expect { delete :destroy, id: author.id }.to change(Author, :count).by(-1) }
+    it { expect { delete :destroy, params: {id: author.id} }.to change(Author, :count).by(-1) }
   end
   
 end

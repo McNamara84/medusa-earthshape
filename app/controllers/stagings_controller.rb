@@ -194,7 +194,7 @@ end
 	params=staging_params[:box_create_attributes]
 	if params[:id].present?
 		box=Box.find(params[:id])
-		box.update_attributes!(params)		 
+		box.update!(params)		 
 	else
 		box=Box.new(params)
 		box.save!
@@ -207,7 +207,7 @@ end
 	params=staging_params[:place_create_attributes]
 	if params[:id].present?
 		place=Place.find(params[:id])
-		place.update_attributes!(params)		 
+		place.update!(params)		 
 	else
 		place=Place.new(params)
 		place.save!
@@ -220,7 +220,7 @@ end
 	params=staging_params[:collection_create_attributes]
 	if params[:id].present?
 		collection=Collection.find(params[:id])
-		collection.update_attributes!(params)		 
+		collection.update!(params)		 
 	else
 		collection=Collection.new(params)
 		collection.save!
@@ -233,7 +233,7 @@ end
 	params=staging_params[:stone_create_attributes]
 	if params[:id].present?
 		stone=Stone.find(params[:id])
-		stone.update_attributes!(params)		 
+		stone.update!(params)		 
 	else
 		stone=Stone.new(params)
 		stone.save!

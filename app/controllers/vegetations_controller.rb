@@ -5,7 +5,7 @@ class VegetationsController < ApplicationController
   layout "admin_lab"
 
   def index
-    @search = Vegetation.search(params[:q])
+    @search = Vegetation.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @vegetations = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @vegetations
@@ -26,7 +26,7 @@ class VegetationsController < ApplicationController
   end
 
   def update
-    @vegetation.update_attributes(vegetation_params)
+    @vegetation.update(vegetation_params)
     redirect_to vegetations_path	  
   end
 

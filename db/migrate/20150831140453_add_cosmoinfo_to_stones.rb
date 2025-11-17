@@ -1,4 +1,4 @@
-class AddCosmoinfoToStones < ActiveRecord::Migration
+class AddCosmoinfoToStones < ActiveRecord::Migration[4.2]
   def change
     add_column :stones, :quantity_initial, :float
     add_column :stones, :labname, :string

@@ -1,4 +1,4 @@
-class Stone < ActiveRecord::Base
+class Stone < ApplicationRecord
   include HasRecordProperty
   include HasViewSpot
   include OutputPdf
@@ -16,16 +16,57 @@ class Stone < ActiveRecord::Base
   has_many :referrings, as: :referable, dependent: :destroy
   has_many :bibs, through: :referrings
   has_many :collectors
-  belongs_to :parent, class_name: "Stone", foreign_key: :parent_id
-  belongs_to :box
-  belongs_to :place
-  belongs_to :classification
-  belongs_to :physical_form
-  belongs_to :stonecontainer_type
-  belongs_to :collection
-  belongs_to :quantityunit
-  belongs_to :collectionmethod
+  belongs_to :parent, class_name: "Stone", foreign_key: :parent_id, optional: true
+  belongs_to :box, optional: true
+  belongs_to :place, optional: true
+  belongs_to :classification, optional: true
+  belongs_to :physical_form, optional: true
+  belongs_to :stonecontainer_type, optional: true
+  belongs_to :collection, optional: true
+  belongs_to :quantityunit, optional: true
+  belongs_to :collectionmethod, optional: true
   has_many :preparations, dependent: :destroy
+
+  # Virtual attributes for forms: allows setting relationships via global_id
+  def parent_global_id
+    parent&.global_id
+  end
+  
+  def parent_global_id=(global_id)
+    return if global_id.blank?
+    record_property = RecordProperty.find_by(global_id: global_id)
+    self.parent_id = record_property&.datum_id if record_property&.datum_type == 'Stone'
+  end
+  
+  def place_global_id
+    place&.global_id
+  end
+  
+  def place_global_id=(global_id)
+    return if global_id.blank?
+    record_property = RecordProperty.find_by(global_id: global_id)
+    self.place_id = record_property&.datum_id if record_property&.datum_type == 'Place'
+  end
+  
+  def box_global_id
+    box&.global_id
+  end
+  
+  def box_global_id=(global_id)
+    return if global_id.blank?
+    record_property = RecordProperty.find_by(global_id: global_id)
+    self.box_id = record_property&.datum_id if record_property&.datum_type == 'Box'
+  end
+  
+  def collection_global_id
+    collection&.global_id
+  end
+  
+  def collection_global_id=(global_id)
+    return if global_id.blank?
+    record_property = RecordProperty.find_by(global_id: global_id)
+    self.collection_id = record_property&.datum_id if record_property&.datum_type == 'Collection'
+  end
 
   accepts_nested_attributes_for :collectors, allow_destroy: true, reject_if: lambda {|attributes| attributes['name'].blank?}
 
@@ -35,7 +76,7 @@ class Stone < ActiveRecord::Base
   validates :stonecontainer_type, presence: true
   validates :quantity_initial, numericality: true
   validates :classification, presence: true
-  validates :physical_form, existence: true, allow_nil: true
+  # Rails 5.1: Removed validates :physical_form, existence: true - belongs_to optional: true handles this
   validates :name, presence: true, length: { maximum: 255 }
   validates :sampledepth, numericality: true
   validates :date, presence: true 
@@ -45,7 +86,8 @@ class Stone < ActiveRecord::Base
 
   def to_pml
     # Sort analyses by id descending for consistent PML output
-    analyses.order(id: :desc).to_pml
+    # Rails 5.0+: Convert to Array before calling to_pml
+    analyses.order(id: :desc).to_a.to_pml
   end
 
   def copy_associations (parent)

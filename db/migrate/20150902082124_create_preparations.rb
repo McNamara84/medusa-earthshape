@@ -1,4 +1,4 @@
-class CreatePreparations < ActiveRecord::Migration
+class CreatePreparations < ActiveRecord::Migration[4.2]
   def change
     create_table :preparations do |t|
       t.string :info

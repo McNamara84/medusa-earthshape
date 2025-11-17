@@ -5,7 +5,7 @@ class StonecontainerTypesController < ApplicationController
   layout "admin"
 
   def index
-    @search = StonecontainerType.search(params[:q])
+    @search = StonecontainerType.search(params[:q]&.permit! || {})
     @search.sorts = "updated_at ASC" if @search.sorts.empty?
     @stonecontainer_types = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @stonecontainer_types
@@ -26,7 +26,7 @@ class StonecontainerTypesController < ApplicationController
   end
 
   def update
-    @stonecontainer_type.update_attributes(stonecontainer_type_params)
+    @stonecontainer_type.update(stonecontainer_type_params)
     redirect_to stonecontainer_types_path	  
   end
 
