@@ -1,13 +1,15 @@
 services:
   db:
-    image: postgres:18-alpine
+    image: postgres:18
     environment:
       POSTGRES_USER: medusa
       POSTGRES_PASSWORD: medusa_development
       POSTGRES_DB: medusa_development
-      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_prod:/var/lib/postgresql/data
+    tmpfs:
+      - /tmp
+      - /run/postgresql
     networks:
       - default
       - traefik
@@ -43,7 +45,7 @@ services:
       - "traefik.http.services.esm-service.loadbalancer.server.port=80"
       - "traefik.docker.network=traefik"
 volumes:
-  postgres_data:
+  postgres_data_prod:
   bundle_cache:
   node_modules:
 networks:
