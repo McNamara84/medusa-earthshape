@@ -6,7 +6,7 @@ services:
       POSTGRES_PASSWORD: medusa_development
       POSTGRES_DB: medusa_development
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_v18:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U medusa"]
       interval: 10s
@@ -46,7 +46,7 @@ services:
       - "traefik.http.services.esm-service.loadbalancer.server.port=80"
       - "traefik.docker.network=traefik"
 volumes:
-  postgres_data:
+  postgres_data_v18:
   bundle_cache:
   node_modules:
 networks:
