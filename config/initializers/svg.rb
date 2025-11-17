@@ -1,5 +1,5 @@
-# Rails 6.0: Renderer block signature changed from |obj, options| to |obj|
-ActionController::Renderers.add :svg do |obj|
+# Rails 6.0: Renderer block must accept options parameter even if unused
+ActionController::Renderers.add :svg do |obj, options|
   %Q|<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">#{obj.to_svg}</svg>|
 end
 
