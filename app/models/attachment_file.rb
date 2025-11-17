@@ -124,7 +124,7 @@ class AttachmentFile < ApplicationRecord
 
  def affine_matrix_in_string
     a = affine_matrix
-    return unless a && a.present?  # Rails 4.2: serialize returns [] instead of nil
+    return unless a && a.present?  # Rails 5.2: serialize returns [] instead of nil (changed in Rails 4.2)
     str = ""
     a.in_groups_of(3, false) do |row|
       vals = Array.new

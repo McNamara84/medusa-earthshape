@@ -7,8 +7,8 @@ class Spot < ApplicationRecord
   validates :spot_x, presence: true
   validates :spot_y, presence: true
 
-  before_validation :generate_name, if: -> { name.blank? }  # Rails 5.2: String callbacks deprecated
-  before_validation :generate_stroke_width, if: -> { stroke_width.blank? }  # Rails 5.2: String callbacks deprecated
+  before_validation :generate_name, if: -> { name.blank? }  # Rails 5.2: Lambda syntax (string callbacks deprecated in Rails 4.x)
+  before_validation :generate_stroke_width, if: -> { stroke_width.blank? }  # Rails 5.2: Lambda syntax (string callbacks deprecated in Rails 4.x)
 
   def generate_name
     if target_uid.blank? 

@@ -4,7 +4,7 @@ class RecordProperty < ApplicationRecord
   belongs_to :datum, polymorphic: true
   has_one :global_qr
 
-  before_save :generate_global_id, if: -> { global_id.blank? }  # Rails 5.2: String callbacks deprecated
+  before_save :generate_global_id, if: -> { global_id.blank? }  # Rails 5.2: Lambda syntax (string callbacks deprecated in Rails 4.x)
   before_save :adjust_published_at
 
   # Rails 5.1: Removed validates :user/:group, existence: true - belongs_to handles this
