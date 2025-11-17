@@ -25,7 +25,8 @@ class Array
 	end
 end
 
-ActionController::Renderers.add :pml do |object, options|
+# Rails 6.0: Renderer block signature changed from |object, options| to |object|
+ActionController::Renderers.add :pml do |object|
 	self.content_type ||= Mime[:pml]
 	# Rails 5.0+: Convert ActiveRecord::Relation to Array before calling to_pml
 	object = object.to_a if object.respond_to?(:to_a) && !object.is_a?(Array)

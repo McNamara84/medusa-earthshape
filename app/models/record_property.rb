@@ -70,10 +70,21 @@ class RecordProperty < ApplicationRecord
   end
 
   def self.group_readables_where_clauses(user)
+    # Rails 6.0: Correlated subqueries with .exists? no longer work as before
+    # Rewrite to use a subquery with explicit SELECT for PostgreSQL compatibility
     record_properties = self.arel_table
     group_members = GroupMember.arel_table
-    # Rails 6.0: .exists renamed to .exists?
-    record_properties[:group_readable].eq(true).and(GroupMember.where(group_members[:user_id].eq(user.id).and(group_members[:group_id].eq(record_properties[:group_id]))).exists?)
+    
+    # Build subquery: SELECT 1 FROM group_members WHERE user_id = ? AND group_id = record_properties.group_id
+    subquery = GroupMember.where(
+      group_members[:user_id].eq(user.id).and(
+        group_members[:group_id].eq(record_properties[:group_id])
+      )
+    ).select(Arel.sql('1')).arel
+    
+    record_properties[:group_readable].eq(true).and(
+      Arel::Nodes::Exists.new(subquery)
+    )
   end
 
   def self.guest_readables_where_clauses
