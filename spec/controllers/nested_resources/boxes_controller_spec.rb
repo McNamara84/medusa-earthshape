@@ -95,4 +95,4 @@ describe NestedResources::BoxesController do
     end
   end
 
-end
+end

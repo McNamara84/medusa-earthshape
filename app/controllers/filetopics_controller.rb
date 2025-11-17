@@ -26,7 +26,7 @@ class FiletopicsController < ApplicationController
   end
 
   def update
-    @filetopic.update_attributes(filetopic_params)
+    @filetopic.update(filetopic_params)
     redirect_to filetopic_path	  
   end
 

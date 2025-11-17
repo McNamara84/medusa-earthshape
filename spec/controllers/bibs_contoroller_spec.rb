@@ -134,4 +134,4 @@ describe BibsController do
     end
   end
 
-end
+end

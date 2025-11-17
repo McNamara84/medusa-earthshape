@@ -65,7 +65,7 @@ class BibsController < ApplicationController
   end
 
   def update
-    @bib.update_attributes(bib_params)
+    @bib.update(bib_params)
     respond_with @bib
   end
   
@@ -87,7 +87,7 @@ class BibsController < ApplicationController
   end
 
   def bundle_update
-    @bibs.each { |bib| bib.update_attributes(bib_params.only_presence) }
+    @bibs.each { |bib| bib.update(bib_params.only_presence) }
     render :bundle_edit
   end
 

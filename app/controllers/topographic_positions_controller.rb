@@ -26,7 +26,7 @@ class TopographicPositionsController < ApplicationController
   end
 
   def update
-    @topographic_position.update_attributes(topographic_position_params)
+    @topographic_position.update(topographic_position_params)
     redirect_to topographic_positions_path	  
   end
 

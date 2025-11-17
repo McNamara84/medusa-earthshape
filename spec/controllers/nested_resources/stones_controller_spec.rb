@@ -144,4 +144,4 @@ describe NestedResources::StonesController do
     end
   end
 
-end
+end

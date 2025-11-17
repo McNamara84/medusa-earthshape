@@ -201,4 +201,4 @@ describe BoxesController do
     it {expect(obj3.path).to eq obj3path}
   end
 
-end
+end

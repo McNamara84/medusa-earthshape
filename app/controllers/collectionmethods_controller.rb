@@ -26,7 +26,7 @@ class CollectionmethodsController < ApplicationController
   end
 
   def update
-    @collectionmethod.update_attributes(collectionmethod_params)
+    @collectionmethod.update(collectionmethod_params)
     redirect_to collectionmethods_path	  
   end
 

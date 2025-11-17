@@ -26,7 +26,7 @@ class UnitsController < ApplicationController
   end
 
   def update
-    @unit.update_attributes(unit_params)
+    @unit.update(unit_params)
     respond_with(@unit, location: units_path)
   end
 

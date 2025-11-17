@@ -47,7 +47,7 @@ class PlacesController < ApplicationController
         place_params.delete :is_parent if not current_user.admin?   
 	begin
 		ActiveRecord::Base.transaction do
-			@place.update_attributes(place_params)
+			@place.update(place_params)
 			@place.validate_stringlatlon(place_params[:latitude],place_params[:longitude])
 			if @place.errors.size > 0
 				raise ActiveRecord::RecordInvalid.new(@place)
@@ -92,7 +92,7 @@ class PlacesController < ApplicationController
   end
 
   def bundle_update
-    @places.each { |place| place.update_attributes(place_params.only_presence) }
+    @places.each { |place| place.update(place_params.only_presence) }
     render :bundle_edit
   end
 

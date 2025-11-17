@@ -35,8 +35,8 @@ class AnalysesController < ApplicationController
   end
 
   def update
-    @analysis.update_attributes(analysis_params)
-    respond_with @analysis
+    @analysis.update(analysis_params)
+    respond_with(@analysis)
   end
 
   def picture
@@ -57,7 +57,7 @@ class AnalysesController < ApplicationController
   end
 
   def bundle_update
-    @analyses.each { |analysis| analysis.update_attributes(analysis_params.only_presence) }
+    @analyses.each { |analysis| analysis.update(analysis_params.only_presence) }
     render :bundle_edit
   end
 

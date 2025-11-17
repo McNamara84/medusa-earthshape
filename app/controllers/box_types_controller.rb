@@ -26,7 +26,7 @@ class BoxTypesController < ApplicationController
   end
 
   def update
-    @box_type.update_attributes(box_type_params)
+    @box_type.update(box_type_params)
     respond_with(@box_type, location: box_types_path)
   end
 

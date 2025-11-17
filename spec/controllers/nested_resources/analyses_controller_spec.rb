@@ -95,4 +95,4 @@ describe NestedResources::AnalysesController do
     end
   end
 
-end
+end

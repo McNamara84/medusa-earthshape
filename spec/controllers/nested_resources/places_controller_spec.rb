@@ -95,4 +95,4 @@ describe NestedResources::PlacesController do
     end
   end
 
-end
+end

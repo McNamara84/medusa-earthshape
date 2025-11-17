@@ -26,7 +26,7 @@ class PreparationsController < ApplicationController
   end
 
   def update
-    @preparation.update_attributes(preparation_params)
+    @preparation.update(preparation_params)
     redirect_to preparations_path	  
   end
 

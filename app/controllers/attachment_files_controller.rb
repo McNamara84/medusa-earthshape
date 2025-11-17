@@ -34,8 +34,8 @@ class AttachmentFilesController < ApplicationController
   end
 
   def update
-    @attachment_file.update_attributes(attachment_file_params)
-    respond_with @attachment_file
+    @attachment_file.update(attachment_file_params)
+    respond_with(@attachment_file)
   end
 
   def property
@@ -61,7 +61,7 @@ class AttachmentFilesController < ApplicationController
   end
 
   def bundle_update
-    @attachment_files.each { |attachment_file| attachment_file.update_attributes(attachment_file_params.only_presence) }
+    @attachment_files.each { |attachment_file| attachment_file.update(attachment_file_params.only_presence) }
     render :bundle_edit
   end
 

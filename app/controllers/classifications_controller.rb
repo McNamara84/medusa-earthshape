@@ -26,7 +26,7 @@ class ClassificationsController < ApplicationController
   end
 
   def update
-    @classification.update_attributes(classification_params)
+    @classification.update(classification_params)
     respond_with(@classification, location: classifications_path)
 
   end

@@ -26,7 +26,7 @@ class LandusesController < ApplicationController
   end
 
   def update
-    @landuse.update_attributes(landuse_params)
+    @landuse.update(landuse_params)
     redirect_to landuses_path	  
   end
 

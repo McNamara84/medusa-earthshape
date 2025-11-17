@@ -237,4 +237,4 @@ describe AnalysesController do
   end
 
 
-end
+end

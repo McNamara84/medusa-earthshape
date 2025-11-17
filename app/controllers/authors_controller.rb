@@ -26,7 +26,7 @@ class AuthorsController < ApplicationController
   end
   
   def update
-    @author.update_attributes(author_params)
+    @author.update(author_params)
     respond_with(@author, location: authors_path)
   end
   

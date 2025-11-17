@@ -541,4 +541,4 @@ describe RecordsController do
     before { stone }
     it { expect { delete :destroy, params: {id: stone.record_property.global_id} }.to change(RecordProperty, :count).by(-1) }
   end
-end
+end

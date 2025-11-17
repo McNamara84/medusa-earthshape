@@ -8,7 +8,7 @@ class SpotsController < ApplicationController
   end
 
   def update
-    @spot.update_attributes(spot_params)
+    @spot.update(spot_params)
     respond_with @spot, location: attachment_file_path(@spot.attachment_file)
   end
   

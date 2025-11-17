@@ -25,7 +25,7 @@ class GroupsController < ApplicationController
   end
 
   def update
-    @group.update_attributes(group_params)
+    @group.update(group_params)
     respond_with(@group, location: groups_path)
   end
   

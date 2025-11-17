@@ -39,7 +39,7 @@ class MeasurementCategoriesController < ApplicationController
   end
 
   def update
-    @measurement_category.update_attributes(measurement_category_params)
+    @measurement_category.update(measurement_category_params)
     respond_with(@measurement_category, location: measurement_categories_path)
   end
 

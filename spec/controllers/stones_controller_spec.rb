@@ -251,4 +251,4 @@ describe StonesController do
     end
   end
   
-end
+end

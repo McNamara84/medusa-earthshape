@@ -91,4 +91,4 @@ describe TechniquesController do
     it { expect { delete :destroy, params: {id: technique.id} }.to change(Technique, :count).by(-1) }
   end
   
-end
+end

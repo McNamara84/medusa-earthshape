@@ -26,7 +26,7 @@ class PreparationForClassificationsController < ApplicationController
   end
 
   def update
-    @preparation_for_classification.update_attributes(preparation_for_classification_params)
+    @preparation_for_classification.update(preparation_for_classification_params)
     redirect_to preparation_for_classifications_path	  
   end
 

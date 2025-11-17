@@ -26,7 +26,7 @@ class PhysicalFormsController < ApplicationController
   end
 
   def update
-    @physical_form.update_attributes(physical_form_params)
+    @physical_form.update(physical_form_params)
     respond_with(@physical_form, location: physical_forms_path)
   end
 

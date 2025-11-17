@@ -40,4 +40,4 @@ describe SpotsController do
     it { expect(assigns(:spot)).to eq spot }
   end
   
-end
+end

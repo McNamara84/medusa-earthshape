@@ -14,7 +14,7 @@ class Spot < ApplicationRecord
     if target_uid.blank? 
       self.name = "untitled point #{attachment_file.spots.size + 1}"
     else
-      record_property = RecordProperty.find_by_global_id(target_uid)
+      record_property = RecordProperty.find_by(global_id: target_uid)
       if record_property.blank? || record_property.datum.blank?
         self.name = target_uid
       else

@@ -26,7 +26,7 @@ class VegetationsController < ApplicationController
   end
 
   def update
-    @vegetation.update_attributes(vegetation_params)
+    @vegetation.update(vegetation_params)
     redirect_to vegetations_path	  
   end
 

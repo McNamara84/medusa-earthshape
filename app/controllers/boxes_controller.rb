@@ -26,8 +26,8 @@ class BoxesController < ApplicationController
   end
 
   def update
-    @box.update_attributes(box_params)
-    respond_with @box
+    @box.update(box_params)
+    respond_with(@box)
   end
 
   def destroy
@@ -52,7 +52,7 @@ class BoxesController < ApplicationController
   end
 
   def bundle_update
-    @boxes.each { |box| box.update_attributes(box_params.only_presence) }
+    @boxes.each { |box| box.update(box_params.only_presence) }
     render :bundle_edit
   end
 

@@ -32,4 +32,4 @@ describe ChemistriesController do
     end
   end
   
-end
+end

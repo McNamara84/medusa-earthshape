@@ -34,7 +34,7 @@ class Place < ApplicationRecord
    
    def parent_global_id=(global_id)
      return if global_id.blank?
-     record_property = RecordProperty.find_by_global_id(global_id)
+     record_property = RecordProperty.find_by(global_id: global_id)
      self.parent_id = record_property&.datum_id if record_property&.datum_type == 'Place'
    end
    

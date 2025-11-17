@@ -29,8 +29,8 @@ class StonesController < ApplicationController
   end
 
   def update
-    @stone.update_attributes(stone_params)
-    respond_with @stone
+    @stone.update(stone_params)
+    respond_with(@stone)
   end
   
   def destroy
@@ -59,7 +59,7 @@ class StonesController < ApplicationController
   end
 
   def bundle_update
-    @stones.each { |stone| stone.update_attributes(stone_params.only_presence) }
+    @stones.each { |stone| stone.update(stone_params.only_presence) }
     render :bundle_edit
   end
 

@@ -26,7 +26,7 @@ class DevicesController < ApplicationController
   end
   
   def update
-    @device.update_attributes(device_params)
+    @device.update(device_params)
     respond_with(@device, location: devices_path)
   end
   

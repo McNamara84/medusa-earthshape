@@ -102,4 +102,4 @@ describe UsersController do
     it { expect { delete :destroy, params: {id: user.id} }.to change(User, :count).by(-1) }
   end
 
-end
+end

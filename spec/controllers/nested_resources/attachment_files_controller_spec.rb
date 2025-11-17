@@ -112,4 +112,4 @@ describe NestedResources::AttachmentFilesController do
     end
   end
 
-end
+end

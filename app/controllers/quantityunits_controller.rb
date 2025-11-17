@@ -26,7 +26,7 @@ class QuantityunitsController < ApplicationController
   end
 
   def update
-    @quantityunit.update_attributes(quantityunit_params)
+    @quantityunit.update(quantityunit_params)
     redirect_to quantityunit_path	  
   end
 

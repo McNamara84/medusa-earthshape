@@ -94,4 +94,4 @@ describe NestedResources::BibsController do
     end
   end
 
-end
+end

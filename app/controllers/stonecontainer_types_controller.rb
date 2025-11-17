@@ -26,7 +26,7 @@ class StonecontainerTypesController < ApplicationController
   end
 
   def update
-    @stonecontainer_type.update_attributes(stonecontainer_type_params)
+    @stonecontainer_type.update(stonecontainer_type_params)
     redirect_to stonecontainer_types_path	  
   end
 

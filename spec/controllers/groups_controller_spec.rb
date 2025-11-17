@@ -91,4 +91,4 @@ describe GroupsController do
     it { expect { delete :destroy, params: {id: group.id} }.to change(Group, :count).by(-1) }
   end
 
-end
+end

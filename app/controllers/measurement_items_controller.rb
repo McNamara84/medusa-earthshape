@@ -26,7 +26,7 @@ class MeasurementItemsController < ApplicationController
   end
 
   def update
-    @measurement_item.update_attributes(measurement_item_params)
+    @measurement_item.update(measurement_item_params)
     respond_with(@measurement_item, location: measurement_items_path)
 
   end

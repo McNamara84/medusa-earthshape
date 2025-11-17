@@ -34,7 +34,7 @@ class Stone < ApplicationRecord
   
   def parent_global_id=(global_id)
     return if global_id.blank?
-    record_property = RecordProperty.find_by_global_id(global_id)
+    record_property = RecordProperty.find_by(global_id: global_id)
     self.parent_id = record_property&.datum_id if record_property&.datum_type == 'Stone'
   end
   
@@ -44,7 +44,7 @@ class Stone < ApplicationRecord
   
   def place_global_id=(global_id)
     return if global_id.blank?
-    record_property = RecordProperty.find_by_global_id(global_id)
+    record_property = RecordProperty.find_by(global_id: global_id)
     self.place_id = record_property&.datum_id if record_property&.datum_type == 'Place'
   end
   
@@ -54,7 +54,7 @@ class Stone < ApplicationRecord
   
   def box_global_id=(global_id)
     return if global_id.blank?
-    record_property = RecordProperty.find_by_global_id(global_id)
+    record_property = RecordProperty.find_by(global_id: global_id)
     self.box_id = record_property&.datum_id if record_property&.datum_type == 'Box'
   end
   
@@ -64,7 +64,7 @@ class Stone < ApplicationRecord
   
   def collection_global_id=(global_id)
     return if global_id.blank?
-    record_property = RecordProperty.find_by_global_id(global_id)
+    record_property = RecordProperty.find_by(global_id: global_id)
     self.collection_id = record_property&.datum_id if record_property&.datum_type == 'Collection'
   end
 

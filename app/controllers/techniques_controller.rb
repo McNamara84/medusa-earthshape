@@ -26,7 +26,7 @@ class TechniquesController < ApplicationController
   end
   
   def update
-    @technique.update_attributes(technique_params)
+    @technique.update(technique_params)
     respond_with(@technique, location: techniques_path)
   end
   

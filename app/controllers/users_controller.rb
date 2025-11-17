@@ -34,7 +34,7 @@ class UsersController < ApplicationController
     pa = user_params
     pa.delete(:password) if pa[:password].blank?
     pa.delete(:password_confirmation) if pa[:password_confirmation].blank?
-    @user.update_attributes(pa)
+    @user.update(pa)
     respond_with(@user, location: users_path)
   end
   
