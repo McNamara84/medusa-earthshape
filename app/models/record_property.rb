@@ -72,7 +72,8 @@ class RecordProperty < ApplicationRecord
   def self.group_readables_where_clauses(user)
     record_properties = self.arel_table
     group_members = GroupMember.arel_table
-    record_properties[:group_readable].eq(true).and(GroupMember.where(group_members[:user_id].eq(user.id).and(group_members[:group_id].eq(record_properties[:group_id]))).exists)
+    # Rails 6.0: .exists renamed to .exists?
+    record_properties[:group_readable].eq(true).and(GroupMember.where(group_members[:user_id].eq(user.id).and(group_members[:group_id].eq(record_properties[:group_id]))).exists?)
   end
 
   def self.guest_readables_where_clauses
