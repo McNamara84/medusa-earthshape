@@ -15,7 +15,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4:latest
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@medusa.local
+      PGADMIN_DEFAULT_EMAIL: ehrmann@gfz.de
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_CONFIG_SERVER_MODE: 'True'
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
