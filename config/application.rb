@@ -9,9 +9,9 @@ Bundler.require(*Rails.groups)
 module Medusa
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    config.load_defaults 6.1
 
-    # Rails 6.0: Temporarily use Classic autoloader instead of Zeitwerk
+    # Rails 6.0+: Temporarily use Classic autoloader instead of Zeitwerk
     # TODO: Migrate to Zeitwerk once application structure is fixed
     config.autoloader = :classic
 

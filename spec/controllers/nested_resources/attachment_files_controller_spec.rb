@@ -10,7 +10,7 @@ describe NestedResources::AttachmentFilesController do
   let(:url){"where_i_came_from"}
   let(:filetopic) { FactoryGirl.create(:filetopic) }
   let(:attributes) { {data: data, filetopic_id: filetopic.id} }
-  let(:data){fixture_file_upload("/files/test_image.jpg",'image/jpeg')}
+  let(:data){ Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg'), 'image/jpeg') }
   before { request.env["HTTP_REFERER"]  = url }
   before { sign_in user }
   before { parent }

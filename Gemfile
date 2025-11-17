@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.6', '>= 6.0.6.1'  # Upgraded from 5.2.8.1 - Rails 6.0 LTS version
+gem 'rails', '~> 6.1.7', '>= 6.1.7.10'  # Upgraded to Rails 6.1 LTS version (latest: 6.1.7.10)
 gem 'nokogiri', '~> 1.10.10'  # Lock to version compatible with Ruby 2.5 (1.13+ requires Ruby 2.6+)
 gem 'loofah', '~> 2.3.1'  # Lock to older version compatible with nokogiri 1.10
 gem 'psych', '~> 3.3.0'  # Lock to version 3.x for mini_racer compatibility (4.x+ have safe_load issues with libv8-node)
@@ -74,7 +74,7 @@ gem 'geonames'
 gem 'rubyzip'
 #gem 'oai'
 gem 'comma'
-gem 'acts-as-taggable-on', '~> 6.5.0'  # Rails 5.2 compatible (v4.0.0 has class_name bug with Rails 5.2)
+gem 'acts-as-taggable-on', '~> 9.0'  # Rails 6.1 compatible, Ruby 2.5+ (v9.0 supports Rails 5.0-6.1)
 gem 'exception_notification'
 gem 'settingslogic'
 # gem 'validates_existence'  # Rails 5.1: Removed - incompatible with Rails 5.1+ (belongs_to validation now built-in)
