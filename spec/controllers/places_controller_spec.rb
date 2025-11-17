@@ -45,8 +45,11 @@ describe PlacesController do
       stone_1;stone_2;stone_3;      
       analysis_1;analysis_2;analysis_3;
       # Explicitly set permissions - reload to ensure fresh data
-      record_property_1.reload.update!(group_id: group_1.id, owner_readable: true, owner_writable: true)
+      # place_1 owned by current user, group_1
+      record_property_1.reload.update!(user_id: user.id, group_id: group_1.id, owner_readable: true, owner_writable: true)
+      # place_2 owned by user_2, guest readable
       record_property_2.reload.update!(user_id: user_2.id, group_id: group_2.id, guest_readable: true, guest_writable: true, owner_readable: true, owner_writable: true)
+      # place_3 owned by user_3, guest readable
       record_property_3.reload.update!(user_id: user_3.id, group_id: group_3.id, guest_readable: true, guest_writable: true, owner_readable: true, owner_writable: true)
 #      get :index, params
     end
