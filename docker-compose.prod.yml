@@ -1,10 +1,13 @@
 services:
   db:
-    image: postgres:18
+    image: postgres:18-alpine
+    user: postgres
     environment:
       POSTGRES_USER: medusa
       POSTGRES_PASSWORD: medusa_development
       POSTGRES_DB: medusa_development
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -12,9 +15,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
     networks:
       - default
       - traefik
+    restart: unless-stopped
   web:
     build: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0 -p 80"
