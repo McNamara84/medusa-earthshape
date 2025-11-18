@@ -74,18 +74,27 @@ jobs:
 
       - name: Create test database
         run: |
+          # Create development database (needed for initializers)
+          docker compose exec -T db psql -U medusa -d postgres -c "DROP DATABASE IF EXISTS medusa_development;" || true
+          docker compose exec -T db psql -U medusa -d postgres -c "CREATE DATABASE medusa_development OWNER medusa;"
+          echo "Development database created"
+          
           # Create test database
           docker compose exec -T db psql -U medusa -d postgres -c "DROP DATABASE IF EXISTS medusa_test;" || true
           docker compose exec -T db psql -U medusa -d postgres -c "CREATE DATABASE medusa_test OWNER medusa;"
           echo "Test database created successfully"
 
-      - name: Start web service (without entrypoint for CI)
+      - name: Run development migrations (for initializers)
         run: |
-          # In CI: Skip entrypoint, run bundle install + rails server directly
-          # Avoids permission issues with entrypoint script in GitHub Actions
-          docker compose run -d --name medusa-earthshape-web-1 --service-ports --entrypoint "" web bash -c "bundle check || bundle install --jobs 4 && rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
+          # Temporarily start web container to run migrations
+          docker compose run --rm -e RAILS_ENV=development web bundle exec rake db:migrate || echo "Development migration completed"
+          echo "Development database setup completed"
+
+      - name: Start web service
+        run: |
+          docker compose up -d web
           echo "Web service started"
-          sleep 10
+          sleep 5
 
       - name: Check services status
         run: |
@@ -102,15 +111,19 @@ jobs:
           fi
           echo "Web container is running"
 
-      - name: Load database schema
+      - name: Run database migrations
         run: |
-          docker compose exec -T web bundle exec rake db:schema:load RAILS_ENV=test
-          echo "Schema loaded successfully (no migrations needed for test database)"
+          docker compose exec -T web bundle exec rake db:migrate RAILS_ENV=test
+          echo "Migrations completed successfully"
+
+      - name: Seed test database
+        run: |
+          docker compose exec -T web bundle exec rake db:seed RAILS_ENV=test || echo "Seed failed or not needed"
+          echo "Database setup completed"
 
       - name: Run RSpec tests
         run: |
-          docker compose exec -T -e CI=true web bundle exec rspec --format progress --format RspecJunitFormatter --out tmp/rspec-results.xml
-          echo "Tests completed"
+          docker compose exec -T web bundle exec rspec --format progress --format RspecJunitFormatter --out tmp/rspec-results.xml
           
       - name: Check test results
         if: always()

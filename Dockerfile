@@ -56,9 +56,9 @@ RUN if [ -d "db/csvs" ] && [ "$(ls -A db/csvs/*.csv 2>/dev/null)" ]; then \
 # Precompile assets (will be done in entrypoint for development)
 # RUN RAILS_ENV=production bundle exec rake assets:precompile
 
-# Set entrypoint (already copied with COPY . . above)
+# Add entrypoint script (but don't set as ENTRYPOINT - let docker-compose.yml decide)
+# This keeps GitHub Actions working while still allowing local dev to use entrypoint
 RUN chmod +x /app/docker-entrypoint.sh
-ENTRYPOINT ["/app/docker-entrypoint.sh"]
 
 # Expose port 3000
 EXPOSE 3000
