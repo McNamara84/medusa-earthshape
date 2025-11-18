@@ -99,7 +99,7 @@ group :development, :test do
   gem 'pry-doc'
   gem 'pry-stack_explorer'
   gem 'pry-byebug'
-  gem 'rspec-rails', '~> 4.0.0'  # Rails 6.0 requires RSpec-Rails 4.0+
+  gem 'rspec-rails', '~> 5.1.0'  # Rails 6.0 requires RSpec-Rails 4.0+
   gem 'rails-controller-testing'  # Required for Rails 5.0+ (assigns, assert_template)
   gem 'spring', '~> 2.1.0'  # Lock to version compatible with Ruby 2.5 (v4+ requires Ruby 2.7+)
   gem 'guard-rspec', '>= 4.7.3', require: false  # Updated to support RSpec 3.9+

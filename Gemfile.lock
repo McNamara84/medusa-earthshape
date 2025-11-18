@@ -382,10 +382,10 @@ GEM
     rspec-mocks (3.13.7)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-rails (4.0.2)
-      actionpack (>= 4.2)
-      activesupport (>= 4.2)
-      railties (>= 4.2)
+    rspec-rails (5.1.2)
+      actionpack (>= 5.2)
+      activesupport (>= 5.2)
+      railties (>= 5.2)
       rspec-core (~> 3.10)
       rspec-expectations (~> 3.10)
       rspec-mocks (~> 3.10)
@@ -522,7 +522,7 @@ DEPENDENCIES
   rak
   ransack
   rqrcode
-  rspec-rails (~> 4.0.0)
+  rspec-rails (~> 5.1.0)
   rspec_junit_formatter
   rubyzip
   sass-rails (~> 5.0)
