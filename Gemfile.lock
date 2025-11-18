@@ -506,6 +506,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails
   kaminari
+  listen (~> 3.3)
   loofah (~> 2.3.1)
   mini_racer
   nokogiri (~> 1.10.10)
