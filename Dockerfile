@@ -22,8 +22,9 @@ RUN apt-get update -qq && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Install bundler 1.17.3 (compatible with Ruby 2.3-2.4)
-RUN gem install bundler -v '1.17.3'
+# Install bundler 2.1.4 (compatible with Ruby 2.7, RubyGems 3.3+ for pg 1.6+)
+RUN gem update --system 3.3.22 && \
+    gem install bundler -v '2.1.4'
 
 # Copy Gemfile and Gemfile.lock
 COPY Gemfile Gemfile.lock ./
