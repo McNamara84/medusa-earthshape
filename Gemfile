@@ -1,12 +1,13 @@
 source 'https://rubygems.org'
+ruby '2.6.10'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.1.7', '>= 6.1.7.10'  # Upgraded to Rails 6.1 LTS version (latest: 6.1.7.10)
-gem 'nokogiri', '~> 1.10.10'  # Lock to version compatible with Ruby 2.5 (1.13+ requires Ruby 2.6+)
+gem 'nokogiri', '~> 1.10.10'  # Lock to version compatible with Ruby 2.5-2.6 (1.13+ requires Ruby 2.7+)
 gem 'loofah', '~> 2.3.1'  # Lock to older version compatible with nokogiri 1.10
 gem 'psych', '~> 3.3.0'  # Lock to version 3.x for mini_racer compatibility (4.x+ have safe_load issues with libv8-node)
-gem 'zeitwerk', '~> 2.3.0'  # Rails 6.0 autoloader - lock to 2.3.x for Ruby 2.5 compatibility
+gem 'zeitwerk', '~> 2.3.0'  # Rails 6.0 autoloader - lock to 2.3.x for compatibility
 
 # Use postgresql as the database for Active Record
 gem 'pg'

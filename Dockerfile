@@ -1,12 +1,10 @@
-# Use Ruby 2.5.9 (last stable 2.5.x version)
-FROM ruby:2.5.9
+# Use Ruby 2.6.10 (last stable 2.6.x version)
+# Based on Debian Bullseye (11)
+FROM ruby:2.6.10
 
-# Fix Debian Buster repositories (EOL - moved to archive)
-RUN sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list && \
-    sed -i 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list && \
-    sed -i '/stretch-updates/d' /etc/apt/sources.list
+# Debian Bullseye repositories are still active (no archive fix needed)
 
-# Install system dependencies including PhantomJS from Debian repos
+# Install system dependencies (PhantomJS not available in Bullseye, but not needed for production)
 RUN apt-get update -qq && apt-get install -y \
     build-essential \
     libpq-dev \
@@ -16,8 +14,10 @@ RUN apt-get update -qq && apt-get install -y \
     libmagickwand-dev \
     git \
     xvfb \
-    phantomjs \
     && rm -rf /var/lib/apt/lists/*
+
+# Note: PhantomJS was available in Debian Buster but removed in Bullseye
+# It's only needed for Poltergeist tests which can run without it or use Selenium/Capybara alternatives
 
 # Set working directory
 WORKDIR /app
