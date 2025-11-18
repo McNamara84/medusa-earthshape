@@ -25,6 +25,7 @@ class Array
 	end
 end
 
+# Rails 6.0: Renderer block must accept options parameter even if unused
 ActionController::Renderers.add :pml do |object, options|
 	self.content_type ||= Mime[:pml]
 	# Rails 5.0+: Convert ActiveRecord::Relation to Array before calling to_pml

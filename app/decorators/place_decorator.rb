@@ -77,16 +77,41 @@ class PlaceDecorator < Draper::Decorator
 
   def country_name
     return "" if latitude.blank? || longitude.blank?
-    country_subdivisions = Geonames::WebService.country_subdivision "%0.2f" % latitude, "%0.2f" % longitude
-    return "" if country_subdivisions.blank?
-    country_subdivisions[0].country_name
+    # Validate coordinate ranges: latitude [-90, 90], longitude [-180, 180]
+    return "" if latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180
+    
+    begin
+      country_subdivisions = Geonames::WebService.country_subdivision "%0.2f" % latitude, "%0.2f" % longitude
+      return "" if country_subdivisions.blank?
+      country_subdivisions[0].country_name
+    rescue REXML::ParseException, Errno::ECONNREFUSED, Errno::ETIMEDOUT, SocketError, Net::OpenTimeout, Net::ReadTimeout => e
+      # Handle specific Geonames API errors: XML parsing, network connectivity, timeouts
+      Rails.logger.warn("Geonames API error in country_name: #{e.class} - #{e.message}")
+      ""
+    rescue StandardError => e
+      # Catch any other unexpected errors to prevent breaking the decorator
+      Rails.logger.error("Unexpected error in country_name: #{e.class} - #{e.message}")
+      ""
+    end
   end
 
   def nearby_geonames
     return [] if latitude.blank? || longitude.blank?
-    geonames = Geonames::WebService.find_nearby "%0.2f" % latitude, "%0.2f" % longitude,{radius: 100,maxRows: 10,style: "FULL"}
-    geonames
-
+    # Validate coordinate ranges: latitude [-90, 90], longitude [-180, 180]
+    return [] if latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180
+    
+    begin
+      geonames = Geonames::WebService.find_nearby "%0.2f" % latitude, "%0.2f" % longitude,{radius: 100,maxRows: 10,style: "FULL"}
+      geonames
+    rescue REXML::ParseException, Errno::ECONNREFUSED, Errno::ETIMEDOUT, SocketError, Net::OpenTimeout, Net::ReadTimeout => e
+      # Handle specific Geonames API errors: XML parsing, network connectivity, timeouts
+      Rails.logger.warn("Geonames API error in nearby_geonames: #{e.class} - #{e.message}")
+      []
+    rescue StandardError => e
+      # Catch any other unexpected errors to prevent breaking the decorator
+      Rails.logger.error("Unexpected error in nearby_geonames: #{e.class} - #{e.message}")
+      []
+    end
   end
 
   def readable_neighbors(current_user)

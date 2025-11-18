@@ -38,7 +38,7 @@ describe AttachmentFilesController do
   describe "POST create", :current => true do
     let(:md5hash){ Digest::MD5.hexdigest(File.open("spec/fixtures/files/test_image.jpg", 'rb').read) }
     let(:filetopic) { FactoryGirl.create(:filetopic) }
-    let(:attributes) { {data: fixture_file_upload("/files/test_image.jpg",'image/jpeg'), filetopic_id: filetopic.id} }
+    let(:attributes) { {data: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg'), 'image/jpeg'), filetopic_id: filetopic.id} }
     it { expect { post :create, params: {attachment_file: attributes}, format: 'json' }.to change(AttachmentFile, :count).by(1) }
     describe "assigns as @attachment_file" do
       before { post :create, params: {attachment_file: attributes}, format: 'json' }

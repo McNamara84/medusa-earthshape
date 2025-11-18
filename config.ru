@@ -1,7 +1,9 @@
 # This file is used by Rack-based servers to start the application.
 
-require ::File.expand_path('../config/environment',  __FILE__)
+require_relative "config/environment"
 
+# Support mounting application at non-root path (e.g., /medusa)
+# Set RAILS_RELATIVE_URL_ROOT environment variable to configure
 if ENV['RAILS_RELATIVE_URL_ROOT']
   map ENV['RAILS_RELATIVE_URL_ROOT'] do
     run Rails.application
@@ -9,3 +11,5 @@ if ENV['RAILS_RELATIVE_URL_ROOT']
 else
   run Rails.application
 end
+
+Rails.application.load_server
