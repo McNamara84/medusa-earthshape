@@ -1,4 +1,5 @@
 class Box < ApplicationRecord
+  include Ransackable
   include HasRecordProperty
   include HasViewSpot
   include OutputPdf

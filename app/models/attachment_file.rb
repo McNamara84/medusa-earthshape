@@ -1,5 +1,6 @@
 require 'matrix'
 class AttachmentFile < ApplicationRecord
+  include Ransackable
   include HasRecordProperty
 
   # Paperclip configuration for file attachments

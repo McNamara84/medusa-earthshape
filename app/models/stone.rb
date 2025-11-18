@@ -1,4 +1,5 @@
 class Stone < ApplicationRecord
+  include Ransackable
   include HasRecordProperty
   include HasViewSpot
   include OutputPdf

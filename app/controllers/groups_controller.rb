@@ -5,8 +5,8 @@ class GroupsController < ApplicationController
   layout "admin"
 
   def index
-    @search = Group.search(params[:q]&.permit! || {})
-    @search.sorts = "updated_at ASC" if @search.sorts.empty?
+    @search = Group.ransack(params[:q]&.permit! || {})
+    @search.sorts = ["updated_at ASC"] if @search.sorts.empty?
     @groups = @search.result.page(params[:page]).per(params[:per_page])
   end
 

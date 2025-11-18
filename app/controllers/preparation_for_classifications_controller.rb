@@ -5,8 +5,8 @@ class PreparationForClassificationsController < ApplicationController
   layout "admin"
 
   def index
-    @search = PreparationForClassification.search(params[:q]&.permit! || {})
-    @search.sorts = "updated_at ASC" if @search.sorts.empty?
+    @search = PreparationForClassification.ransack(params[:q]&.permit! || {})
+    @search.sorts = ["updated_at ASC"] if @search.sorts.empty?
     @preparation_for_classifications = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @preparation_for_classification   
   end

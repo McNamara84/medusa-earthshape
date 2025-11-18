@@ -43,7 +43,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_searchable_records
-    @records_search = RecordProperty.search
+    @records_search = RecordProperty.ransack(params[:q])
   end
 
   def adjust_url_by_requesting_tab(url)

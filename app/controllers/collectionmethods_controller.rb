@@ -5,8 +5,8 @@ class CollectionmethodsController < ApplicationController
   layout "admin"
 
   def index
-    @search = Collectionmethod.search(params[:q]&.permit! || {})
-    @search.sorts = "updated_at ASC" if @search.sorts.empty?
+    @search = Collectionmethod.ransack(params[:q]&.permit! || {})
+    @search.sorts = ["updated_at ASC"] if @search.sorts.empty?
     @collectionmethods = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @collectionmethods
   end

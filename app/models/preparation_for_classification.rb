@@ -1,4 +1,5 @@
 class PreparationForClassification < ApplicationRecord
+  include Ransackable
   belongs_to :classification
   belongs_to :preparation_type
   

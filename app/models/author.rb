@@ -1,4 +1,5 @@
 class Author < ApplicationRecord
+  include Ransackable
   has_many :bib_authors
   has_many :bibs, through: :bib_authors
 

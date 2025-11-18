@@ -1,4 +1,5 @@
 class RecordProperty < ApplicationRecord
+  include Ransackable
   belongs_to :user, optional: true  # Rails 5.1: Added optional: true - factories don't always set user
   belongs_to :group, optional: true  # Rails 5.1: Added optional: true (was validated with allow_nil: true)
   belongs_to :datum, polymorphic: true

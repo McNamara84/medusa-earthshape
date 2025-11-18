@@ -5,8 +5,8 @@ class DevicesController < ApplicationController
   layout "admin"
   
   def index
-    @search = Device.search(params[:q]&.permit! || {})
-    @search.sorts = "updated_at ASC" if @search.sorts.empty?
+    @search = Device.ransack(params[:q]&.permit! || {})
+    @search.sorts = ["updated_at ASC"] if @search.sorts.empty?
     @devices = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @devices
   end
