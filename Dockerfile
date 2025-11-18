@@ -29,8 +29,9 @@ RUN gem update --system 3.3.22 && \
 # Copy Gemfile and Gemfile.lock
 COPY Gemfile Gemfile.lock ./
 
-# Install dependencies (Gemfile now has problematic gems commented out)
-RUN bundle config set --local without 'development test' && \
+# Install dependencies (including test gems for CI/CD)
+# Only exclude development group (IRB, debugging tools not needed in container)
+RUN bundle config set --local without 'development' && \
     bundle install --jobs 4 --retry 3
 
 # Copy the application code
