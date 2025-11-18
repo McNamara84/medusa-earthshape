@@ -107,7 +107,7 @@ jobs:
 
       - name: Run RSpec tests
         run: |
-          docker compose exec -T web bundle exec rspec --format progress --format RspecJunitFormatter --out tmp/rspec-results.xml
+          docker compose exec -T -e CI=true web bundle exec rspec --format progress --format RspecJunitFormatter --out tmp/rspec-results.xml
           echo "Tests completed"
           
       - name: Check test results
