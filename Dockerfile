@@ -56,9 +56,9 @@ RUN if [ -d "db/csvs" ] && [ "$(ls -A db/csvs/*.csv 2>/dev/null)" ]; then \
 # Precompile assets (will be done in entrypoint for development)
 # RUN RAILS_ENV=production bundle exec rake assets:precompile
 
-# Add entrypoint script
-COPY docker-entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/docker-entrypoint.sh
+# Set entrypoint (already copied with COPY . . above)
+RUN chmod +x /app/docker-entrypoint.sh
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 
 # Expose port 3000
 EXPOSE 3000

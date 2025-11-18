@@ -1,6 +1,17 @@
 #!/bin/bash
 set -e
 
+# Ensure gems are installed (fixes volume mount override issue)
+# When ./app is mounted, bundled gems from image are not accessible
+# Run bundle check first, install only if needed
+echo "Checking bundle..."
+if ! bundle check > /dev/null 2>&1; then
+  echo "Installing missing gems..."
+  bundle install --jobs 4 --retry 3
+else
+  echo "Bundle check passed"
+fi
+
 # Start Xvfb (virtual display) for PhantomJS/Poltergeist tests
 # Run in background and save PID for cleanup
 export DISPLAY=:99
@@ -48,9 +59,9 @@ if [ "$TABLE_COUNT" = "0" ] || [ "$TABLE_COUNT" = "" ]; then
   if [ -f "db/seeds.rb" ]; then
     echo "Running database seeds (loading CSV data and creating admin user)..."
     if bundle exec rake db:seed; then
-      echo "✓ Database seeded successfully"
+      echo "âœ“ Database seeded successfully"
     else
-      echo "✗ Seeding failed, creating minimal admin user..."
+      echo "âœ— Seeding failed, creating minimal admin user..."
       # Fallback: Create admin user manually if seeding fails
       bundle exec rails runner "
         unless User.exists?(username: 'admin')
@@ -68,7 +79,7 @@ if [ "$TABLE_COUNT" = "0" ] || [ "$TABLE_COUNT" = "" ]; then
           admin_box.group = admin_group
           admin.box_id = admin_box.id
           admin.save!
-          puts '✓ Admin user created: admin / admin123'
+          puts 'âœ“ Admin user created: admin / admin123'
         end
       "
     fi
