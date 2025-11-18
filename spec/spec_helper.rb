@@ -12,14 +12,11 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 # Rails 6.1+: maintain_test_schema! loads schema.rb if no migrations have run
-# For CI/CD environments where schema is pre-loaded, we skip the check
-unless ENV['CI'] # Skip in CI environment where schema is loaded via workflow
-  begin
-    ActiveRecord::Migration.maintain_test_schema!
-  rescue ActiveRecord::PendingMigrationError => e
-    puts e.to_s.strip
-    exit 1
-  end
+begin
+  ActiveRecord::Migration.maintain_test_schema!
+rescue ActiveRecord::PendingMigrationError => e
+  puts e.to_s.strip
+  exit 1
 end
 
 RSpec.configure do |config|

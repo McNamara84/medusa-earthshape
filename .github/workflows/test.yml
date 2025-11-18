@@ -92,7 +92,9 @@ jobs:
 
       - name: Create docker-compose override for CI
         run: |
-          # Override entrypoint for CI to avoid permission issues
+          # Override entrypoint for CI to avoid permission issues with entrypoint script
+          # Alternative: Could modify docker-entrypoint.sh to detect CI environment and skip
+          # permission-sensitive operations, but explicit override is clearer for CI debugging
           cat > docker-compose.override.yml << 'EOF'
           services:
             web:

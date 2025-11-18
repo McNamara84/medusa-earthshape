@@ -59,9 +59,9 @@ if [ "$TABLE_COUNT" = "0" ] || [ "$TABLE_COUNT" = "" ]; then
   if [ -f "db/seeds.rb" ]; then
     echo "Running database seeds (loading CSV data and creating admin user)..."
     if bundle exec rake db:seed; then
-      echo "âœ“ Database seeded successfully"
+      echo "✓ Database seeded successfully"
     else
-      echo "âœ— Seeding failed, creating minimal admin user..."
+      echo "✗ Seeding failed, creating minimal admin user..."
       # Fallback: Create admin user manually if seeding fails
       bundle exec rails runner "
         unless User.exists?(username: 'admin')
@@ -79,7 +79,7 @@ if [ "$TABLE_COUNT" = "0" ] || [ "$TABLE_COUNT" = "" ]; then
           admin_box.group = admin_group
           admin.box_id = admin_box.id
           admin.save!
-          puts 'âœ“ Admin user created: admin / admin123'
+          puts '✓ Admin user created: admin / admin123'
         end
       "
     fi

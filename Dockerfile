@@ -16,8 +16,12 @@ RUN apt-get update -qq && apt-get install -y \
     xvfb \
     && rm -rf /var/lib/apt/lists/*
 
-# Note: PhantomJS was available in Debian Buster but removed in Bullseye
-# It's only needed for Poltergeist tests which can run without it or use Selenium/Capybara alternatives
+# Note: PhantomJS was removed in Debian Bullseye (available in Buster via phantomjs package)
+# Poltergeist tests (gem 'poltergeist', '~> 1.18.0') require PhantomJS to run
+# Options: 1) Install PhantomJS from archived builds (wget from phantomjs.org/download.html)
+#          2) Migrate to modern headless browser (Selenium + Chrome headless)
+#          3) Skip Poltergeist tests in environments without PhantomJS
+# Current: Poltergeist tests are skipped in CI (.rspec excludes spec/requests/*)
 
 # Set working directory
 WORKDIR /app
@@ -56,8 +60,9 @@ RUN if [ -d "db/csvs" ] && [ "$(ls -A db/csvs/*.csv 2>/dev/null)" ]; then \
 # Precompile assets (will be done in entrypoint for development)
 # RUN RAILS_ENV=production bundle exec rake assets:precompile
 
-# Add entrypoint script (but don't set as ENTRYPOINT - let docker-compose.yml decide)
-# This keeps GitHub Actions working while still allowing local dev to use entrypoint
+# Make entrypoint script executable
+# The entrypoint is configured in docker-compose.yml (line 20), not in Dockerfile
+# CI uses docker-compose.override.yml to disable the entrypoint and avoid permission issues
 RUN chmod +x /app/docker-entrypoint.sh
 
 # Expose port 3000

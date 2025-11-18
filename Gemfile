@@ -4,7 +4,7 @@ ruby '2.7.8'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.1.7', '>= 6.1.7.10'  # Upgraded to Rails 6.1 LTS version (latest: 6.1.7.10)
-gem 'nokogiri', '~> 1.10.10'  # Lock to version compatible with Ruby 2.5-2.6 (1.13+ requires Ruby 2.7+)
+gem 'nokogiri', '~> 1.10.10'  # Locked for loofah 2.3.1 compatibility - can upgrade to 1.16+ with loofah 2.22+ in future
 gem 'loofah', '~> 2.3.1'  # Lock to older version compatible with nokogiri 1.10
 gem 'psych', '~> 3.3.0'  # Lock to version 3.x for mini_racer compatibility (4.x+ have safe_load issues with libv8-node)
 gem 'zeitwerk', '~> 2.3.0'  # Rails 6.0 autoloader - lock to 2.3.x for compatibility
@@ -99,7 +99,7 @@ group :development, :test do
   gem 'pry-doc'
   gem 'pry-stack_explorer'
   gem 'pry-byebug'
-  gem 'rspec-rails', '~> 5.1.0'  # Rails 6.0 requires RSpec-Rails 4.0+
+  gem 'rspec-rails', '~> 5.1.0'  # Rails 6.1 requires RSpec-Rails 5.x (4.x not compatible)
   gem 'rails-controller-testing'  # Required for Rails 5.0+ (assigns, assert_template)
   gem 'spring', '~> 2.1.0'  # Lock to version compatible with Ruby 2.5 (v4+ requires Ruby 2.7+)
   gem 'guard-rspec', '>= 4.7.3', require: false  # Updated to support RSpec 3.9+

@@ -1,3 +1,7 @@
+# TODO: Consider removing this monkey patch when upgrading to Rails 7.x
+# This patch addresses pg gem 1.6+ keyword argument compatibility with Rails 6.1
+# Rails 7.x handles pg 1.6+ keyword arguments correctly without patching
+# See: https://github.com/rails/rails/pull/40740
 module ActiveRecord
   module Tasks
     class PostgreSQLDatabaseTasks
