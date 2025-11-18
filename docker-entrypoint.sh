@@ -12,7 +12,9 @@ else
   echo "Bundle check passed"
 fi
 
-# Start Xvfb (virtual display) for PhantomJS/Poltergeist tests
+# Start Xvfb (virtual display) for legacy Poltergeist tests
+# Note: PhantomJS is not available in Debian Bullseye (see Dockerfile lines 19-24)
+# Poltergeist tests are skipped in CI, but Xvfb is kept for local compatibility
 # Run in background and save PID for cleanup
 export DISPLAY=:99
 Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &

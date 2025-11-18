@@ -43,7 +43,9 @@ class ApplicationController < ActionController::Base
   end
 
   def set_searchable_records
-    @records_search = RecordProperty.ransack(params[:q])
+    # Use strong parameters for security and handle nil case
+    # Consistent with other controllers using ransack
+    @records_search = RecordProperty.ransack(params[:q]&.permit! || {})
   end
 
   def adjust_url_by_requesting_tab(url)
