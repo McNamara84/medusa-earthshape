@@ -10,7 +10,7 @@ gem 'psych', '~> 3.3.0'  # Lock to version 3.x for mini_racer compatibility (4.x
 gem 'zeitwerk', '~> 2.3.0'  # Rails 6.0 autoloader - lock to 2.3.x for compatibility
 
 # Use postgresql as the database for Active Record
-gem 'pg'
+gem 'pg', '~> 1.6'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'  # Updated for Rails 4.2

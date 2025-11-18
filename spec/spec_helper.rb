@@ -1,6 +1,7 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
+
 require 'rspec/rails'
 # require 'rspec/autorun'  # Removed - deprecated when running via 'rspec' command (RSpec 3.5+)
 
