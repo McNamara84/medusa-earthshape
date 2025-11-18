@@ -48,20 +48,31 @@ if ! bundle exec rails runner "ActiveRecord::Base.connection" 2>/dev/null; then
   bundle exec rake db:create
 fi
 
+# Precompile assets in production (only if not already done)
+if [ "$RAILS_ENV" = "production" ] && [ ! -d "public/assets" ]; then
+  echo "Precompiling assets for production..."
+  bundle exec rake assets:precompile
+  echo "✓ Assets precompiled"
+fi
+
 # Check if database needs setup
 TABLE_COUNT=$(bundle exec rails runner "puts ActiveRecord::Base.connection.tables.count" 2>/dev/null || echo "0")
 
 if [ "$TABLE_COUNT" = "0" ] || [ "$TABLE_COUNT" = "" ]; then
   echo "Database is empty, running setup..."
   
-  # Create test database to prevent Rails 6.1 schema:load from failing
-  # (Rails 6.1 db:schema:load iterates all environments in database.yml)
-  echo "Creating development and test databases..."
-  bundle exec rake db:create RAILS_ENV=development 2>/dev/null || true
-  bundle exec rake db:create RAILS_ENV=test 2>/dev/null || true
+  # Create database for current environment
+  bundle exec rake db:create 2>/dev/null || true
   
-  # Run database setup (only for development environment)
-  bundle exec rake db:schema:load RAILS_ENV=development
+  # In development, also create test database to prevent Rails 6.1 schema:load from failing
+  # (Rails 6.1 db:schema:load iterates all environments in database.yml)
+  if [ "$RAILS_ENV" = "development" ]; then
+    echo "Creating test database for development environment..."
+    bundle exec rake db:create RAILS_ENV=test 2>/dev/null || true
+  fi
+  
+  # Run database setup (schema load)
+  bundle exec rake db:schema:load
   
   # Run seeds to load CSV data and create admin user
   if [ -f "db/seeds.rb" ]; then

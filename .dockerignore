@@ -7,10 +7,10 @@
 docker-compose*.yml
 Dockerfile*
 
-# Documentation
-README.md
+# Documentation (keep DEPLOYMENT-PORTAINER.md for reference)
 README.rdoc
-*.md
+UPGRADE-*.md
+TEST-*.md
 
 # Logs
 log/*
@@ -35,10 +35,12 @@ tmp/*
 .DS_Store
 Thumbs.db
 
-# Test files
-spec/*
+# Test files (keep spec/ for RSpec in production monitoring)
 test/*
 coverage/*
+test-results*.txt
+test_*.rb
+test_*.txt
 
 # Development dependencies
 .bundle

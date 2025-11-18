@@ -454,6 +454,29 @@ rake db:dump          # Backup database
 rake db:load          # Restore database
 ```
 
+## Production Deployment
+
+### Portainer + Traefik (Recommended)
+
+For production deployment using Portainer Web UI with Traefik reverse proxy, see the comprehensive guide:
+
+📖 **[DEPLOYMENT-PORTAINER.md](DEPLOYMENT-PORTAINER.md)**
+
+**Quick Summary:**
+1. Copy `.env.prod.example` to `.env.prod`
+2. Generate `SECRET_KEY_BASE` (see guide)
+3. Deploy via Portainer using `docker-compose.prod.yml`
+4. Access: `https://your-domain.com/esm`
+
+**Services included:**
+- Medusa Rails app (with automatic setup)
+- PostgreSQL 18 database
+- pgAdmin web interface
+
+### Traditional Server Deployment
+
+For traditional server deployment (Ubuntu/Debian + Apache/Nginx + Unicorn), see the Capistrano deployment scripts in `config/deploy/`.
+
 ## API Usage
 
 Medusa provides a REST API for all resources. Authentication uses HTTP Basic Auth.
