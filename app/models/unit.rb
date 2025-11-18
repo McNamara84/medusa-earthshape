@@ -1,4 +1,5 @@
 class Unit < ApplicationRecord
+  include Ransackable
   has_many :chemistries
   has_many :measurement_items
   has_many :measurement_categories

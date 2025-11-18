@@ -1,4 +1,5 @@
 class Analysis < ApplicationRecord
+  include Ransackable
   include HasRecordProperty
   include HasViewSpot
   include HasAttachmentFile

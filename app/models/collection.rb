@@ -1,4 +1,5 @@
 class Collection < ApplicationRecord
+  include Ransackable
   include HasRecordProperty
   include HasAttachmentFile
 #  belongs_to :collectionmethod

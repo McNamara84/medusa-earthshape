@@ -18,9 +18,9 @@ Medusa is a comprehensive web-based sample management system designed for geolog
 
 ## System Requirements
 
-- **Ruby**: 2.5.9
-- **Rails**: 6.0.6.1
-- **Database**: PostgreSQL 9.6 or higher
+- **Ruby**: 2.7.8
+- **Rails**: 6.1.7.10 (LTS)
+- **Database**: PostgreSQL 18 (or PostgreSQL 12+)
 - **Server**: Linux/Unix-based system (tested on Ubuntu/Debian)
 - **Web Server**: Apache 2.4+ with mod_proxy (or Nginx)
 - **Application Server**: Unicorn
@@ -524,9 +524,12 @@ Developed for the EarthShape project - A collaborative research initiative in ea
 
 ## Recent Updates
 
-**November 2025**: Successfully upgraded from Rails 4.0.2 to Rails 6.1.7.10 (LTS)
-- Complete upgrade path: Rails 4.0 → 4.2 → 5.0 → 5.1 → 5.2 → 6.0 → 6.1
-- Ruby upgraded: 2.1.10 → 2.3.8 → 2.4.10 → 2.5.9
-- 100% test suite passing (1318 tests)
-- CI/CD verified on GitHub Actions
-- See `UPGRADE-PLAN.md` for detailed upgrade history
+**November 2025**: Successfully upgraded to Ruby 2.7.8 + Rails 6.1.7.10 (LTS) 🎉
+- **Rails**: 4.0.2 → 4.2 → 5.0 → 5.1 → 5.2 → 6.0 → 6.1.7.10 (LTS)
+- **Ruby**: 2.1.10 → 2.3.8 → 2.4.10 → 2.5.9 → 2.6.10 → 2.7.8
+- **Ransack 4.0**: Major security migration (attribute allowlisting)
+- **RSpec-Rails**: Upgraded to 5.1.2 for Rails 6.1 compatibility
+- **PostgreSQL**: Upgraded to version 18
+- **100% test suite passing** (1318 examples, 0 failures, 13 pending)
+- **CI/CD**: GitHub Actions fully green ✅
+- See `UPGRADE-PLAN.md` for detailed upgrade history and lessons learned

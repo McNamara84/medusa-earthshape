@@ -5,8 +5,8 @@ class VegetationsController < ApplicationController
   layout "admin_lab"
 
   def index
-    @search = Vegetation.search(params[:q]&.permit! || {})
-    @search.sorts = "updated_at ASC" if @search.sorts.empty?
+    @search = Vegetation.ransack(params[:q]&.permit! || {})
+    @search.sorts = ["updated_at ASC"] if @search.sorts.empty?
     @vegetations = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @vegetations
   end

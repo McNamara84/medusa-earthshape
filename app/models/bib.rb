@@ -1,4 +1,5 @@
 class Bib < ApplicationRecord
+  include Ransackable
   include HasRecordProperty
   include HasViewSpot
   include OutputPdf

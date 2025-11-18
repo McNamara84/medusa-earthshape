@@ -5,8 +5,8 @@ class LandusesController < ApplicationController
   layout "admin_lab"
 
   def index
-    @search = Landuse.search(params[:q]&.permit! || {})
-    @search.sorts = "updated_at ASC" if @search.sorts.empty?
+    @search = Landuse.ransack(params[:q]&.permit! || {})
+    @search.sorts = ["updated_at ASC"] if @search.sorts.empty?
     @landuses = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @landuses
   end

@@ -1,4 +1,5 @@
 class PreparationType < ApplicationRecord
+  include Ransackable
   has_many :children, class_name: "PreparationType", foreign_key: :parent_id
   belongs_to :parent, class_name: "PreparationType", foreign_key: :parent_id, optional: true
 

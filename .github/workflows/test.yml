@@ -86,9 +86,22 @@ jobs:
 
       - name: Run development migrations (for initializers)
         run: |
-          # Temporarily start web container to run migrations
-          docker compose run --rm -e RAILS_ENV=development web bundle exec rake db:migrate || echo "Development migration completed"
+          # Temporarily start web container to run migrations (skip entrypoint in CI)
+          docker compose run --rm --entrypoint "" -e RAILS_ENV=development web bundle exec rake db:migrate || echo "Development migration completed"
           echo "Development database setup completed"
+
+      - name: Create docker-compose override for CI
+        run: |
+          # Override entrypoint for CI to avoid permission issues with entrypoint script
+          # Alternative: Could modify docker-entrypoint.sh to detect CI environment and skip
+          # permission-sensitive operations, but explicit override is clearer for CI debugging
+          cat > docker-compose.override.yml << 'EOF'
+          services:
+            web:
+              entrypoint: []
+              command: bash -c "bundle check || bundle install --jobs 4 && rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
+          EOF
+          echo "Docker compose override created"
 
       - name: Start web service
         run: |

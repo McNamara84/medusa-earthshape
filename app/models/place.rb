@@ -1,4 +1,5 @@
 class Place < ApplicationRecord
+  include Ransackable
   include HasRecordProperty
   include OutputPdf
   include OutputCsv

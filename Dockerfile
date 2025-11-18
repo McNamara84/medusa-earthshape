@@ -1,12 +1,10 @@
-# Use Ruby 2.5.9 (last stable 2.5.x version)
-FROM ruby:2.5.9
+# Use Ruby 2.7.8 (last stable 2.7.x version)
+# Based on Debian Bullseye (11)
+FROM ruby:2.7.8
 
-# Fix Debian Buster repositories (EOL - moved to archive)
-RUN sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list && \
-    sed -i 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list && \
-    sed -i '/stretch-updates/d' /etc/apt/sources.list
+# Debian Bullseye repositories are still active (no archive fix needed)
 
-# Install system dependencies including PhantomJS from Debian repos
+# Install system dependencies (PhantomJS not available in Bullseye, but not needed for production)
 RUN apt-get update -qq && apt-get install -y \
     build-essential \
     libpq-dev \
@@ -16,20 +14,29 @@ RUN apt-get update -qq && apt-get install -y \
     libmagickwand-dev \
     git \
     xvfb \
-    phantomjs \
     && rm -rf /var/lib/apt/lists/*
+
+# Note: PhantomJS was removed in Debian Bullseye (available in Buster via phantomjs package)
+# Poltergeist tests (gem 'poltergeist', '~> 1.18.0') require PhantomJS to run
+# Options: 1) Install PhantomJS from archived builds (wget from phantomjs.org/download.html)
+#          2) Migrate to modern headless browser (Selenium + Chrome headless)
+#          3) Skip Poltergeist tests in environments without PhantomJS
+# Current: Poltergeist tests are skipped in CI (.rspec excludes spec/requests/*)
 
 # Set working directory
 WORKDIR /app
 
-# Install bundler 1.17.3 (compatible with Ruby 2.3-2.4)
-RUN gem install bundler -v '1.17.3'
+# Install bundler 2.3.22 (from Gemfile.lock BUNDLED WITH)
+# Requires RubyGems 3.3+ for pg gem 1.6+ native extension compatibility
+RUN gem update --system 3.3.22 && \
+    gem install bundler -v '2.3.22'
 
 # Copy Gemfile and Gemfile.lock
 COPY Gemfile Gemfile.lock ./
 
-# Install dependencies (Gemfile now has problematic gems commented out)
-RUN bundle config set --local without 'development test' && \
+# Install dependencies (including test gems for CI/CD)
+# Only exclude development group (IRB, debugging tools not needed in container)
+RUN bundle config set --local without 'development' && \
     bundle install --jobs 4 --retry 3
 
 # Copy the application code
@@ -54,9 +61,10 @@ RUN if [ -d "db/csvs" ] && [ "$(ls -A db/csvs/*.csv 2>/dev/null)" ]; then \
 # Precompile assets (will be done in entrypoint for development)
 # RUN RAILS_ENV=production bundle exec rake assets:precompile
 
-# Add entrypoint script
-COPY docker-entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/docker-entrypoint.sh
+# Make entrypoint script executable
+# The entrypoint is configured in docker-compose.yml (line 20), not in Dockerfile
+# CI uses docker-compose.override.yml to disable the entrypoint and avoid permission issues
+RUN chmod +x /app/docker-entrypoint.sh
 
 # Expose port 3000
 EXPOSE 3000

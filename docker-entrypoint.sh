@@ -1,7 +1,20 @@
 #!/bin/bash
 set -e
 
-# Start Xvfb (virtual display) for PhantomJS/Poltergeist tests
+# Ensure gems are installed (fixes volume mount override issue)
+# When ./app is mounted, bundled gems from image are not accessible
+# Run bundle check first, install only if needed
+echo "Checking bundle..."
+if ! bundle check > /dev/null 2>&1; then
+  echo "Installing missing gems..."
+  bundle install --jobs 4 --retry 3
+else
+  echo "Bundle check passed"
+fi
+
+# Start Xvfb (virtual display) for legacy Poltergeist tests
+# Note: PhantomJS is not available in Debian Bullseye (see Dockerfile lines 19-24)
+# Poltergeist tests are skipped in CI, but Xvfb is kept for local compatibility
 # Run in background and save PID for cleanup
 export DISPLAY=:99
 Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
@@ -41,8 +54,14 @@ TABLE_COUNT=$(bundle exec rails runner "puts ActiveRecord::Base.connection.table
 if [ "$TABLE_COUNT" = "0" ] || [ "$TABLE_COUNT" = "" ]; then
   echo "Database is empty, running setup..."
   
-  # Run database setup
-  bundle exec rake db:schema:load
+  # Create test database to prevent Rails 6.1 schema:load from failing
+  # (Rails 6.1 db:schema:load iterates all environments in database.yml)
+  echo "Creating development and test databases..."
+  bundle exec rake db:create RAILS_ENV=development 2>/dev/null || true
+  bundle exec rake db:create RAILS_ENV=test 2>/dev/null || true
+  
+  # Run database setup (only for development environment)
+  bundle exec rake db:schema:load RAILS_ENV=development
   
   # Run seeds to load CSV data and create admin user
   if [ -f "db/seeds.rb" ]; then

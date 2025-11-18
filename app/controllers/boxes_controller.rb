@@ -5,8 +5,8 @@ class BoxesController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @search = Box.readables(current_user).search(params[:q]&.permit! || {})
-    @search.sorts = "updated_at DESC" if @search.sorts.empty?
+    @search = Box.readables(current_user).ransack(params[:q]&.permit! || {})
+    @search.sorts = ["updated_at DESC"] if @search.sorts.empty?
     @boxes = @search.result.includes(:box_type).page(params[:page]).per(params[:per_page])
     respond_with @boxes
   end
