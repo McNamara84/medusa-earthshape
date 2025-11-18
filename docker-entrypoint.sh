@@ -52,8 +52,14 @@ TABLE_COUNT=$(bundle exec rails runner "puts ActiveRecord::Base.connection.table
 if [ "$TABLE_COUNT" = "0" ] || [ "$TABLE_COUNT" = "" ]; then
   echo "Database is empty, running setup..."
   
-  # Run database setup
-  bundle exec rake db:schema:load
+  # Create test database to prevent Rails 6.1 schema:load from failing
+  # (Rails 6.1 db:schema:load iterates all environments in database.yml)
+  echo "Creating development and test databases..."
+  bundle exec rake db:create RAILS_ENV=development 2>/dev/null || true
+  bundle exec rake db:create RAILS_ENV=test 2>/dev/null || true
+  
+  # Run database setup (only for development environment)
+  bundle exec rake db:schema:load RAILS_ENV=development
   
   # Run seeds to load CSV data and create admin user
   if [ -f "db/seeds.rb" ]; then
