@@ -52,7 +52,7 @@ fi
 if [ "$RAILS_ENV" = "production" ] && [ ! -d "public/assets" ]; then
   echo "Precompiling assets for production..."
   bundle exec rake assets:precompile
-  echo "âœ“ Assets precompiled"
+  echo "[OK] Assets precompiled"
 fi
 
 # Check if database needs setup
@@ -78,9 +78,9 @@ if [ "$TABLE_COUNT" = "0" ] || [ "$TABLE_COUNT" = "" ]; then
   if [ -f "db/seeds.rb" ]; then
     echo "Running database seeds (loading CSV data and creating admin user)..."
     if bundle exec rake db:seed; then
-      echo "âœ“ Database seeded successfully"
+      echo "[OK] Database seeded successfully"
     else
-      echo "âœ— Seeding failed, creating minimal admin user..."
+      echo "[ERROR] Seeding failed, creating minimal admin user..."
       # Fallback: Create admin user manually if seeding fails
       bundle exec rails runner "
         unless User.exists?(username: 'admin')
@@ -98,7 +98,7 @@ if [ "$TABLE_COUNT" = "0" ] || [ "$TABLE_COUNT" = "" ]; then
           admin_box.group = admin_group
           admin.box_id = admin_box.id
           admin.save!
-          puts 'âœ“ Admin user created: admin / admin123'
+          puts '[OK] Admin user created: admin / admin123'
         end
       "
     fi
