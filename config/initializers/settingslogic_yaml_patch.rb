@@ -6,6 +6,9 @@
 #
 # This patch overrides the initialize method to pass aliases: true
 # when loading YAML files that use anchors and aliases (like &defaults / *defaults)
+#
+# Note: This application requires Ruby 3.2.6+ (see Gemfile), so we use
+# YAML.safe_load with aliases: true for security and compatibility.
 
 if defined?(Settingslogic)
   class Settingslogic
@@ -17,20 +20,19 @@ if defined?(Settingslogic)
         # Original behavior for hash input
         original_initialize(hash_or_file, section)
       else
-        # File path - load with aliases enabled
+        # File path - load with aliases enabled using safe_load for security
         file_path = hash_or_file
         if File.exist?(file_path)
-          # Load YAML with aliases enabled for Ruby 3.1+ compatibility
           yaml_content = File.read(file_path)
-          hash = if RUBY_VERSION >= '3.1'
-                   YAML.safe_load(yaml_content, permitted_classes: [Symbol, Date, Time], aliases: true)
-                 else
-                   YAML.load(yaml_content)
-                 end
-          
+          hash = YAML.safe_load(
+            yaml_content,
+            permitted_classes: [Symbol, Date, Time],
+            aliases: true
+          )
+
           # Apply section/namespace if specified
           hash = hash[section] if section && hash.is_a?(Hash)
-          
+
           # Call original with the parsed hash
           self.replace(hash || {})
           @section = section
