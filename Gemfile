@@ -36,6 +36,9 @@ gem 'jquery-ui-rails'
 gem 'jbuilder', '~> 2.7'  # Updated for Rails 5.1 (Mime::JSON fix)
 #gem 'active_model_serializers'
 
+# Rails 7.0: respond_with was extracted to the responders gem
+gem 'responders', '~> 3.1'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
