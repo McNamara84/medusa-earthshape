@@ -287,6 +287,32 @@ describe "URI.escape patch for Ruby 3.0+ compatibility" do
       expect(URI.unescape(nil)).to eq("")
     end
 
+    # Plus sign handling is critical for URI vs form-data encoding.
+    # CGI.unescape treats '+' as space (form-data), but URI encoding (RFC 3986)
+    # treats '+' as a literal character. Only %2B should decode to '+'.
+    context "with plus signs (URI encoding vs form-data encoding)" do
+      it "preserves literal plus signs (does NOT convert to space)" do
+        # Unlike CGI.unescape, URI.unescape should keep '+' as '+'
+        expect(URI.unescape("/file+name.jpg")).to eq("/file+name.jpg")
+      end
+
+      it "preserves multiple plus signs" do
+        expect(URI.unescape("/C++_tutorial.pdf")).to eq("/C++_tutorial.pdf")
+      end
+
+      it "decodes %2B to plus sign" do
+        expect(URI.unescape("/file%2Bname.jpg")).to eq("/file+name.jpg")
+      end
+
+      it "handles mixed plus signs and encoded plus" do
+        expect(URI.unescape("/file+and%2Bmore.jpg")).to eq("/file+and+more.jpg")
+      end
+
+      it "handles plus signs with spaces" do
+        expect(URI.unescape("/file%20+%20name.jpg")).to eq("/file + name.jpg")
+      end
+    end
+
     it "is inverse of escape for simple cases" do
       original = "/path with spaces.jpg"
       expect(URI.unescape(URI.escape(original))).to eq(original)
@@ -294,6 +320,11 @@ describe "URI.escape patch for Ruby 3.0+ compatibility" do
 
     it "is inverse of escape for UTF-8" do
       original = "/tëst fïlé.jpg"
+      expect(URI.unescape(URI.escape(original))).to eq(original)
+    end
+
+    it "is inverse of escape for plus signs" do
+      original = "/file+plus+signs.jpg"
       expect(URI.unescape(URI.escape(original))).to eq(original)
     end
   end
@@ -305,7 +336,10 @@ describe "URI.escape patch for Ruby 3.0+ compatibility" do
         "/path with spaces.jpg",
         "/path/with<special>chars.jpg",
         "/Ümläut/日本語/中文.jpg",
-        "/mixed%20already encoded and spaces.jpg"
+        "/mixed%20already encoded and spaces.jpg",
+        "/file+plus.jpg",           # Plus sign handling
+        "/C++_code.cpp",            # Multiple plus signs
+        "/file + spaces + plus.jpg" # Plus signs with spaces
       ]
 
       test_strings.each do |original|

@@ -114,12 +114,22 @@ module URI
 
     # Provide URI.unescape for Ruby 3.0+ compatibility.
     #
+    # Note: We intentionally do NOT use CGI.unescape here because it treats
+    # '+' as a space (application/x-www-form-urlencoded encoding). In URI
+    # encoding (RFC 3986), '+' is a valid character that should remain as-is.
+    # Only %2B should decode to '+'.
+    #
+    # This is important for filenames containing plus signs, which are common
+    # (e.g., "file+v2.jpg", "C++_tutorial.pdf").
+    #
     # @param str [String] The string to unescape
     # @param _unsafe [Regexp] Unused, kept for API compatibility
     # @return [String] The unescaped string
     #
     def unescape(str, _unsafe = nil)
-      CGI.unescape(str.to_s)
+      str.to_s.gsub(PERCENT_ENCODED_PATTERN) do |match|
+        [match[1, 2].to_i(16)].pack('C')
+      end.force_encoding(Encoding::UTF_8)
     end
 
     private
