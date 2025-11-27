@@ -77,11 +77,19 @@ describe "URI.escape patch for Ruby 3.0+ compatibility" do
         expect(URI.escape("/file%20name%3Cwith%3Eencoding.jpg")).to eq("/file%20name%3Cwith%3Eencoding.jpg")
       end
 
-      it "preserves lowercase hex digits" do
+      # Note: %2f (lowercase) and %2F (uppercase) are both valid percent-encoded
+      # representations of the forward slash character '/'. When these appear in
+      # an input string, they are preserved as-is because:
+      # 1. They match the PERCENT_ENCODED_PATTERN (%XX where XX are hex digits)
+      # 2. Double-encoding would turn %2f into %252f, breaking the URL
+      #
+      # This is intentional: if the input contains %2f, we assume it was already
+      # encoded by a previous operation and should not be modified.
+      it "preserves lowercase hex digits in encoded sequences" do
         expect(URI.escape("/file%2fname.jpg")).to eq("/file%2fname.jpg")
       end
 
-      it "preserves uppercase hex digits" do
+      it "preserves uppercase hex digits in encoded sequences" do
         expect(URI.escape("/file%2Fname.jpg")).to eq("/file%2Fname.jpg")
       end
     end
@@ -174,14 +182,22 @@ describe "URI.escape patch for Ruby 3.0+ compatibility" do
         expect(URI.escape("   ")).to eq("%20%20%20")
       end
 
+      # Edge case: "%" not followed by two hex digits is NOT a valid percent-encoded
+      # sequence. The split pattern /%[0-9A-Fa-f]{2}/ won't match "%n", so it remains
+      # in a plain-text segment where "%" gets encoded to "%25".
       it "handles percent sign not followed by hex digits" do
         expect(URI.escape("/file%name.jpg")).to eq("/file%25name.jpg")
       end
 
+      # Edge case: "%2" has only one hex digit, not two. This doesn't match the
+      # PERCENT_ENCODED_PATTERN which requires exactly "%XX". The segment "%2"
+      # is treated as plain text, encoding "%" to "%25".
       it "handles percent sign followed by only one hex digit" do
         expect(URI.escape("/file%2.jpg")).to eq("/file%252.jpg")
       end
 
+      # Edge case: "%GH" has letters outside hex range (valid: 0-9, A-F, a-f).
+      # "G" and "H" are not valid hex digits, so this doesn't match the pattern.
       it "handles percent sign followed by non-hex characters" do
         expect(URI.escape("/file%GH.jpg")).to eq("/file%25GH.jpg")
       end
@@ -197,6 +213,51 @@ describe "URI.escape patch for Ruby 3.0+ compatibility" do
         # Custom pattern that also encodes forward slashes
         custom = /[^A-Za-z0-9\-._~]/
         expect(URI.escape("/path/to/file.jpg", custom)).to eq("%2Fpath%2Fto%2Ffile.jpg")
+      end
+    end
+
+    # Security-related tests
+    #
+    # IMPORTANT: This URI.escape patch preserves reserved URI characters (?, &, =, etc.)
+    # because Paperclip generates complete URLs that may include query strings.
+    # Filename sanitization is the responsibility of Paperclip's attachment processing
+    # or application-level validation BEFORE filenames reach URL generation.
+    #
+    # These tests document the expected behavior and security boundaries.
+    context "with security considerations (reserved characters in paths)" do
+      # This test documents that reserved characters are NOT encoded.
+      # Filename sanitization must happen before URL generation.
+      it "preserves query-like characters (security: relies on filename sanitization)" do
+        # A malicious filename like "file.jpg?inject=value" keeps ? and = unencoded
+        # Paperclip should sanitize filenames before they reach this point
+        path = "/system/files/file.jpg?query=value"
+        expect(URI.escape(path)).to eq(path)
+      end
+
+      it "preserves ampersand in paths (security: relies on filename sanitization)" do
+        path = "/system/files/file&name.jpg"
+        expect(URI.escape(path)).to eq(path)
+      end
+
+      # Path traversal sequences like "../" are preserved because "/" is a reserved
+      # character. Prevention of path traversal attacks is handled at the filesystem
+      # level by Paperclip's storage backend, not at URL encoding time.
+      it "preserves path traversal sequences (security: handled by storage backend)" do
+        path = "/system/files/../../../etc/passwd"
+        # Forward slashes and dots are preserved (reserved/unreserved chars)
+        expect(URI.escape(path)).to eq(path)
+      end
+
+      it "encodes null bytes (security: null byte injection prevention)" do
+        # Null bytes should be encoded to prevent null byte injection attacks
+        path = "/system/files/file\x00.jpg"
+        expect(URI.escape(path)).to eq("/system/files/file%00.jpg")
+      end
+
+      it "encodes backslash (security: Windows path injection prevention)" do
+        # Backslashes are encoded to prevent Windows-style path manipulation
+        path = "/system/files/..\\..\\etc\\passwd"
+        expect(URI.escape(path)).to eq("/system/files/..%5C..%5Cetc%5Cpasswd")
       end
     end
   end
