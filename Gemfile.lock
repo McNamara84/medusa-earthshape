@@ -141,8 +141,6 @@ GEM
     crass (1.0.6)
     crossref (0.0.4)
       nokogiri (>= 1.2.3)
-    datacite_doi_ify (1.1.0)
-      rest-client (~> 1.7)
     date (3.5.0)
     debug_inspector (1.2.0)
     devise (4.9.4)
@@ -194,6 +192,7 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
+    http-accept (1.7.0)
     http-cookie (1.1.0)
       domain_name (~> 0.5)
     i18n (1.14.7)
@@ -239,7 +238,10 @@ GEM
     marcel (1.1.0)
     matrix (0.4.3)
     method_source (1.1.0)
-    mime-types (2.99.3)
+    mime-types (3.7.0)
+      logger
+      mime-types-data (~> 3.2025, >= 3.2025.0507)
+    mime-types-data (3.2025.0924)
     mimemagic (0.3.10)
       nokogiri (~> 1)
       rake
@@ -361,10 +363,11 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
-    rest-client (1.8.0)
+    rest-client (2.1.0)
+      http-accept (>= 1.7.0, < 2.0)
       http-cookie (>= 1.0.2, < 2.0)
-      mime-types (>= 1.16, < 3.0)
-      netrc (~> 0.7)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     rexml (3.4.4)
     rqrcode (2.2.0)
       chunky_png (~> 1.0)
@@ -491,7 +494,6 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   comma
   crossref
-  datacite_doi_ify
   devise
   draper
   exception_notification
@@ -506,6 +508,7 @@ DEPENDENCIES
   kaminari
   listen (~> 3.3)
   loofah (~> 2.3.1)
+  mime-types (~> 3.5)
   mini_racer
   nokogiri (~> 1.10.10)
   paperclip
@@ -521,6 +524,7 @@ DEPENDENCIES
   rails-controller-testing
   rak
   ransack
+  rest-client (~> 2.1)
   rqrcode
   rspec-rails (~> 5.1.0)
   rspec_junit_formatter
