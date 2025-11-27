@@ -1,6 +1,6 @@
-# Use Ruby 2.7.8 (last stable 2.7.x version)
+# Use Ruby 3.0.6 (first Ruby 3.x version)
 # Based on Debian Bullseye (11)
-FROM ruby:2.7.8
+FROM ruby:3.0.6
 
 # Debian Bullseye repositories are still active (no archive fix needed)
 

@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.7.8'
+ruby '3.0.6'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -45,7 +45,14 @@ end
   gem 'crossref'
 
 #DataCite/IGSN
-  gem 'datacite_doi_ify'
+  # datacite_doi_ify requires rest-client ~> 1.7 which uses mime-types < 3.0
+  # mime-types 2.x is NOT compatible with Ruby 3.0 (_1, _2, _3 are reserved)
+  # Options:
+  # 1. Fork datacite_doi_ify and update dependencies
+  # 2. Use newer rest-client gem and override dependency
+  # gem 'datacite_doi_ify'
+  gem 'rest-client', '~> 2.1'  # Ruby 3.0 compatible (uses mime-types 3.x)
+  gem 'mime-types', '~> 3.5'   # Ruby 3.0 compatible
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'
