@@ -14,10 +14,6 @@ module AlchemistMedusaConfig
   def self.mark_registered!
     @@units_registered = true
   end
-
-  def self.reset!
-    @@units_registered = false
-  end
 end
 
 Rails.application.config.after_initialize do

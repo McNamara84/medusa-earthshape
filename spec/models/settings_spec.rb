@@ -29,8 +29,14 @@ describe Settings do
   # sufficient coverage for the Settings class configuration.
 
   describe ".barcode_type" do
-    let(:data){YAML.load_file(file_yaml, aliases: true)}
     let(:file_yaml){Rails.root.join("config", "application.yml").to_path}
+    let(:data) do
+      YAML.safe_load(
+        File.read(file_yaml),
+        permitted_classes: [Symbol, Date, Time],
+        aliases: true
+      )
+    end
     after do 
       data["defaults"]["barcode"]["type"] = "3D"
       File.open(file_yaml,"w"){|f| f.write data.to_yaml}
@@ -55,8 +61,14 @@ describe Settings do
   end
 
   describe ".barcode_prefix" do
-    let(:data){YAML.load_file(file_yaml, aliases: true)}
     let(:file_yaml){Rails.root.join("config", "application.yml").to_path}
+    let(:data) do
+      YAML.safe_load(
+        File.read(file_yaml),
+        permitted_classes: [Symbol, Date, Time],
+        aliases: true
+      )
+    end
     after do 
       data["defaults"]["barcode"]["prefix"] = nil
       File.open(file_yaml,"w"){|f| f.write data.to_yaml}

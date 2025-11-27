@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 # Patch Settingslogic to support YAML aliases in Ruby 3.1+
+#
+# IMPORTANT: This patch is specifically for settingslogic gem version 2.0.9
+# If the gem is updated, this patch should be reviewed and potentially removed
+# or updated to match the new gem's implementation.
+#
 # The settingslogic gem (2.0.9) uses YAML.load without aliases: true,
 # which causes Psych::AliasesNotEnabled errors with Ruby 3.1+
 #
@@ -13,6 +18,8 @@
 # in case future configs need them.
 #
 # Note: This application requires Ruby 3.2.6+ (see Gemfile)
+#
+# Reference: https://github.com/binarylogic/settingslogic/blob/v2.0.9/lib/settingslogic.rb
 
 if defined?(Settingslogic)
   class Settingslogic

@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   helper_method :adjust_url_by_requesting_tab
+  helper_method :safe_referer_url
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :authenticate_user!, :set_current_user
@@ -48,10 +49,35 @@ class ApplicationController < ActionController::Base
     @records_search = RecordProperty.ransack(params[:q]&.permit! || {})
   end
 
-  def adjust_url_by_requesting_tab(url)
+  def adjust_url_by_requesting_tab(url = nil)
+    # Use safe_referer_url if no URL provided or if the URL is request.referer
+    url = safe_referer_url if url.nil? || url == request.referer
     return url if params[:tab].blank?
     work_url = url.sub(/tab=.*&/,"").sub(/\?tab=.*/,"")
     work_url + (work_url.include?("?") ? "&" : "?") + "tab=#{params[:tab]}"
+  end
+
+  # Returns a safe referer URL that only allows redirects to the same host.
+  # This is used with respond_with to prevent open redirect vulnerabilities
+  # while maintaining the legacy pattern of redirecting to the referring page.
+  # Falls back to root_path if referer is missing or from a different host.
+  def safe_referer_url
+    referer = request.referer
+    return root_path if referer.blank?
+
+    begin
+      referer_uri = URI.parse(referer)
+      request_uri = URI.parse(request.url)
+
+      # Only allow same-host redirects
+      if referer_uri.host == request_uri.host
+        referer
+      else
+        root_path
+      end
+    rescue URI::InvalidURIError
+      root_path
+    end
   end
 
   protected
