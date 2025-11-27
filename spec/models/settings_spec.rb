@@ -15,7 +15,7 @@ describe Settings do
   end
 
   describe ".barcode_type" do
-    let(:data){YAML.load_file(file_yaml)}
+    let(:data){YAML.load_file(file_yaml, aliases: true)}
     let(:file_yaml){Rails.root.join("config", "application.yml").to_path}
     after do 
       data["defaults"]["barcode"]["type"] = "3D"
@@ -45,7 +45,7 @@ describe Settings do
   end
 
   describe ".barcode_prefix" do
-    let(:data){YAML.load_file(file_yaml)}
+    let(:data){YAML.load_file(file_yaml, aliases: true)}
     let(:file_yaml){Rails.root.join("config", "application.yml").to_path}
     after do 
       data["defaults"]["barcode"]["prefix"] = nil
