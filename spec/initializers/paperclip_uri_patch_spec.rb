@@ -104,7 +104,7 @@ describe "URI.escape patch for Ruby 3.0+ compatibility" do
       it "handles encoded sequences scattered throughout" do
         input = "a%20b c%20d e"
         expected = "a%20b%20c%20d%20e"
-        expect(URI.escape(input))
+        expect(URI.escape(input)).to eq(expected)
       end
     end
 
