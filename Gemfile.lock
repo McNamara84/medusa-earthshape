@@ -531,7 +531,7 @@ DEPENDENCIES
   pry-rails
   pry-stack_explorer
   puma (~> 5.6)
-  rails (~> 7.0.8)
+  rails (~> 7.0.10)
   rails-controller-testing
   rak
   ransack

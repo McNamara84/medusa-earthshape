@@ -4,14 +4,26 @@
 # The settingslogic gem (2.0.9) uses YAML.load without aliases: true,
 # which causes Psych::AliasesNotEnabled errors with Ruby 3.1+
 #
-# This patch overrides the initialize method to pass aliases: true
-# when loading YAML files that use anchors and aliases (like &defaults / *defaults)
-#
-# Note: This application requires Ruby 3.2.6+ (see Gemfile), so we use
+# This patch overrides both initialize and reload! methods to use
 # YAML.safe_load with aliases: true for security and compatibility.
+#
+# Permitted classes: The application.yml contains only basic types
+# (strings, integers, booleans, nil, hashes, arrays) which are allowed
+# by default in safe_load. Symbol, Date, and Time are added for safety
+# in case future configs need them.
+#
+# Note: This application requires Ruby 3.2.6+ (see Gemfile)
 
 if defined?(Settingslogic)
   class Settingslogic
+    class << self
+      # Override reload! to use our patched YAML loading
+      def reload!
+        @instance = nil
+        instance
+      end
+    end
+
     # Store original method
     alias_method :original_initialize, :initialize
 
@@ -33,7 +45,7 @@ if defined?(Settingslogic)
           # Apply section/namespace if specified
           hash = hash[section] if section && hash.is_a?(Hash)
 
-          # Call original with the parsed hash
+          # Initialize the hash-like structure
           self.replace(hash || {})
           @section = section
           create_accessors!
