@@ -543,7 +543,7 @@ DEPENDENCIES
   zeitwerk (~> 2.3.0)
 
 RUBY VERSION
-   ruby 3.1.6p260
+   ruby 3.2.6p234
 
 BUNDLED WITH
    2.3.22

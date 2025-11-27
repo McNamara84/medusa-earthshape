@@ -1,6 +1,6 @@
-# Use Ruby 3.1.6 (with YJIT support)
-# Based on Debian Bullseye (11)
-FROM ruby:3.1.6
+# Use Ruby 3.2.6 (with improved YJIT and WASI support)
+# Based on Debian Bookworm (12)
+FROM ruby:3.2.6
 
 # Debian Bullseye repositories are still active (no archive fix needed)
 
