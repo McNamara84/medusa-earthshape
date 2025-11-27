@@ -18,7 +18,7 @@ Medusa is a comprehensive web-based sample management system designed for geolog
 
 ## System Requirements
 
-- **Ruby**: 3.1.6
+- **Ruby**: 3.2.6
 - **Rails**: 6.1.7.10 (LTS)
 - **Database**: PostgreSQL 18 (or PostgreSQL 12+)
 - **Server**: Linux/Unix-based system (tested on Ubuntu/Debian)
@@ -242,7 +242,7 @@ stdout_path "/srv/app/medusa/shared/log/unicorn.log"
 
 before_fork do |server, worker|
   old_pid = "#{server.config[:pid]}.oldbin"
-  if File.exists?(old_pid) && server.pid != old_pid
+  if File.exist?(old_pid) && server.pid != old_pid
     begin
       Process.kill("QUIT", File.read(old_pid).to_i)
     rescue Errno::ENOENT, Errno::ESRCH

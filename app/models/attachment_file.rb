@@ -36,7 +36,7 @@ class AttachmentFile < ApplicationRecord
   validates :filetopic, presence: true
 
   def path(style = :original)
-    File.exists?(data.path(style)) ? data.url(style) : data.url(:original)
+    File.exist?(data.path(style)) ? data.url(style) : data.url(:original)
   end
 
   def as_json(options = {})
