@@ -535,6 +535,7 @@ DEPENDENCIES
   rails-controller-testing
   rak
   ransack
+  responders (~> 3.1)
   rest-client (~> 2.1)
   rqrcode
   rspec-rails (~> 5.1.0)
