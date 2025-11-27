@@ -3,23 +3,23 @@ ruby '3.2.6'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1.7', '>= 6.1.7.10'  # Upgraded to Rails 6.1 LTS version (latest: 6.1.7.10)
+gem 'rails', '~> 7.0.8'  # Upgraded to Rails 7.0 (latest: 7.0.8.6)
 gem 'nokogiri', '~> 1.16'  # Ruby 3.1+ requires nokogiri 1.13+ (upgraded from 1.10.10)
 gem 'loofah', '~> 2.22'  # Updated for nokogiri 1.16+ compatibility (upgraded from 2.3.1)
-gem 'psych', '~> 3.3.0'  # Lock to version 3.x for mini_racer compatibility (4.x+ have safe_load issues with libv8-node)
-gem 'zeitwerk', '~> 2.3.0'  # Rails 6.0 autoloader - lock to 2.3.x for compatibility
+# gem 'psych', '~> 3.3.0'  # Removed - Rails 7.0 uses Psych 4.x natively
+# gem 'zeitwerk', '~> 2.3.0'  # Removed - Rails 7.0 bundles Zeitwerk 2.6+
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.6'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'  # Updated for Rails 4.2
+gem 'sassc-rails'  # Rails 7.0: sass-rails replaced with sassc-rails
 
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+# Use Terser as compressor for JavaScript assets (Rails 7.0)
+gem 'terser'  # Rails 7.0: Replaces uglifier
 
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.2'  # Updated for Rails 5.1 compatibility
+gem 'coffee-rails', '~> 5.0'  # Rails 7.0 compatible
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby  # Incompatible with Ruby 2.4+
@@ -70,7 +70,7 @@ gem 'puma', '~> 5.6'  # Lock to 5.x for Capybara 3.35.3 compatibility (6.x chang
 # gem 'debugger', group: [:development, :test]
 
 gem 'devise'
-gem 'cancancan', '~> 1.10'  # Rails 5.1: Replaced cancan with cancancan (maintained fork)
+gem 'cancancan', '~> 3.5'  # Rails 7.0: Updated to 3.x (1.x deprecated)
 gem 'kaminari'
 gem 'draper'
 gem 'paperclip'
@@ -82,7 +82,7 @@ gem 'geonames'
 gem 'rubyzip'
 #gem 'oai'
 gem 'comma'
-gem 'acts-as-taggable-on', '~> 9.0'  # Rails 6.1 compatible, Ruby 2.5+ (v9.0 supports Rails 5.0-6.1)
+gem 'acts-as-taggable-on', '~> 10.0'  # Rails 7.0 compatible (v10.0+ supports Rails 6.1-7.x)
 gem 'exception_notification'
 gem 'settingslogic'
 # gem 'validates_existence'  # Rails 5.1: Removed - incompatible with Rails 5.1+ (belongs_to validation now built-in)
