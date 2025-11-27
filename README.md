@@ -18,7 +18,7 @@ Medusa is a comprehensive web-based sample management system designed for geolog
 
 ## System Requirements
 
-- **Ruby**: 2.7.8
+- **Ruby**: 3.1.6
 - **Rails**: 6.1.7.10 (LTS)
 - **Database**: PostgreSQL 18 (or PostgreSQL 12+)
 - **Server**: Linux/Unix-based system (tested on Ubuntu/Debian)

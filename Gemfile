@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
-ruby '3.0.6'
+ruby '3.1.6'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.1.7', '>= 6.1.7.10'  # Upgraded to Rails 6.1 LTS version (latest: 6.1.7.10)
-gem 'nokogiri', '~> 1.10.10'  # Locked for loofah 2.3.1 compatibility - can upgrade to 1.16+ with loofah 2.22+ in future
-gem 'loofah', '~> 2.3.1'  # Lock to older version compatible with nokogiri 1.10
+gem 'nokogiri', '~> 1.16'  # Ruby 3.1+ requires nokogiri 1.13+ (upgraded from 1.10.10)
+gem 'loofah', '~> 2.22'  # Updated for nokogiri 1.16+ compatibility (upgraded from 2.3.1)
 gem 'psych', '~> 3.3.0'  # Lock to version 3.x for mini_racer compatibility (4.x+ have safe_load issues with libv8-node)
 gem 'zeitwerk', '~> 2.3.0'  # Rails 6.0 autoloader - lock to 2.3.x for compatibility
 
