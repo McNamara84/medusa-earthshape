@@ -61,15 +61,23 @@ class ApplicationController < ActionController::Base
   # This is used with respond_with to prevent open redirect vulnerabilities
   # while maintaining the legacy pattern of redirecting to the referring page.
   # Falls back to root_path if referer is missing or from a different host.
+  #
+  # Accepts:
+  # - Same-host absolute URLs (e.g., "http://example.com/path")
+  # - Relative URLs (e.g., "/path" or "path") - implicitly same-host
+  # - URLs without host - treated as same-host
   def safe_referer_url
     referer = request.referer
     return root_path if referer.blank?
 
     begin
       referer_uri = URI.parse(referer)
+      
+      # Allow relative URLs (no host means same-host)
+      return referer if referer_uri.host.nil?
+      
+      # For absolute URLs, verify same host
       request_uri = URI.parse(request.url)
-
-      # Only allow same-host redirects
       if referer_uri.host == request_uri.host
         referer
       else
