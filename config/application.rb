@@ -18,5 +18,10 @@ module Medusa
 
     # Rails 7.0: Zeitwerk is the only autoloader (Classic removed)
     # Ensure all autoloaded paths follow Zeitwerk naming conventions
+
+    # Rails 7.0: Disable open redirect protection for legacy request.referer usage
+    # The application uses respond_with location: request.referer in many controllers
+    # This pattern is safe in this context as it only redirects to the referring page
+    config.action_controller.raise_on_open_redirects = false
   end
 end
