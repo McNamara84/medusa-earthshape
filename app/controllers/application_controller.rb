@@ -49,9 +49,7 @@ class ApplicationController < ActionController::Base
     @records_search = RecordProperty.ransack(params[:q]&.permit! || {})
   end
 
-  def adjust_url_by_requesting_tab(url = nil)
-    # Use safe_referer_url if no URL provided or if the URL is request.referer
-    url = safe_referer_url if url.nil? || url == request.referer
+  def adjust_url_by_requesting_tab(url)
     return url if params[:tab].blank?
     work_url = url.sub(/tab=.*&/,"").sub(/\?tab=.*/,"")
     work_url + (work_url.include?("?") ? "&" : "?") + "tab=#{params[:tab]}"
