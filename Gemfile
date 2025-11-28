@@ -3,11 +3,11 @@ ruby '3.2.6'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.0.10'  # Upgraded to Rails 7.0
+gem 'rails', '~> 7.1.0'  # Upgraded to Rails 7.1.6
 gem 'nokogiri', '~> 1.16'  # Ruby 3.1+ requires nokogiri 1.13+ (upgraded from 1.10.10)
 gem 'loofah', '~> 2.22'  # Updated for nokogiri 1.16+ compatibility (upgraded from 2.3.1)
-# gem 'psych', '~> 3.3.0'  # Removed - Rails 7.0 uses Psych 4.x natively
-# gem 'zeitwerk', '~> 2.3.0'  # Removed - Rails 7.0 bundles Zeitwerk 2.6+
+# gem 'psych', '~> 3.3.0'  # Removed - Rails 7.0+ uses Psych 4.x natively
+# gem 'zeitwerk', '~> 2.3.0'  # Removed - Rails 7.0+ bundles Zeitwerk 2.6+
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.6'
@@ -63,8 +63,8 @@ end
 # Use unicorn as the app server
 gem 'unicorn'
 
-# Use puma for Capybara request specs (Rails 5.1+ default)
-gem 'puma', '~> 5.6'  # Lock to 5.x for Capybara 3.35.3 compatibility (6.x changed Events API)
+# Use puma for Capybara request specs (Rails 7.1 requires Puma 6+ for Rack 3)
+gem 'puma', '~> 6.0'  # Rails 7.1 uses Rack 3 which requires Puma 6+
 
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
@@ -109,7 +109,7 @@ group :development, :test do
   gem 'pry-doc'
   gem 'pry-stack_explorer'
   gem 'pry-byebug'
-  gem 'rspec-rails', '~> 5.1.0'  # Rails 6.1 requires RSpec-Rails 5.x (4.x not compatible)
+  gem 'rspec-rails', '~> 6.1.0'  # Rails 7.1 requires RSpec-Rails 6.x
   gem 'rails-controller-testing'  # Required for Rails 5.0+ (assigns, assert_template)
   gem 'spring', '~> 2.1.0'  # Lock to version compatible with Ruby 2.5 (v4+ requires Ruby 2.7+)
   gem 'guard-rspec', '>= 4.7.3', require: false  # Updated to support RSpec 3.9+

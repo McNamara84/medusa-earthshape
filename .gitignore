@@ -35,6 +35,7 @@ db_dump
 
 # Docker
 .env
+.env.prod
 docker-compose.override.yml
 
 # Editor and IDE

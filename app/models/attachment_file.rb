@@ -30,7 +30,8 @@ class AttachmentFile < ApplicationRecord
   attr_accessor :path
   after_post_process :save_geometry
 
-  serialize :affine_matrix, Array
+  # Rails 7.1+: serialize requires explicit coder argument
+  serialize :affine_matrix, type: Array, coder: YAML
 
   validates :data, presence: true
   validates :filetopic, presence: true
