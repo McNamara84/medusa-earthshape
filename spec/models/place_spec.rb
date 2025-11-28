@@ -14,22 +14,22 @@ describe Place do
   end
 
   describe "#analyses" do
-    let(:obj){FactoryGirl.create(:place) }
-    let(:stone_1) { FactoryGirl.create(:stone, name: "hoge", place_id: obj.id) }
-    let(:stone_2) { FactoryGirl.create(:stone, name: "stone_2", place_id: obj.id) }
-    let(:stone_3) { FactoryGirl.create(:stone, name: "stone_3", place_id: obj.id) }
+    let(:obj){FactoryBot.create(:place) }
+    let(:stone_1) { FactoryBot.create(:stone, name: "hoge", place_id: obj.id) }
+    let(:stone_2) { FactoryBot.create(:stone, name: "stone_2", place_id: obj.id) }
+    let(:stone_3) { FactoryBot.create(:stone, name: "stone_3", place_id: obj.id) }
     let(:analysis_1) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_1
       analysis
     end
     let(:analysis_2) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_2
       analysis
     end
     let(:analysis_3) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_3
       analysis
     end
@@ -47,7 +47,7 @@ describe Place do
       it { expect(subject).to be_nil }
     end
     context "file is present" do
-      let(:parent_place) { FactoryGirl.create(:place, is_parent: true) }
+      let(:parent_place) { FactoryBot.create(:place, is_parent: true) }
       let(:file) { double(:file) }
       before do
         parent_place # Ensure parent exists before import
@@ -90,7 +90,7 @@ describe Place do
 
  describe "validates" do
     describe "name" do
-      let(:obj) { FactoryGirl.build(:place, name: name) }
+      let(:obj) { FactoryBot.build(:place, name: name) }
       context "is presence" do
         let(:name) { "sample_obj_name" }
         it { expect(obj).to be_valid }

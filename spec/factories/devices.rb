@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :device do
     sequence(:name) { |n| "EPMA_#{n}" }
   end

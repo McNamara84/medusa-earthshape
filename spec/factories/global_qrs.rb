@@ -1,10 +1,10 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :global_qr do
     association :record_property, factory: :record_property
-    file_name "ファイル名１"
-    content_type "コンテンツタイプ１"
-    file_size 12345
+    file_name { "ファイル名１" }
+    content_type { "コンテンツタイプ１" }
+    file_size { 12345 }
     file_updated_at { DateTime.now }
-    identifier 1
+    identifier { 1 }
   end
 end

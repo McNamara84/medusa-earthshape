@@ -1,16 +1,16 @@
 require 'spec_helper'
 
-# FIXME: Rails 5.2 - Controller specs with FactoryGirl nested associations hang indefinitely
-# Problem: Multiple before blocks evaluating let variables with nested FactoryGirl.create
+# FIXME: Rails 5.2 - Controller specs with FactoryBot nested associations hang indefinitely
+# Problem: Multiple before blocks evaluating let variables with nested FactoryBot.create
 # causes deadlock in Rails 5.2. Issue tracked for Rails 6.0 upgrade.
 # Skipped: 2025-11-16
 # Testing 2025-11-16: Re-enable after HasRecordProperty fix
 describe NestedResources::SpotsController do
   let(:parent_name){:attachment_file}
   let(:child_name){:spot}
-  let(:parent) { FactoryGirl.create(parent_name) }
-  let(:child) { FactoryGirl.create(child_name) }
-  let(:user) { FactoryGirl.create(:user) }
+  let(:parent) { FactoryBot.create(parent_name) }
+  let(:child) { FactoryBot.create(child_name) }
+  let(:user) { FactoryBot.create(:user) }
   let(:url){"where_i_came_from"}
   let(:spot_x){1}
   let(:attributes) { {spot_x: spot_x,spot_y: 0} }

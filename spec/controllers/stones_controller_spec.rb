@@ -2,25 +2,25 @@ require 'spec_helper'
 include ActionDispatch::TestProcess
 
 describe StonesController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "GET index" do
-    let(:stone_1) { FactoryGirl.create(:stone, name: "hoge") }
-    let(:stone_2) { FactoryGirl.create(:stone, name: "stone_2") }
-    let(:stone_3) { FactoryGirl.create(:stone, name: "stone_3") }
+    let(:stone_1) { FactoryBot.create(:stone, name: "hoge") }
+    let(:stone_2) { FactoryBot.create(:stone, name: "stone_2") }
+    let(:stone_3) { FactoryBot.create(:stone, name: "stone_3") }
     let(:analysis_1) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_1
       analysis
     end
     let(:analysis_2) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_2
       analysis
     end
     let(:analysis_3) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_3
       analysis
     end
@@ -54,19 +54,19 @@ describe StonesController do
   end
   
   describe "GET show", :current => true do
-    let(:stone) { FactoryGirl.create(:stone) }
+    let(:stone) { FactoryBot.create(:stone) }
     let(:analysis_1) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone
       analysis
     end
     let(:analysis_2) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone
       analysis
     end
     let(:analysis_3) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone
       analysis
     end
@@ -91,18 +91,18 @@ describe StonesController do
   end
   
   describe "GET edit" do
-    let(:stone) { FactoryGirl.create(:stone) }
+    let(:stone) { FactoryBot.create(:stone) }
     before { get :edit, params: {id: stone.id} }
     it { expect(assigns(:stone)).to eq stone }
   end
   
   describe "POST create" do
-    let(:place) { FactoryGirl.create(:place) }
-    let(:box) { FactoryGirl.create(:box) }
-    let(:collection) { FactoryGirl.create(:collection) }
-    let(:stonecontainer_type) { FactoryGirl.create(:stonecontainer_type) }
-    let(:classification) { FactoryGirl.create(:classification) }
-    let(:physical_form) { FactoryGirl.create(:physical_form) }
+    let(:place) { FactoryBot.create(:place) }
+    let(:box) { FactoryBot.create(:box) }
+    let(:collection) { FactoryBot.create(:collection) }
+    let(:stonecontainer_type) { FactoryBot.create(:stonecontainer_type) }
+    let(:classification) { FactoryBot.create(:classification) }
+    let(:physical_form) { FactoryBot.create(:physical_form) }
     let(:attributes) do
       {
         name: "stone_name",
@@ -129,7 +129,7 @@ describe StonesController do
     before do
       stone
     end
-    let(:stone) { FactoryGirl.create(:stone) }
+    let(:stone) { FactoryBot.create(:stone) }
     let(:attributes) { {name: "update_name"} }
     context "witout format" do
       before { put :update, params: {id: stone.id, stone:attributes} }
@@ -139,39 +139,39 @@ describe StonesController do
   end
 
   describe "DELETE destroy" do
-    let(:stone) { FactoryGirl.create(:stone) }
+    let(:stone) { FactoryBot.create(:stone) }
     before { stone }
     it { expect { delete :destroy, params: {id: stone.id} }.to change(Stone, :count).by(-1) }
   end
   
   describe "GET family" do
-    let(:stone) { FactoryGirl.create(:stone) }
+    let(:stone) { FactoryBot.create(:stone) }
     before { get :family, params: {id: stone.id} }
     it { expect(assigns(:stone)).to eq stone }
   end
   
   describe "GET picture" do
-    let(:stone) { FactoryGirl.create(:stone) }
+    let(:stone) { FactoryBot.create(:stone) }
     before { get :picture, params: {id: stone.id} }
     it { expect(assigns(:stone)).to eq stone }
   end
   
   describe "GET map" do
-    let(:stone) { FactoryGirl.create(:stone) }
+    let(:stone) { FactoryBot.create(:stone) }
     before { get :map, params: {id: stone.id} }
     it { expect(assigns(:stone)).to eq stone }
   end
   
   describe "GET property" do
-    let(:stone) { FactoryGirl.create(:stone) }
+    let(:stone) { FactoryBot.create(:stone) }
     before { get :property, params: {id: stone.id} }
     it { expect(assigns(:stone)).to eq stone }
   end
 
   describe "POST bundle_edit" do
-    let(:obj1) { FactoryGirl.create(:stone, name: "obj1") }
-    let(:obj2) { FactoryGirl.create(:stone, name: "obj2") }
-    let(:obj3) { FactoryGirl.create(:stone, name: "obj3") }
+    let(:obj1) { FactoryBot.create(:stone, name: "obj1") }
+    let(:obj2) { FactoryBot.create(:stone, name: "obj2") }
+    let(:obj3) { FactoryBot.create(:stone, name: "obj3") }
     let(:ids){[obj1.id,obj2.id]}
     before do
       obj1
@@ -186,9 +186,9 @@ describe StonesController do
 
   describe "POST bundle_update" do
     let(:obj3name){"obj3"}
-    let(:obj1) { FactoryGirl.create(:stone, name: "obj1") }
-    let(:obj2) { FactoryGirl.create(:stone, name: "obj2") }
-    let(:obj3) { FactoryGirl.create(:stone, name: obj3name) }
+    let(:obj1) { FactoryBot.create(:stone, name: "obj1") }
+    let(:obj2) { FactoryBot.create(:stone, name: "obj2") }
+    let(:obj3) { FactoryBot.create(:stone, name: obj3name) }
     let(:attributes) { {name: "update_name"} }
     let(:ids){[obj1.id,obj2.id]}
     before do
@@ -208,7 +208,7 @@ describe StonesController do
   # send_data test returns unexpected object.
   pending "GET download_card" do
     after { get :download_card, params: {id: stone.id} }
-    let(:stone) { FactoryGirl.create(:stone) }
+    let(:stone) { FactoryBot.create(:stone) }
     before do
       stone
       allow(stone).to receive(:build_card).and_return(double(:report))
@@ -225,7 +225,7 @@ describe StonesController do
   # send_data test returns unexpected object.
   pending "GET download_label" do
     after { get :download_label, params: {id: stone.id} }
-    let(:stone) { FactoryGirl.create(:stone) }
+    let(:stone) { FactoryBot.create(:stone) }
     before do
       stone
       allow(stone).to receive(:build_label).and_return(double(:build_label))
@@ -235,7 +235,7 @@ describe StonesController do
   end
   
   describe "download_bundle_label" do
-    let(:stone) { FactoryGirl.create(:stone) }
+    let(:stone) { FactoryBot.create(:stone) }
     let(:params_ids) { [stone.id.to_s] }
     let(:label) { double(:label) }
     let(:stones) { Stone.all }

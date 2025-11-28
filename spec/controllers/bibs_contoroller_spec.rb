@@ -2,13 +2,13 @@ require 'spec_helper'
 include ActionDispatch::TestProcess
 
 describe BibsController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "GET index" do
-    let(:bib_1) { FactoryGirl.create(:bib, name: "hoge") }
-    let(:bib_2) { FactoryGirl.create(:bib, name: "bib_2") }
-    let(:bib_3) { FactoryGirl.create(:bib, name: "bib_3") }
+    let(:bib_1) { FactoryBot.create(:bib, name: "hoge") }
+    let(:bib_2) { FactoryBot.create(:bib, name: "bib_2") }
+    let(:bib_3) { FactoryBot.create(:bib, name: "bib_3") }
     before do
       bib_1;bib_2;bib_3
       get :index
@@ -18,13 +18,13 @@ describe BibsController do
   end
   
   describe "GET show" do
-    let(:bib) { FactoryGirl.create(:bib) }
+    let(:bib) { FactoryBot.create(:bib) }
     before { get :show, params: {id: bib.id} }
     it{ expect(assigns(:bib)).to eq bib }
   end
   
   describe "GET edit" do
-    let(:bib) { FactoryGirl.create(:bib) }
+    let(:bib) { FactoryBot.create(:bib) }
     before { get :edit, params: {id: bib.id} }
     it{ expect(assigns(:bib)).to eq bib }
   end
@@ -33,7 +33,7 @@ describe BibsController do
     describe "with valid attributes" do
       # doi parameter is required (controller checks doi.empty? without nil check)
       let(:attributes) { {name: "bib_name", author_ids: ["#{author_id}"], doi: ""} }
-      let(:author_id) { FactoryGirl.create(:author, name: "name_1").id }
+      let(:author_id) { FactoryBot.create(:author, name: "name_1").id }
       it { expect { post :create, params: {bib: attributes} }.to change(Bib, :count).by(1) }
       it "assigns a newly created bib as @bib" do
         post :create, params: {bib: attributes}
@@ -58,34 +58,34 @@ describe BibsController do
       bib
       put :update, params: {id: bib.id, bib: attributes}
     end
-    let(:bib) { FactoryGirl.create(:bib) }
+    let(:bib) { FactoryBot.create(:bib) }
     let(:attributes) { {name: "update_name"} }
     it { expect(assigns(:bib)).to eq bib }
     it { expect(assigns(:bib).name).to eq attributes[:name] }
   end
   
   describe "DELETE destroy" do
-    let(:bib) { FactoryGirl.create(:bib) }
+    let(:bib) { FactoryBot.create(:bib) }
     before { bib }
     it { expect { delete :destroy, params: {id: bib.id} }.to change(Bib, :count).by(-1) }
   end
   
   describe "GET picture" do
-    let(:bib) { FactoryGirl.create(:bib) }
+    let(:bib) { FactoryBot.create(:bib) }
     before { get :picture, params: {id: bib.id} }
     it { expect(assigns(:bib)).to eq bib }
   end
   
   describe "GET property" do
-    let(:bib) { FactoryGirl.create(:bib) }
+    let(:bib) { FactoryBot.create(:bib) }
     before { get :property, params: {id: bib.id} }
     it { expect(assigns(:bib)).to eq bib }
   end
 
   describe "POST bundle_edit" do
-    let(:obj1) { FactoryGirl.create(:bib, name: "obj1") }
-    let(:obj2) { FactoryGirl.create(:bib, name: "obj2") }
-    let(:obj3) { FactoryGirl.create(:bib, name: "obj3") }
+    let(:obj1) { FactoryBot.create(:bib, name: "obj1") }
+    let(:obj2) { FactoryBot.create(:bib, name: "obj2") }
+    let(:obj3) { FactoryBot.create(:bib, name: "obj3") }
     let(:ids){[obj1.id,obj2.id]}
     before do
       obj1
@@ -100,9 +100,9 @@ describe BibsController do
 
   describe "POST bundle_update" do
     let(:obj3name){"obj3"}
-    let(:obj1) { FactoryGirl.create(:bib, name: "obj1") }
-    let(:obj2) { FactoryGirl.create(:bib, name: "obj2") }
-    let(:obj3) { FactoryGirl.create(:bib, name: obj3name) }
+    let(:obj1) { FactoryBot.create(:bib, name: "obj1") }
+    let(:obj2) { FactoryBot.create(:bib, name: "obj2") }
+    let(:obj3) { FactoryBot.create(:bib, name: obj3name) }
     let(:attributes) { {name: "update_name"} }
     let(:ids){[obj1.id,obj2.id]}
     before do
@@ -120,7 +120,7 @@ describe BibsController do
   end
   
   describe "GET download_to_tex" do
-    let(:bib) { FactoryGirl.create(:bib) }
+    let(:bib) { FactoryBot.create(:bib) }
     let(:params_ids) { [bib.id.to_s] }
     let(:tex) { double(:tex) }
     before do

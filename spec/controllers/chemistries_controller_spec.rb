@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe ChemistriesController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
   
   describe "GET edit" do
-    let(:obj) { FactoryGirl.create(:chemistry) }
+    let(:obj) { FactoryBot.create(:chemistry) }
     before do
       get :edit, params: {id: obj.id}, format: :html
     end
@@ -13,7 +13,7 @@ describe ChemistriesController do
   end
   
   describe "PUT update" do
-    let(:obj) { FactoryGirl.create(:chemistry, description: "chemistry") }
+    let(:obj) { FactoryBot.create(:chemistry, description: "chemistry") }
     before do
       put :update, params: {id: obj.id, chemistry: attributes}
     end

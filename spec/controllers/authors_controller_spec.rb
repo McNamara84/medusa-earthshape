@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe AuthorsController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
   
   describe "GET index" do
-    let(:author_1) { FactoryGirl.create(:author, name: "hoge") }
-    let(:author_2) { FactoryGirl.create(:author, name: "author_2") }
-    let(:author_3) { FactoryGirl.create(:author, name: "author_3") }
+    let(:author_1) { FactoryBot.create(:author, name: "hoge") }
+    let(:author_2) { FactoryBot.create(:author, name: "author_2") }
+    let(:author_3) { FactoryBot.create(:author, name: "author_3") }
     let(:params) { {q: query, page: 2, per_page: 1} }
     before do
       author_1;author_2;author_3
@@ -25,7 +25,7 @@ describe AuthorsController do
   
   # This "GET show" has no html.
   describe "GET show" do
-    let(:author) { FactoryGirl.create(:author) }
+    let(:author) { FactoryBot.create(:author) }
     before do
       author
       get :show, params: {id: author.id}, format: :json
@@ -34,7 +34,7 @@ describe AuthorsController do
   end
 
   describe "GET edit" do
-    let(:author) { FactoryGirl.create(:author) }
+    let(:author) { FactoryBot.create(:author) }
     before do
       author
       get :edit, params: {id: author.id}
@@ -65,7 +65,7 @@ describe AuthorsController do
   end
   
   describe "PUT update" do
-    let(:author) { FactoryGirl.create(:author, name: "author") }
+    let(:author) { FactoryBot.create(:author, name: "author") }
     before do
       author
       put :update, params: {id: author.id, author: attributes}
@@ -86,7 +86,7 @@ describe AuthorsController do
   end
   
   describe "DELETE destroy" do
-    let(:author) { FactoryGirl.create(:author, name: "author") }
+    let(:author) { FactoryBot.create(:author, name: "author") }
     before { author }
     it { expect { delete :destroy, params: {id: author.id} }.to change(Author, :count).by(-1) }
   end

@@ -4,11 +4,11 @@ include ActionDispatch::TestProcess
 describe NestedResources::AttachmentFilesController do
   let(:parent_name){:bib}
   let(:child_name){:attachment_file}
-  let(:parent) { FactoryGirl.create(parent_name) }
-  let(:child) { FactoryGirl.create(child_name) }
-  let(:user) { FactoryGirl.create(:user) }
+  let(:parent) { FactoryBot.create(parent_name) }
+  let(:child) { FactoryBot.create(child_name) }
+  let(:user) { FactoryBot.create(:user) }
   let(:url){"where_i_came_from"}
-  let(:filetopic) { FactoryGirl.create(:filetopic) }
+  let(:filetopic) { FactoryBot.create(:filetopic) }
   let(:attributes) { {data: data, filetopic_id: filetopic.id} }
   let(:data){ Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg'), 'image/jpeg') }
   before { request.env["HTTP_REFERER"]  = url }

@@ -2,8 +2,8 @@ require 'spec_helper'
 include ActionDispatch::TestProcess
 
 describe AttachmentFileDecorator do
-  let(:user){ FactoryGirl.create(:user)}
-  let(:attachment_file){FactoryGirl.create(:attachment_file).decorate}
+  let(:user){ FactoryBot.create(:user)}
+  let(:attachment_file){FactoryBot.create(:attachment_file).decorate}
   before{User.current = user}
 
   describe ".picture" do
@@ -39,12 +39,12 @@ describe AttachmentFileDecorator do
     let(:img) { body.find("img") }
     it { expect(body).to have_css("a") }
     context "file is image" do
-      before { attachment_file.stub(:image?).and_return(true) }
+      before { allow(attachment_file).to receive(:image?).and_return(true) }
       it { expect(link).to have_css("img") }
       it { expect(link).to_not have_css("span.glyphicon") }
     end
     context "file is not image" do
-      before { attachment_file.stub(:image?).and_return(false) }
+      before { allow(attachment_file).to receive(:image?).and_return(false) }
       it { expect(link).to_not have_css("img") }
       it { expect(link).to have_css("span.glyphicon") }
     end
@@ -59,7 +59,7 @@ describe AttachmentFileDecorator do
       it {expect(subject).not_to include "{\\footnotesize \\circle{0.7} \\url{"}
     end
     context "spots is not empty " do
-      let(:spot){FactoryGirl.create(:spot)}
+      let(:spot){FactoryBot.create(:spot)}
       before{attachment_file.spots << spot }
       it {expect(subject).to include "{\\footnotesize \\circle{0.7} \\url{"}
       context "target_uid is empty" do

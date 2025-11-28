@@ -6,7 +6,7 @@ describe "group master" do
     create_data
     visit groups_path
   end
-  let(:login_user) { FactoryGirl.create(:user) }
+  let(:login_user) { FactoryBot.create(:user) }
   let(:create_data) {}
   
   describe "list screen" do
@@ -45,9 +45,9 @@ describe "group master" do
     
     describe "search name" do
       let(:create_data) do
-        FactoryGirl.create(:group, name: "#{name}1")
-        FactoryGirl.create(:group, name: "#{name}2")
-        FactoryGirl.create(:group, name: "hoge")
+        FactoryBot.create(:group, name: "#{name}1")
+        FactoryBot.create(:group, name: "#{name}2")
+        FactoryBot.create(:group, name: "hoge")
       end
       let(:name) { "Group" }
       context "value that is not registered" do
@@ -77,9 +77,9 @@ describe "group master" do
     end
     describe "search date" do
       let(:create_data) do
-        FactoryGirl.create(:group, created_at: created_at_1, updated_at: updated_at_1)
-        FactoryGirl.create(:group, created_at: created_at_2, updated_at: updated_at_2)
-        FactoryGirl.create(:group, created_at: created_at_3, updated_at: updated_at_3)
+        FactoryBot.create(:group, created_at: created_at_1, updated_at: updated_at_1)
+        FactoryBot.create(:group, created_at: created_at_2, updated_at: updated_at_2)
+        FactoryBot.create(:group, created_at: created_at_3, updated_at: updated_at_3)
       end
       let(:created_at_1) { Date.today.prev_day.strftime("%Y-%m-%d") }
       let(:created_at_2) { Date.today.strftime("%Y-%m-%d") }
@@ -291,9 +291,9 @@ describe "group master" do
       group_2
       group_3
     end
-    let(:group_1) { FactoryGirl.create(:group, name: "Group1", created_at: created_at_1, updated_at: updated_at_1) }
-    let(:group_2) { FactoryGirl.create(:group, name: "Group2", created_at: created_at_2, updated_at: updated_at_2) }
-    let(:group_3) { FactoryGirl.create(:group, name: "Group3", created_at: created_at_3, updated_at: updated_at_3) }
+    let(:group_1) { FactoryBot.create(:group, name: "Group1", created_at: created_at_1, updated_at: updated_at_1) }
+    let(:group_2) { FactoryBot.create(:group, name: "Group2", created_at: created_at_2, updated_at: updated_at_2) }
+    let(:group_3) { FactoryBot.create(:group, name: "Group3", created_at: created_at_3, updated_at: updated_at_3) }
     let(:created_at_1) { (DateTime.now - 3).strftime("%Y-%m-%d") }
     let(:created_at_2) { (DateTime.now - 2).strftime("%Y-%m-%d") }
     let(:created_at_3) { (DateTime.now - 1).strftime("%Y-%m-%d") }
@@ -381,7 +381,7 @@ describe "group master" do
   end
   
   describe "edit screen" do
-    let(:create_data) { FactoryGirl.create(:group) }
+    let(:create_data) { FactoryBot.create(:group) }
     before do
       click_link("group-#{create_data.id}-link")
       visit edit_group_path(create_data)

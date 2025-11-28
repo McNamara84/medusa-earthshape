@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 describe "bib master" do
-  let(:login_user) { FactoryGirl.create(:user) }
+  let(:login_user) { FactoryBot.create(:user) }
   
   describe "bib detail screen" do
     let(:bib) do
       User.current = login_user
-      FactoryGirl.create(:bib)
+      FactoryBot.create(:bib)
     end
-    let(:attachment_file) { FactoryGirl.create(:attachment_file, data_file_name: "file_name", data_content_type: data_type) }
+    let(:attachment_file) { FactoryBot.create(:attachment_file, data_file_name: "file_name", data_content_type: data_type) }
     
     before do
       login login_user

@@ -2,26 +2,26 @@ require "spec_helper"
 
 describe Stone do
   describe ".to_pml", :current => true do
-    let(:stone1) { FactoryGirl.create(:stone) }
-    let(:stone2) { FactoryGirl.create(:stone) }
+    let(:stone1) { FactoryBot.create(:stone) }
+    let(:stone2) { FactoryBot.create(:stone) }
     let(:stones) { [stone1] }
     let(:analysis_1) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone1
       analysis
     end
     let(:analysis_2) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone1
       analysis
     end
     let(:analysis_3) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone2
       analysis
     end
     let(:analysis_4) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone2
       analysis
     end
@@ -41,9 +41,9 @@ describe Stone do
   end
 
   describe ".descendants" do
-    let(:root) { FactoryGirl.create(:stone, name: "root") }
-    let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
-    let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
+    let(:root) { FactoryBot.create(:stone, name: "root") }
+    let(:child_1){ FactoryBot.create(:stone, parent_id: root.id) }
+    let(:child_1_1){ FactoryBot.create(:stone, parent_id: child_1.id) }
     before do
       root;child_1;child_1_1;
     end
@@ -53,9 +53,9 @@ describe Stone do
   end
 
   describe ".self_and_descendants" do
-    let(:root) { FactoryGirl.create(:stone, name: "root") }
-    let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
-    let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
+    let(:root) { FactoryBot.create(:stone, name: "root") }
+    let(:child_1){ FactoryBot.create(:stone, parent_id: root.id) }
+    let(:child_1_1){ FactoryBot.create(:stone, parent_id: child_1.id) }
     before do
       root;child_1;child_1_1;
     end
@@ -65,8 +65,8 @@ describe Stone do
   end
 
   describe ".blood_path" do
-      let(:parent_stone) { FactoryGirl.create(:stone) }
-      let(:stone) { FactoryGirl.create(:stone, parent_id: parent_id) }
+      let(:parent_stone) { FactoryBot.create(:stone) }
+      let(:stone) { FactoryBot.create(:stone, parent_id: parent_id) }
       before do
         parent_stone
         stone
@@ -87,7 +87,7 @@ describe Stone do
 
   describe "validates" do
     describe "name" do
-      let(:obj) { FactoryGirl.build(:stone, name: name) }
+      let(:obj) { FactoryBot.build(:stone, name: name) }
       context "is presence" do
         let(:name) { "sample_obj_name" }
         it { expect(obj).to be_valid }
@@ -108,10 +108,10 @@ describe Stone do
       end
     end
     describe "parent_id" do
-      let(:parent_stone) { FactoryGirl.create(:stone) }
-      let(:stone) { FactoryGirl.create(:stone, parent_id: parent_id) }
-      let(:child_stone) { FactoryGirl.create(:stone, parent_id: stone.id) }
-      let(:user) { FactoryGirl.create(:user) }
+      let(:parent_stone) { FactoryBot.create(:stone) }
+      let(:stone) { FactoryBot.create(:stone, parent_id: parent_id) }
+      let(:child_stone) { FactoryBot.create(:stone, parent_id: stone.id) }
+      let(:user) { FactoryBot.create(:user) }
       before do
         User.current = user
         parent_stone

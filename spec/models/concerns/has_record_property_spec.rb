@@ -51,20 +51,20 @@ describe HasRecordProperty do
       obj
     end
     context "for Stone" do
-      let(:obj) { FactoryGirl.create(:stone) }
+      let(:obj) { FactoryBot.create(:stone) }
       context "without stone" do
         it { expect(subject).to eq(0) }
       end
       context "with a stone" do
-        let(:stone1) { FactoryGirl.create(:stone)}
+        let(:stone1) { FactoryBot.create(:stone)}
         before do
           obj.stones << stone1
         end
         it { expect(subject).to eq(1) }
       end
       context "with 2 stones" do
-        let(:stone1) { FactoryGirl.create(:stone)}
-        let(:stone2) { FactoryGirl.create(:stone)}
+        let(:stone1) { FactoryBot.create(:stone)}
+        let(:stone2) { FactoryBot.create(:stone)}
         before do
           obj.stones << stone1
           obj.stones << stone2
@@ -73,20 +73,20 @@ describe HasRecordProperty do
       end
     end
     context "for Box" do
-      let(:obj) { FactoryGirl.create(:box) }
+      let(:obj) { FactoryBot.create(:box) }
       context "without stone" do
         it { expect(subject).to eq(0) }
       end
       context "with a stone" do
-        let(:stone1) { FactoryGirl.create(:stone)}
+        let(:stone1) { FactoryBot.create(:stone)}
         before do
           obj.stones << stone1
         end
         it { expect(subject).to eq(1) }
       end
       context "with 2 stones" do
-        let(:stone1) { FactoryGirl.create(:stone)}
-        let(:stone2) { FactoryGirl.create(:stone)}
+        let(:stone1) { FactoryBot.create(:stone)}
+        let(:stone2) { FactoryBot.create(:stone)}
         before do
           obj.stones << stone1
           obj.stones << stone2
@@ -96,7 +96,7 @@ describe HasRecordProperty do
     end
 
     context "for Analysis" do
-      let(:obj) { FactoryGirl.create(:analysis) }
+      let(:obj) { FactoryBot.create(:analysis) }
       context "without stone" do
         before do
           obj.stone = nil
@@ -104,7 +104,7 @@ describe HasRecordProperty do
         it { expect(subject).to eq(0) }
       end
       context "with a stone" do
-        let(:stone1) { FactoryGirl.create(:stone)}
+        let(:stone1) { FactoryBot.create(:stone)}
         before do
           obj.stone = stone1
         end
@@ -119,7 +119,7 @@ describe HasRecordProperty do
       obj
     end
     context "for Stone" do
-      let(:obj) { FactoryGirl.create(:stone) }
+      let(:obj) { FactoryBot.create(:stone) }
       context "without box" do
         before do
           obj.box = nil
@@ -127,7 +127,7 @@ describe HasRecordProperty do
         it { expect(subject).to eq(0) }
       end
       context "with a box" do
-        let(:box1) { FactoryGirl.create(:box)}
+        let(:box1) { FactoryBot.create(:box)}
         before do
           obj.box = box1
         end
@@ -135,20 +135,20 @@ describe HasRecordProperty do
       end
     end
     context "for Box" do
-      let(:obj) { FactoryGirl.create(:box) }
+      let(:obj) { FactoryBot.create(:box) }
       context "without box" do
         it { expect(subject).to eq(0) }
       end
       context "with a box" do
-        let(:box1) { FactoryGirl.create(:box)}
+        let(:box1) { FactoryBot.create(:box)}
         before do
           obj.boxes << box1
         end
         it { expect(subject).to eq(1) }
       end
       context "with 2 boxes" do
-        let(:box1) { FactoryGirl.create(:box)}
-        let(:box2) { FactoryGirl.create(:box)}
+        let(:box1) { FactoryBot.create(:box)}
+        let(:box2) { FactoryBot.create(:box)}
         before do
           obj.boxes << box1
           obj.boxes << box2
@@ -157,20 +157,20 @@ describe HasRecordProperty do
       end
     end
     context "for Bib" do
-      let(:obj) { FactoryGirl.create(:bib) }
+      let(:obj) { FactoryBot.create(:bib) }
       context "without box" do
         it { expect(subject).to eq(0) }
       end
       context "with a box" do
-        let(:box1) { FactoryGirl.create(:box)}
+        let(:box1) { FactoryBot.create(:box)}
         before do
           obj.boxes << box1
         end
         it { expect(subject).to eq(1) }
       end
       context "with 2 boxes" do
-        let(:box1) { FactoryGirl.create(:box)}
-        let(:box2) { FactoryGirl.create(:box)}
+        let(:box1) { FactoryBot.create(:box)}
+        let(:box2) { FactoryBot.create(:box)}
         before do
           obj.boxes << box1
           obj.boxes << box2
@@ -186,20 +186,20 @@ describe HasRecordProperty do
       obj
     end
     context "for Stone" do
-      let(:obj) { FactoryGirl.create(:stone) }
+      let(:obj) { FactoryBot.create(:stone) }
       context "without file" do
         it { expect(subject).to eq(0) }
       end
       context "with a file" do
-        let(:file1) { FactoryGirl.create(:attachment_file)}
+        let(:file1) { FactoryBot.create(:attachment_file)}
         before do
           obj.attachment_files << file1
         end
         it { expect(subject).to eq(1) }
       end
       context "with 2 files" do
-        let(:file1) { FactoryGirl.create(:attachment_file)}
-        let(:file2) { FactoryGirl.create(:attachment_file)}
+        let(:file1) { FactoryBot.create(:attachment_file)}
+        let(:file2) { FactoryBot.create(:attachment_file)}
         before do
           obj.attachment_files << file1
           obj.attachment_files << file2
@@ -215,15 +215,15 @@ describe HasRecordProperty do
         obj
      end
      context "for Stone" do
-       let(:obj) { FactoryGirl.create(:stone) }
+       let(:obj) { FactoryBot.create(:stone) }
        it { expect(subject).to match /\/#{obj.name} <stone: #{obj.global_id}> <link: stone=\d+ box=\d+ analysis=\d+ file=\d+ bib=\d+ locality=\d+ point=\d+> <last-modified: #{obj.updated_at}> <created: #{obj.created_at}>/}
      end
      context "for Box" do
-       let(:obj) { FactoryGirl.create(:box) }
+       let(:obj) { FactoryBot.create(:box) }
        it { expect(subject).to match /\/#{obj.name} <box: #{obj.global_id}> <link: stone=\d+ box=\d+ analysis=\d+ file=\d+ bib=\d+ locality=\d+ point=\d+> <last-modified: #{obj.updated_at}> <created: #{obj.created_at}>/}
      end
      context "for Bib" do
-       let(:obj) { FactoryGirl.create(:bib) }
+       let(:obj) { FactoryBot.create(:bib) }
        it { expect(subject).to match /\/#{obj.name} <bib: #{obj.global_id}> <link: stone=\d+ box=\d+ analysis=\d+ file=\d+ bib=\d+ locality=\d+ point=\d+> <last-modified: #{obj.updated_at}> <created: #{obj.created_at}>/}
      end
   end
@@ -231,7 +231,7 @@ describe HasRecordProperty do
   describe "#to_bibtex" do
     subject { obj.to_bibtex }
     context "bib" do
-      let(:obj) { FactoryGirl.create(:bib, entry_type: entry_type, abbreviation: abbreviation) }
+      let(:obj) { FactoryBot.create(:bib, entry_type: entry_type, abbreviation: abbreviation) }
       describe "@article" do
         before do
           obj
@@ -248,7 +248,7 @@ describe HasRecordProperty do
         end
       end
       context "stone" do
-        let(:obj) { FactoryGirl.create(:stone, name: name) }
+        let(:obj) { FactoryBot.create(:stone, name: name) }
         let(:name) { "stone" }
         describe "@stone" do
           before do
@@ -263,10 +263,10 @@ describe HasRecordProperty do
   describe ".readables" do
     subject { HasRecordPropertySpec.readables(user) }
     let(:obj) { klass.create(name: "foo") }
-    let(:user) { FactoryGirl.create(:user_foo) }
-    let(:group) { FactoryGirl.create(:group) }
-    let(:another_user) { FactoryGirl.create(:user_baa) }
-    let(:another_group) { FactoryGirl.create(:group) }
+    let(:user) { FactoryBot.create(:user_foo) }
+    let(:group) { FactoryBot.create(:group) }
+    let(:another_user) { FactoryBot.create(:user_baa) }
+    let(:another_group) { FactoryBot.create(:group) }
     before do
       GroupMember.create(user: user, group: group)
       obj.create_record_property(owner_readable: owner_readable, group_readable: group_readable, guest_readable: guest_readable, user_id: user_id, group_id: group_id)
@@ -318,7 +318,7 @@ describe HasRecordProperty do
   describe "#writable?" do
     subject { obj.writable?(user) }
     let(:obj) { klass.create(name: "foo") }
-    let(:user) { FactoryGirl.create(:user_foo) }
+    let(:user) { FactoryBot.create(:user_foo) }
     before { obj.create_record_property }
     context "when obj is new_record." do
       before { allow(obj).to receive(:new_record?).and_return(true) }
@@ -347,8 +347,8 @@ describe HasRecordProperty do
   describe "callbacks" do
     describe "after_create" do
       describe "generate_record_property" do
-        let(:user) { FactoryGirl.create(:user) }
-        let(:stone) { FactoryGirl.build(:stone) }
+        let(:user) { FactoryBot.create(:user) }
+        let(:stone) { FactoryBot.build(:stone) }
         before do
           User.current = user
           stone.save
@@ -360,14 +360,14 @@ describe HasRecordProperty do
     describe "after_save" do
       describe "update_record_property" do
         context "name attribute is exist" do
-          let(:stone) { FactoryGirl.create(:stone, name: name) }
+          let(:stone) { FactoryBot.create(:stone, name: name) }
           let(:name) { "stone" }
           before { stone }
           it { expect(stone.record_property).to be_present }
           it { expect(stone.record_property.name).to eq name }
         end
         context "name attribute isn't exist" do
-          let(:chemistry) { FactoryGirl.create(:chemistry) }
+          let(:chemistry) { FactoryBot.create(:chemistry) }
           before { chemistry }
           it { expect(chemistry.record_property).to be_present }
           it { expect(chemistry.record_property.name).to be_nil }
@@ -376,14 +376,14 @@ describe HasRecordProperty do
     end
 
     describe ".user_id=" do
-      let(:stone) { FactoryGirl.create(:stone) }
+      let(:stone) { FactoryBot.create(:stone) }
       let(:user_id){999}
       before{stone.user_id = user_id}
       it { expect(stone.user_id).to eq user_id}
     end
 
     describe ".group_id=" do
-      let(:stone) { FactoryGirl.create(:stone) }
+      let(:stone) { FactoryBot.create(:stone) }
       let(:group_id){999}
       before{stone.group_id = group_id}
       it { expect(stone.group_id).to eq group_id}

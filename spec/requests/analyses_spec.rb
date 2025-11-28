@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe "analysis" do
-  let(:login_user) { FactoryGirl.create(:user) }
+  let(:login_user) { FactoryBot.create(:user) }
   
   describe "analysis detail screen" do
     let(:analysis) do
       # Rails 5.0: Set User.current before creating analysis to ensure proper record_property
       User.current = login_user
-      FactoryGirl.create(:analysis)
+      FactoryBot.create(:analysis)
     end
     before do
       # Rails 5.0: Login first, then create data, then visit page
@@ -16,7 +16,7 @@ describe "analysis" do
       # Rails 5.0: Visit analysis show page directly to avoid index page readables filtering
       visit analysis_path(analysis)
     end
-    let(:attachment_file) { FactoryGirl.create(:attachment_file, data_file_name: "file_name", data_content_type: data_type) }
+    let(:attachment_file) { FactoryBot.create(:attachment_file, data_file_name: "file_name", data_content_type: data_type) }
     
     describe "view spot" do
       describe "thumbnail" do

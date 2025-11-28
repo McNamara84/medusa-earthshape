@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe TechniquesController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
   
   describe "GET index" do
-    let(:technique_1) { FactoryGirl.create(:technique, name: "hoge") }
-    let(:technique_2) { FactoryGirl.create(:technique, name: "technique_2") }
-    let(:technique_3) { FactoryGirl.create(:technique, name: "technique_3") }
+    let(:technique_1) { FactoryBot.create(:technique, name: "hoge") }
+    let(:technique_2) { FactoryBot.create(:technique, name: "technique_2") }
+    let(:technique_3) { FactoryBot.create(:technique, name: "technique_3") }
     let(:params) { {q: query, page: 2, per_page: 1} }
     before do
       technique_1;technique_2;technique_3
@@ -25,7 +25,7 @@ describe TechniquesController do
   
   # This "GET show" has no html.
   describe "GET show" do
-    let(:technique) { FactoryGirl.create(:technique) }
+    let(:technique) { FactoryBot.create(:technique) }
     before do
       technique
       get :show, params: {id: technique.id}, format: :json
@@ -34,7 +34,7 @@ describe TechniquesController do
   end
   
   describe "GET edit" do
-    let(:technique) { FactoryGirl.create(:technique) }
+    let(:technique) { FactoryBot.create(:technique) }
     before do
       technique
       get :edit, params: {id: technique.id}
@@ -65,7 +65,7 @@ describe TechniquesController do
   end
   
   describe "PUT update" do
-    let(:technique) { FactoryGirl.create(:technique, name: "technique") }
+    let(:technique) { FactoryBot.create(:technique, name: "technique") }
     before do
       technique
       put :update, params: {id: technique.id, technique: attributes}
@@ -86,7 +86,7 @@ describe TechniquesController do
   end
   
   describe "DELETE destroy" do
-    let(:technique) { FactoryGirl.create(:technique, name: "technique") }
+    let(:technique) { FactoryBot.create(:technique, name: "technique") }
     before { technique }
     it { expect { delete :destroy, params: {id: technique.id} }.to change(Technique, :count).by(-1) }
   end

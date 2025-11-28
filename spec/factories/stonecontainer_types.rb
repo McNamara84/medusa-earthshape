@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :stonecontainer_type do
     sequence(:name) { |n| "Container Type #{n}" }
   end

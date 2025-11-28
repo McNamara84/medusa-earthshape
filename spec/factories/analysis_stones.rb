@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :analysis_stone do
     association :analysis, factory: :analysis
     association :stone, factory: :stone

@@ -2,13 +2,13 @@ require 'spec_helper'
 include ActionDispatch::TestProcess
 
 describe AnalysesController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "GET index" do
-    let(:obj_1) { FactoryGirl.create(:analysis, name: "hoge") }
-    let(:obj_2) { FactoryGirl.create(:analysis, name: "analysis_2") }
-    let(:obj_3) { FactoryGirl.create(:analysis, name: "analysis_3") }
+    let(:obj_1) { FactoryBot.create(:analysis, name: "hoge") }
+    let(:obj_2) { FactoryBot.create(:analysis, name: "analysis_2") }
+    let(:obj_3) { FactoryBot.create(:analysis, name: "analysis_3") }
 
     before do
       obj_1;obj_2;obj_3
@@ -77,7 +77,7 @@ describe AnalysesController do
 
   describe "GET show" do
     let(:method){ get :show, params: {id: id} }
-    let(:obj) { FactoryGirl.create(:analysis) }
+    let(:obj) { FactoryBot.create(:analysis) }
     context "record found" do
       let(:id){obj.id}
       before { method }
@@ -102,7 +102,7 @@ describe AnalysesController do
 
   describe "GET edit" do
     let(:method){ get :edit, params: {id: id} }
-    let(:obj) { FactoryGirl.create(:analysis) }
+    let(:obj) { FactoryBot.create(:analysis) }
     context "record found" do
       let(:id){obj.id}
       before { method }
@@ -126,7 +126,7 @@ describe AnalysesController do
 
   describe "PUT update" do
     let(:method){ put :update, params: {id: id, analysis: attributes} }
-    let(:obj) { FactoryGirl.create(:analysis) }
+    let(:obj) { FactoryBot.create(:analysis) }
     let(:attributes) { {name: "update_name"} }
     context "record found" do
       let(:id){obj.id}
@@ -141,9 +141,9 @@ describe AnalysesController do
   end
 
   describe "POST bundle_edit" do
-    let(:obj1) { FactoryGirl.create(:analysis, name: "obj1") }
-    let(:obj2) { FactoryGirl.create(:analysis, name: "obj2") }
-    let(:obj3) { FactoryGirl.create(:analysis, name: "obj3") }
+    let(:obj1) { FactoryBot.create(:analysis, name: "obj1") }
+    let(:obj2) { FactoryBot.create(:analysis, name: "obj2") }
+    let(:obj3) { FactoryBot.create(:analysis, name: "obj3") }
     let(:ids){[obj1.id,obj2.id]}
     before do
       obj1
@@ -158,9 +158,9 @@ describe AnalysesController do
 
   describe "POST bundle_update" do
     let(:obj3name){"obj3"}
-    let(:obj1) { FactoryGirl.create(:analysis, name: "obj1") }
-    let(:obj2) { FactoryGirl.create(:analysis, name: "obj2") }
-    let(:obj3) { FactoryGirl.create(:analysis, name: obj3name) }
+    let(:obj1) { FactoryBot.create(:analysis, name: "obj1") }
+    let(:obj2) { FactoryBot.create(:analysis, name: "obj2") }
+    let(:obj3) { FactoryBot.create(:analysis, name: obj3name) }
     let(:attributes) { {name: "update_name"} }
     let(:ids){[obj1.id,obj2.id]}
     before do
@@ -178,13 +178,13 @@ describe AnalysesController do
   end
 
   describe "GET picture" do
-    let(:obj) { FactoryGirl.create(:analysis) }
+    let(:obj) { FactoryBot.create(:analysis) }
     before { get :picture, params: {id: obj.id} }
     it { expect(assigns(:analysis)).to eq obj }
   end
 
   describe "GET property" do
-    let(:obj) { FactoryGirl.create(:analysis) }
+    let(:obj) { FactoryBot.create(:analysis) }
     before { get :property, params: {id: obj.id} }
     it { expect(assigns(:analysis)).to eq obj }
   end
@@ -206,8 +206,8 @@ describe AnalysesController do
   end
 
   describe "GET table" do
-    let(:obj) { FactoryGirl.create(:analysis) }
-    let(:obj2) { FactoryGirl.create(:analysis) }
+    let(:obj) { FactoryBot.create(:analysis) }
+    let(:obj2) { FactoryBot.create(:analysis) }
     let(:objs){ [obj,obj2]}
     before { get :table, params: {ids: objs.map {|obj| obj.id} } }
     it { expect(assigns(:analyses)).to eq objs }
@@ -215,8 +215,8 @@ describe AnalysesController do
   end
 
   describe "GET castemls" do
-    let(:obj) { FactoryGirl.create(:analysis) }
-    let(:obj2) { FactoryGirl.create(:analysis) }
+    let(:obj) { FactoryBot.create(:analysis) }
+    let(:obj2) { FactoryBot.create(:analysis) }
     let(:objs){ [obj,obj2]}
     let(:castemls){Analysis.to_castemls(objs)}
     it "sends castemls data" do
@@ -227,7 +227,7 @@ describe AnalysesController do
   end
 
   describe "GET casteml", :current => true do
-    let(:obj) { FactoryGirl.create(:analysis) }
+    let(:obj) { FactoryBot.create(:analysis) }
     let(:casteml){Analysis.to_castemls([obj])}
     it "sends casteml data" do
       allow(controller).to receive(:send_data) { controller.response_body = '' }

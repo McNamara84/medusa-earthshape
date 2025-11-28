@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe UsersController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "GET index" do
-    let(:user_1) { FactoryGirl.create(:user, username: "hoge",email: "email1@test.co.jp") }
-    let(:user_2) { FactoryGirl.create(:user, username: "user_2",email: "email2@test.co.jp") }
-    let(:user_3) { FactoryGirl.create(:user, username: "user_3",email: "email3@test.co.jp") }
+    let(:user_1) { FactoryBot.create(:user, username: "hoge",email: "email1@test.co.jp") }
+    let(:user_2) { FactoryBot.create(:user, username: "user_2",email: "email2@test.co.jp") }
+    let(:user_3) { FactoryBot.create(:user, username: "user_3",email: "email3@test.co.jp") }
     let(:users){ User.all }
     before do
       user_1;user_2;user_3
@@ -18,7 +18,7 @@ describe UsersController do
 
   # This "GET show" has no html.
   describe "GET show" do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     before do
       user
       get :show, params: {id: user.id}, format: :json
@@ -34,7 +34,7 @@ describe UsersController do
   end
 
   describe "GET edit" do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     before do
       user
       get :edit, params: {id: user.id}
@@ -67,7 +67,7 @@ describe UsersController do
   end
 
   describe "PUT update" do
-    let(:user) { FactoryGirl.create(:user, username: "user", description: "description") }
+    let(:user) { FactoryBot.create(:user, username: "user", description: "description") }
     before do
       user
       put :update, params: {id: user.id, user: attributes}
@@ -97,7 +97,7 @@ describe UsersController do
   end
   
   describe "DELETE destroy" do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     before { user }
     it { expect { delete :destroy, params: {id: user.id} }.to change(User, :count).by(-1) }
   end

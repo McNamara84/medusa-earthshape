@@ -11,7 +11,7 @@ describe Analysis do
 
   describe "validates" do
     describe "name" do
-      let(:obj) { FactoryGirl.build(:analysis, name: name) }
+      let(:obj) { FactoryBot.build(:analysis, name: name) }
       context "is presence" do
         let(:name) { "sample_analysis" }
         it { expect(obj).to be_valid }
@@ -32,12 +32,12 @@ describe Analysis do
   end
 
   describe "#chemistry_summary" do
-    let(:analysis) { FactoryGirl.create(:analysis) }
+    let(:analysis) { FactoryBot.create(:analysis) }
     let(:chemistries) { [chemistry_1, chemistry_2] }
-    let(:chemistry_1) { FactoryGirl.build(:chemistry, analysis: analysis, measurement_item: measurement_item_1) }
-    let(:chemistry_2) { FactoryGirl.build(:chemistry, analysis: analysis, measurement_item: measurement_item_2) }
-    let(:measurement_item_1) { FactoryGirl.create(:measurement_item) }
-    let(:measurement_item_2) { FactoryGirl.create(:measurement_item) }
+    let(:chemistry_1) { FactoryBot.build(:chemistry, analysis: analysis, measurement_item: measurement_item_1) }
+    let(:chemistry_2) { FactoryBot.build(:chemistry, analysis: analysis, measurement_item: measurement_item_2) }
+    let(:measurement_item_1) { FactoryBot.create(:measurement_item) }
+    let(:measurement_item_2) { FactoryBot.create(:measurement_item) }
     let(:display_name_1) { "display_name_1" }
     let(:display_name_2) { "display_name_2" }
     before do
@@ -56,8 +56,8 @@ describe Analysis do
         it { expect(subject).to eq(display_name_1 + ", " + "bbbbb...") }
       end
       context "chemistry.measurement_item is blank" do
-        let(:chemistry_1) { FactoryGirl.build(:chemistry, analysis: analysis, measurement_item: nil) }
-        let(:chemistry_2) { FactoryGirl.build(:chemistry, analysis: analysis, measurement_item: nil) }
+        let(:chemistry_1) { FactoryBot.build(:chemistry, analysis: analysis, measurement_item: nil) }
+        let(:chemistry_2) { FactoryBot.build(:chemistry, analysis: analysis, measurement_item: nil) }
         it { expect(subject).to eq "" }
       end
     end
@@ -72,16 +72,16 @@ describe Analysis do
         it { expect(subject).to eq("a" * 47 + "...") }
       end
       context "chemistry.measurement_item is blank" do
-        let(:chemistry_1) { FactoryGirl.build(:chemistry, analysis: analysis, measurement_item: nil) }
-        let(:chemistry_2) { FactoryGirl.build(:chemistry, analysis: analysis, measurement_item: nil) }
+        let(:chemistry_1) { FactoryBot.build(:chemistry, analysis: analysis, measurement_item: nil) }
+        let(:chemistry_2) { FactoryBot.build(:chemistry, analysis: analysis, measurement_item: nil) }
         it { expect(subject).to eq "" }
       end
     end
   end
 
   describe "stone_global_id" do
-    let(:stone){FactoryGirl.create(:stone)}
-    let(:analysis){FactoryGirl.create(:analysis)}
+    let(:stone){FactoryBot.create(:stone)}
+    let(:analysis){FactoryBot.create(:analysis)}
     context "get" do
       context "stone_id is nil" do
         before{analysis.stone_id = nil}
@@ -114,10 +114,10 @@ describe Analysis do
 
   describe "#device_name=" do
     before { analysis.device_name = name }
-    let(:analysis) { FactoryGirl.build(:analysis, device: nil) }
+    let(:analysis) { FactoryBot.build(:analysis, device: nil) }
     context "name is exist device name" do
       let(:name) { device.name }
-      let(:device) { FactoryGirl.create(:device) }
+      let(:device) { FactoryBot.create(:device) }
       it { expect(analysis.device_id).to eq device.id }
     end
     context "name is not device name" do
@@ -128,10 +128,10 @@ describe Analysis do
 
   describe "#technique_name=" do
     before { analysis.technique_name = name }
-    let(:analysis) { FactoryGirl.build(:analysis, technique: nil) }
+    let(:analysis) { FactoryBot.build(:analysis, technique: nil) }
     context "name is exist technique name" do
       let(:name) { technique.name }
-      let(:technique) { FactoryGirl.create(:technique) }
+      let(:technique) { FactoryBot.create(:technique) }
       it { expect(analysis.technique_id).to eq technique.id }
     end
     context "name is not technique name" do
@@ -156,22 +156,22 @@ describe Analysis do
       context "content_type is 'csv'" do
         let(:content_type) { 'text/csv' }
         context "objects is all valid" do
-          let(:analysis) { FactoryGirl.build(:analysis) }
+          let(:analysis) { FactoryBot.build(:analysis) }
           it { expect(subject).to be_present }
         end
         context "object is invalid" do
-          let(:analysis) { FactoryGirl.build(:analysis, name: nil) }
+          let(:analysis) { FactoryBot.build(:analysis, name: nil) }
           it { expect(subject).to eq false }
         end
       end
       context "content_type is not 'csv'" do
         let(:content_type) { 'image/png' }
         context "objects is all valid" do
-          let(:analysis) { FactoryGirl.build(:analysis) }
+          let(:analysis) { FactoryBot.build(:analysis) }
           it { expect(subject).to be_nil }
         end
         context "object is invalid" do
-          let(:analysis) { FactoryGirl.build(:analysis, name: nil) }
+          let(:analysis) { FactoryBot.build(:analysis, name: nil) }
           it { expect(subject).to be_nil }
         end
       end
@@ -201,11 +201,11 @@ describe Analysis do
 
   describe "#to_castemls" do
     subject { Analysis.to_castemls(objs) }
-    let(:spot){FactoryGirl.create(:spot)}
-    let(:attachment_file){FactoryGirl.create(:attachment_file)}
-    let(:chemistry){FactoryGirl.create(:chemistry)}
-    let(:obj) { FactoryGirl.create(:analysis) }
-    let(:obj2) { FactoryGirl.create(:analysis) }
+    let(:spot){FactoryBot.create(:spot)}
+    let(:attachment_file){FactoryBot.create(:attachment_file)}
+    let(:chemistry){FactoryBot.create(:chemistry)}
+    let(:obj) { FactoryBot.create(:analysis) }
+    let(:obj2) { FactoryBot.create(:analysis) }
     let(:objs){ [obj,obj2]}
     before do
       attachment_file.spots << spot
@@ -216,15 +216,15 @@ describe Analysis do
   end
 
   describe "#to_pml", :current => true do
-    let(:box){ FactoryGirl.create(:box)}
-    let(:stone){ FactoryGirl.create(:stone, box_id: box.id)}
-    let(:spot){FactoryGirl.create(:spot)}
-    let(:attachment_file){FactoryGirl.create(:attachment_file)}
-    let(:chemistry){FactoryGirl.create(:chemistry)}
-    let(:obj) { FactoryGirl.create(:analysis) }
-    let(:obj2) { FactoryGirl.create(:analysis) }
+    let(:box){ FactoryBot.create(:box)}
+    let(:stone){ FactoryBot.create(:stone, box_id: box.id)}
+    let(:spot){FactoryBot.create(:spot)}
+    let(:attachment_file){FactoryBot.create(:attachment_file)}
+    let(:chemistry){FactoryBot.create(:chemistry)}
+    let(:obj) { FactoryBot.create(:analysis) }
+    let(:obj2) { FactoryBot.create(:analysis) }
     let(:obj3) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone
       analysis
     end
@@ -243,10 +243,10 @@ describe Analysis do
 
   describe ".get_spot" do
     subject { obj.get_spot }
-    let(:user){FactoryGirl.create(:user)}
-    let(:obj) {FactoryGirl.create(:analysis) }
-    let(:spot1){FactoryGirl.create(:spot,target_uid: global_id)}
-    let(:spot2){FactoryGirl.create(:spot,target_uid: global_id)}
+    let(:user){FactoryBot.create(:user)}
+    let(:obj) {FactoryBot.create(:analysis) }
+    let(:spot1){FactoryBot.create(:spot,target_uid: global_id)}
+    let(:spot2){FactoryBot.create(:spot,target_uid: global_id)}
     before{User.current = user}
     context "no spots" do
       let(:global_id){"xxx"}

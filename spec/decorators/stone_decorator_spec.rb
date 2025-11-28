@@ -2,9 +2,9 @@ require 'spec_helper'
 include ActionDispatch::TestProcess
 
 describe StoneDecorator do
-  let(:user){FactoryGirl.create(:user)}
-  let(:obj){FactoryGirl.create(:stone).decorate}
-  let(:box){FactoryGirl.create(:box)}
+  let(:user){FactoryBot.create(:user)}
+  let(:obj){FactoryBot.create(:stone).decorate}
+  let(:box){FactoryBot.create(:box)}
   before{User.current = user}
 
   describe ".name_with_id" do
@@ -31,7 +31,7 @@ describe StoneDecorator do
   end
 
   describe ".primary_picture" do
-    let(:attachment_file){ FactoryGirl.create(:attachment_file) }
+    let(:attachment_file){ FactoryBot.create(:attachment_file) }
     let(:picture) { obj.primary_picture(width: width, height: height) }
     let(:capybara) { Capybara.string(picture) }
     let(:body) { capybara.find("body") }
@@ -69,10 +69,10 @@ describe StoneDecorator do
   describe ".tree_node" do
     subject{obj.tree_node}
     before { allow(obj.h).to receive(:can?).and_return(true) }
-    let(:child){FactoryGirl.create(:stone)}
-    let(:analysis){FactoryGirl.create(:analysis)}
-    let(:bib){FactoryGirl.create(:bib)}
-    let(:attachment_file){FactoryGirl.create(:attachment_file)}
+    let(:child){FactoryBot.create(:stone)}
+    let(:analysis){FactoryBot.create(:analysis)}
+    let(:bib){FactoryBot.create(:bib)}
+    let(:attachment_file){FactoryBot.create(:attachment_file)}
     it{expect(subject).to include("<span class=\"glyphicon glyphicon-cloud\"></span>")} 
     it{expect(subject).to include("#{obj.name}")} 
     before do
@@ -104,7 +104,7 @@ describe StoneDecorator do
       it{expect(subject).to be_blank} 
     end
     context "count zero" do
-      let(:child){FactoryGirl.create(:stone)}
+      let(:child){FactoryBot.create(:stone)}
       before{obj.children << child}
       it{expect(subject).to include("<span>#{count}</span>")} 
       it{expect(subject).to include("<span>#{obj.children.count}</span>")} 
@@ -120,7 +120,7 @@ describe StoneDecorator do
       it{expect(subject).to be_blank} 
     end
     context "count zero" do
-      let(:analysis){FactoryGirl.create(:analysis)}
+      let(:analysis){FactoryBot.create(:analysis)}
       before{obj.analyses << analysis}
       it{expect(subject).to include("<span>#{count}</span>")} 
       it{expect(subject).to include("<span class=\"glyphicon glyphicon-#{icon}\"></span>")} 
@@ -136,7 +136,7 @@ describe StoneDecorator do
       it{expect(subject).to be_blank} 
     end
     context "count zero" do
-      let(:bib){FactoryGirl.create(:bib)}
+      let(:bib){FactoryBot.create(:bib)}
       before{obj.bibs << bib}
       it{expect(subject).to include("<span>#{count}</span>")} 
       it{expect(subject).to include("<span class=\"glyphicon glyphicon-#{icon}\"></span>")} 
@@ -152,7 +152,7 @@ describe StoneDecorator do
       it{expect(subject).to be_blank} 
     end
     context "count zero" do
-      let(:attachment_file){FactoryGirl.create(:attachment_file)}
+      let(:attachment_file){FactoryBot.create(:attachment_file)}
       before{obj.attachment_files << attachment_file}
       it{expect(subject).to include("<span>#{count}</span>")} 
       it{expect(subject).to include("<span class=\"glyphicon glyphicon-#{icon}\"></span>")} 
@@ -162,7 +162,7 @@ describe StoneDecorator do
   describe ".to_tex" do
     subject{obj.to_tex}
     let(:child_name){"child_name"}
-    let(:child){FactoryGirl.create(:stone,name: child_name)}
+    let(:child){FactoryBot.create(:stone,name: child_name)}
     before{obj.children << child}
     it{expect(subject).to include(obj.name)}
     it{expect(subject).to include(obj.global_id)}

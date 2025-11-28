@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe MeasurementItemsController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "GET index" do
-    let(:measurement_item_1) { FactoryGirl.create(:measurement_item, nickname: "hoge") }
-    let(:measurement_item_2) { FactoryGirl.create(:measurement_item, nickname: "measurement_item_2") }
-    let(:measurement_item_3) { FactoryGirl.create(:measurement_item, nickname: "measurement_item_3") }
+    let(:measurement_item_1) { FactoryBot.create(:measurement_item, nickname: "hoge") }
+    let(:measurement_item_2) { FactoryBot.create(:measurement_item, nickname: "measurement_item_2") }
+    let(:measurement_item_3) { FactoryBot.create(:measurement_item, nickname: "measurement_item_3") }
     let(:measurement_items){ MeasurementItem.all }
     before do
       measurement_item_1;measurement_item_2;measurement_item_3
@@ -19,7 +19,7 @@ describe MeasurementItemsController do
 
   # This "GET show" has no html.
   describe "GET show" do
-    let(:measurement_item) { FactoryGirl.create(:measurement_item) }
+    let(:measurement_item) { FactoryBot.create(:measurement_item) }
     before do
       measurement_item
       get :show, params: {id: measurement_item.id}, format: :json
@@ -28,7 +28,7 @@ describe MeasurementItemsController do
   end
 
   describe "GET edit" do
-    let(:measurement_item) { FactoryGirl.create(:measurement_item) }
+    let(:measurement_item) { FactoryBot.create(:measurement_item) }
     before do
       measurement_item
       get :edit, params: {id: measurement_item.id}
@@ -61,7 +61,7 @@ describe MeasurementItemsController do
   end
 
   describe "PUT update" do
-    let(:measurement_item) { FactoryGirl.create(:measurement_item, nickname: "measurement_item", description: "description") }
+    let(:measurement_item) { FactoryBot.create(:measurement_item, nickname: "measurement_item", description: "description") }
     before do
       measurement_item
       put :update, params: {id: measurement_item.id, measurement_item: attributes}
@@ -84,7 +84,7 @@ describe MeasurementItemsController do
   end
 
   describe "DELETE destroy" do
-    let(:measurement_item) { FactoryGirl.create(:measurement_item, nickname: "measurement_item", description: "description") }
+    let(:measurement_item) { FactoryBot.create(:measurement_item, nickname: "measurement_item", description: "description") }
     before{ measurement_item }
     it { expect { delete :destroy, params: {id: measurement_item.id} }.to change(MeasurementItem, :count).by(-1) }
   end

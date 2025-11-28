@@ -3,9 +3,9 @@ require 'spec_helper'
 describe NestedResources::AnalysesController do
   let(:parent_name){:bib}
   let(:child_name){:analysis}
-  let(:parent) { FactoryGirl.create(parent_name) }
-  let(:child) { FactoryGirl.create(child_name) }
-  let(:user) { FactoryGirl.create(:user) }
+  let(:parent) { FactoryBot.create(parent_name) }
+  let(:child) { FactoryBot.create(child_name) }
+  let(:user) { FactoryBot.create(:user) }
   let(:url){"where_i_came_from"}
   let(:attributes) { {name: name, operator: "Test Operator"} }
   let(:name){"child_name"}

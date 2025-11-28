@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :filetopic do
     sequence(:name) { |n| "Filetopic #{n}" }
   end
