@@ -4,14 +4,14 @@ FactoryBot.define do
     association :datum, factory: :place
     association :user, factory: :user
     association :group, factory: :group
-    owner_readable true
-    owner_writable true
-    group_readable true
-    group_writable true
-    guest_readable false
-    guest_writable false
-    global_id "グローバルID１"
-    published false
+    owner_readable { true }
+    owner_writable { true }
+    group_readable { true }
+    group_writable { true }
+    guest_readable { false }
+    guest_writable { false }
+    global_id { "グローバルID１" }
+    published { false }
     published_at { DateTime.now }
   end
 end
