@@ -53,7 +53,7 @@ describe RecordProperty do
 
   describe ".datum_attributes", :current => true do
     subject { record_property.datum_attributes }
-    let(:record_property) { FactoryBot.build(:record_property) }
+    let(:record_property) { FactoryBot.create(:record_property) }
     it { expect(subject).to include("global_id" => record_property.datum.global_id)}
   end
 
