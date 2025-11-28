@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :stone do
     name "ストーン１"
     stone_type "サンプル１"

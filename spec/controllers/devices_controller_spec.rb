@@ -1,16 +1,16 @@
 require 'spec_helper'
 
 describe DevicesController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
   
   describe "GET index" do
     # Use unique names to avoid collisions with other tests
     # timestamp is evaluated once and cached for all let blocks
     let(:timestamp) { Time.now.to_i.to_s }
-    let(:device_1) { FactoryGirl.create(:device, name: "hoge_#{timestamp}") }
-    let(:device_2) { FactoryGirl.create(:device, name: "devicetest_#{timestamp}_2") }
-    let(:device_3) { FactoryGirl.create(:device, name: "devicetest_#{timestamp}_3") }
+    let(:device_1) { FactoryBot.create(:device, name: "hoge_#{timestamp}") }
+    let(:device_2) { FactoryBot.create(:device, name: "devicetest_#{timestamp}_2") }
+    let(:device_3) { FactoryBot.create(:device, name: "devicetest_#{timestamp}_3") }
     let(:search_term) { "devicetest_#{timestamp}" }
     let(:params) { {q: query, page: 2, per_page: 1} }
     before do
@@ -29,7 +29,7 @@ describe DevicesController do
   
   # This "GET show" has no html.
   describe "GET show" do
-    let(:device) { FactoryGirl.create(:device) }
+    let(:device) { FactoryBot.create(:device) }
     before do
       device
       get :show, params: {id: device.id}, format: :json
@@ -38,7 +38,7 @@ describe DevicesController do
   end
   
   describe "GET edit" do
-    let(:device) { FactoryGirl.create(:device) }
+    let(:device) { FactoryBot.create(:device) }
     before do
       device
       get :edit, params: {id: device.id}
@@ -69,7 +69,7 @@ describe DevicesController do
   end
   
   describe "PUT update" do
-    let(:device) { FactoryGirl.create(:device, name: "device") }
+    let(:device) { FactoryBot.create(:device, name: "device") }
     before do
       device
       put :update, params: {id: device.id, device: attributes}
@@ -90,7 +90,7 @@ describe DevicesController do
   end
   
   describe "DELETE destroy" do
-    let(:device) { FactoryGirl.create(:device, name: "device") }
+    let(:device) { FactoryBot.create(:device, name: "device") }
     before { device }
     it { expect { delete :destroy, params: {id: device.id} }.to change(Device, :count).by(-1) }
   end

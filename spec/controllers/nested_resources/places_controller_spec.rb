@@ -3,9 +3,9 @@ require 'spec_helper'
 describe NestedResources::PlacesController do
   let(:parent_name){:bib}
   let(:child_name){:place}
-  let(:parent) { FactoryGirl.create(parent_name) }
-  let(:child) { FactoryGirl.create(child_name) }
-  let(:user) { FactoryGirl.create(:user) }
+  let(:parent) { FactoryBot.create(parent_name) }
+  let(:child) { FactoryBot.create(child_name) }
+  let(:user) { FactoryBot.create(:user) }
   let(:url){"where_i_came_from"}
   # Place.initialize requires latitude and longitude to be strings (not nil) for gsub!
   let(:attributes) { {name: name, latitude: "1.0", longitude: "2.0", elevation: "0", is_parent: true} }

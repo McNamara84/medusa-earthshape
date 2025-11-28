@@ -3,16 +3,16 @@ require 'spec_helper'
 describe NestedResources::StonesController do
   let(:parent_name){:bib}
   let(:child_name){:stone}
-  let(:parent) { FactoryGirl.create(parent_name) }
-  let(:child) { FactoryGirl.create(child_name) }
-  let(:user) { FactoryGirl.create(:user) }
+  let(:parent) { FactoryBot.create(parent_name) }
+  let(:child) { FactoryBot.create(child_name) }
+  let(:user) { FactoryBot.create(:user) }
   let(:url){"where_i_came_from"}
-  let(:place) { FactoryGirl.create(:place) }
-  let(:box) { FactoryGirl.create(:box) }
-  let(:collection) { FactoryGirl.create(:collection) }
-  let(:stonecontainer_type) { FactoryGirl.create(:stonecontainer_type) }
-  let(:classification) { FactoryGirl.create(:classification) }
-  let(:physical_form) { FactoryGirl.create(:physical_form) }
+  let(:place) { FactoryBot.create(:place) }
+  let(:box) { FactoryBot.create(:box) }
+  let(:collection) { FactoryBot.create(:collection) }
+  let(:stonecontainer_type) { FactoryBot.create(:stonecontainer_type) }
+  let(:classification) { FactoryBot.create(:classification) }
+  let(:physical_form) { FactoryBot.create(:physical_form) }
   let(:attributes) do
     {
       name: name,

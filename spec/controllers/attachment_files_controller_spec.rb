@@ -2,13 +2,13 @@ require 'spec_helper'
 include ActionDispatch::TestProcess
 
 describe AttachmentFilesController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "GET index" do
-    let(:attachment_file_1) { FactoryGirl.create(:attachment_file, name: "hoge") }
-    let(:attachment_file_2) { FactoryGirl.create(:attachment_file, name: "attachment_file_2") }
-    let(:attachment_file_3) { FactoryGirl.create(:attachment_file, name: "attachment_file_3") }
+    let(:attachment_file_1) { FactoryBot.create(:attachment_file, name: "hoge") }
+    let(:attachment_file_2) { FactoryBot.create(:attachment_file, name: "attachment_file_2") }
+    let(:attachment_file_3) { FactoryBot.create(:attachment_file, name: "attachment_file_3") }
     before do
       attachment_file_1;attachment_file_2;attachment_file_3
       get :index
@@ -17,27 +17,27 @@ describe AttachmentFilesController do
   end
   
   describe "GET show" do
-    let(:attachment_file) { FactoryGirl.create(:attachment_file) }
+    let(:attachment_file) { FactoryBot.create(:attachment_file) }
     before { get :show, params: {id: attachment_file.id} }
     it { expect(assigns(:attachment_file)).to eq attachment_file }
   end
 
   describe "GET show" do
-    let(:attachment_file) { FactoryGirl.create(:attachment_file) }
+    let(:attachment_file) { FactoryBot.create(:attachment_file) }
     before { get :show, params: {id: attachment_file.id}, format: 'json' }
     it { expect(assigns(:attachment_file)).to eq attachment_file }
     it { expect(response.body).to include("\"global_id\":\"#{attachment_file.global_id}\"") }
   end
   
   describe "GET edit" do
-    let(:attachment_file) { FactoryGirl.create(:attachment_file) }
+    let(:attachment_file) { FactoryBot.create(:attachment_file) }
     before { get :edit, params: {id: attachment_file.id} }
     it { expect(assigns(:attachment_file)).to eq attachment_file }
   end
   
   describe "POST create", :current => true do
     let(:md5hash){ Digest::MD5.hexdigest(File.open("spec/fixtures/files/test_image.jpg", 'rb').read) }
-    let(:filetopic) { FactoryGirl.create(:filetopic) }
+    let(:filetopic) { FactoryBot.create(:filetopic) }
     let(:attributes) { {data: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg'), 'image/jpeg'), filetopic_id: filetopic.id} }
     it { expect { post :create, params: {attachment_file: attributes}, format: 'json' }.to change(AttachmentFile, :count).by(1) }
     describe "assigns as @attachment_file" do
@@ -52,7 +52,7 @@ describe AttachmentFilesController do
   end
 
   describe "GET property" do
-    let(:attachment_file) { FactoryGirl.create(:attachment_file,name: "test") }
+    let(:attachment_file) { FactoryBot.create(:attachment_file,name: "test") }
     before do
       attachment_file
       get :property, params: {id: attachment_file.id}
@@ -61,7 +61,7 @@ describe AttachmentFilesController do
   end
 
   describe "GET picture" do
-    let(:attachment_file) { FactoryGirl.create(:attachment_file,name: "test") }
+    let(:attachment_file) { FactoryBot.create(:attachment_file,name: "test") }
     before do
       attachment_file
       get :picture, params: {id: attachment_file.id}
@@ -73,7 +73,7 @@ describe AttachmentFilesController do
   end
 
   describe "GET download" do
-    let(:attachment_file) { FactoryGirl.create(:attachment_file) }
+    let(:attachment_file) { FactoryBot.create(:attachment_file) }
     before do
       attachment_file
     end
@@ -85,9 +85,9 @@ describe AttachmentFilesController do
   end
 
   describe "POST bundle_edit" do
-    let(:obj1) { FactoryGirl.create(:attachment_file, description: "obj1") }
-    let(:obj2) { FactoryGirl.create(:attachment_file, description: "obj2") }
-    let(:obj3) { FactoryGirl.create(:attachment_file, description: "obj3") }
+    let(:obj1) { FactoryBot.create(:attachment_file, description: "obj1") }
+    let(:obj2) { FactoryBot.create(:attachment_file, description: "obj2") }
+    let(:obj3) { FactoryBot.create(:attachment_file, description: "obj3") }
     let(:ids){[obj1.id,obj2.id]}
     before do
       obj1
@@ -102,9 +102,9 @@ describe AttachmentFilesController do
 
   describe "POST bundle_update" do
     let(:obj3description){"obj3"}
-    let(:obj1) { FactoryGirl.create(:attachment_file, description: "obj1") }
-    let(:obj2) { FactoryGirl.create(:attachment_file, description: "obj2") }
-    let(:obj3) { FactoryGirl.create(:attachment_file, description: obj3description) }
+    let(:obj1) { FactoryBot.create(:attachment_file, description: "obj1") }
+    let(:obj2) { FactoryBot.create(:attachment_file, description: "obj2") }
+    let(:obj3) { FactoryBot.create(:attachment_file, description: obj3description) }
     let(:attributes) { {description: "update_description"} }
     let(:ids){[obj1.id,obj2.id]}
     before do

@@ -3,9 +3,9 @@ require 'spec_helper'
 describe NestedResources::BoxesController do
   let(:parent_name){:bib}
   let(:child_name){:box}
-  let(:parent) { FactoryGirl.create(parent_name) }
-  let(:child) { FactoryGirl.create(child_name) }
-  let(:user) { FactoryGirl.create(:user) }
+  let(:parent) { FactoryBot.create(parent_name) }
+  let(:child) { FactoryBot.create(child_name) }
+  let(:user) { FactoryBot.create(:user) }
   let(:url){"where_i_came_from"}
   let(:name){"child_name"}
   let(:attributes) { {name: name} }

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :bib do |f|
     f.entry_type "エントリ種別１"
     f.abbreviation "略１"
@@ -14,7 +14,7 @@ FactoryGirl.define do
     f.link_url "URL１"
     f.doi "doi１"
     f.authors {
-      [ FactoryGirl.create(:author, name: "Test_1"), FactoryGirl.create(:author, name: "Test_2") ]
+      [ FactoryBot.create(:author, name: "Test_1"), FactoryBot.create(:author, name: "Test_2") ]
     }
   end
 end

@@ -10,7 +10,7 @@ describe Bib do
     
   describe "validates" do
     describe "name" do
-      let(:bib) { FactoryGirl.build(:bib, name: name) }
+      let(:bib) { FactoryBot.build(:bib, name: name) }
       context "is presence" do
         let(:name) { "sample_bib_name" }
         it { expect(bib).to be_valid }
@@ -32,13 +32,13 @@ describe Bib do
     end
     describe "author" do
       context "is presence" do
-        let(:bib) { FactoryGirl.build(:bib, authors: [author_1, author_2]) }
-        let(:author_1) { FactoryGirl.create(:author, name: "name_1") }
-        let(:author_2) { FactoryGirl.create(:author, name: "name_2") }
+        let(:bib) { FactoryBot.build(:bib, authors: [author_1, author_2]) }
+        let(:author_1) { FactoryBot.create(:author, name: "name_1") }
+        let(:author_2) { FactoryBot.create(:author, name: "name_2") }
         it { expect(bib).to be_valid }
       end
       context "is blank" do
-        let(:bib) { FactoryGirl.build(:bib, authors: []) }
+        let(:bib) { FactoryBot.build(:bib, authors: []) }
         it { expect(bib).not_to be_valid }
       end
     end
@@ -47,7 +47,7 @@ describe Bib do
   describe ".doi_link_url" do
     subject { bib.doi_link_url }
     before { bib }
-    let(:bib) { FactoryGirl.create(:bib, doi: doi_1) }
+    let(:bib) { FactoryBot.create(:bib, doi: doi_1) }
     context "doi is nil" do
       let(:doi_1) { nil }
       it { expect(subject).to be_nil }
@@ -60,7 +60,7 @@ describe Bib do
   
   describe "#primary_pdf_attachment_file" do
     subject { bib.primary_pdf_attachment_file }
-    let(:bib) { FactoryGirl.build(:bib) }
+    let(:bib) { FactoryBot.build(:bib) }
     before do
       bib
       allow(bib).to receive(:pdf_files).and_return(pdf_files)
@@ -81,20 +81,20 @@ describe Bib do
 
   describe "#build_label" do
     subject { bib.build_label }
-    let(:bib) { FactoryGirl.create(:bib, name: "foo", authors: [author_1, author_2]) }
-    let(:author_1) { FactoryGirl.create(:author, name: "bar") }
-    let(:author_2) { FactoryGirl.create(:author, name: "baz") }
+    let(:bib) { FactoryBot.create(:bib, name: "foo", authors: [author_1, author_2]) }
+    let(:author_1) { FactoryBot.create(:author, name: "bar") }
+    let(:author_2) { FactoryBot.create(:author, name: "baz") }
     it { expect(subject).to eq "Id,Name,Authors\n#{bib.global_id},foo,bar and baz\n" }
   end
 
   describe ".build_bundle_label" do
     subject { Bib.build_bundle_label(bibs) }
     let(:bibs) { Bib.all }
-    let(:bib_1) { FactoryGirl.create(:bib, name: "bib_1", authors: [author_1]) }
-    let(:bib_2) { FactoryGirl.create(:bib, name: "bib_2", authors: [author_2, author_3]) }
-    let(:author_1) { FactoryGirl.create(:author, name: "author_1") }
-    let(:author_2) { FactoryGirl.create(:author, name: "author_2") }
-    let(:author_3) { FactoryGirl.create(:author, name: "author_3") }
+    let(:bib_1) { FactoryBot.create(:bib, name: "bib_1", authors: [author_1]) }
+    let(:bib_2) { FactoryBot.create(:bib, name: "bib_2", authors: [author_2, author_3]) }
+    let(:author_1) { FactoryBot.create(:author, name: "author_1") }
+    let(:author_2) { FactoryBot.create(:author, name: "author_2") }
+    let(:author_3) { FactoryBot.create(:author, name: "author_3") }
     before do
       bib_1
       bib_2
@@ -106,16 +106,16 @@ describe Bib do
 
   describe "#author_lists" do
     subject { bib.author_lists }
-    let(:bib) { FactoryGirl.create(:bib, authors: [author_1, author_2]) }
-    let(:author_1) { FactoryGirl.create(:author, name: "author_1") }
-    let(:author_2) { FactoryGirl.create(:author, name: "author_2") }
+    let(:bib) { FactoryBot.create(:bib, authors: [author_1, author_2]) }
+    let(:author_1) { FactoryBot.create(:author, name: "author_1") }
+    let(:author_2) { FactoryBot.create(:author, name: "author_2") }
     it { expect(subject).to eq "author_1 and author_2" }
   end
 
   describe "#pdf_files" do
     subject { bib.send(:pdf_files) }
-    let(:bib) { FactoryGirl.build(:bib) }
-    let(:attachment_file) { FactoryGirl.create(:attachment_file, data_content_type: data_content_type) }
+    let(:bib) { FactoryBot.build(:bib) }
+    let(:attachment_file) { FactoryBot.create(:attachment_file, data_content_type: data_content_type) }
     let(:data_content_type) { "application/pdf" }
     before do
       bib
@@ -145,8 +145,8 @@ describe Bib do
   describe ".build_bundle_tex" do
     subject { Bib.build_bundle_tex(bibs) }
     let(:bibs) { Bib.all }
-    let(:bib_1) { FactoryGirl.create(:bib, name: "bib_1", authors: [author]) }
-    let(:author) { FactoryGirl.create(:author, name: "name_1") }
+    let(:bib_1) { FactoryBot.create(:bib, name: "bib_1", authors: [author]) }
+    let(:author) { FactoryBot.create(:author, name: "name_1") }
     before { bib_1 }
     it { expect(subject).to eq "\n@misc{#{bib_1.global_id},\n\tauthor = \"name_1\",\n\ttitle = \"bib_1\",\n\tnumber = \"1\",\n\tmonth = \"january\",\n\tjournal = \"雑誌名１\",\n\tvolume = \"1\",\n\tpages = \"100\",\n\tyear = \"2014\",\n\tnote = \"注記１\",\n\tdoi = \"doi１\",\n\tkey = \"キー１\",\n}" }
   end
@@ -154,7 +154,7 @@ describe Bib do
 
   describe "#to_tex" do
     subject { bib.to_tex }
-    let(:bib) { FactoryGirl.create(:bib, entry_type: entry_type, abbreviation: abbreviation) }
+    let(:bib) { FactoryBot.create(:bib, entry_type: entry_type, abbreviation: abbreviation) }
     describe "@article" do
       before do
         bib
@@ -190,7 +190,7 @@ describe Bib do
   describe "#article_tex", :current => true do
     subject { bib.article_tex }
     let(:bib) do
-      FactoryGirl.create(:bib,
+      FactoryBot.create(:bib,
         number: number,
         month: month,
         volume: volume,
@@ -202,9 +202,9 @@ describe Bib do
        )
     end
     let(:authors) { [author, author_1, author_2]}
-    let(:author) { FactoryGirl.create(:author, name: "Kobayashi, K.") }
-    let(:author_1) { FactoryGirl.create(:author, name: "Nakamura, E.") }
-    let(:author_2) { FactoryGirl.create(:author, name: "Ota, T.") }
+    let(:author) { FactoryBot.create(:author, name: "Kobayashi, K.") }
+    let(:author_1) { FactoryBot.create(:author, name: "Nakamura, E.") }
+    let(:author_2) { FactoryBot.create(:author, name: "Ota, T.") }
 
     context "value is nil" do
       let(:number) { "" }
@@ -231,7 +231,7 @@ describe Bib do
   describe "#misc_tex", :current => true do
     subject { bib.misc_tex }
     let(:bib) do
-      FactoryGirl.create(:bib,
+      FactoryBot.create(:bib,
         number: number,
         month: month,
         journal: journal,
@@ -244,7 +244,7 @@ describe Bib do
         authors: [author]
        )
     end
-    let(:author) { FactoryGirl.create(:author, name: "name_1") }
+    let(:author) { FactoryBot.create(:author, name: "name_1") }
     context "value is nil" do
       let(:number) { "" }
       let(:month) { "" }
@@ -275,7 +275,7 @@ describe Bib do
   describe "#to_html" do
     subject { bib.to_html }
     let(:bib) do
-      FactoryGirl.create(:bib,
+      FactoryBot.create(:bib,
         name: "bib_name",
         journal: journal,
         volume: volume,
@@ -288,42 +288,42 @@ describe Bib do
     let(:volume) { "1" }
     let(:pages) { "100" }
     let(:year) { "2014" }
-    let(:author_1) { FactoryGirl.create(:author, name: "author_1") }
-    let(:author_2) { FactoryGirl.create(:author, name: "author_2") }
+    let(:author_1) { FactoryBot.create(:author, name: "author_1") }
+    let(:author_2) { FactoryBot.create(:author, name: "author_2") }
     it { expect(subject).to eq "author_1 (#{year}) bib_name, <i>#{journal}</i>, <b>#{volume}</b>, #{pages}." }
   end
 
   describe "#author_valid?" do
     subject { bib.send(:author_valid?) }
-    let(:bib) { FactoryGirl.build(:bib, authors: []) }
+    let(:bib) { FactoryBot.build(:bib, authors: []) }
     it { expect(subject).to eq "can't be blank" }
   end
 
   describe "#referrings_analyses" do
-    let(:bib) { FactoryGirl.create(:bib) }
+    let(:bib) { FactoryBot.create(:bib) }
 
-    let(:box_1){ FactoryGirl.create(:box)}
-    let(:place_1){ FactoryGirl.create(:place)}
-    let(:stone_1) { FactoryGirl.create(:stone, name: "hoge", box_id: box_1.id) }
-    let(:stone_2) { FactoryGirl.create(:stone, name: "stone_2", place_id: place_1.id) }
-    let(:stone_3) { FactoryGirl.create(:stone, name: "stone_3", box_id: box_1.id) }
-    let(:stone_4) { FactoryGirl.create(:stone, name: "stone_3") }
+    let(:box_1){ FactoryBot.create(:box)}
+    let(:place_1){ FactoryBot.create(:place)}
+    let(:stone_1) { FactoryBot.create(:stone, name: "hoge", box_id: box_1.id) }
+    let(:stone_2) { FactoryBot.create(:stone, name: "stone_2", place_id: place_1.id) }
+    let(:stone_3) { FactoryBot.create(:stone, name: "stone_3", box_id: box_1.id) }
+    let(:stone_4) { FactoryBot.create(:stone, name: "stone_3") }
     let(:analysis_1) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_1
       analysis
     end
     let(:analysis_2) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_2
       analysis
     end
     let(:analysis_3) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_3
       analysis
     end
-    let(:analysis_4) { FactoryGirl.create(:analysis) }
+    let(:analysis_4) { FactoryBot.create(:analysis) }
 
     before do
       bib

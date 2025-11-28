@@ -1,17 +1,17 @@
 require 'spec_helper'
 
 describe SpotsController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
   
   describe "GET edit" do
-    let(:obj) { FactoryGirl.create(:spot) }
+    let(:obj) { FactoryBot.create(:spot) }
     before{ get :edit, params: {id: obj.id}, format: :html }
     it { expect(assigns(:spot)).to eq obj }
   end
   
   describe "PUT update" do
-    let(:obj) { FactoryGirl.create(:spot, name: "spot") }
+    let(:obj) { FactoryBot.create(:spot, name: "spot") }
     before{ put :update, params: {id: obj.id, spot: attributes} }
     describe "with valid attributes" do
       let(:attributes) { {name: "update_name"} }
@@ -29,13 +29,13 @@ describe SpotsController do
   end
   
   describe "GET property" do
-    let(:spot) { FactoryGirl.create(:spot) }
+    let(:spot) { FactoryBot.create(:spot) }
     before { get :property, params: {id: spot.id} }
     it { expect(assigns(:spot)).to eq spot }
   end
   
   describe "GET picture" do
-    let(:spot) { FactoryGirl.create(:spot) }
+    let(:spot) { FactoryBot.create(:spot) }
     before { get :picture, params: {id: spot.id} }
     it { expect(assigns(:spot)).to eq spot }
   end

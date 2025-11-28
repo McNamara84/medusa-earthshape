@@ -1,22 +1,22 @@
 require 'spec_helper'
 
 RSpec.describe "Factory in Model Spec", type: :model do
-  it "builds user with FactoryGirl in model context" do
-    puts "Starting model test with FactoryGirl.build..."
+  it "builds user with FactoryBot in model context" do
+    puts "Starting model test with FactoryBot.build..."
     
-    user = FactoryGirl.build(:user)
+    user = FactoryBot.build(:user)
     
-    puts "User built via FactoryGirl: #{user.username}"
+    puts "User built via FactoryBot: #{user.username}"
     expect(user).to be_valid
     puts "Model test completed!"
   end
   
-  it "creates user with FactoryGirl in model context" do
-    puts "Starting model test with FactoryGirl.create..."
+  it "creates user with FactoryBot in model context" do
+    puts "Starting model test with FactoryBot.create..."
     
-    user = FactoryGirl.create(:user)
+    user = FactoryBot.create(:user)
     
-    puts "User created via FactoryGirl: #{user.id}"
+    puts "User created via FactoryBot: #{user.id}"
     expect(user).to be_persisted
     puts "Model test completed!"
   end

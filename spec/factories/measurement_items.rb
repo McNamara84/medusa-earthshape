@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :measurement_item do
     nickname "測定１"
     description "説明１"

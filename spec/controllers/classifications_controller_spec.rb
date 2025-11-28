@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe ClassificationsController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "GET index" do
-    let(:classification_1) { FactoryGirl.create(:classification, name: "hoge") }
-    let(:classification_2) { FactoryGirl.create(:classification, name: "classification_2") }
-    let(:classification_3) { FactoryGirl.create(:classification, name: "classification_3") }
+    let(:classification_1) { FactoryBot.create(:classification, name: "hoge") }
+    let(:classification_2) { FactoryBot.create(:classification, name: "classification_2") }
+    let(:classification_3) { FactoryBot.create(:classification, name: "classification_3") }
     let(:classifications){ Classification.all }
     before do
       classification_1;classification_2;classification_3
@@ -19,7 +19,7 @@ describe ClassificationsController do
 
   # This "GET show" has no html.
   describe "GET show" do
-    let(:classification) { FactoryGirl.create(:classification) }
+    let(:classification) { FactoryBot.create(:classification) }
     before do
       classification
       get :show, params: {id: classification.id}, format: :json
@@ -28,7 +28,7 @@ describe ClassificationsController do
   end
 
   describe "GET edit" do
-    let(:classification) { FactoryGirl.create(:classification) }
+    let(:classification) { FactoryBot.create(:classification) }
     before do
       classification
       get :edit, params: {id: classification.id}
@@ -61,7 +61,7 @@ describe ClassificationsController do
   end
 
   describe "PUT update" do
-    let(:classification) { FactoryGirl.create(:classification, name: "classification", description: "description") }
+    let(:classification) { FactoryBot.create(:classification, name: "classification", description: "description") }
     before do
       classification
       put :update, params: {id: classification.id, classification: attributes}
@@ -84,7 +84,7 @@ describe ClassificationsController do
   end
 
   describe "DELETE destroy" do
-    let(:classification) { FactoryGirl.create(:classification, name: "classification", description: "description") }
+    let(:classification) { FactoryBot.create(:classification, name: "classification", description: "description") }
     before{ classification }
     it { expect { delete :destroy, params: {id: classification.id} }.to change(Classification, :count).by(-1) }
   end

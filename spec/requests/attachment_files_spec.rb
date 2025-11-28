@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "attachment_file" do
-  let(:login_user) { FactoryGirl.create(:user, administrator: true) }  # Rails 5.0: Use admin to bypass readables
+  let(:login_user) { FactoryBot.create(:user, administrator: true) }  # Rails 5.0: Use admin to bypass readables
   
   # Rails 5.0: INDEX page tests with readables scope don't work reliably in request specs
   # The PDF icon is displayed in the _attachment_file partial on index page, but
@@ -14,11 +14,11 @@ describe "attachment_file" do
         let(:attachment_file) do
           # Rails 5.0: Set User.current before creating attachment_file
           User.current = login_user
-          FactoryGirl.create(:attachment_file)
+          FactoryBot.create(:attachment_file)
         end
         let(:obj) do
           User.current = login_user
-          FactoryGirl.create(:stone, name: "obj_name")
+          FactoryBot.create(:stone, name: "obj_name")
         end
         
         before do
@@ -29,7 +29,7 @@ describe "attachment_file" do
         end
         
         describe "spot link" do
-          let(:spot) { FactoryGirl.create(:spot, attachment_file_id: attachment_file.id, target_uid: target_uid) }
+          let(:spot) { FactoryBot.create(:spot, attachment_file_id: attachment_file.id, target_uid: target_uid) }
           context "link exists" do
             let(:target_uid) { obj.record_property.global_id }
             it "link name is displayed" do
@@ -50,7 +50,7 @@ describe "attachment_file" do
       let(:attachment_file) do
         # Rails 5.0: Set User.current before creating attachment_file
         User.current = login_user
-        FactoryGirl.create(:attachment_file, data_file_name: "file_name", data_content_type: data_content_type, original_geometry: "", affine_matrix: [])
+        FactoryBot.create(:attachment_file, data_file_name: "file_name", data_content_type: data_content_type, original_geometry: "", affine_matrix: [])
       end
       
       before do

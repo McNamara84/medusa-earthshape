@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :analysis do
     name "分析１"
     description "説明１"

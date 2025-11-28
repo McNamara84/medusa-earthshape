@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :chemistry do
     association :analysis, factory: :analysis
     association :measurement_item, factory: :measurement_item

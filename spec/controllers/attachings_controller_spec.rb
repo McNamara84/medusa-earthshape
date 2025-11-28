@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 describe AttachingsController do
-  let(:user) { FactoryGirl.create(:user) }
-  let(:place1) { FactoryGirl.create(:place,name: "place1") }
-  let(:place2) { FactoryGirl.create(:place,name: "place2") }
-  let(:attachment_file1) { FactoryGirl.create(:attachment_file,name: "attachment_file1") }
-  let(:attachment_file2) { FactoryGirl.create(:attachment_file,name: "attachment_file2") }
-  let(:attaching1) { FactoryGirl.create(:attaching,attachable: place1,attachment_file: attachment_file1) }
-  let(:attaching2) { FactoryGirl.create(:attaching,attachable: place1,attachment_file: attachment_file2) }
-  let(:attaching3) { FactoryGirl.create(:attaching,attachable: place2,attachment_file: attachment_file1) }
+  let(:user) { FactoryBot.create(:user) }
+  let(:place1) { FactoryBot.create(:place,name: "place1") }
+  let(:place2) { FactoryBot.create(:place,name: "place2") }
+  let(:attachment_file1) { FactoryBot.create(:attachment_file,name: "attachment_file1") }
+  let(:attachment_file2) { FactoryBot.create(:attachment_file,name: "attachment_file2") }
+  let(:attaching1) { FactoryBot.create(:attaching,attachable: place1,attachment_file: attachment_file1) }
+  let(:attaching2) { FactoryBot.create(:attaching,attachable: place1,attachment_file: attachment_file2) }
+  let(:attaching3) { FactoryBot.create(:attaching,attachable: place2,attachment_file: attachment_file1) }
   before do
     sign_in user 
     attaching1

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :spot do
     association :attachment_file, factory: :attachment_file
     name "画像上点１"

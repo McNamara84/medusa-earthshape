@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe BoxDecorator do
-  let(:user){FactoryGirl.create(:user)}
-  let(:obj){FactoryGirl.create(:box).decorate}
+  let(:user){FactoryBot.create(:user)}
+  let(:obj){FactoryBot.create(:box).decorate}
   before{User.current = user}
 
   describe ".to_json", :current => true do
@@ -18,7 +18,7 @@ describe BoxDecorator do
   end
 
   describe ".primary_picture" do
-    let(:attachment_file){ FactoryGirl.create(:attachment_file) }
+    let(:attachment_file){ FactoryBot.create(:attachment_file) }
     let(:picture) { obj.primary_picture(width: width, height: height) }
     let(:capybara) { Capybara.string(picture) }
     let(:body) { capybara.find("body") }
@@ -46,7 +46,7 @@ describe BoxDecorator do
 
   describe ".family_tree" do
     subject{obj.family_tree}
-    let(:child){FactoryGirl.create(:box)}
+    let(:child){FactoryBot.create(:box)}
     before do
       allow(obj.h).to receive(:can?).and_return(true)
       obj.children << child
@@ -63,11 +63,11 @@ describe BoxDecorator do
 
   describe ".tree_node" do
     subject{obj.tree_node}
-    let(:stone){FactoryGirl.create(:stone)}
-    let(:child){FactoryGirl.create(:box)}
-    let(:analysis){FactoryGirl.create(:analysis)}
-    let(:bib){FactoryGirl.create(:bib)}
-    let(:attachment_file){FactoryGirl.create(:attachment_file)}
+    let(:stone){FactoryBot.create(:stone)}
+    let(:child){FactoryBot.create(:box)}
+    let(:analysis){FactoryBot.create(:analysis)}
+    let(:bib){FactoryBot.create(:bib)}
+    let(:attachment_file){FactoryBot.create(:attachment_file)}
     it{expect(subject).to include("<span class=\"glyphicon glyphicon-folder-close\"></span>")}
     it{expect(subject).to include("#{obj.name}")}
     before do
@@ -102,7 +102,7 @@ describe BoxDecorator do
       it{expect(subject).to be_blank}
     end
     context "count zero" do
-      let(:stone){FactoryGirl.create(:stone)}
+      let(:stone){FactoryBot.create(:stone)}
       before{obj.stones << stone}
       it{expect(subject).to include("<span>#{count}</span>")}
       it{expect(subject).to include("<span class=\"glyphicon glyphicon-#{icon}\"></span>")}
@@ -118,7 +118,7 @@ describe BoxDecorator do
       it{expect(subject).to be_blank}
     end
     context "count not zero" do
-      let(:child){FactoryGirl.create(:box)}
+      let(:child){FactoryBot.create(:box)}
       before{obj.children << child}
       it{expect(subject).to include("<span>#{count}</span>")}
       it{expect(subject).to include("<span class=\"glyphicon glyphicon-#{icon}\"></span>")}
@@ -134,8 +134,8 @@ describe BoxDecorator do
       it{expect(subject).to be_blank}
     end
     context "count not zero" do
-      let(:stone){FactoryGirl.create(:stone)}
-      let(:analysis){FactoryGirl.create(:analysis)}
+      let(:stone){FactoryBot.create(:stone)}
+      let(:analysis){FactoryBot.create(:analysis)}
       before{stone.analyses  << analysis}
       before{obj.stones << stone}
       it{expect(subject).to include("<span>#{count}</span>")}
@@ -152,7 +152,7 @@ describe BoxDecorator do
       it{expect(subject).to be_blank}
     end
     context "count not zero" do
-      let(:bib){FactoryGirl.create(:bib)}
+      let(:bib){FactoryBot.create(:bib)}
       before{obj.bibs << bib}
       it{expect(subject).to include("<span>#{count}</span>")}
       it{expect(subject).to include("<span class=\"glyphicon glyphicon-#{icon}\"></span>")}
@@ -168,7 +168,7 @@ describe BoxDecorator do
       it{expect(subject).to be_blank}
     end
     context "count zero" do
-      let(:attachment_file){FactoryGirl.create(:attachment_file)}
+      let(:attachment_file){FactoryBot.create(:attachment_file)}
       before{obj.attachment_files << attachment_file}
       it{expect(subject).to include("<span>#{count}</span>")}
       it{expect(subject).to include("<span class=\"glyphicon glyphicon-#{icon}\"></span>")}
@@ -187,7 +187,7 @@ describe BoxDecorator do
 
   describe ".to_tex" do
     subject { obj.to_tex }
-    let(:stone) { FactoryGirl.create(:stone, name: "name_1", box_id: obj.id) }
+    let(:stone) { FactoryBot.create(:stone, name: "name_1", box_id: obj.id) }
     let(:time_now) { Time.now.to_date }
     before { obj.stones << stone }
     it { expect(subject).to eq "%------------\nThe sample names and ID of each mounted materials are listed in Table \\ref{mount:materials}.\n%------------\n\\begin{footnotesize}\n\\begin{table}\n\\caption{Stones mounted on #{obj.name} (#{obj.global_id}) as of #{time_now}.}\n\\begin{center}\n\\begin{tabular}{lll}\n\\hline\nstone name\t&\tID\t&\tremark\\\\\n\\hline\nname_1\t&\t#{stone.global_id}\t&\t\\\\\n\\hline\n\\end{tabular}\n\\end{center}\n\\label{mount:materials}\n\\end{table}\n\\end{footnotesize}\n%------------" }

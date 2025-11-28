@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :global_qr do
     association :record_property, factory: :record_property
     file_name "ファイル名１"

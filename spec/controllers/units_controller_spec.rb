@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe UnitsController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "GET index" do
-    let(:unit_1) { FactoryGirl.create(:unit, name: "hoge") }
-    let(:unit_2) { FactoryGirl.create(:unit, name: "unit_2") }
-    let(:unit_3) { FactoryGirl.create(:unit, name: "unit_3") }
+    let(:unit_1) { FactoryBot.create(:unit, name: "hoge") }
+    let(:unit_2) { FactoryBot.create(:unit, name: "unit_2") }
+    let(:unit_3) { FactoryBot.create(:unit, name: "unit_3") }
     let(:params) { {q: query, page: 2, per_page: 1} }
     before do
       unit_1;unit_2;unit_3
@@ -25,7 +25,7 @@ describe UnitsController do
 
   # This "GET show" has no html.
   describe "GET show" do
-    let(:unit) { FactoryGirl.create(:unit) }
+    let(:unit) { FactoryBot.create(:unit) }
     before do
       unit
       get :show, params: {id: unit.id}, format: :json
@@ -34,7 +34,7 @@ describe UnitsController do
   end
 
   describe "GET edit" do
-    let(:unit) { FactoryGirl.create(:unit) }
+    let(:unit) { FactoryBot.create(:unit) }
     before do
       unit
       get :edit, params: {id: unit.id}
@@ -68,7 +68,7 @@ describe UnitsController do
   end
 
   describe "PUT update" do
-    let(:unit) { FactoryGirl.create(:unit, name: "unit") }
+    let(:unit) { FactoryBot.create(:unit, name: "unit") }
     before do
       unit
       put :update, params: {id: unit.id, unit: attributes}
@@ -89,7 +89,7 @@ describe UnitsController do
   end
 
   describe "DELETE destroy" do
-    let(:unit) { FactoryGirl.create(:unit, name: "unit") }
+    let(:unit) { FactoryBot.create(:unit, name: "unit") }
     before { unit }
     it { expect { delete :destroy, params: {id: unit.id} }.to change(Unit, :count).by(-1) }
   end

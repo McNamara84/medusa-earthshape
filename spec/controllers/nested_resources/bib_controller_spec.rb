@@ -3,11 +3,11 @@ require 'spec_helper'
 describe NestedResources::BibsController do
   let(:parent_name){:analysis}
   let(:child_name){:bib}
-  let(:parent) { FactoryGirl.create(parent_name) }
-  let(:child) { FactoryGirl.create(child_name) }
-  let(:user) { FactoryGirl.create(:user) }
+  let(:parent) { FactoryBot.create(parent_name) }
+  let(:child) { FactoryBot.create(child_name) }
+  let(:user) { FactoryBot.create(:user) }
   let(:url){"where_i_came_from"}
-  let(:author_id) { FactoryGirl.create(:author).id } 
+  let(:author_id) { FactoryBot.create(:author).id } 
   let(:attributes) { {name: name, author_ids: ["#{author_id}"]} }
   let(:name){"child_name"}
   before { request.env["HTTP_REFERER"]  = url }

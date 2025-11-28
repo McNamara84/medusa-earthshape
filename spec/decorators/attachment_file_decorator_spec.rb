@@ -2,8 +2,8 @@ require 'spec_helper'
 include ActionDispatch::TestProcess
 
 describe AttachmentFileDecorator do
-  let(:user){ FactoryGirl.create(:user)}
-  let(:attachment_file){FactoryGirl.create(:attachment_file).decorate}
+  let(:user){ FactoryBot.create(:user)}
+  let(:attachment_file){FactoryBot.create(:attachment_file).decorate}
   before{User.current = user}
 
   describe ".picture" do
@@ -59,7 +59,7 @@ describe AttachmentFileDecorator do
       it {expect(subject).not_to include "{\\footnotesize \\circle{0.7} \\url{"}
     end
     context "spots is not empty " do
-      let(:spot){FactoryGirl.create(:spot)}
+      let(:spot){FactoryBot.create(:spot)}
       before{attachment_file.spots << spot }
       it {expect(subject).to include "{\\footnotesize \\circle{0.7} \\url{"}
       context "target_uid is empty" do

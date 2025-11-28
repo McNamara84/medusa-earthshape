@@ -1,21 +1,21 @@
 require 'spec_helper'
 
-# FIXME: Rails 5.2 - Controller specs with FactoryGirl nested associations hang indefinitely
-# Problem: Multiple before blocks evaluating let variables with nested FactoryGirl.create
+# FIXME: Rails 5.2 - Controller specs with FactoryBot nested associations hang indefinitely
+# Problem: Multiple before blocks evaluating let variables with nested FactoryBot.create
 # causes deadlock in Rails 5.2. Issue tracked for Rails 6.0 upgrade.
 # Skipped: 2025-11-16
 # Testing 2025-11-16: Re-enable after HasRecordProperty fix
 describe NestedResources::ChemistriesController do
   let(:parent_name){:analysis}
   let(:child_name){:chemistry}
-  let(:parent) { FactoryGirl.create(parent_name) }
-  let(:child) { FactoryGirl.create(child_name) }
-  let(:user) { FactoryGirl.create(:user) }
+  let(:parent) { FactoryBot.create(parent_name) }
+  let(:child) { FactoryBot.create(child_name) }
+  let(:user) { FactoryBot.create(:user) }
   let(:url){"where_i_came_from"}
   let(:value){1}
-  let(:unit){FactoryGirl.create(:unit) }
-  let(:measurement_item) { FactoryGirl.create(:measurement_item) }
-  let(:category_measurement_item){FactoryGirl.create(:category_measurement_item)}
+  let(:unit){FactoryBot.create(:unit) }
+  let(:measurement_item) { FactoryBot.create(:measurement_item) }
+  let(:category_measurement_item){FactoryBot.create(:category_measurement_item)}
   let(:measurement_item_id){measurement_item.id}
   let(:attributes) { {measurement_item_id: measurement_item_id,unit_id: unit.id,value: value ,uncertainty: 1} }
   let(:mesurement_category_id){category_measurement_item.measurement_category_id}
@@ -43,8 +43,8 @@ describe NestedResources::ChemistriesController do
 
   describe "POST multiple_create" do
     let(:method){ post :multiple_create, params: {parent_resource: :analysis, analysis_id: parent, chemistries: attributes} }
-    let(:measurement_item){FactoryGirl.create(:measurement_item) }
-    let(:measurement_item2){FactoryGirl.create(:measurement_item) }
+    let(:measurement_item){FactoryBot.create(:measurement_item) }
+    let(:measurement_item2){FactoryBot.create(:measurement_item) }
     let(:attributes) {[{measurement_item_id: measurement_item.id,unit_id: unit.id,value: 1,uncertainty: 1},{measurement_item_id: measurement_item2.id,unit_id: unit.id,value: 2,uncertainty: 2}] }
 
     it { expect {method}.to change(Chemistry, :count).by(attributes.count) }

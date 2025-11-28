@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :place do
     name "場所１"
     description "説明１"

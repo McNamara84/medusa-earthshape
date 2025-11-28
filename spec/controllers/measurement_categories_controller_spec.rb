@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe MeasurementCategoriesController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "GET index" do
-    let(:measurement_category_1) { FactoryGirl.create(:measurement_category, name: "hoge") }
-    let(:measurement_category_2) { FactoryGirl.create(:measurement_category, name: "measurement_category_2") }
-    let(:measurement_category_3) { FactoryGirl.create(:measurement_category, name: "measurement_category_3") }
+    let(:measurement_category_1) { FactoryBot.create(:measurement_category, name: "hoge") }
+    let(:measurement_category_2) { FactoryBot.create(:measurement_category, name: "measurement_category_2") }
+    let(:measurement_category_3) { FactoryBot.create(:measurement_category, name: "measurement_category_3") }
     let(:measurement_categories){ MeasurementCategory.all }
     before do
       measurement_category_1;measurement_category_2;measurement_category_3
@@ -20,9 +20,9 @@ describe MeasurementCategoriesController do
 
   # This "GET show" has no html.
   describe "GET show", :current => true do
-    let(:obj) { FactoryGirl.create(:measurement_category) }
-    let(:measurement_item_1) { FactoryGirl.create(:measurement_item, nickname: "foo") }
-    let(:measurement_item_2) { FactoryGirl.create(:measurement_item, nickname: "bar") }
+    let(:obj) { FactoryBot.create(:measurement_category) }
+    let(:measurement_item_1) { FactoryBot.create(:measurement_item, nickname: "foo") }
+    let(:measurement_item_2) { FactoryBot.create(:measurement_item, nickname: "bar") }
     before do
       obj 
       obj.measurement_items << measurement_item_1
@@ -36,7 +36,7 @@ describe MeasurementCategoriesController do
   end
 
   describe "GET edit" do
-    let(:obj) { FactoryGirl.create(:measurement_category) }
+    let(:obj) { FactoryBot.create(:measurement_category) }
     before do
       obj
       get :edit, params: {id: obj.id}
@@ -69,7 +69,7 @@ describe MeasurementCategoriesController do
   end
 
   describe "PUT update" do
-    let(:obj) { FactoryGirl.create(:measurement_category, name: "measurement_category", description: "description") }
+    let(:obj) { FactoryBot.create(:measurement_category, name: "measurement_category", description: "description") }
     before do
       obj
       put :update, params: {id: obj.id, measurement_category: attributes}
@@ -92,8 +92,8 @@ describe MeasurementCategoriesController do
   end
 
   describe "POST duplicate" do
-    let(:obj) { FactoryGirl.create(:measurement_category, name: "aaa",description: "description") }
-    let(:measurement_item) { FactoryGirl.create(:measurement_item) }
+    let(:obj) { FactoryBot.create(:measurement_category, name: "aaa",description: "description") }
+    let(:measurement_item) { FactoryBot.create(:measurement_item) }
     before do 
       obj
       obj.measurement_items << measurement_item
@@ -112,7 +112,7 @@ describe MeasurementCategoriesController do
   end
 
   describe "DELETE destroy" do
-    let(:obj) { FactoryGirl.create(:measurement_category) }
+    let(:obj) { FactoryBot.create(:measurement_category) }
     before{ obj  }
     it { expect { delete :destroy, params: {id: obj.id} }.to change(MeasurementCategory, :count).by(-1) }
   end

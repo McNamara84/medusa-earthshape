@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :classification do
     name "分類１"
     full_name "分類１"

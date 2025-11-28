@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe CategoryMeasurementItemsController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "POST move_to_top" do
-    let(:category_measurement_item) { FactoryGirl.create(:category_measurement_item) }
+    let(:category_measurement_item) { FactoryBot.create(:category_measurement_item) }
     before do
       request.env["HTTP_REFERER"]  = "where_i_came_from"
       category_measurement_item
@@ -19,7 +19,7 @@ describe CategoryMeasurementItemsController do
   end
 
   describe "DELETE destroy" do
-    let(:category_measurement_item) { FactoryGirl.create(:category_measurement_item) }
+    let(:category_measurement_item) { FactoryBot.create(:category_measurement_item) }
     let(:measurement_category){category_measurement_item.measurement_category}
     before do
       request.env["HTTP_REFERER"]  = "where_i_came_from"

@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe BoxTypesController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "GET index" do
-    let(:box_type_1) { FactoryGirl.create(:box_type, name: "hoge") }
-    let(:box_type_2) { FactoryGirl.create(:box_type, name: "box_type_2") }
-    let(:box_type_3) { FactoryGirl.create(:box_type, name: "box_type_3") }
+    let(:box_type_1) { FactoryBot.create(:box_type, name: "hoge") }
+    let(:box_type_2) { FactoryBot.create(:box_type, name: "box_type_2") }
+    let(:box_type_3) { FactoryBot.create(:box_type, name: "box_type_3") }
     let(:box_types){ BoxType.all }
     before do
       box_type_1;box_type_2;box_type_3
@@ -18,7 +18,7 @@ describe BoxTypesController do
 
   # This "GET show" has no html.
   describe "GET show" do
-    let(:box_type) { FactoryGirl.create(:box_type) }
+    let(:box_type) { FactoryBot.create(:box_type) }
     before do
       box_type
       get :show, params: {id: box_type.id}, format: :json
@@ -27,7 +27,7 @@ describe BoxTypesController do
   end
 
   describe "GET edit" do
-    let(:box_type) { FactoryGirl.create(:box_type) }
+    let(:box_type) { FactoryBot.create(:box_type) }
     before do
       box_type
       get :edit, params: {id: box_type.id}
@@ -60,7 +60,7 @@ describe BoxTypesController do
   end
 
   describe "PUT update" do
-    let(:box_type) { FactoryGirl.create(:box_type, name: "box_type", description: "description") }
+    let(:box_type) { FactoryBot.create(:box_type, name: "box_type", description: "description") }
     before do
       box_type
       put :update, params: {id: box_type.id, box_type: attributes}
@@ -83,7 +83,7 @@ describe BoxTypesController do
   end
 
   describe "DELETE destroy" do
-    let(:box_type) { FactoryGirl.create(:box_type, name: "box_type", description: "description") }
+    let(:box_type) { FactoryBot.create(:box_type, name: "box_type", description: "description") }
     before{ box_type }
     it { expect { delete :destroy, params: {id: box_type.id} }.to change(BoxType, :count).by(-1) }
   end

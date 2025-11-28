@@ -2,38 +2,38 @@ require 'spec_helper'
 include ActionDispatch::TestProcess
 
 describe PlacesController do
-  let(:user) { FactoryGirl.create(:user, :username => "user_1") }
+  let(:user) { FactoryBot.create(:user, :username => "user_1") }
   before { sign_in user }
 
   describe "GET index" do
-    let(:place_1) { FactoryGirl.create(:place, :name => "place_1") }
-    let(:place_2) { FactoryGirl.create(:place, :name => "place_2") }
-    let(:place_3) { FactoryGirl.create(:place, :name => "hoge") }
+    let(:place_1) { FactoryBot.create(:place, :name => "place_1") }
+    let(:place_2) { FactoryBot.create(:place, :name => "place_2") }
+    let(:place_3) { FactoryBot.create(:place, :name => "hoge") }
     let(:record_property_1) { RecordProperty.find_by(datum_id: place_1.id) }
     let(:record_property_2) { RecordProperty.find_by(datum_id: place_2.id) }
     let(:record_property_3) { RecordProperty.find_by(datum_id: place_3.id) }
-    let(:user_2) { FactoryGirl.create(:user, :username => "test_2", :email => "email@test_2.co.jp") }
-    let(:user_3) { FactoryGirl.create(:user, :username => "test_3", :email => "email@hoge.co.jp") }
-    let(:group_1) { FactoryGirl.create(:group, :name => "group_1") }
-    let(:group_2) { FactoryGirl.create(:group, :name => "hoge") }
-    let(:group_3) { FactoryGirl.create(:group, :name => "group_3") }
+    let(:user_2) { FactoryBot.create(:user, :username => "test_2", :email => "email@test_2.co.jp") }
+    let(:user_3) { FactoryBot.create(:user, :username => "test_3", :email => "email@hoge.co.jp") }
+    let(:group_1) { FactoryBot.create(:group, :name => "group_1") }
+    let(:group_2) { FactoryBot.create(:group, :name => "hoge") }
+    let(:group_3) { FactoryBot.create(:group, :name => "group_3") }
     let(:params) { {q: query} }
 
-    let(:stone_1) { FactoryGirl.create(:stone, name: "hoge", place_id: place_1.id) }
-    let(:stone_2) { FactoryGirl.create(:stone, name: "stone_2", place_id: place_2.id) }
-    let(:stone_3) { FactoryGirl.create(:stone, name: "stone_3", place_id: place_3.id) }
+    let(:stone_1) { FactoryBot.create(:stone, name: "hoge", place_id: place_1.id) }
+    let(:stone_2) { FactoryBot.create(:stone, name: "stone_2", place_id: place_2.id) }
+    let(:stone_3) { FactoryBot.create(:stone, name: "stone_3", place_id: place_3.id) }
     let(:analysis_1) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_1
       analysis
     end
     let(:analysis_2) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_2
       analysis
     end
     let(:analysis_3) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_3
       analysis
     end
@@ -101,22 +101,22 @@ describe PlacesController do
   end
 
   describe "GET show" do
-    let(:obj){FactoryGirl.create(:place) }
-    let(:stone_1) { FactoryGirl.create(:stone, name: "hoge", place_id: obj.id) }
-    let(:stone_2) { FactoryGirl.create(:stone, name: "stone_2", place_id: obj.id) }
-    let(:stone_3) { FactoryGirl.create(:stone, name: "stone_3", place_id: obj.id) }
+    let(:obj){FactoryBot.create(:place) }
+    let(:stone_1) { FactoryBot.create(:stone, name: "hoge", place_id: obj.id) }
+    let(:stone_2) { FactoryBot.create(:stone, name: "stone_2", place_id: obj.id) }
+    let(:stone_3) { FactoryBot.create(:stone, name: "stone_3", place_id: obj.id) }
     let(:analysis_1) do
-      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1 = FactoryBot.create(:analysis)
       analysis_1.stones << stone_1
       analysis_1
     end
     let(:analysis_2) do
-      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2 = FactoryBot.create(:analysis)
       analysis_2.stones << stone_2
       analysis_2
     end
     let(:analysis_3) do
-      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3 = FactoryBot.create(:analysis)
       analysis_3.stones << stone_3
       analysis_3
     end
@@ -140,7 +140,7 @@ describe PlacesController do
   end
 
   describe "GET edit" do
-    let(:place) { FactoryGirl.create(:place) }
+    let(:place) { FactoryBot.create(:place) }
     before { get :edit, params: {id: place.id} }
     it { expect(assigns(:place)).to eq place }
   end
@@ -155,7 +155,7 @@ describe PlacesController do
   end
 
   describe "PUT update" do
-    let(:obj){FactoryGirl.create(:place) }
+    let(:obj){FactoryBot.create(:place) }
     let(:attributes) { {name: "update_name", latitude: "1.0", longitude: "2.0", elevation: "0"} }
     it { expect {put :update, params: {id: obj.id, place: attributes}}.to change(Place, :count).by(0) }
     before do
@@ -166,29 +166,29 @@ describe PlacesController do
   end
 
   describe "GET map" do
-    let(:obj){FactoryGirl.create(:place) }
+    let(:obj){FactoryBot.create(:place) }
     before{get :map, params: {id: obj.id}}
     it{expect(assigns(:place)).to eq obj}
     it{expect(response).to render_template("map") }
   end
 
   describe "GET property" do
-    let(:obj){FactoryGirl.create(:place) }
+    let(:obj){FactoryBot.create(:place) }
     before{get :property, params: {id: obj.id}}
     it{expect(assigns(:place)).to eq obj}
     it{expect(response).to render_template("property") }
   end
 
   describe "DELETE destroy" do
-    let(:obj){FactoryGirl.create(:place) }
+    let(:obj){FactoryBot.create(:place) }
     before { obj }
     it { expect{delete :destroy, params: {id: obj.id}}.to change(Place, :count).by(-1) }
   end
 
   describe "POST bundle_edit" do
-    let(:obj1) { FactoryGirl.create(:place, name: "obj1") }
-    let(:obj2) { FactoryGirl.create(:place, name: "obj2") }
-    let(:obj3) { FactoryGirl.create(:place, name: "obj3") }
+    let(:obj1) { FactoryBot.create(:place, name: "obj1") }
+    let(:obj2) { FactoryBot.create(:place, name: "obj2") }
+    let(:obj3) { FactoryBot.create(:place, name: "obj3") }
     let(:ids){[obj1.id,obj2.id]}
     before do
       obj1
@@ -203,9 +203,9 @@ describe PlacesController do
 
   describe "POST bundle_update" do
     let(:obj3name){"obj3"}
-    let(:obj1) { FactoryGirl.create(:place, name: "obj1") }
-    let(:obj2) { FactoryGirl.create(:place, name: "obj2") }
-    let(:obj3) { FactoryGirl.create(:place, name: obj3name) }
+    let(:obj1) { FactoryBot.create(:place, name: "obj1") }
+    let(:obj2) { FactoryBot.create(:place, name: "obj2") }
+    let(:obj3) { FactoryBot.create(:place, name: obj3name) }
     let(:attributes) { {name: "update_name"} }
     let(:ids){[obj1.id,obj2.id]}
     before do
@@ -231,7 +231,7 @@ describe PlacesController do
   end
   
   describe "GET download_bundle_label" do
-    let(:place) { FactoryGirl.create(:place) }
+    let(:place) { FactoryBot.create(:place) }
     let(:params_ids) { [place.id.to_s] }
     let(:label) { double(:label) }
     let(:places) { Place.all }

@@ -4,9 +4,9 @@ describe Chemistry do
 
   describe "#display_name" do
     subject { chemistry.display_name }
-    let(:chemistry) { FactoryGirl.build(:chemistry, measurement_item: measurement_item, unit: unit, value: value) }
-    let(:measurement_item) { FactoryGirl.create(:measurement_item, unit: unit, display_in_html: display_in_html, nickname: nickname) }
-    let(:unit) { FactoryGirl.create(:unit) }
+    let(:chemistry) { FactoryBot.build(:chemistry, measurement_item: measurement_item, unit: unit, value: value) }
+    let(:measurement_item) { FactoryBot.create(:measurement_item, unit: unit, display_in_html: display_in_html, nickname: nickname) }
+    let(:unit) { FactoryBot.create(:unit) }
     let(:value) { 1 }
     let(:display_in_html) { "HTML" }
     let(:nickname) { "nickname" }

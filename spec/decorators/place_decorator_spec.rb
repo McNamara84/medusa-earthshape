@@ -1,25 +1,25 @@
 require 'spec_helper'
 
-# FIXME: Rails 5.2 - Decorator specs with FactoryGirl + User.current hang indefinitely
-# Problem: Setting User.current in before block with FactoryGirl.create causes deadlock
+# FIXME: Rails 5.2 - Decorator specs with FactoryBot + User.current hang indefinitely
+# Problem: Setting User.current in before block with FactoryBot.create causes deadlock
 # in Rails 5.2. Issue tracked for Rails 6.0 upgrade.
 # Skipped: 2025-11-16
 # Testing 2025-11-16: Re-enable after HasRecordProperty fix
 describe PlaceDecorator do
-  let(:user){ FactoryGirl.create(:user)}
+  let(:user){ FactoryBot.create(:user)}
   let(:latitude) { 0.0 }
   let(:longitude) { 0.0 }
   let(:elevation) { 0.0 }
-  let(:place){FactoryGirl.create(:place, latitude: latitude, longitude: longitude, elevation: elevation).decorate}
+  let(:place){FactoryBot.create(:place, latitude: latitude, longitude: longitude, elevation: elevation).decorate}
   before{User.current = user}
 
   describe ".latitude_to_text" do
     # Use child trait to get a non-parent place for coordinate display
-    let(:place){FactoryGirl.create(:place, :child, latitude: latitude, longitude: longitude, elevation: elevation).decorate}
+    let(:place){FactoryBot.create(:place, :child, latitude: latitude, longitude: longitude, elevation: elevation).decorate}
     subject{ place.latitude_to_text }
     context "latitude is blank" do
       # For nil test, use parent place (child places require lat/lon)
-      let(:place){FactoryGirl.create(:place, latitude: nil, longitude: 1, elevation: elevation).decorate}
+      let(:place){FactoryBot.create(:place, latitude: nil, longitude: 1, elevation: elevation).decorate}
       it { expect(subject).to eq "" }
     end
     context "latitude S" do
@@ -34,11 +34,11 @@ describe PlaceDecorator do
 
   describe ".longitude_to_text" do
     # Use child trait to get a non-parent place for coordinate display
-    let(:place){FactoryGirl.create(:place, :child, latitude: latitude, longitude: longitude, elevation: elevation).decorate}
+    let(:place){FactoryBot.create(:place, :child, latitude: latitude, longitude: longitude, elevation: elevation).decorate}
     subject{ place.longitude_to_text }
     context "longitude is blank" do
       # For nil test, use parent place (child places require lat/lon)
-      let(:place){FactoryGirl.create(:place, latitude: 1, longitude: nil, elevation: elevation).decorate}
+      let(:place){FactoryBot.create(:place, latitude: 1, longitude: nil, elevation: elevation).decorate}
       it { expect(subject).to eq "" }
     end
     context "longitude W" do
@@ -70,39 +70,39 @@ describe PlaceDecorator do
       it {expect(subject).to eq " [0]"}
     end
     context "count 1" do
-      before { FactoryGirl.create(:stone, name: "123", place: place.object) }
+      before { FactoryBot.create(:stone, name: "123", place: place.object) }
       it {expect(subject).to eq "123 [1]"}
     end
     context "count 2" do
       before do
-        FactoryGirl.create(:stone, name: "123", place: place.object)
-        FactoryGirl.create(:stone, name: "456", place: place.object)
+        FactoryBot.create(:stone, name: "123", place: place.object)
+        FactoryBot.create(:stone, name: "456", place: place.object)
       end
       it {expect(subject).to eq "123, 456 [2]"}
     end
     context "length over" do
       before do
-        FactoryGirl.create(:stone, name: "123", place: place.object)
-        FactoryGirl.create(:stone, name: "456", place: place.object)
-        FactoryGirl.create(:stone, name: "789", place: place.object)
+        FactoryBot.create(:stone, name: "123", place: place.object)
+        FactoryBot.create(:stone, name: "456", place: place.object)
+        FactoryBot.create(:stone, name: "789", place: place.object)
       end
       it {expect(subject).to eq "123, 456,  ... [3]"}
     end
     context "length 11" do
       subject{ place.stones_summary(11) }
       before do
-        FactoryGirl.create(:stone, name: "123", place: place.object)
-        FactoryGirl.create(:stone, name: "456", place: place.object)
-        FactoryGirl.create(:stone, name: "789", place: place.object)
+        FactoryBot.create(:stone, name: "123", place: place.object)
+        FactoryBot.create(:stone, name: "456", place: place.object)
+        FactoryBot.create(:stone, name: "789", place: place.object)
       end
       it {expect(subject).to eq "123, 456, 7 ... [3]"}
     end
     context "length no limit" do
       subject{ place.stones_summary(nil) }
       before do
-        FactoryGirl.create(:stone, name: "123", place: place.object)
-        FactoryGirl.create(:stone, name: "456", place: place.object)
-        FactoryGirl.create(:stone, name: "789", place: place.object)
+        FactoryBot.create(:stone, name: "123", place: place.object)
+        FactoryBot.create(:stone, name: "456", place: place.object)
+        FactoryBot.create(:stone, name: "789", place: place.object)
       end
       it {expect(subject).to eq "123, 456, 789 [3]"}
     end
@@ -115,13 +115,13 @@ describe PlaceDecorator do
       it {expect(subject).to eq ""}
     end
     context "count 1" do
-      before { FactoryGirl.create(:stone, name: "123", place: place.object) }
+      before { FactoryBot.create(:stone, name: "123", place: place.object) }
       it {expect(subject).to eq "1"}
     end
     context "count 2" do
       before do
-        FactoryGirl.create(:stone, name: "123", place: place.object)
-        FactoryGirl.create(:stone, name: "456", place: place.object)
+        FactoryBot.create(:stone, name: "123", place: place.object)
+        FactoryBot.create(:stone, name: "456", place: place.object)
       end
       it {expect(subject).to eq "2"}
     end
@@ -183,19 +183,19 @@ describe PlaceDecorator do
   end
 
   describe ".readable_neighbors" do
-    let(:user){ FactoryGirl.create(:user,administrator: false) }
-    let(:place){FactoryGirl.create(:place,latitude:0,longitude:0).decorate}
-    let(:place1){FactoryGirl.create(:place,name:1,latitude:9,longitude:0).decorate}
-    let(:place2){FactoryGirl.create(:place,name:2,latitude:8,longitude:0).decorate}
-    let(:place3){FactoryGirl.create(:place,name:3,latitude:7,longitude:0).decorate}
-    let(:place4){FactoryGirl.create(:place,name:4,latitude:6,longitude:0).decorate}
-    let(:place5){FactoryGirl.create(:place,name:5,latitude:5,longitude:0).decorate}
-    let(:place6){FactoryGirl.create(:place,name:6,latitude:4,longitude:0).decorate}
-    let(:place7){FactoryGirl.create(:place,name:7,latitude:3,longitude:0).decorate}
-    let(:place8){FactoryGirl.create(:place,name:8,latitude:2,longitude:0).decorate}
-    let(:place9){FactoryGirl.create(:place,name:9,latitude:1,longitude:0).decorate}
-    let(:place10){FactoryGirl.create(:place,name:10,latitude:10,longitude:0).decorate}
-    let(:place11){FactoryGirl.create(:place,name:11,latitude:11,longitude:0).decorate}
+    let(:user){ FactoryBot.create(:user,administrator: false) }
+    let(:place){FactoryBot.create(:place,latitude:0,longitude:0).decorate}
+    let(:place1){FactoryBot.create(:place,name:1,latitude:9,longitude:0).decorate}
+    let(:place2){FactoryBot.create(:place,name:2,latitude:8,longitude:0).decorate}
+    let(:place3){FactoryBot.create(:place,name:3,latitude:7,longitude:0).decorate}
+    let(:place4){FactoryBot.create(:place,name:4,latitude:6,longitude:0).decorate}
+    let(:place5){FactoryBot.create(:place,name:5,latitude:5,longitude:0).decorate}
+    let(:place6){FactoryBot.create(:place,name:6,latitude:4,longitude:0).decorate}
+    let(:place7){FactoryBot.create(:place,name:7,latitude:3,longitude:0).decorate}
+    let(:place8){FactoryBot.create(:place,name:8,latitude:2,longitude:0).decorate}
+    let(:place9){FactoryBot.create(:place,name:9,latitude:1,longitude:0).decorate}
+    let(:place10){FactoryBot.create(:place,name:10,latitude:10,longitude:0).decorate}
+    let(:place11){FactoryBot.create(:place,name:11,latitude:11,longitude:0).decorate}
     before do
       User.current = user
       place
@@ -239,8 +239,8 @@ describe PlaceDecorator do
       it {expect(place.readable_neighbors(user).count).to eq 4}
     end
     context "none readable" do
-      let(:user_other){ FactoryGirl.create(:user,username: "user_other",email: "user_other@test.co.jp",administrator: false) }
-      let(:place_other){FactoryGirl.create(:place,latitude:0,longitude:0).decorate}
+      let(:user_other){ FactoryBot.create(:user,username: "user_other",email: "user_other@test.co.jp",administrator: false) }
+      let(:place_other){FactoryBot.create(:place,latitude:0,longitude:0).decorate}
       before do
         place1
         place_other.record_property.user_id = user_other.id

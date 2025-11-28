@@ -1,16 +1,16 @@
 require 'spec_helper'
 
 describe RecordsController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "GET index" do
-    let(:stone) { FactoryGirl.create(:stone) }
-    let(:box) { FactoryGirl.create(:box) }
-    let(:analysis) { FactoryGirl.create(:analysis) }
-    let(:bib) { FactoryGirl.create(:bib) }
-    let(:place) { FactoryGirl.create(:place) }
-    let(:attachment_file) { FactoryGirl.create(:attachment_file) }
+    let(:stone) { FactoryBot.create(:stone) }
+    let(:box) { FactoryBot.create(:box) }
+    let(:analysis) { FactoryBot.create(:analysis) }
+    let(:bib) { FactoryBot.create(:bib) }
+    let(:place) { FactoryBot.create(:place) }
+    let(:attachment_file) { FactoryBot.create(:attachment_file) }
     # Count only record_properties that are readable by current user
     # instead of all objects in the database
     let(:allcount) { RecordProperty.readables(user).where.not(datum_type: ["Chemistry", "Spot", "Staging"]).count }
@@ -59,7 +59,7 @@ describe RecordsController do
   describe "GET show" do
 
     context "record found json " do
-      let(:stone) { FactoryGirl.create(:stone) }
+      let(:stone) { FactoryBot.create(:stone) }
       before do
         stone
         get :show, params: {id: stone.record_property.global_id}, format: :json
@@ -67,7 +67,7 @@ describe RecordsController do
       it { expect(response.body).to include(stone.to_json) }
     end
     context "record found html " do
-      let(:stone) { FactoryGirl.create(:stone) }
+      let(:stone) { FactoryBot.create(:stone) }
       before do
         stone
         get :show, params: {id: stone.record_property.global_id}, format: :html
@@ -75,9 +75,9 @@ describe RecordsController do
       it { expect(response).to  redirect_to(controller: "stones",action: "show",id:stone.id) }
     end
     context "record found pml " do
-      let(:stone) { FactoryGirl.create(:stone) }
+      let(:stone) { FactoryBot.create(:stone) }
       let(:analysis) do
-        analysis = FactoryGirl.create(:analysis)
+        analysis = FactoryBot.create(:analysis)
         analysis.stones << stone
         analysis
       end
@@ -114,21 +114,21 @@ describe RecordsController do
   end
 
   describe "GET ancestors" do
-    let(:root) { FactoryGirl.create(:stone, name: "root") }
-    let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
-    let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
+    let(:root) { FactoryBot.create(:stone, name: "root") }
+    let(:child_1){ FactoryBot.create(:stone, parent_id: root.id) }
+    let(:child_1_1){ FactoryBot.create(:stone, parent_id: child_1.id) }
     let(:analysis_1) do
-      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1 = FactoryBot.create(:analysis)
       analysis_1.stones << root
       analysis_1
     end
     let(:analysis_2) do
-      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2 = FactoryBot.create(:analysis)
       analysis_2.stones << child_1
       analysis_2
     end
     let(:analysis_3) do
-      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3 = FactoryBot.create(:analysis)
       analysis_3.stones << child_1_1
       analysis_3
     end
@@ -153,21 +153,21 @@ describe RecordsController do
   end
 
   describe "GET descendants" do
-    let(:root) { FactoryGirl.create(:stone, name: "root") }
-    let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
-    let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
+    let(:root) { FactoryBot.create(:stone, name: "root") }
+    let(:child_1){ FactoryBot.create(:stone, parent_id: root.id) }
+    let(:child_1_1){ FactoryBot.create(:stone, parent_id: child_1.id) }
     let(:analysis_1) do
-      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1 = FactoryBot.create(:analysis)
       analysis_1.stones << root
       analysis_1
     end
     let(:analysis_2) do
-      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2 = FactoryBot.create(:analysis)
       analysis_2.stones << child_1
       analysis_2
     end
     let(:analysis_3) do
-      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3 = FactoryBot.create(:analysis)
       analysis_3.stones << child_1_1
       analysis_3
     end
@@ -192,21 +192,21 @@ describe RecordsController do
   end
 
   describe "GET self_and_descendants" do
-    let(:root) { FactoryGirl.create(:stone, name: "root") }
-    let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
-    let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
+    let(:root) { FactoryBot.create(:stone, name: "root") }
+    let(:child_1){ FactoryBot.create(:stone, parent_id: root.id) }
+    let(:child_1_1){ FactoryBot.create(:stone, parent_id: child_1.id) }
     let(:analysis_1) do
-      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1 = FactoryBot.create(:analysis)
       analysis_1.stones << root
       analysis_1
     end
     let(:analysis_2) do
-      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2 = FactoryBot.create(:analysis)
       analysis_2.stones << child_1
       analysis_2
     end
     let(:analysis_3) do
-      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3 = FactoryBot.create(:analysis)
       analysis_3.stones << child_1_1
       analysis_3
     end
@@ -233,21 +233,21 @@ describe RecordsController do
   end
 
   describe "GET families" do
-    let(:root) { FactoryGirl.create(:stone, name: "root") }
-    let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
-    let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
+    let(:root) { FactoryBot.create(:stone, name: "root") }
+    let(:child_1){ FactoryBot.create(:stone, parent_id: root.id) }
+    let(:child_1_1){ FactoryBot.create(:stone, parent_id: child_1.id) }
     let(:analysis_1) do
-      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1 = FactoryBot.create(:analysis)
       analysis_1.stones << root
       analysis_1
     end
     let(:analysis_2) do
-      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2 = FactoryBot.create(:analysis)
       analysis_2.stones << child_1
       analysis_2
     end
     let(:analysis_3) do
-      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3 = FactoryBot.create(:analysis)
       analysis_3.stones << child_1_1
       analysis_3
     end
@@ -274,21 +274,21 @@ describe RecordsController do
   end
 
   describe "GET root" do
-    let(:root) { FactoryGirl.create(:stone, name: "root") }
-    let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
-    let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
+    let(:root) { FactoryBot.create(:stone, name: "root") }
+    let(:child_1){ FactoryBot.create(:stone, parent_id: root.id) }
+    let(:child_1_1){ FactoryBot.create(:stone, parent_id: child_1.id) }
     let(:analysis_1) do
-      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1 = FactoryBot.create(:analysis)
       analysis_1.stones << root
       analysis_1
     end
     let(:analysis_2) do
-      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2 = FactoryBot.create(:analysis)
       analysis_2.stones << child_1
       analysis_2
     end
     let(:analysis_3) do
-      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3 = FactoryBot.create(:analysis)
       analysis_3.stones << child_1_1
       analysis_3
     end
@@ -311,21 +311,21 @@ describe RecordsController do
   end
 
   describe "GET parent" do
-    let(:root) { FactoryGirl.create(:stone, name: "root") }
-    let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
-    let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
+    let(:root) { FactoryBot.create(:stone, name: "root") }
+    let(:child_1){ FactoryBot.create(:stone, parent_id: root.id) }
+    let(:child_1_1){ FactoryBot.create(:stone, parent_id: child_1.id) }
     let(:analysis_1) do
-      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1 = FactoryBot.create(:analysis)
       analysis_1.stones << root
       analysis_1
     end
     let(:analysis_2) do
-      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2 = FactoryBot.create(:analysis)
       analysis_2.stones << child_1
       analysis_2
     end
     let(:analysis_3) do
-      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3 = FactoryBot.create(:analysis)
       analysis_3.stones << child_1_1
       analysis_3
     end
@@ -349,24 +349,24 @@ describe RecordsController do
 
 
   describe "GET siblings" do
-    let(:root) { FactoryGirl.create(:stone, name: "root") }
-    let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
-    let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
-    let(:child_1_2){ FactoryGirl.create(:stone, parent_id: child_1.id) }
-    let(:child_1_3){ FactoryGirl.create(:stone, parent_id: child_1.id) }
+    let(:root) { FactoryBot.create(:stone, name: "root") }
+    let(:child_1){ FactoryBot.create(:stone, parent_id: root.id) }
+    let(:child_1_1){ FactoryBot.create(:stone, parent_id: child_1.id) }
+    let(:child_1_2){ FactoryBot.create(:stone, parent_id: child_1.id) }
+    let(:child_1_3){ FactoryBot.create(:stone, parent_id: child_1.id) }
 
     let(:analysis_1) do
-      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1 = FactoryBot.create(:analysis)
       analysis_1.stones << child_1_1
       analysis_1
     end
     let(:analysis_2) do
-      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2 = FactoryBot.create(:analysis)
       analysis_2.stones << child_1_2
       analysis_2
     end
     let(:analysis_3) do
-      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3 = FactoryBot.create(:analysis)
       analysis_3.stones << child_1_3
       analysis_3
     end
@@ -391,15 +391,15 @@ describe RecordsController do
   end
 
   describe "GET daughters" do
-    let(:root) { FactoryGirl.create(:stone, name: "root") }
-    let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
-    let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
-    let(:child_1_2){ FactoryGirl.create(:stone, parent_id: child_1.id) }
-    let(:child_1_3){ FactoryGirl.create(:stone, parent_id: child_1.id) }
+    let(:root) { FactoryBot.create(:stone, name: "root") }
+    let(:child_1){ FactoryBot.create(:stone, parent_id: root.id) }
+    let(:child_1_1){ FactoryBot.create(:stone, parent_id: child_1.id) }
+    let(:child_1_2){ FactoryBot.create(:stone, parent_id: child_1.id) }
+    let(:child_1_3){ FactoryBot.create(:stone, parent_id: child_1.id) }
 
     let(:analysis_1) do
 
-      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1 = FactoryBot.create(:analysis)
 
       analysis_1.stones << child_1_1
 
@@ -407,12 +407,12 @@ describe RecordsController do
 
     end
     let(:analysis_2) do
-      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2 = FactoryBot.create(:analysis)
       analysis_2.stones << child_1_2
       analysis_2
     end
     let(:analysis_3) do
-      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3 = FactoryBot.create(:analysis)
       analysis_3.stones << child_1_3
       analysis_3
     end
@@ -439,15 +439,15 @@ describe RecordsController do
   end
 
   describe "GET self_and_siblings" do
-    let(:root) { FactoryGirl.create(:stone, name: "root") }
-    let(:child_1){ FactoryGirl.create(:stone, parent_id: root.id) }
-    let(:child_1_1){ FactoryGirl.create(:stone, parent_id: child_1.id) }
-    let(:child_1_2){ FactoryGirl.create(:stone, parent_id: child_1.id) }
-    let(:child_1_3){ FactoryGirl.create(:stone, parent_id: child_1.id) }
+    let(:root) { FactoryBot.create(:stone, name: "root") }
+    let(:child_1){ FactoryBot.create(:stone, parent_id: root.id) }
+    let(:child_1_1){ FactoryBot.create(:stone, parent_id: child_1.id) }
+    let(:child_1_2){ FactoryBot.create(:stone, parent_id: child_1.id) }
+    let(:child_1_3){ FactoryBot.create(:stone, parent_id: child_1.id) }
 
     let(:analysis_1) do
 
-      analysis_1 = FactoryGirl.create(:analysis)
+      analysis_1 = FactoryBot.create(:analysis)
 
       analysis_1.stones << child_1_1
 
@@ -455,12 +455,12 @@ describe RecordsController do
 
     end
     let(:analysis_2) do
-      analysis_2 = FactoryGirl.create(:analysis)
+      analysis_2 = FactoryBot.create(:analysis)
       analysis_2.stones << child_1_2
       analysis_2
     end
     let(:analysis_3) do
-      analysis_3 = FactoryGirl.create(:analysis)
+      analysis_3 = FactoryBot.create(:analysis)
       analysis_3.stones << child_1_3
       analysis_3
     end
@@ -488,7 +488,7 @@ describe RecordsController do
 
   describe "GET property" do
     context "record found json" do
-      let(:stone) { FactoryGirl.create(:stone) }
+      let(:stone) { FactoryBot.create(:stone) }
       before do
         stone
         get :property, params: {id: stone.record_property.global_id}, format: :json
@@ -496,7 +496,7 @@ describe RecordsController do
       it { expect(response.body).to eq(stone.record_property.to_json) }
     end
     context "record found html" do
-      let(:stone) { FactoryGirl.create(:stone) }
+      let(:stone) { FactoryBot.create(:stone) }
       before do
         stone
         get :property, params: {id: stone.record_property.global_id}, format: :html
@@ -520,9 +520,9 @@ describe RecordsController do
   end
   
   describe "casteml" do
-    let(:obj) { FactoryGirl.create(:stone) }
-    let(:analysis_1){ FactoryGirl.create(:analysis, :stone_id => obj.id )}
-    let(:analysis_2){ FactoryGirl.create(:analysis, :stone_id => obj.id )}
+    let(:obj) { FactoryBot.create(:stone) }
+    let(:analysis_1){ FactoryBot.create(:analysis, :stone_id => obj.id )}
+    let(:analysis_2){ FactoryBot.create(:analysis, :stone_id => obj.id )}
     let(:casteml){[analysis_2, analysis_1].to_pml}
     before do
       obj
@@ -537,7 +537,7 @@ describe RecordsController do
   end
 
   describe "DELETE destroy" do
-    let(:stone) { FactoryGirl.create(:stone) }
+    let(:stone) { FactoryBot.create(:stone) }
     before { stone }
     it { expect { delete :destroy, params: {id: stone.record_property.global_id} }.to change(RecordProperty, :count).by(-1) }
   end

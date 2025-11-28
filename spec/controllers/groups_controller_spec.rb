@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe GroupsController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "GET index" do
-    let(:group_1) { FactoryGirl.create(:group, name: "hoge") }
-    let(:group_2) { FactoryGirl.create(:group, name: "group_2") }
-    let(:group_3) { FactoryGirl.create(:group, name: "group_3") }
+    let(:group_1) { FactoryBot.create(:group, name: "hoge") }
+    let(:group_2) { FactoryBot.create(:group, name: "group_2") }
+    let(:group_3) { FactoryBot.create(:group, name: "group_3") }
     let(:params) { {q: query, page: 2, per_page: 1} }
     before do
       group_1;group_2;group_3
@@ -25,7 +25,7 @@ describe GroupsController do
 
   # This "GET show" has no html.
   describe "GET show" do
-    let(:group) { FactoryGirl.create(:group) }
+    let(:group) { FactoryBot.create(:group) }
     before do
       group
       get :show, params: {id: group.id}, format: :json
@@ -34,7 +34,7 @@ describe GroupsController do
   end
 
   describe "GET edit" do
-    let(:group) { FactoryGirl.create(:group) }
+    let(:group) { FactoryBot.create(:group) }
     before do
       group
       get :edit, params: {id: group.id}
@@ -65,7 +65,7 @@ describe GroupsController do
   end
 
   describe "PUT update" do
-    let(:group) { FactoryGirl.create(:group, name: "group") }
+    let(:group) { FactoryBot.create(:group, name: "group") }
     before do
       group
       put :update, params: {id: group.id, group: attributes}
@@ -86,7 +86,7 @@ describe GroupsController do
   end
   
   describe "DELETE destroy" do
-    let(:group) { FactoryGirl.create(:group, name: "group") }
+    let(:group) { FactoryBot.create(:group, name: "group") }
     before { group }
     it { expect { delete :destroy, params: {id: group.id} }.to change(Group, :count).by(-1) }
   end

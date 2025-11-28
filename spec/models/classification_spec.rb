@@ -4,7 +4,7 @@ describe Classification do
 
   describe "validates" do
     describe "name" do
-      let(:obj) { FactoryGirl.build(:classification, name: name) }
+      let(:obj) { FactoryBot.build(:classification, name: name) }
       context "is presence" do
         let(:name) { "sample_classification" }
         it { expect(obj).to be_valid }
@@ -25,9 +25,9 @@ describe Classification do
   end
 
   describe "full_name" do
-    let(:parent){ FactoryGirl.build(:classification_parent)}
-    let(:child){ FactoryGirl.build(:classification_child)}
-    let(:grandchild){ FactoryGirl.build(:classification_grandchild)}
+    let(:parent){ FactoryBot.build(:classification_parent)}
+    let(:child){ FactoryBot.build(:classification_child)}
+    let(:grandchild){ FactoryBot.build(:classification_grandchild)}
     context "new parent full_name" do
       before{parent.save}
       it{expect(parent).to be_persisted}

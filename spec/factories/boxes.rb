@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :box do
     sequence(:name) { |n| "box_#{n}" }
     parent_id nil

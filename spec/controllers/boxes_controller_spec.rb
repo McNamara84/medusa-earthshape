@@ -2,28 +2,28 @@ require 'spec_helper'
 include ActionDispatch::TestProcess
 
 describe BoxesController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "GET index" do
-    let(:box_1) { FactoryGirl.create(:box, name: "hoge") }
-    let(:box_2) { FactoryGirl.create(:box, name: "box_2") }
-    let(:box_3) { FactoryGirl.create(:box, name: "box_3") }
-    let(:stone_1) { FactoryGirl.create(:stone, name: "hoge", box_id: box_1.id) }
-    let(:stone_2) { FactoryGirl.create(:stone, name: "stone_2", box_id: box_2.id) }
-    let(:stone_3) { FactoryGirl.create(:stone, name: "stone_3", box_id: box_3.id) }
+    let(:box_1) { FactoryBot.create(:box, name: "hoge") }
+    let(:box_2) { FactoryBot.create(:box, name: "box_2") }
+    let(:box_3) { FactoryBot.create(:box, name: "box_3") }
+    let(:stone_1) { FactoryBot.create(:stone, name: "hoge", box_id: box_1.id) }
+    let(:stone_2) { FactoryBot.create(:stone, name: "stone_2", box_id: box_2.id) }
+    let(:stone_3) { FactoryBot.create(:stone, name: "stone_3", box_id: box_3.id) }
     let(:analysis_1) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_1
       analysis
     end
     let(:analysis_2) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_2
       analysis
     end
     let(:analysis_3) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_3
       analysis
     end
@@ -60,22 +60,22 @@ describe BoxesController do
   end
 
   describe "GET show" do
-    let(:box) { FactoryGirl.create(:box) }
-    let(:stone_1) { FactoryGirl.create(:stone, name: "hoge", box_id: box.id) }
-    let(:stone_2) { FactoryGirl.create(:stone, name: "stone_2", box_id: box.id) }
-    let(:stone_3) { FactoryGirl.create(:stone, name: "stone_3", box_id: box.id) }
+    let(:box) { FactoryBot.create(:box) }
+    let(:stone_1) { FactoryBot.create(:stone, name: "hoge", box_id: box.id) }
+    let(:stone_2) { FactoryBot.create(:stone, name: "stone_2", box_id: box.id) }
+    let(:stone_3) { FactoryBot.create(:stone, name: "stone_3", box_id: box.id) }
     let(:analysis_1) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_1
       analysis
     end
     let(:analysis_2) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_2
       analysis
     end
     let(:analysis_3) do
-      analysis = FactoryGirl.create(:analysis)
+      analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_3
       analysis
     end
@@ -102,7 +102,7 @@ describe BoxesController do
   end
 
   describe "GET edit" do
-    let(:box) { FactoryGirl.create(:box) }
+    let(:box) { FactoryBot.create(:box) }
     before { get :edit, params: {id: box.id} }
     it { expect(assigns(:box)).to eq box }
   end
@@ -122,7 +122,7 @@ describe BoxesController do
       box
       put :update, params: {id: box.id, box: attributes}
     end
-    let(:box) { FactoryGirl.create(:box) }
+    let(:box) { FactoryBot.create(:box) }
 
     context "name" do
       let(:attributes) { {name: "update_name", parent_id: "11"} }
@@ -141,33 +141,33 @@ describe BoxesController do
   end
 
   describe "DELETE destroy" do
-    let(:box) { FactoryGirl.create(:box) }
+    let(:box) { FactoryBot.create(:box) }
     before { box }
     it { expect { delete :destroy, params: {id: box.id} }.to change(Box, :count).by(-1) }
   end
 
   describe "GET family" do
-    let(:box) { FactoryGirl.create(:box) }
+    let(:box) { FactoryBot.create(:box) }
     before { get :family, params: {id: box.id} }
     it { expect(assigns(:box)).to eq box }
   end
 
   describe "GET picture" do
-    let(:box) { FactoryGirl.create(:box) }
+    let(:box) { FactoryBot.create(:box) }
     before { get :picture, params: {id: box.id} }
     it { expect(assigns(:box)).to eq box }
   end
 
   describe "GET property" do
-    let(:box) { FactoryGirl.create(:box) }
+    let(:box) { FactoryBot.create(:box) }
     before { get :property, params: {id: box.id} }
     it { expect(assigns(:box)).to eq box }
   end
 
   describe "POST bundle_edit" do
-    let(:obj1) { FactoryGirl.create(:box, name: "obj1") }
-    let(:obj2) { FactoryGirl.create(:box, name: "obj2") }
-    let(:obj3) { FactoryGirl.create(:box, name: "obj3") }
+    let(:obj1) { FactoryBot.create(:box, name: "obj1") }
+    let(:obj2) { FactoryBot.create(:box, name: "obj2") }
+    let(:obj3) { FactoryBot.create(:box, name: "obj3") }
     let(:ids){[obj1.id,obj2.id]}
     before do
       obj1
@@ -182,9 +182,9 @@ describe BoxesController do
 
   describe "POST bundle_update" do
     let(:obj3path){"obj3"}
-    let(:obj1) { FactoryGirl.create(:box, path: "obj1") }
-    let(:obj2) { FactoryGirl.create(:box, path: "obj2") }
-    let(:obj3) { FactoryGirl.create(:box, path: obj3path) }
+    let(:obj1) { FactoryBot.create(:box, path: "obj1") }
+    let(:obj2) { FactoryBot.create(:box, path: "obj2") }
+    let(:obj3) { FactoryBot.create(:box, path: obj3path) }
     let(:attributes) { {path: "update_path"} }
     let(:ids){[obj1.id,obj2.id]}
     before do

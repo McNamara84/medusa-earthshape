@@ -62,6 +62,6 @@ RSpec.configure do |config|
   config.order = "random"
 
   config.before(:all) do
-    FactoryGirl.reload
+    FactoryBot.reload
   end
 end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe AccountsController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "GET show" do
@@ -13,7 +13,7 @@ describe AccountsController do
       it { expect(response).to render_template("show") }
     end
     context "not administrator" do
-      let(:user) { FactoryGirl.create(:user,administrator: false) }
+      let(:user) { FactoryBot.create(:user,administrator: false) }
       before { sign_in user }
       it { expect(assigns(:user)).to eq User.current }
       it { expect(response).to render_template("show") }
@@ -21,7 +21,7 @@ describe AccountsController do
   end
   describe "GET show with format", :current => true do
     context "with format 'json'" do
-      let(:box){ FactoryGirl.create(:box)}
+      let(:box){ FactoryBot.create(:box)}
       before { 
         user.box = box
         user.save
@@ -42,7 +42,7 @@ describe AccountsController do
       it { expect(response).to render_template("edit") }
     end
     context "not administrator" do
-      let(:user) { FactoryGirl.create(:user,administrator: false) }
+      let(:user) { FactoryBot.create(:user,administrator: false) }
       before { sign_in user }
       it { expect(assigns(:user)).to eq User.current }
       it { expect(response).to render_template("edit") }
@@ -50,7 +50,7 @@ describe AccountsController do
   end
 
   describe "GET find_by_global_id" do
-    let(:stone){FactoryGirl.create(:stone)}
+    let(:stone){FactoryBot.create(:stone)}
     before do
       stone
       get :find_by_global_id, params: {global_id: stone.record_property.global_id}
@@ -59,7 +59,7 @@ describe AccountsController do
       it { expect(response).to redirect_to(record_path(stone.record_property.global_id)) }
     end
     context "not administrator" do
-      let(:user) { FactoryGirl.create(:user,administrator: false) }
+      let(:user) { FactoryBot.create(:user,administrator: false) }
       before { sign_in user }
       it { expect(response).to redirect_to(record_path(stone.record_property.global_id)) }
     end
@@ -78,7 +78,7 @@ describe AccountsController do
         it { expect(response).to redirect_to(account_path) }
       end
       context "not administrator" do
-        let(:user) { FactoryGirl.create(:user,administrator: false) }
+        let(:user) { FactoryBot.create(:user,administrator: false) }
         before { sign_in user }
         it { expect(assigns(:user)).to eq User.current }
         it { expect(assigns(:user).username).to eq attributes[:username] }
@@ -95,7 +95,7 @@ describe AccountsController do
         it { expect(response).to redirect_to(account_path) }
       end
       context "not administrator" do
-        let(:user) { FactoryGirl.create(:user,administrator: false) }
+        let(:user) { FactoryBot.create(:user,administrator: false) }
         before { sign_in user }
         it { expect(assigns(:user)).to eq User.current }
         it { expect(assigns(:user).username).to eq attributes[:username] }
@@ -113,7 +113,7 @@ describe AccountsController do
         it { expect(response).to render_template("edit") }
       end
       context "not administrator" do
-        let(:user) { FactoryGirl.create(:user,administrator: false) }
+        let(:user) { FactoryBot.create(:user,administrator: false) }
         before { sign_in user }
         it { expect(assigns(:user)).to eq user }
         it { expect(assigns(:user).username).to eq attributes[:username] }

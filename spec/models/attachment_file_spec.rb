@@ -4,8 +4,8 @@ include ActionDispatch::TestProcess
 describe AttachmentFile do
 
  describe "validates" do
-    let(:user) { FactoryGirl.create(:user) }
-    let(:filetopic) { FactoryGirl.create(:filetopic) }
+    let(:user) { FactoryBot.create(:user) }
+    let(:filetopic) { FactoryBot.create(:filetopic) }
     before { User.current = user }
     describe "data" do
       before{obj.save}
@@ -24,14 +24,14 @@ describe AttachmentFile do
   describe "alias_attribute" do
     describe "name" do
       subject { attachment_file.name }
-      let(:attachment_file) { FactoryGirl.build(:attachment_file, name: "name", data_file_name: data_file_name) }
+      let(:attachment_file) { FactoryBot.build(:attachment_file, name: "name", data_file_name: data_file_name) }
       let(:data_file_name) { "test.jpg" }
       it { expect(subject).to eq data_file_name }
     end
   end
 
   describe ".path" do
-    let(:attachment_file) { FactoryGirl.create(:attachment_file, :id => attachment_file_id, :data_file_name => "test.jpg") }
+    let(:attachment_file) { FactoryBot.create(:attachment_file, :id => attachment_file_id, :data_file_name => "test.jpg") }
     context "with no argument" do
       subject { attachment_file.path }
       context "id is 1 digit" do
@@ -54,7 +54,7 @@ describe AttachmentFile do
   end
 
   describe ".md5hash", :current => true do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     let(:md5hash){ Digest::MD5.hexdigest(File.open("spec/fixtures/files/test_image.jpg", 'rb').read) }
     let(:obj) { AttachmentFile.create(data: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg'), 'image/jpeg')) }
     before do
@@ -68,13 +68,13 @@ describe AttachmentFile do
   end
 
   describe ".data_fingerprint" do
-    let(:obj) { FactoryGirl.create(:attachment_file) }
+    let(:obj) { FactoryBot.create(:attachment_file) }
     before{ obj.data_fingerprint = "test" }
     it {expect(obj.data_fingerprint).to eq("test")}
   end
 
   describe ".save_geometry" do
-    let(:user){FactoryGirl.create(:user)}
+    let(:user){FactoryBot.create(:user)}
     let(:obj) { AttachmentFile.new(data: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg'), 'image/jpeg')) }
     before do
       User.current = user
@@ -85,7 +85,7 @@ describe AttachmentFile do
 
   describe "#pdf?" do
     subject { obj.pdf? }
-    let(:obj) { FactoryGirl.build(:attachment_file, data_content_type: data_content_type) }
+    let(:obj) { FactoryBot.build(:attachment_file, data_content_type: data_content_type) }
     context "data_content_type is pdf" do
       let(:data_content_type) { "application/pdf" }
       it { expect(subject).to eq true }
@@ -102,7 +102,7 @@ describe AttachmentFile do
 
   describe "#image?" do
     subject { obj.image? }
-    let(:obj) { FactoryGirl.build(:attachment_file, data_content_type: data_content_type) }
+    let(:obj) { FactoryBot.build(:attachment_file, data_content_type: data_content_type) }
     context "data_content_type is pdf" do
       let(:data_content_type) { "application/pdf" }
       it { expect(subject).to eq false }
@@ -118,7 +118,7 @@ describe AttachmentFile do
   end
 
   describe ".original_width" do
-    let(:obj){FactoryGirl.create(:attachment_file)}
+    let(:obj){FactoryBot.create(:attachment_file)}
     subject{ obj.original_width }
     before{obj.original_geometry = original_geometry}
     context "original_geometry is blank" do
@@ -132,7 +132,7 @@ describe AttachmentFile do
   end
 
   describe ".original_height" do
-    let(:obj){FactoryGirl.create(:attachment_file)}
+    let(:obj){FactoryBot.create(:attachment_file)}
     subject{ obj.original_height }
     before{obj.original_geometry = original_geometry}
     context "original_geometry is blank" do
@@ -146,7 +146,7 @@ describe AttachmentFile do
   end
 
   describe ".width_in_um" do
-    let(:obj){FactoryGirl.create(:attachment_file)}
+    let(:obj){FactoryBot.create(:attachment_file)}
     subject{obj.width_in_um}
     context "affine_matrix is blank" do
       before{obj.affine_matrix = nil}
@@ -158,7 +158,7 @@ describe AttachmentFile do
   end
 
   describe ".height_in_um" do
-    let(:obj){FactoryGirl.create(:attachment_file)}
+    let(:obj){FactoryBot.create(:attachment_file)}
     subject{obj.height_in_um}
     context "affine_matrix is blank" do
       before{obj.affine_matrix = nil}
@@ -171,7 +171,7 @@ describe AttachmentFile do
 
   describe ".affine_matrix_in_string" do
     subject{obj.affine_matrix_in_string}
-    let(:obj){FactoryGirl.create(:attachment_file)}
+    let(:obj){FactoryBot.create(:attachment_file)}
     context "affine_matrix is blank" do
       before{obj.affine_matrix = nil}
       it {expect(subject).to eq nil}

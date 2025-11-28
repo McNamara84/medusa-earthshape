@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe PhysicalFormsController do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before { sign_in user }
 
   describe "GET index" do
-    let(:physical_form_1) { FactoryGirl.create(:physical_form, name: "hoge") }
-    let(:physical_form_2) { FactoryGirl.create(:physical_form, name: "physical_form_2") }
-    let(:physical_form_3) { FactoryGirl.create(:physical_form, name: "physical_form_3") }
+    let(:physical_form_1) { FactoryBot.create(:physical_form, name: "hoge") }
+    let(:physical_form_2) { FactoryBot.create(:physical_form, name: "physical_form_2") }
+    let(:physical_form_3) { FactoryBot.create(:physical_form, name: "physical_form_3") }
     let(:physical_forms){ PhysicalForm.all }
     before do
       physical_form_1;physical_form_2;physical_form_3
@@ -18,7 +18,7 @@ describe PhysicalFormsController do
 
   # This "GET show" has no html.
   describe "GET show" do
-    let(:physical_form) { FactoryGirl.create(:physical_form) }
+    let(:physical_form) { FactoryBot.create(:physical_form) }
     before do
       physical_form
       get :show, params: {id: physical_form.id}, format: :json
@@ -27,7 +27,7 @@ describe PhysicalFormsController do
   end
 
   describe "GET edit" do
-    let(:physical_form) { FactoryGirl.create(:physical_form) }
+    let(:physical_form) { FactoryBot.create(:physical_form) }
     before do
       physical_form
       get :edit, params: {id: physical_form.id}
@@ -60,7 +60,7 @@ describe PhysicalFormsController do
   end
 
   describe "PUT update" do
-    let(:physical_form) { FactoryGirl.create(:physical_form, name: "physical_form", description: "description") }
+    let(:physical_form) { FactoryBot.create(:physical_form, name: "physical_form", description: "description") }
     before do
       physical_form
       put :update, params: {id: physical_form.id, physical_form: attributes}
@@ -83,7 +83,7 @@ describe PhysicalFormsController do
   end
 
   describe "DELETE destroy" do
-    let(:physical_form) { FactoryGirl.create(:physical_form, name: "physical_form", description: "description") }
+    let(:physical_form) { FactoryBot.create(:physical_form, name: "physical_form", description: "description") }
     before{ physical_form }
     it { expect { delete :destroy, params: {id: physical_form.id} }.to change(PhysicalForm, :count).by(-1) }
   end
