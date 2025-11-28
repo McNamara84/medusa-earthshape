@@ -1,6 +1,6 @@
-# Use Ruby 3.2.6 (with improved YJIT and WASI support)
+# Use Ruby 3.3.10 (with Prism parser, improved YJIT, M:N threading)
 # Based on Debian Bookworm (12)
-FROM ruby:3.2.6
+FROM ruby:3.3.10
 
 # Debian Bullseye repositories are still active (no archive fix needed)
 

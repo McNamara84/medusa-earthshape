@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '3.2.6'
+ruby '3.3.10'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
