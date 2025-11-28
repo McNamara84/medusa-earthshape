@@ -10,7 +10,7 @@ describe Settings do
     it { expect(Settings.source).to eq Rails.root.join("config", "application.yml").to_path }
   end
 
-  describe ".namespece" do
+  describe ".namespace" do
     it { expect(Settings.namespace).to eq Rails.env }
   end
 
