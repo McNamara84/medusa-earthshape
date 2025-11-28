@@ -27,16 +27,14 @@ describe Settings do
   #
   # For now, the basic inheritance/source/namespace tests above provide
   # sufficient coverage for the Settings class configuration.
+  #
+  # TODO: Track in GitHub issue to properly rewrite or remove these flaky tests.
+  #       See: https://github.com/McNamara84/medusa-earthshape/issues (create issue)
 
   describe ".barcode_type" do
     let(:file_yaml){Rails.root.join("config", "application.yml").to_path}
-    let(:data) do
-      YAML.safe_load(
-        File.read(file_yaml),
-        permitted_classes: [Symbol, Date, Time],
-        aliases: true
-      )
-    end
+    # Use shared YAML config from SettingsYamlConfig for consistency
+    let(:data) { SettingsYamlConfig.safe_load_file(file_yaml) }
     after do 
       data["defaults"]["barcode"]["type"] = "3D"
       File.open(file_yaml,"w"){|f| f.write data.to_yaml}
@@ -62,13 +60,8 @@ describe Settings do
 
   describe ".barcode_prefix" do
     let(:file_yaml){Rails.root.join("config", "application.yml").to_path}
-    let(:data) do
-      YAML.safe_load(
-        File.read(file_yaml),
-        permitted_classes: [Symbol, Date, Time],
-        aliases: true
-      )
-    end
+    # Use shared YAML config from SettingsYamlConfig for consistency
+    let(:data) { SettingsYamlConfig.safe_load_file(file_yaml) }
     after do 
       data["defaults"]["barcode"]["prefix"] = nil
       File.open(file_yaml,"w"){|f| f.write data.to_yaml}

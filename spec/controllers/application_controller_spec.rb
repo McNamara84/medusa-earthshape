@@ -1,6 +1,100 @@
 require 'spec_helper'
 
 describe ApplicationController do
+  # Create a test controller to expose protected methods for testing
+  controller do
+    skip_before_action :authenticate_user!, raise: false
+    
+    def test_safe_referer
+      render plain: safe_referer_url
+    end
+  end
+
+  describe '#safe_referer_url' do
+    before do
+      routes.draw { get 'test_safe_referer' => 'anonymous#test_safe_referer' }
+    end
+
+    context 'when referer is blank' do
+      it 'returns root_path for nil referer' do
+        request.env['HTTP_REFERER'] = nil
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
+
+      it 'returns root_path for empty string referer' do
+        request.env['HTTP_REFERER'] = ''
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
+    end
+
+    context 'when referer is from the same host' do
+      it 'allows same-host absolute URL' do
+        request.env['HTTP_REFERER'] = 'http://test.host/stones/123'
+        get :test_safe_referer
+        expect(response.body).to eq('http://test.host/stones/123')
+      end
+
+      it 'allows same-host URL with query params' do
+        request.env['HTTP_REFERER'] = 'http://test.host/stones?page=2&tab=info'
+        get :test_safe_referer
+        expect(response.body).to eq('http://test.host/stones?page=2&tab=info')
+      end
+    end
+
+    context 'when referer is from a different host' do
+      it 'returns root_path for different domain' do
+        request.env['HTTP_REFERER'] = 'http://evil.com/phishing'
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
+
+      it 'returns root_path for subdomain mismatch' do
+        request.env['HTTP_REFERER'] = 'http://subdomain.test.host/path'
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
+    end
+
+    context 'when referer is a relative URL' do
+      it 'allows relative path (implicitly same-host)' do
+        request.env['HTTP_REFERER'] = '/stones/123'
+        get :test_safe_referer
+        expect(response.body).to eq('/stones/123')
+      end
+
+      it 'allows relative path without leading slash' do
+        request.env['HTTP_REFERER'] = 'stones/123'
+        get :test_safe_referer
+        expect(response.body).to eq('stones/123')
+      end
+
+      it 'allows relative path with query params' do
+        request.env['HTTP_REFERER'] = '/stones?tab=info'
+        get :test_safe_referer
+        expect(response.body).to eq('/stones?tab=info')
+      end
+    end
+
+    context 'when referer is an invalid URI' do
+      it 'returns root_path for malformed URL' do
+        request.env['HTTP_REFERER'] = 'http://[invalid'
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
+    end
+
+    context 'edge cases' do
+      it 'handles protocol-relative URLs as different host' do
+        request.env['HTTP_REFERER'] = '//other.host/path'
+        get :test_safe_referer
+        # Protocol-relative URLs have a host, so they should be rejected
+        expect(response.body).to eq('/')
+      end
+    end
+  end
+
   describe ".adjust_url_by_requesting_tab" do
     subject{ @controller.adjust_url_by_requesting_tab(url) }
     let(:tabname){"analysis"}
