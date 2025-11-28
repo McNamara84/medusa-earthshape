@@ -55,15 +55,21 @@ class ApplicationController < ActionController::Base
     work_url + (work_url.include?("?") ? "&" : "?") + "tab=#{params[:tab]}"
   end
 
-  # Returns a safe referer URL that only allows redirects to the same host.
+  # Returns a safe referer URL that only allows redirects to the same origin.
   # This is used with respond_with to prevent open redirect vulnerabilities
   # while maintaining the legacy pattern of redirecting to the referring page.
-  # Falls back to root_path if referer is missing or from a different host.
+  # Falls back to root_path if referer is missing or from a different origin.
+  #
+  # Validates:
+  # - Same host (prevents redirects to different domains)
+  # - Same port (prevents redirects to different services on same host)
+  # - Same scheme (prevents protocol downgrade attacks http <-> https)
   #
   # Accepts:
-  # - Same-host absolute URLs (e.g., "http://example.com/path")
-  # - Relative URLs (e.g., "/path" or "path") - implicitly same-host
-  # - URLs without host - treated as same-host
+  # - Same-origin absolute URLs (e.g., "http://example.com:80/path")
+  # - Relative URLs (e.g., "/path" or "path") - implicitly same-origin
+  # - URLs without host - treated as same-origin
+  # - URLs with fragments (e.g., "/path#section")
   def safe_referer_url
     referer = request.referer
     return root_path if referer.blank?
@@ -71,12 +77,16 @@ class ApplicationController < ActionController::Base
     begin
       referer_uri = URI.parse(referer)
       
-      # Allow relative URLs (no host means same-host)
+      # Allow relative URLs (no host means same-origin)
       return referer if referer_uri.host.nil?
       
-      # For absolute URLs, verify same host
+      # For absolute URLs, verify same origin (host, port, and scheme)
       request_uri = URI.parse(request.url)
-      if referer_uri.host == request_uri.host
+      same_host = referer_uri.host == request_uri.host
+      same_port = referer_uri.port == request_uri.port
+      same_scheme = referer_uri.scheme == request_uri.scheme
+      
+      if same_host && same_port && same_scheme
         referer
       else
         root_path

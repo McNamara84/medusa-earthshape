@@ -26,9 +26,10 @@ module Medusa
     # Current state:
     # - The application uses `respond_with location: request.referer` pattern in 39 places
     #   across nested resource controllers for UX continuity after CRUD operations
-    # - Only 2 controllers have been migrated to use `safe_referer_url`:
+    # - Only 1 controller has been migrated to use `safe_referer_url`:
     #   - CategoryMeasurementItemsController (move_to_top, destroy)
-    #   - AttachingsController uses adjust_url_by_requesting_tab() which does NOT validate hosts
+    # - AttachingsController passes raw `request.referer` to `adjust_url_by_requesting_tab()`
+    #   (a URL utility that only manipulates query params, does not validate hosts)
     # - The remaining 37 locations still use raw `request.referer` without validation
     #
     # Risk mitigation:
@@ -41,8 +42,11 @@ module Medusa
     # - Allows relative URLs (implicitly same-host)
     # - Falls back to root_path for cross-host URLs
     #
-    # TODO: Migrate all 39 locations to use `safe_referer_url` or explicit
-    # `redirect_to url, allow_other_host: false` pattern, then re-enable this protection.
+    # TODO: Migrate all 39 locations to use `respond_with @resource, location: safe_referer_url`
+    # pattern (for respond_with usage) or `redirect_to safe_referer_url` (for direct redirects),
+    # then re-enable this protection. Note: `redirect_to url, allow_other_host: false` is not
+    # applicable with respond_with as it uses the `location:` option which doesn't support
+    # the allow_other_host parameter.
     # See: https://github.com/McNamara84/medusa-earthshape/issues (create tracking issue)
     config.action_controller.raise_on_open_redirects = false
   end

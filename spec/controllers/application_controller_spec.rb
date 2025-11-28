@@ -92,6 +92,49 @@ describe ApplicationController do
         # Protocol-relative URLs have a host, so they should be rejected
         expect(response.body).to eq('/')
       end
+
+      it 'allows URLs with fragments' do
+        request.env['HTTP_REFERER'] = 'http://test.host/stones/123#details'
+        get :test_safe_referer
+        expect(response.body).to eq('http://test.host/stones/123#details')
+      end
+
+      it 'allows URLs with encoded characters in path' do
+        request.env['HTTP_REFERER'] = 'http://test.host/stones/my%20stone'
+        get :test_safe_referer
+        expect(response.body).to eq('http://test.host/stones/my%20stone')
+      end
+    end
+
+    context 'port mismatch (different service protection)' do
+      it 'returns root_path when referer port differs from request port' do
+        # Simulates redirect to different service on same host
+        request.env['HTTP_REFERER'] = 'http://test.host:8080/path'
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
+
+      it 'returns root_path for non-standard port when request is on default port' do
+        request.env['HTTP_REFERER'] = 'http://test.host:3000/stones'
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
+    end
+
+    context 'scheme mismatch (protocol downgrade protection)' do
+      it 'returns root_path when referer is https but request is http' do
+        # Prevents protocol downgrade attack
+        request.env['HTTP_REFERER'] = 'https://test.host/secure/path'
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
+
+      it 'returns root_path when schemes differ (http vs https)' do
+        request.env['HTTP_REFERER'] = 'https://test.host/stones/123'
+        get :test_safe_referer
+        # Request is http://test.host, referer is https://test.host
+        expect(response.body).to eq('/')
+      end
     end
   end
 

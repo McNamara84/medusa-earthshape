@@ -28,6 +28,9 @@ describe Settings do
   # For now, the basic inheritance/source/namespace tests above provide
   # sufficient coverage for the Settings class configuration.
   #
+  # HISTORICAL NOTE: All 4 barcode tests below were already skipped (`xit`) since
+  # commit 336684f (2023) - they were NOT newly disabled during the Rails 7.0 upgrade.
+  #
   # TODO: Track in GitHub issue to properly rewrite or remove these flaky tests.
   #       See: https://github.com/McNamara84/medusa-earthshape/issues (create issue)
 

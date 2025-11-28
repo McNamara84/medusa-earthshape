@@ -28,7 +28,7 @@ Rails.application.config.after_initialize do
   # Initialize Alchemist before registering custom units
   Alchemist.setup
 
-  # Check if Unit model has the required attributes (table may not exist during migrations)
+  # Check if Unit table exists and has the required attributes for Alchemist registration
   # Guard: Only register units once (Alchemist.register is not idempotent)
   if defined?(Unit) && Unit.table_exists? && Unit.attribute_method?(:name) && Unit.attribute_method?(:conversion)
     AlchemistMedusaConfig.register_units_once do

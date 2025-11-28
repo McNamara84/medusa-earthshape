@@ -37,7 +37,7 @@ gem 'jbuilder', '~> 2.7'  # Updated for Rails 5.1 (Mime::JSON fix)
 #gem 'active_model_serializers'
 
 # Rails 7.0: respond_with was extracted to the responders gem
-gem 'responders', '~> 3.1'
+gem 'responders', '~> 3.2'  # Rails 7.0: Required for respond_with (installed 3.2.0)
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -55,7 +55,7 @@ end
   # 2. Use newer rest-client gem and override dependency
   # gem 'datacite_doi_ify'
   gem 'rest-client', '~> 2.1'  # Ruby 3.0 compatible (uses mime-types 3.x)
-  gem 'mime-types', '~> 3.5'   # Ruby 3.0 compatible
+  gem 'mime-types', '~> 3.6'   # Ruby 3.0 compatible (installed 3.6.1)
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'
@@ -73,7 +73,7 @@ gem 'puma', '~> 5.6'  # Lock to 5.x for Capybara 3.35.3 compatibility (6.x chang
 # gem 'debugger', group: [:development, :test]
 
 gem 'devise'
-gem 'cancancan', '~> 3.5'  # Rails 7.0: Updated to 3.x (1.x deprecated)
+gem 'cancancan', '~> 3.6'  # Rails 7.0: Updated to 3.6+ (1.x deprecated)
 gem 'kaminari'
 gem 'draper'
 gem 'paperclip'
