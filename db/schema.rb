@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_11_17_155609) do
-
+ActiveRecord::Schema[7.0].define(version: 2025_11_17_155609) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,8 +19,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.text "description"
     t.integer "stone_id"
     t.string "operator"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "technique_id"
     t.integer "device_id"
     t.index ["device_id"], name: "index_analyses_on_device_id"
@@ -41,8 +40,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.integer "attachable_id"
     t.string "attachable_type"
     t.integer "position"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["attachable_id"], name: "index_attachings_on_attachable_id"
     t.index ["attachment_file_id", "attachable_id", "attachable_type"], name: "index_on_attachings_attachable_type_and_id_and_file_id", unique: true
     t.index ["attachment_file_id"], name: "index_attachings_on_attachment_file_id"
@@ -55,19 +54,19 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.string "data_file_name"
     t.string "data_content_type"
     t.integer "data_file_size"
-    t.datetime "data_updated_at"
+    t.datetime "data_updated_at", precision: nil
     t.string "original_geometry"
     t.text "affine_matrix"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "filetopic_id"
     t.index ["filetopic_id"], name: "index_attachment_files_on_filetopic_id"
   end
 
   create_table "authors", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "bib_authors", id: :serial, force: :cascade do |t|
@@ -91,8 +90,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.string "key"
     t.string "link_url"
     t.text "doi"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "box_types", id: :serial, force: :cascade do |t|
@@ -106,8 +105,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.integer "position"
     t.string "path"
     t.integer "box_type_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["box_type_id"], name: "index_boxes_on_box_type_id"
     t.index ["parent_id"], name: "index_boxes_on_parent_id"
   end
@@ -128,8 +127,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.string "label"
     t.text "description"
     t.float "uncertainty"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "unit_id"
     t.index ["analysis_id"], name: "index_chemistries_on_analysis_id"
     t.index ["measurement_item_id"], name: "index_chemistries_on_measurement_item_id"
@@ -147,8 +146,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
 
   create_table "collectionmethods", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "collections", id: :serial, force: :cascade do |t|
@@ -162,8 +161,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.text "weather_conditions"
     t.text "comment"
     t.integer "collectionmethod_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "affiliation"
     t.string "project"
     t.boolean "timeseries"
@@ -175,21 +174,21 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.string "name"
     t.string "affiliation"
     t.integer "stone_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["stone_id"], name: "index_collectors_on_stone_id"
   end
 
   create_table "devices", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "filetopics", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "global_qrs", id: :serial, force: :cascade do |t|
@@ -197,7 +196,7 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.string "file_name"
     t.string "content_type"
     t.integer "file_size"
-    t.datetime "file_updated_at"
+    t.datetime "file_updated_at", precision: nil
     t.string "identifier"
     t.index ["record_property_id"], name: "index_global_qrs_on_record_property_id"
   end
@@ -211,14 +210,14 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
 
   create_table "groups", id: :serial, force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "landuses", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "measurement_categories", id: :serial, force: :cascade do |t|
@@ -246,8 +245,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.float "latitude"
     t.float "longitude"
     t.float "elevation"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "slope_description"
     t.string "landuse"
     t.string "aspect"
@@ -266,8 +265,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
   create_table "preparation_for_classifications", id: :serial, force: :cascade do |t|
     t.integer "classification_id", null: false
     t.integer "preparation_type_id", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["classification_id"], name: "index_preparation_for_classifications_on_classification_id"
     t.index ["preparation_type_id"], name: "index_preparation_for_classifications_on_preparation_type_id"
   end
@@ -275,8 +274,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
   create_table "preparation_types", id: :serial, force: :cascade do |t|
     t.string "name"
     t.boolean "creates_siblings"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "full_name"
     t.text "description"
     t.integer "parent_id"
@@ -286,16 +285,16 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.string "info"
     t.integer "preparation_type_id"
     t.integer "stone_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["preparation_type_id"], name: "index_preparations_on_preparation_type_id"
     t.index ["stone_id"], name: "index_preparations_on_stone_id"
   end
 
   create_table "quantityunits", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "record_properties", id: :serial, force: :cascade do |t|
@@ -305,7 +304,7 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.integer "group_id"
     t.string "global_id"
     t.boolean "published", default: false
-    t.datetime "published_at"
+    t.datetime "published_at", precision: nil
     t.boolean "owner_readable", default: true, null: false
     t.boolean "owner_writable", default: true, null: false
     t.boolean "group_readable", default: true, null: false
@@ -313,8 +312,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.boolean "guest_readable", default: false, null: false
     t.boolean "guest_writable", default: false, null: false
     t.string "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["datum_id"], name: "index_record_properties_on_datum_id"
     t.index ["group_id"], name: "index_record_properties_on_group_id"
     t.index ["user_id"], name: "index_record_properties_on_user_id"
@@ -324,16 +323,16 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.integer "bib_id"
     t.integer "referable_id"
     t.string "referable_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["bib_id", "referable_id", "referable_type"], name: "index_referrings_on_bib_id_and_referable_id_and_referable_type", unique: true
     t.index ["bib_id"], name: "index_referrings_on_bib_id"
     t.index ["referable_id"], name: "index_referrings_on_referable_id"
   end
 
   create_table "search_maps", id: :serial, force: :cascade do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "spots", id: :serial, force: :cascade do |t|
@@ -349,8 +348,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.string "fill_color"
     t.float "opacity"
     t.boolean "with_cross"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["attachment_file_id"], name: "index_spots_on_attachment_file_id"
   end
 
@@ -395,8 +394,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.string "treatment_strategy"
     t.string "treatment_analyticalmethod"
     t.text "treatment_comment"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.float "sample_depth"
     t.string "hidden_column"
     t.string "collection_weather"
@@ -416,8 +415,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
 
   create_table "stonecontainer_types", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "stones", id: :serial, force: :cascade do |t|
@@ -431,8 +430,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.integer "classification_id"
     t.float "quantity"
     t.string "quantity_unit"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.float "quantity_initial"
     t.string "labname"
     t.string "igsn"
@@ -458,7 +457,7 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.string "tagger_type"
     t.integer "tagger_id"
     t.string "context", limit: 128
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["context"], name: "index_taggings_on_context"
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
@@ -478,20 +477,20 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
 
   create_table "techniques", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "topographic_positions", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "units", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "conversion", null: false
     t.string "html", limit: 10, null: false
     t.string "text", limit: 10, null: false
@@ -501,15 +500,15 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
     t.string "email"
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.boolean "administrator", default: false, null: false
     t.string "family_name"
     t.string "first_name"
@@ -525,8 +524,8 @@ ActiveRecord::Schema.define(version: 2025_11_17_155609) do
 
   create_table "vegetations", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
 end

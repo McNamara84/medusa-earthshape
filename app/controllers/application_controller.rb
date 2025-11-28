@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   helper_method :adjust_url_by_requesting_tab
+  helper_method :safe_referer_url
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :authenticate_user!, :set_current_user
@@ -52,6 +53,47 @@ class ApplicationController < ActionController::Base
     return url if params[:tab].blank?
     work_url = url.sub(/tab=.*&/,"").sub(/\?tab=.*/,"")
     work_url + (work_url.include?("?") ? "&" : "?") + "tab=#{params[:tab]}"
+  end
+
+  # Returns a safe referer URL that only allows redirects to the same origin.
+  # This is used with respond_with to prevent open redirect vulnerabilities
+  # while maintaining the legacy pattern of redirecting to the referring page.
+  # Falls back to root_path if referer is missing or from a different origin.
+  #
+  # Validates:
+  # - Same host (prevents redirects to different domains)
+  # - Same port (prevents redirects to different services on same host)
+  # - Same scheme (prevents protocol downgrade attacks http <-> https)
+  #
+  # Accepts:
+  # - Same-origin absolute URLs (e.g., "http://example.com:80/path")
+  # - Relative URLs (e.g., "/path" or "path") - implicitly same-origin
+  # - URLs without host - treated as same-origin
+  # - URLs with fragments (e.g., "/path#section")
+  def safe_referer_url
+    referer = request.referer
+    return root_path if referer.blank?
+
+    begin
+      referer_uri = URI.parse(referer)
+      
+      # Allow relative URLs (no host means same-origin)
+      return referer if referer_uri.host.nil?
+      
+      # For absolute URLs, verify same origin (host, port, and scheme)
+      request_uri = URI.parse(request.url)
+      same_host = referer_uri.host == request_uri.host
+      same_port = referer_uri.port == request_uri.port
+      same_scheme = referer_uri.scheme == request_uri.scheme
+      
+      if same_host && same_port && same_scheme
+        referer
+      else
+        root_path
+      end
+    rescue URI::InvalidURIError
+      root_path
+    end
   end
 
   protected

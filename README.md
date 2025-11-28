@@ -547,12 +547,13 @@ Developed for the EarthShape project - A collaborative research initiative in ea
 
 ## Recent Updates
 
-**November 2025**: Successfully upgraded to Ruby 2.7.8 + Rails 6.1.7.10 (LTS) 🎉
-- **Rails**: 4.0.2 → 4.2 → 5.0 → 5.1 → 5.2 → 6.0 → 6.1.7.10 (LTS)
-- **Ruby**: 2.1.10 → 2.3.8 → 2.4.10 → 2.5.9 → 2.6.10 → 2.7.8
+**November 2025**: Successfully upgraded to Ruby 3.2.6 + Rails 7.0.10 🎉
+- **Rails**: 4.0.2 → 4.2 → 5.0 → 5.1 → 5.2 → 6.0 → 6.1 → 7.0.10
+- **Ruby**: 2.1.10 → 2.3.8 → 2.4.10 → 2.5.9 → 2.6.10 → 2.7.8 → 3.0.6 → 3.1.6 → 3.2.6
+- **Rails 7.0**: Zeitwerk autoloader, responders gem for respond_with
 - **Ransack 4.0**: Major security migration (attribute allowlisting)
-- **RSpec-Rails**: Upgraded to 5.1.2 for Rails 6.1 compatibility
+- **RSpec-Rails**: Upgraded to 5.1.2 for Rails 6.1+ compatibility
 - **PostgreSQL**: Upgraded to version 18
-- **100% test suite passing** (1318 examples, 0 failures, 13 pending)
+- **100% test suite passing** (1380 examples, 0 failures, 13 pending)
 - **CI/CD**: GitHub Actions fully green ✅
 - See `UPGRADE-PLAN.md` for detailed upgrade history and lessons learned
