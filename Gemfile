@@ -3,7 +3,7 @@ ruby '3.2.6'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.1.0'  # Upgraded to Rails 7.1.6
+gem 'rails', '~> 7.2.0'  # Upgraded to Rails 7.2
 gem 'nokogiri', '~> 1.16'  # Ruby 3.1+ requires nokogiri 1.13+ (upgraded from 1.10.10)
 gem 'loofah', '~> 2.22'  # Updated for nokogiri 1.16+ compatibility (upgraded from 2.3.1)
 # gem 'psych', '~> 3.3.0'  # Removed - Rails 7.0+ uses Psych 4.x natively
@@ -85,7 +85,7 @@ gem 'geonames'
 gem 'rubyzip'
 #gem 'oai'
 gem 'comma'
-gem 'acts-as-taggable-on', '~> 10.0'  # Rails 7.0 compatible (v10.0+ supports Rails 6.1-7.x)
+gem 'acts-as-taggable-on', '~> 13.0'  # Rails 7.2 compatible (v13.0+ supports Rails 7.1-7.2)
 gem 'exception_notification'
 gem 'settingslogic'
 # gem 'validates_existence'  # Rails 5.1: Removed - incompatible with Rails 5.1+ (belongs_to validation now built-in)
