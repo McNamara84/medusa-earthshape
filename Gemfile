@@ -76,7 +76,7 @@ gem 'devise'
 gem 'cancancan', '~> 3.6'  # Rails 7.0: Updated to 3.6+ (1.x deprecated)
 gem 'kaminari'
 gem 'draper'
-gem 'paperclip'
+gem 'kt-paperclip', '~> 7.2'  # Maintained fork of Paperclip (Rails 7.x + Ruby 3.x compatible)
 gem 'barby'
 gem 'rqrcode'
 gem 'chunky_png'
