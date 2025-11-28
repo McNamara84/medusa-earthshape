@@ -21,22 +21,29 @@ module Medusa
 
     # Rails 7.0: Disable open redirect protection
     #
-    # SECURITY NOTE: This setting is disabled because:
-    # 1. The application uses `respond_with location: request.referer` pattern in 39 places
-    #    across nested resource controllers for UX continuity after CRUD operations
-    # 2. All these redirects use `adjust_url_by_requesting_tab()` which calls `safe_referer_url`
-    #    to validate that the referer is from the same host before redirecting
-    # 3. The application is an internal scientific data management system, not public-facing
-    # 4. Refactoring all 39 locations to use `allow_other_host: true` would require significant
-    #    changes to the responders gem integration
+    # SECURITY NOTE: This setting is disabled for legacy compatibility.
     #
-    # The `safe_referer_url` helper in ApplicationController provides host validation:
+    # Current state:
+    # - The application uses `respond_with location: request.referer` pattern in 39 places
+    #   across nested resource controllers for UX continuity after CRUD operations
+    # - Only 2 controllers have been migrated to use `safe_referer_url`:
+    #   - CategoryMeasurementItemsController (move_to_top, destroy)
+    #   - AttachingsController uses adjust_url_by_requesting_tab() which does NOT validate hosts
+    # - The remaining 37 locations still use raw `request.referer` without validation
+    #
+    # Risk mitigation:
+    # - The application is an internal scientific data management system
+    # - Access requires authentication (Devise)
+    # - The referer-based redirects only occur after successful CRUD operations
+    #
+    # The `safe_referer_url` helper is available in ApplicationController for future use:
     # - Allows same-host absolute URLs
     # - Allows relative URLs (implicitly same-host)
     # - Falls back to root_path for cross-host URLs
     #
-    # TODO: Consider migrating to explicit `redirect_to url, allow_other_host: false` pattern
-    # in a future refactoring effort.
+    # TODO: Migrate all 39 locations to use `safe_referer_url` or explicit
+    # `redirect_to url, allow_other_host: false` pattern, then re-enable this protection.
+    # See: https://github.com/McNamara84/medusa-earthshape/issues (create tracking issue)
     config.action_controller.raise_on_open_redirects = false
   end
 end
