@@ -3,8 +3,11 @@
 # Fix for Ruby 2.7 keyword argument deprecation warning with pg gem 1.6.x
 # Rails 6.1 PostgreSQL adapter passes hash as positional argument but pg 1.6 expects keyword arguments
 # This monkey-patches Rails to use keyword argument splat operator
+#
+# Rails 7.0+: This fix is no longer needed as the PostgreSQL adapter was updated.
+# We skip this patch for Rails 7.0 and later.
 
-if RUBY_VERSION >= '2.7.0'
+if RUBY_VERSION >= '2.7.0' && Rails::VERSION::MAJOR < 7
   require 'active_record/connection_adapters/postgresql_adapter'
   
   ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do

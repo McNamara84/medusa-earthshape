@@ -8,18 +8,18 @@ Bundler.require(*Rails.groups)
 
 module Medusa
   class Application < Rails::Application
-    # Initialize configuration defaults for Rails 7.0
-    config.load_defaults 7.0
+    # Initialize configuration defaults for Rails 7.1
+    config.load_defaults 7.1
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
 
-    # Rails 7.0: Zeitwerk is the only autoloader (Classic removed)
+    # Rails 7.1: Zeitwerk is the only autoloader
     # Ensure all autoloaded paths follow Zeitwerk naming conventions
 
-    # Rails 7.0: Disable open redirect protection
+    # Rails 7.0+: Disable open redirect protection
     #
     # SECURITY NOTE: This setting is disabled for legacy compatibility.
     #
