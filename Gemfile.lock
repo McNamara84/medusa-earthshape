@@ -184,11 +184,11 @@ GEM
       actionmailer (>= 5.2, < 9)
       activesupport (>= 5.2, < 9)
     execjs (2.10.0)
-    factory_girl (4.9.0)
-      activesupport (>= 3.0.0)
-    factory_girl_rails (4.9.0)
-      factory_girl (~> 4.9.0)
-      railties (>= 3.0.0)
+    factory_bot (6.5.6)
+      activesupport (>= 6.1.0)
+    factory_bot_rails (6.5.1)
+      factory_bot (~> 6.5)
+      railties (>= 6.1.0)
     ffi (1.15.5)
     formatador (1.2.3)
       reline
@@ -537,7 +537,7 @@ DEPENDENCIES
   devise
   draper
   exception_notification
-  factory_girl_rails
+  factory_bot_rails
   ffi (~> 1.15.0)
   geonames
   gmaps4rails

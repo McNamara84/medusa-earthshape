@@ -125,7 +125,7 @@ group :test do
   gem 'simplecov', :require => false
   gem 'simplecov-rcov', :require => false
   gem 'ci_reporter'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'  # Renamed from factory_girl_rails (Rails 7.2 compatible)
   gem 'rspec_junit_formatter' # For CI test result reporting
 end
 
