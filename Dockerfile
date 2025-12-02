@@ -1,6 +1,6 @@
-# Use Ruby 3.3.10 (with Prism parser, improved YJIT, M:N threading)
+# Use Ruby 3.4.7 (with 'it' block param, Prism default parser, Happy Eyeballs v2, modular GC)
 # Based on Debian Bookworm (12)
-FROM ruby:3.3.10
+FROM ruby:3.4.7
 
 # Debian Bullseye repositories are still active (no archive fix needed)
 
