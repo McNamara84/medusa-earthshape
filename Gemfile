@@ -80,6 +80,11 @@ gem 'kt-paperclip', '~> 7.2'  # Maintained fork of Paperclip (Rails 7.x + Ruby 3
 gem 'barby'
 gem 'rqrcode'
 gem 'chunky_png'
+gem 'csv'  # Ruby 3.4: csv moved from default gem to bundled gem
+gem 'bigdecimal'  # Ruby 3.4: bigdecimal moved from default gem to bundled gem
+gem 'mutex_m'  # Ruby 3.4: mutex_m moved from default gem to bundled gem
+gem 'base64'  # Ruby 3.4: base64 moved from default gem to bundled gem
+gem 'drb'  # Ruby 3.4: drb moved from default gem to bundled gem
 gem 'alchemist', git: 'https://github.com/halogenandtoast/alchemist'
 gem 'geonames'
 gem 'rubyzip'
