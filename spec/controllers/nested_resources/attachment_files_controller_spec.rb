@@ -5,7 +5,8 @@ describe NestedResources::AttachmentFilesController do
   let(:parent_name){:bib}
   let(:child_name){:attachment_file}
   let(:parent) { FactoryBot.create(parent_name) }
-  let(:child) { FactoryBot.create(child_name) }
+  # Use :with_real_file for JSON format tests (as_json calls path methods that need real file)
+  let(:child) { FactoryBot.create(child_name, :with_real_file) }
   let(:user) { FactoryBot.create(:user) }
   let(:url){"where_i_came_from"}
   let(:filetopic) { FactoryBot.create(:filetopic) }

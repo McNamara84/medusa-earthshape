@@ -15,7 +15,15 @@ class AttachmentFile < ApplicationRecord
   # Paperclip 6.1+ requires explicit content type validation
   validates_attachment_content_type :data, content_type: /.*/
   
-  alias_attribute :name, :data_file_name
+  # Rails 8.1 compatibility: alias_attribute interferes with Paperclip's attribute handling
+  # causing data_file_name to be saved as nil. Use explicit methods instead.
+  def name
+    data_file_name
+  end
+  
+  def name=(value)
+    self.data_file_name = value
+  end
 
   has_many :spots, dependent: :destroy
   has_many :attachings, dependent: :destroy

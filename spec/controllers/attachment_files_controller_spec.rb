@@ -23,7 +23,8 @@ describe AttachmentFilesController do
   end
 
   describe "GET show" do
-    let(:attachment_file) { FactoryBot.create(:attachment_file) }
+    # Use :with_real_file for JSON format (as_json calls path methods that need real file)
+    let(:attachment_file) { FactoryBot.create(:attachment_file, :with_real_file) }
     before { get :show, params: {id: attachment_file.id}, format: 'json' }
     it { expect(assigns(:attachment_file)).to eq attachment_file }
     it { expect(response.body).to include("\"global_id\":\"#{attachment_file.global_id}\"") }

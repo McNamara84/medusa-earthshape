@@ -144,7 +144,8 @@ describe Bib do
   
   describe ".build_bundle_tex" do
     subject { Bib.build_bundle_tex(bibs) }
-    let(:bibs) { Bib.all }
+    # Use explicit array instead of Bib.all to avoid test isolation issues
+    let(:bibs) { [bib_1] }
     let(:bib_1) { FactoryBot.create(:bib, name: "bib_1", authors: [author]) }
     let(:author) { FactoryBot.create(:author, name: "name_1") }
     before { bib_1 }
