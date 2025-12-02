@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '3.3.10'
+ruby '3.4.7'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -80,6 +80,11 @@ gem 'kt-paperclip', '~> 7.2'  # Maintained fork of Paperclip (Rails 7.x + Ruby 3
 gem 'barby'
 gem 'rqrcode'
 gem 'chunky_png'
+gem 'csv'  # Ruby 3.4: csv moved from default gem to bundled gem
+gem 'bigdecimal'  # Ruby 3.4: bigdecimal moved from default gem to bundled gem
+gem 'mutex_m'  # Ruby 3.4: mutex_m moved from default gem to bundled gem
+gem 'base64'  # Ruby 3.4: base64 moved from default gem to bundled gem
+gem 'drb'  # Ruby 3.4: drb moved from default gem to bundled gem
 gem 'alchemist', git: 'https://github.com/halogenandtoast/alchemist'
 gem 'geonames'
 gem 'rubyzip'
@@ -87,7 +92,7 @@ gem 'rubyzip'
 gem 'comma'
 gem 'acts-as-taggable-on', '~> 13.0'  # Rails 7.2 compatible (v13.0+ supports Rails 7.1-7.2)
 gem 'exception_notification'
-gem 'settingslogic'
+gem 'config'  # Settings management (replaces settingslogic)
 # gem 'validates_existence'  # Rails 5.1: Removed - incompatible with Rails 5.1+ (belongs_to validation now built-in)
 # Note: acts_as_mappable and with_recursive are from private gem server
 # These gems are temporarily disabled for Docker deployment as they are not publicly available

@@ -1,0 +1,8 @@
+# Development environment settings
+# Inherits from config/settings.yml
+
+site_name: Medusa Development
+
+admin:
+  email: admin@medusa-dev.local
+  initial_password: admin123

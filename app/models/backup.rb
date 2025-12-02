@@ -1,10 +1,20 @@
-require "settingslogic"
+# frozen_string_literal: true
 
-class Backup < Settingslogic
-  source File.expand_path("../../../config/application.yml", __FILE__)
-  namespace "backup"
+# Backup configuration accessor
+# Uses the backup_server settings from config/settings.yml
+# Provides class methods for accessing backup server configuration
+class Backup
+  class << self
+    delegate :host, :username, :dir_path, to: :backup_settings
 
-  def self.ssh_host
-    "#{username}@#{host}"
+    def ssh_host
+      "#{username}@#{host}"
+    end
+
+    private
+
+    def backup_settings
+      Settings.backup_server
+    end
   end
 end

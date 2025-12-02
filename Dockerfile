@@ -1,10 +1,7 @@
-# Use Ruby 3.3.10 (with Prism parser, improved YJIT, M:N threading)
-# Based on Debian Bookworm (12)
-FROM ruby:3.3.10
+# Use Ruby 3.4.7 - Based on Debian Bookworm (12)
+FROM ruby:3.4.7
 
-# Debian Bullseye repositories are still active (no archive fix needed)
-
-# Install system dependencies (PhantomJS not available in Bullseye, but not needed for production)
+# Install system dependencies (PhantomJS not available in Bookworm, but not needed for production)
 RUN apt-get update -qq && apt-get install -y \
     build-essential \
     libpq-dev \
@@ -16,7 +13,7 @@ RUN apt-get update -qq && apt-get install -y \
     xvfb \
     && rm -rf /var/lib/apt/lists/*
 
-# Note: PhantomJS was removed in Debian Bullseye (available in Buster via phantomjs package)
+# Note: PhantomJS was removed in Debian Bullseye and is not available in Bookworm
 # Poltergeist tests (gem 'poltergeist', '~> 1.18.0') require PhantomJS to run
 # Options: 1) Install PhantomJS from archived builds (wget from phantomjs.org/download.html)
 #          2) Migrate to modern headless browser (Selenium + Chrome headless)
