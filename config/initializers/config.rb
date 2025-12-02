@@ -24,7 +24,8 @@ Config.setup do |config|
   config.overwrite_arrays = true
 
   # Load environment variables from the `ENV` object
-  # Setting: Settings.use_env = true allows overriding via ENV['Settings.section.key']
+  # When enabled (`use_env = true`), allows overriding settings via ENV variables
+  # with format ENV['SETTINGS__section__key'] (using env_prefix and env_separator below)
   config.use_env = false
 
   # Define ENV variable prefix
