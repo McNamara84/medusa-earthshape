@@ -4,10 +4,8 @@ FactoryBot.define do
     name { "添付ファイル１" }
     description { "説明１" }
     md5hash { "abcde" }
-    data_file_name { "file_name_1.jpg" }
-    data_content_type { "image/jpg" }
-    data_file_size { 12345 }
-    data_updated_at { DateTime.now }
+    # Use actual file for Paperclip validation in Rails 8.1+
+    data { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg'), 'image/jpeg') }
     original_geometry { "123x123" }
     affine_matrix { [1,0,0,0,1,0,0,0,1] }
   end
