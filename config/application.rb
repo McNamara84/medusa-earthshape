@@ -8,8 +8,8 @@ Bundler.require(*Rails.groups)
 
 module Medusa
   class Application < Rails::Application
-    # Initialize configuration defaults for Rails 8.0
-    config.load_defaults 8.0
+    # Initialize configuration defaults for Rails 8.1
+    config.load_defaults 8.1
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
