@@ -28,6 +28,14 @@ RSpec.configure do |config|
   # config.mock_with :flexmock
   # config.mock_with :rr
   
+  # Rails 8.0: Ensure routes are loaded before Devise test helpers
+  # This is a workaround for https://github.com/heartcombo/devise/issues/5705
+  # Rails 8.0 uses deferred route drawing which causes Devise.mappings to be empty
+  # until routes are actually loaded
+  config.before(:each, type: :controller) do
+    Rails.application.reload_routes_unless_loaded
+  end
+  
   # Include Devise test helpers FIRST, then custom helpers
   # This ensures ControllerSpecHelper.sign_in can call super
   config.include Devise::Test::ControllerHelpers, type: :controller
