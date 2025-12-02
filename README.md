@@ -19,7 +19,7 @@ Medusa is a comprehensive web-based sample management system designed for geolog
 ## System Requirements
 
 - **Ruby**: 3.4.7
-- **Rails**: 7.2.3
+- **Rails**: 8.0.4
 - **Database**: PostgreSQL 18 (or PostgreSQL 12+)
 - **Server**: Linux/Unix-based system (tested on Ubuntu/Debian)
 - **Web Server**: Apache 2.4+ with mod_proxy (or Nginx)
@@ -135,9 +135,9 @@ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
 source ~/.bashrc
 
-# Install Ruby 3.2.6
-rbenv install 3.2.6
-rbenv global 3.2.6
+# Install Ruby 3.4.7
+rbenv install 3.4.7
+rbenv global 3.4.7
 gem install bundler -v '~> 2.3'
 ```
 
@@ -547,14 +547,14 @@ Developed for the EarthShape project - A collaborative research initiative in ea
 
 ## Recent Updates
 
-**November 2025**: Successfully upgraded to Ruby 3.2.6 + Rails 7.2.3 🎉
-- **Rails**: 4.0.2 → 4.2 → 5.0 → 5.1 → 5.2 → 6.0 → 6.1 → 7.0 → 7.1 → 7.2.3
-- **Ruby**: 2.1.10 → 2.3.8 → 2.4.10 → 2.5.9 → 2.6.10 → 2.7.8 → 3.0.6 → 3.1.6 → 3.2.6
+**December 2025**: Successfully upgraded to Ruby 3.4.7 + Rails 8.0.4 🎉
+- **Rails**: 4.0.2 → 4.2 → 5.0 → 5.1 → 5.2 → 6.0 → 6.1 → 7.0 → 7.1 → 7.2 → 8.0.4
+- **Ruby**: 2.1.10 → 2.3.8 → 2.4.10 → 2.5.9 → 2.6.10 → 2.7.8 → 3.0.6 → 3.1.6 → 3.2.6 → 3.3.10 → 3.4.7
 - **Paperclip**: Migrated to `kt-paperclip` 7.2.2 (maintained fork)
 - **FactoryGirl**: Migrated to `FactoryBot` 6.5.6 (Rails 7.2 compatible)
-- **RSpec-Rails**: Upgraded to 6.1.5 for Rails 7.2 compatibility
+- **RSpec-Rails**: Upgraded to 6.1.5 for Rails 7.2+ compatibility
 - **Puma**: Upgraded to 6.6.1 (Rack 3 compatible)
 - **PostgreSQL**: Upgraded to version 18
-- **100% test suite passing** (1335 examples, 0 failures, 14 pending)
+- **100% test suite passing** (1347 examples, 0 failures, 10 pending)
 - **CI/CD**: GitHub Actions fully green ✅
 - See `UPGRADE-PLAN.md` for detailed upgrade history and lessons learned
