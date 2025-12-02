@@ -3,7 +3,7 @@ ruby '3.4.7'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.2.0'  # Upgraded to Rails 7.2
+gem 'rails', '~> 8.0.0'  # Upgraded to Rails 8.0
 gem 'nokogiri', '~> 1.16'  # Ruby 3.1+ requires nokogiri 1.13+ (upgraded from 1.10.10)
 gem 'loofah', '~> 2.22'  # Updated for nokogiri 1.16+ compatibility (upgraded from 2.3.1)
 # gem 'psych', '~> 3.3.0'  # Removed - Rails 7.0+ uses Psych 4.x natively
@@ -14,6 +14,7 @@ gem 'pg', '~> 1.6'
 
 # Use SCSS for stylesheets
 gem 'sassc-rails'  # Rails 7.0: sass-rails replaced with sassc-rails
+gem 'sprockets-rails'  # Rails 8.0: Must be explicitly included (no longer default)
 
 # Use Terser as compressor for JavaScript assets (Rails 7.0)
 gem 'terser'  # Rails 7.0: Replaces uglifier
