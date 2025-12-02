@@ -2,16 +2,22 @@ require 'spec_helper'
 
 describe Settings do
 
-  describe "Inheritance" do
-    it { expect(Settings.superclass).to eq Settingslogic }
-  end
-
-  describe ".source" do
-    it { expect(Settings.source).to eq Rails.root.join("config", "application.yml").to_path }
-  end
-
-  describe ".namespace" do
-    it { expect(Settings.namespace).to eq Rails.env }
+  # The Settings object is now created by the 'config' gem (rubyconfig/config)
+  # instead of Settingslogic. The config gem uses a different API.
+  
+  describe "Configuration" do
+    it "uses Config::Options as the Settings class" do
+      expect(Settings).to be_a(Config::Options)
+    end
+    
+    it "has site_name setting" do
+      expect(Settings.site_name).to be_present
+    end
+    
+    it "has admin settings" do
+      expect(Settings.admin).to be_present
+      expect(Settings.admin.email).to be_present
+    end
   end
 
   # NOTE: The following tests are skipped because they have fundamental design issues:
