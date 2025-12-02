@@ -15,7 +15,7 @@ class CreateStagings < ActiveRecord::Migration[4.2]
       t.string :place_latitude
       t.string :place_longitude
       t.float :place_elevation
-      t.string :place_topographic_positon
+      t.string :place_topographic_position
       t.string :place_slopedescription
       t.string :place_aspect
       t.string :place_vegetation

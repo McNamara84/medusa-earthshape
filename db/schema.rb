@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_17_155609) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_02_120000) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_catalog.plpgsql"
+  enable_extension "plpgsql"
 
   create_table "analyses", id: :serial, force: :cascade do |t|
     t.datetime "created_at", precision: nil
@@ -379,7 +379,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_17_155609) do
     t.string "place_name"
     t.string "place_parent"
     t.string "place_slopedescription"
-    t.string "place_topographic_positon"
+    t.string "place_topographic_position"
     t.string "place_vegetation"
     t.string "sample_affiliation"
     t.string "sample_campaign"
