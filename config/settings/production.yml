@@ -1,0 +1,5 @@
+# Production environment settings
+# Inherits from config/settings.yml
+
+# Override these values in config/settings.local.yml or environment variables
+site_name: Medusa

@@ -1,0 +1,19 @@
+# Default settings for all environments
+# Environment-specific overrides go in config/settings/<environment>.yml
+
+site_name: Medusa Development
+help_url: http://dream.misasa.okayama-u.ac.jp/documentation/
+
+admin:
+  email: admin@medusa-dev.local
+  initial_password: admin123
+
+barcode:
+  prefix:
+  type: 3D
+
+backup:
+  files:
+    dir_path: "/app/tmp/backup/files"
+  db:
+    dir_path: "/app/tmp/backup/db"

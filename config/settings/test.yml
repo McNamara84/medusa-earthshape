@@ -1,0 +1,4 @@
+# Test environment settings
+# Inherits from config/settings.yml
+
+site_name: Medusa Test
