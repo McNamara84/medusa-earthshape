@@ -2,3 +2,8 @@
 # Inherits from config/settings.yml
 
 site_name: Medusa Test
+
+# Test-specific admin credentials to avoid using production-like values
+admin:
+  email: test@medusa-test.local
+  initial_password: test123

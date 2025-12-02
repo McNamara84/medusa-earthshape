@@ -92,7 +92,7 @@ gem 'rubyzip'
 gem 'comma'
 gem 'acts-as-taggable-on', '~> 13.0'  # Rails 7.2 compatible (v13.0+ supports Rails 7.1-7.2)
 gem 'exception_notification'
-gem 'config'  # Ruby 3.4/Rails 7.2 compatible replacement for settingslogic
+gem 'config'  # Settings management (replaces settingslogic)
 # gem 'validates_existence'  # Rails 5.1: Removed - incompatible with Rails 5.1+ (belongs_to validation now built-in)
 # Note: acts_as_mappable and with_recursive are from private gem server
 # These gems are temporarily disabled for Docker deployment as they are not publicly available

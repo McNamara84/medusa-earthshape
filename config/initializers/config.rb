@@ -2,6 +2,13 @@
 
 # Config gem configuration
 # See: https://github.com/rubyconfig/config
+#
+# Note: In Rails, the config gem's Railtie automatically loads settings from:
+#   - config/settings.yml (base settings)
+#   - config/settings/#{Rails.env}.yml (environment-specific overrides)
+#   - config/settings.local.yml (local overrides, gitignored)
+# No explicit call to Config.load_and_set_settings is needed.
+
 Config.setup do |config|
   # Name of the constant exposing loaded settings
   config.const_name = 'Settings'

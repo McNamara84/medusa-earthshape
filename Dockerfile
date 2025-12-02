@@ -1,5 +1,4 @@
-# Use Ruby 3.4.7 (with 'it' block param, Prism default parser, Happy Eyeballs v2, modular GC)
-# Based on Debian Bookworm (12)
+# Use Ruby 3.4.7 - Based on Debian Bookworm (12)
 FROM ruby:3.4.7
 
 # Install system dependencies (PhantomJS not available in Bookworm, but not needed for production)
