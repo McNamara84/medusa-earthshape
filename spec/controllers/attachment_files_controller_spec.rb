@@ -23,7 +23,8 @@ describe AttachmentFilesController do
   end
 
   describe "GET show" do
-    let(:attachment_file) { FactoryBot.create(:attachment_file) }
+    # Use :with_real_file for JSON format (as_json calls path methods that need real file)
+    let(:attachment_file) { FactoryBot.create(:attachment_file, :with_real_file) }
     before { get :show, params: {id: attachment_file.id}, format: 'json' }
     it { expect(assigns(:attachment_file)).to eq attachment_file }
     it { expect(response.body).to include("\"global_id\":\"#{attachment_file.global_id}\"") }
@@ -73,7 +74,8 @@ describe AttachmentFilesController do
   end
 
   describe "GET download" do
-    let(:attachment_file) { FactoryBot.create(:attachment_file) }
+    # Use :with_real_file trait for tests that need actual file on disk
+    let(:attachment_file) { FactoryBot.create(:attachment_file, :with_real_file) }
     before do
       attachment_file
     end
@@ -102,9 +104,10 @@ describe AttachmentFilesController do
 
   describe "POST bundle_update" do
     let(:obj3description){"obj3"}
-    let(:obj1) { FactoryBot.create(:attachment_file, description: "obj1") }
-    let(:obj2) { FactoryBot.create(:attachment_file, description: "obj2") }
-    let(:obj3) { FactoryBot.create(:attachment_file, description: obj3description) }
+    # Use :with_real_file trait for update operations (Rails 8.1+ requires valid file for update)
+    let(:obj1) { FactoryBot.create(:attachment_file, :with_real_file, description: "obj1") }
+    let(:obj2) { FactoryBot.create(:attachment_file, :with_real_file, description: "obj2") }
+    let(:obj3) { FactoryBot.create(:attachment_file, :with_real_file, description: obj3description) }
     let(:attributes) { {description: "update_description"} }
     let(:ids){[obj1.id,obj2.id]}
     before do

@@ -69,12 +69,12 @@ class StagingsController < ApplicationController
   def findplace (staging)
 	vegetation=Vegetation.where("name ILIKE ?","#{staging.place_vegetation }%").take.try!(:id).try(:to_i)
 	landuse=Landuse.where("name ILIKE ?","#{staging.place_landuse }%").take.try!(:id).try(:to_i)
-	topographicpositon=TopographicPosition.where("name ILIKE ?","#{staging.place_topographic_positon }%").take.try!(:id).try(:to_i)	  
+	topographic_position=TopographicPosition.where("name ILIKE ?","#{staging.place_topographic_position }%").take.try!(:id).try(:to_i)	  
 	parent_global_id=Place.where("is_parent IS TRUE AND places.name ILIKE ?","#{staging.place_parent }%").joins(:record_property).take.try!(:global_id)
 	groupid=Group.where("name = ?","#{staging.place_group}").take.try!(:id).try(:to_i)
 
 	
-	ret={:name => staging.place_name, :parent_global_id=>parent_global_id, :longitude => staging.place_longitude, :latitude => staging.place_latitude, :elevation => staging.place_elevation,:topographic_position_id => topographicpositon,
+	ret={:name => staging.place_name, :parent_global_id=>parent_global_id, :longitude => staging.place_longitude, :latitude => staging.place_latitude, :elevation => staging.place_elevation,:topographic_position_id => topographic_position,
 		:slope_description => staging.place_slopedescription, :aspect => staging.place_aspect, :vegetation_id => vegetation, :landuse_id => landuse, :description => staging.place_description, 
 		:lightsituation => staging.place_lightsituation, :place_group_id =>groupid}
 

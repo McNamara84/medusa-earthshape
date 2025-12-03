@@ -10,5 +10,10 @@ FactoryBot.define do
     data_updated_at { DateTime.now }
     original_geometry { "123x123" }
     affine_matrix { [1,0,0,0,1,0,0,0,1] }
+
+    # Trait for tests that need a real file (e.g., for update operations in Rails 8.1+)
+    trait :with_real_file do
+      data { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg'), 'image/jpeg') }
+    end
   end
 end

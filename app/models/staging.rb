@@ -14,7 +14,7 @@ class Staging < ApplicationRecord
     if file && PERMIT_IMPORT_TYPES.include?(file.content_type)
  #     table = CSV.parse(file.read, headers: [
  #     :collection_name, :collection_project, :collection_strategy, :collection_weather, :collection_timeseries, :collection_comment, :collection_group,
- #     :place_is_parent, :place_name, :place_parent, :place_latitude, :place_longitude,  :place_elevation, :place_topographic_positon,
+ #     :place_is_parent, :place_name, :place_parent, :place_latitude, :place_longitude,  :place_elevation, :place_topographic_position,
  #     :place_vegetation, :place_landuse, :place_lightsituation,:place_slopedescription, :place_aspect,  :place_description, :place_group,
  #     :box_name, :box_type, :box_parent,  :box_group,
  #     :sample_name, :sample_parent, :sample_igsn, :sample_collectionmethod, :sample_material, :sample_classification, :sample_location, :sample_campaign,
@@ -60,7 +60,7 @@ class Staging < ApplicationRecord
                              rowhash = {
                               :collection_name => row[0], :collection_project=> row[1], :collection_strategy => row[2], :collection_weather => row[3], :collection_timeseries => row[4], 
                               :collection_comment => row[5], :collection_group => row[6], :place_is_parent => row[7], :place_name => row[8], :place_parent => row[9], 
-                              :place_latitude => row[10], :place_longitude => row[11],  :place_elevation => row[12], :place_topographic_positon => row[13], :place_vegetation => row[14], 
+                              :place_latitude => row[10], :place_longitude => row[11],  :place_elevation => row[12], :place_topographic_position => row[13], :place_vegetation => row[14], 
                               :place_landuse => row[15], :place_lightsituation => row[16], :place_slopedescription => row[17], :place_aspect => row[18],  :place_description => row[19], 
                               :place_group => row[20], :box_name => row[21], :box_type => row[22], :box_parent => row[23],  :box_group => row[24], 
                               :sample_name => row[25], :sample_parent => row[26], :sample_igsn => row[27], :sample_collectionmethod => row[28], :sample_material => row[29], 
@@ -120,7 +120,7 @@ class Staging < ApplicationRecord
 	:longitude => self.place_longitude, 
 	:latitude => self.place_latitude, 
 	:elevation => self.place_elevation, 
-	:topographic_position_id => self.place_topographic_positon,
+	:topographic_position_id => self.place_topographic_position,
 	:slope_description => self.place_slopedescription, 
 	:aspect => self.place_aspect, 
 	:vegetation_id => self.place_vegetation, 

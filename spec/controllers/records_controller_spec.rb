@@ -10,7 +10,8 @@ describe RecordsController do
     let(:analysis) { FactoryBot.create(:analysis) }
     let(:bib) { FactoryBot.create(:bib) }
     let(:place) { FactoryBot.create(:place) }
-    let(:attachment_file) { FactoryBot.create(:attachment_file) }
+    # Use :with_real_file for JSON format tests (as_json calls path methods that need real file)
+    let(:attachment_file) { FactoryBot.create(:attachment_file, :with_real_file) }
     # Count only record_properties that are readable by current user
     # instead of all objects in the database
     let(:allcount) { RecordProperty.readables(user).where.not(datum_type: ["Chemistry", "Spot", "Staging"]).count }

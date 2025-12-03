@@ -3,7 +3,7 @@ ruby '3.4.7'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 8.0.0'  # Upgraded to Rails 8.0
+gem 'rails', '~> 8.1.0'  # Upgraded to Rails 8.1
 gem 'nokogiri', '~> 1.16'  # Ruby 3.1+ requires nokogiri 1.13+ (upgraded from 1.10.10)
 gem 'loofah', '~> 2.22'  # Updated for nokogiri 1.16+ compatibility (upgraded from 2.3.1)
 # gem 'psych', '~> 3.3.0'  # Removed - Rails 7.0+ uses Psych 4.x natively
