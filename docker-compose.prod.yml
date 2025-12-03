@@ -80,10 +80,14 @@ services:
       # Log to STDOUT for Docker logs
       RAILS_LOG_TO_STDOUT: "true"
       # Secret key base - MUST be set via environment variable in Portainer!
-      # Generate with: bundle exec rake secret
-      SECRET_KEY_BASE: ${SECRET_KEY_BASE:-changeme_generate_with_rake_secret}
+      # Generate locally with: bundle exec rake secret
+      # Then add as environment variable in Portainer Web UI
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE:?SECRET_KEY_BASE must be set - generate with 'bundle exec rake secret'}
       # Rails relative URL root for /esm prefix
+      # CRITICAL: This must match the Traefik PathPrefix and stripprefix configuration
       RAILS_RELATIVE_URL_ROOT: /esm
+      # Traefik host (optional, uses default if not set)
+      TRAEFIK_HOST: ${TRAEFIK_HOST:-env.rz-vm182.gfz.de}
     stdin_open: true
     tty: true
     networks:
@@ -92,12 +96,17 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
+      # Router configuration: Match requests to https://env.rz-vm182.gfz.de/esm
       - "traefik.http.routers.esm-router.rule=Host(`${TRAEFIK_HOST:-env.rz-vm182.gfz.de}`) && PathPrefix(`/esm`)"
       - "traefik.http.routers.esm-router.entrypoints=https"
-      - "traefik.http.routers.esm-router.middlewares=esm-stripprefix"
+      # IMPORTANT: Do NOT use stripprefix middleware - Rails handles /esm prefix via RAILS_RELATIVE_URL_ROOT
+      # The middleware was causing 404 because Traefik removed /esm but Rails expected it
+      # - "traefik.http.routers.esm-router.middlewares=esm-stripprefix"
+      # - "traefik.http.middlewares.esm-stripprefix.stripprefix.prefixes=/esm"
       - "traefik.http.routers.esm-router.service=esm-service"
-      - "traefik.http.middlewares.esm-stripprefix.stripprefix.prefixes=/esm"
+      # Service configuration: Forward to Rails on port 3000
       - "traefik.http.services.esm-service.loadbalancer.server.port=3000"
+      # Network configuration: Traefik must connect via 'traefik' network
       - "traefik.docker.network=traefik"
 volumes:
   postgres_data_prod:
