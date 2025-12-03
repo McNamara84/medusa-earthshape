@@ -39,6 +39,10 @@ RUN bundle config set --local without 'development' && \
 # Copy the application code
 COPY . .
 
+# Create production database.yml from template
+# This file uses environment variables for database configuration
+RUN cp config/database.yml.production config/database.yml
+
 # Temporarily comment out unavailable gems in models
 # acts_as_mappable and with_recursive are from private gem server
 RUN sed -i 's/^\(\s*\)acts_as_mappable/\1# acts_as_mappable # Temporarily disabled - gem not available/' app/models/place.rb || true

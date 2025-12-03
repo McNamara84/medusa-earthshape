@@ -1,0 +1,22 @@
+# Production database configuration using environment variables
+# This file is created automatically in the Docker container
+# Database credentials are provided via environment variables:
+# - DATABASE_HOST
+# - DATABASE_USER
+# - DATABASE_PASSWORD
+# - DATABASE_NAME
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: <%= ENV.fetch("DATABASE_NAME", "medusa_production") %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
+  host: <%= ENV.fetch("DATABASE_HOST", "db") %>
+  username: <%= ENV.fetch("DATABASE_USER", "medusa") %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD", "medusa_production") %>
+  # Timeout settings for production
+  timeout: 5000
+  connect_timeout: 5
+  checkout_timeout: 5
+  # Reconnect on connection errors
+  reconnect: true
