@@ -116,6 +116,10 @@ group :development, :test do
   gem 'pry-stack_explorer'
   gem 'pry-byebug'
   gem 'rspec-rails', '~> 6.1.0'  # Rails 7.1 requires RSpec-Rails 6.x
+  # Sorbet static type checker
+  gem 'sorbet', require: false
+  gem 'sorbet-runtime'
+  gem 'tapioca', require: false  # RBI generator for gems and Rails
   gem 'rails-controller-testing'  # Required for Rails 5.0+ (assigns, assert_template)
   gem 'spring', '~> 2.1.0'  # Lock to version compatible with Ruby 2.5 (v4+ requires Ruby 2.7+)
   gem 'guard-rspec', '>= 4.7.3', require: false  # Updated to support RSpec 3.9+
