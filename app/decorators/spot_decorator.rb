@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# typed: false
 class SpotDecorator < Draper::Decorator
   include Rails.application.routes.url_helpers
   delegate_all

@@ -544,17 +544,3 @@ For issues and questions:
 ## Credits
 
 Developed for the EarthShape project - A collaborative research initiative in earth science.
-
-## Recent Updates
-
-**December 2025**: Successfully upgraded to Ruby 3.4.7 + Rails 8.1.1 🎉
-- **Rails**: 4.0.2 → 4.2 → 5.0 → 5.1 → 5.2 → 6.0 → 6.1 → 7.0 → 7.1 → 7.2 → 8.0 → 8.1.1
-- **Ruby**: 2.1.10 → 2.3.8 → 2.4.10 → 2.5.9 → 2.6.10 → 2.7.8 → 3.0.6 → 3.1.6 → 3.2.6 → 3.3.10 → 3.4.7
-- **Paperclip**: Migrated to `kt-paperclip` 7.2.2 (maintained fork)
-- **FactoryGirl**: Migrated to `FactoryBot` 6.5.6 (Rails 7.2 compatible)
-- **RSpec-Rails**: Upgraded to 6.1.5 for Rails 8.1+ compatibility
-- **Puma**: Upgraded to 6.6.1 (Rack 3 compatible)
-- **PostgreSQL**: Upgraded to version 18
-- **100% test suite passing** (1347 examples, 0 failures, 10 pending)
-- **CI/CD**: GitHub Actions fully green ✅
-- See `UPGRADE-PLAN.md` for detailed upgrade history and lessons learned

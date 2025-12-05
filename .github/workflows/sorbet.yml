@@ -1,0 +1,67 @@
+name: Sorbet Type Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  typecheck:
+    name: Sorbet Type Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Create required config files
+        run: |
+          # Create database.yml (needed for Rails boot)
+          cat > config/database.yml << 'EOF'
+          test:
+            adapter: postgresql
+            encoding: unicode
+            database: medusa_test
+            pool: 5
+            username: medusa
+            password: medusa_development
+            host: db
+            port: 5432
+          
+          development:
+            adapter: postgresql
+            encoding: unicode
+            database: medusa_development
+            pool: 5
+            username: medusa
+            password: medusa_development
+            host: db
+            port: 5432
+          EOF
+          
+          # Create application.yml from example
+          cp config/application.yml.example config/application.yml
+
+      - name: Build Docker images
+        run: docker compose build
+
+      - name: Run Sorbet type check
+        run: |
+          # Run Sorbet directly without needing database
+          docker compose run --rm --no-deps --entrypoint "" web bundle exec srb tc
+
+      - name: Type check summary
+        if: always()
+        run: |
+          echo "## 🔍 Sorbet Type Check" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Sorbet static type checking completed." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### What is Sorbet?" >> $GITHUB_STEP_SUMMARY
+          echo "Sorbet is a fast, powerful type checker for Ruby that helps catch bugs before they reach production." >> $GITHUB_STEP_SUMMARY
