@@ -45,7 +45,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pgadmin-router.rule=Host(`${TRAEFIK_HOST:-env.rz-vm182.gfz.de}`) && PathPrefix(`/pgadmin`)"
+      - "traefik.http.routers.pgadmin-router.rule=Host(`${TRAEFIK_HOST:-env.rz-vm499.gfz.de}`) && PathPrefix(`/pgadmin`)"
       - "traefik.http.routers.pgadmin-router.entrypoints=https"
       - "traefik.http.routers.pgadmin-router.service=pgadmin-service"
       - "traefik.http.services.pgadmin-service.loadbalancer.server.port=80"
@@ -87,7 +87,7 @@ services:
       # CRITICAL: This must match the Traefik PathPrefix and stripprefix configuration
       RAILS_RELATIVE_URL_ROOT: /esm
       # Traefik host (optional, uses default if not set)
-      TRAEFIK_HOST: ${TRAEFIK_HOST:-env.rz-vm182.gfz.de}
+      TRAEFIK_HOST: ${TRAEFIK_HOST:-env.rz-vm499.gfz.de}
     stdin_open: true
     tty: true
     networks:
@@ -96,8 +96,8 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      # Router configuration: Match requests to https://env.rz-vm182.gfz.de/esm
-      - "traefik.http.routers.esm-router.rule=Host(`${TRAEFIK_HOST:-env.rz-vm182.gfz.de}`) && PathPrefix(`/esm`)"
+      # Router configuration: Match requests to https://env.rz-vm1499.gfz.de/esm
+      - "traefik.http.routers.esm-router.rule=Host(`${TRAEFIK_HOST:-env.rz-vm499.gfz.de}`) && PathPrefix(`/esm`)"
       - "traefik.http.routers.esm-router.entrypoints=https"
       # IMPORTANT: Do NOT use stripprefix middleware - Rails handles /esm prefix via RAILS_RELATIVE_URL_ROOT
       # The middleware was causing 404 because Traefik removed /esm but Rails expected it
