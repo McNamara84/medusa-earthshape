@@ -96,7 +96,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      # Router configuration: Match requests to https://env.rz-vm1499.gfz.de/esm
+      # Router configuration: Match requests to https://env.rz-vm499.gfz.de/esm
       - "traefik.http.routers.esm-router.rule=Host(`${TRAEFIK_HOST:-env.rz-vm499.gfz.de}`) && PathPrefix(`/esm`)"
       - "traefik.http.routers.esm-router.entrypoints=https"
       # IMPORTANT: Do NOT use stripprefix middleware - Rails handles /esm prefix via RAILS_RELATIVE_URL_ROOT
