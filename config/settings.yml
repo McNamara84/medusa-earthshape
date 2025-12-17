@@ -2,7 +2,7 @@
 # Environment-specific overrides go in config/settings/<environment>.yml
 
 site_name: Medusa
-help_url: http://dream.misasa.okayama-u.ac.jp/documentation/
+help_url: https://github.com/McNamara84/medusa-earthshape
 
 admin:
   email: medusa@example.com
