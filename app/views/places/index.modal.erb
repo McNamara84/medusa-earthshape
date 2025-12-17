@@ -42,7 +42,7 @@
     </tr>
   </thead>
   <tbody>
-    <%= render partial: "place.modal", collection: PlaceDecorator.decorate_collection(@places), locals: { checked: false } %>
+    <%= render partial: "place", collection: PlaceDecorator.decorate_collection(@places), locals: { checked: false } %>
   </tbody>
 </table>
 <% end %>

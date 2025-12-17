@@ -1,5 +1,5 @@
 class BibsController < ApplicationController
-  respond_to :html, :xml, :json
+  respond_to :html, :xml, :json, :modal
   before_action :find_resource, except: [:index, :create, :bundle_edit, :bundle_update, :download_bundle_card, :download_label, :download_bundle_label, :download_to_tex]
   before_action :find_resources, only: [:bundle_edit, :bundle_update, :download_bundle_card, :download_bundle_label, :download_to_tex]
   load_and_authorize_resource
