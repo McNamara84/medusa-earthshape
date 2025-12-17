@@ -11,7 +11,7 @@
 		<%= link_to @stone.igsn, 'http://igsn.org/'+@stone.igsn %>
 <!--                (registration not yet available)-->
 <!--		<%= link_to igsn_register_stone_path(@stone), class: "btn btn-default", title:"register IGSN", id: "tag-button" do %>
-		  <span class="glyphicon glyphicon-tag"></span>
+		  <%= bi_icon('tag') %>
 		<% end %>
 -->
 
@@ -52,7 +52,7 @@
       <% end %>
     </li>
   <% end %>
-  <%= li_if_exist("", @stone.bibs.map{ |bib| content_tag(:span, nil, class: "glyphicon glyphicon-book") + raw(bib.to_html) + link_to_if(can?(:read, bib), " more", url_for(bib)) }.join(" ")) %>
+  <%= li_if_exist("", @stone.bibs.map{ |bib| bi_icon('book') + raw(bib.to_html) + link_to_if(can?(:read, bib), " more", url_for(bib)) }.join(" ")) %>
   <% if @stone.attachment_pdf_files.present? %>
     <li>
       <% @stone.attachment_pdf_files.each do |attachment_pdf_file| %>

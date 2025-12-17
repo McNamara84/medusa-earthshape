@@ -37,12 +37,12 @@
       <td><%== measurement_item.display_name %></td>
       <td>
         <%= link_to move_to_top_category_measurement_item_path(category_measurement_item), :method => :move_to_top ,:title => "move to top" do %>
-          <span class="glyphicon glyphicon-arrow-up"></span>
+          <%= bi_icon('arrow-up') %>
         <% end %>
       </td>
       <td>
         <%= link_to category_measurement_item_path(category_measurement_item), :method => :delete ,:title => "unlink item",data: {confirm: t("confirm.unlink")} do %>
-          <span class="glyphicon glyphicon-remove"></span>
+          <%= bi_icon('remove') %>
         <% end %>
       </td>
     <% end %>

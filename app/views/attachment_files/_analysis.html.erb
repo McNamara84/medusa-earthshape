@@ -26,7 +26,7 @@
           <td><%= analysis.try!(:global_id) %></td> 
           <td>
             <%= link_to attachment_file_analysis_path(@attachment_file,analysis) + tab_param(__FILE__), method: :delete ,title: "unlink analysis",data: {confirm: t("confirm.unlink")} do %>
-              <span class="glyphicon glyphicon-remove"></span>
+              <%= bi_icon('remove') %>
             <% end %>
           </td>
         </tr>
@@ -64,7 +64,7 @@
 
   <div style="float:left;margin-left:10px;margin-top:17px">
           <%= f.button title:"add analysis file",class: "btn btn-default" do %>
-            <span class="glyphicon glyphicon-save"></span>
+            <%= bi_icon('save') %>
           <% end %>
 </div>
 
@@ -80,13 +80,13 @@
    	    <%= select_tag :global_id, options_for_select(Analysis.choose_global_id(@current_user)), { include_blank: true  , id: "analysis-global-id", class: "form-control input-sm"} %>
 	    <span class="input-group-addon">
 	      <%= link_to analyses_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#analysis-global-id" do %>
-	      <span class="glyphicon glyphicon-search"></span>
+	      <%= bi_icon('search') %>
 	      <% end %>
 	    </span>
 	  </div>	  
   <div style="float:left;margin-left:10px">
           <%= button_tag title: "link analysis by global id",class: "btn btn-default" do %>
-            <span class="glyphicon glyphicon-save"></span>
+            <%= bi_icon('save') %>
           <% end %>
   </div>
       <% end %>

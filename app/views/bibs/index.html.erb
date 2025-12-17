@@ -38,7 +38,7 @@
     <tr>
       <th><%= text_field_tag :per_page, (params[:per_page] || Bib.default_per_page), size: 1 %>
              <%= f.button class: "btn btn-default" do %>
-       <span class="glyphicon glyphicon-refresh"></span>
+       <%= bi_icon('refresh') %>
         <% end %> 
       </th>
       <th><%= f.text_field :name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>

@@ -20,7 +20,7 @@
     <tr>
       <td>
         <%= link_to edit_preparation_for_classification_path(preparation_for_classification) do %>
-        <span class="glyphicon glyphicon-edit"></span>
+        <%= bi_icon('edit') %>
         <% end %>
       </td>
       <td><%= preparation_for_classification.classification.try!(:full_name)  %></td>
@@ -28,7 +28,7 @@
       <td></td>
       <td>
         <%= link_to preparation_for_classification_path(preparation_for_classification), method: :delete, data: {confirm: t("confirm.delete")} do %>
-        <span class="glyphicon glyphicon-remove"></span>
+        <%= bi_icon('remove') %>
         <% end %>
       </td>
     </tr>
@@ -42,7 +42,7 @@
       <td><%= f.select :preparation_type_id, PreparationType.order(:full_name).pluck(:full_name,:id), { include_blank: true }, class: "form-control input-sm" %></td>      
       <td>
         <%= f.button class: "btn btn-default" do %>
-        <span class="glyphicon glyphicon-save"></span>
+        <%= bi_icon('save') %>
         <% end %>
       </td>
       <td></td>

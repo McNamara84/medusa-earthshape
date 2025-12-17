@@ -13,16 +13,16 @@
     <div class="row btn-toolbar tool-selector" role="toolbar">
       <div class="btn-group btn-group-sm">
 	<%= link_to map_place_path(@place), class: "btn btn-default activate", remote: true do %>
-	  <span class="glyphicon glyphicon-globe"></span>
+	  <%= bi_icon('globe') %>
 	<% end %>
       </div>
       <% if can? :update, @place %>
       <div class="btn-group btn-group-sm">
 	<%= link_to edit_place_path(@place), class: "btn btn-default", remote: true do %>
-	  <span class="glyphicon glyphicon-pencil"></span>
+	  <%= bi_icon('pencil') %>
 	<% end %>
 	<%= link_to property_place_path(@place), class: "btn btn-default", remote: true do %>
-	  <span class="glyphicon glyphicon-cog"></span>
+	  <%= bi_icon('cog') %>
 	<% end %>
       </div>
       <% end %>

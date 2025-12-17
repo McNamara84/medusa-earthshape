@@ -14,7 +14,7 @@ describe BoxDecorator do
     subject{obj.name_with_id}
     it{expect(subject).to include(obj.name)}
     it{expect(subject).to include(obj.global_id)}
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-folder-close\"></span>")}
+    it{expect(subject).to match(/bi-folder/)}
   end
 
   describe ".primary_picture" do
@@ -52,11 +52,11 @@ describe BoxDecorator do
       obj.children << child
     end
     it{expect(subject).to match("<div class=\"tree-node\" data-depth=\"1\">.*</div>")}
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-folder-close\"></span>")}
+    it{expect(subject).to match(/bi-folder/)}
     it{expect(subject).to match("<a href=\"/boxes/#{obj.id}\">.*</a>")}
     it{expect(subject).to include("<strong>#{obj.name}</strong>")}
     it{expect(subject).to match("<div class=\"tree-node\" data-depth=\"2\">.*</div>")}
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-folder-close\"></span>")}
+    it{expect(subject).to match(/bi-folder/)}
     it{expect(subject).to match("<a href=\"/boxes/#{child.id}\">.*</a>")}
     it{expect(subject).to include("#{child.name}")}
   end
@@ -68,7 +68,7 @@ describe BoxDecorator do
     let(:analysis){FactoryBot.create(:analysis)}
     let(:bib){FactoryBot.create(:bib)}
     let(:attachment_file){FactoryBot.create(:attachment_file)}
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-folder-close\"></span>")}
+    it{expect(subject).to match(/bi-folder/)}
     it{expect(subject).to include("#{obj.name}")}
     before do
       allow(obj.h).to receive(:can?).and_return(true)
@@ -78,11 +78,11 @@ describe BoxDecorator do
       obj.bibs << bib
       obj.attachment_files << attachment_file
     end
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-cloud\"></span><span>#{obj.stones.count}</span>")}
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-folder-close\"></span><span>#{obj.stones.count}</span>")}
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-stats\"></span><span>#{obj.analyses.count}</span>")}
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-book\"></span><span>#{obj.bibs.count}</span>")}
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-file\"></span><span>#{obj.attachment_files.count}</span>")}
+    it{expect(subject).to match(/bi-cloud.*<span>#{obj.stones.count}<\/span>/)}
+    it{expect(subject).to match(/bi-folder.*<span>#{obj.stones.count}<\/span>/)}
+    it{expect(subject).to match(/bi-graph-up.*<span>#{obj.analyses.count}<\/span>/)}
+    it{expect(subject).to match(/bi-book.*<span>#{obj.bibs.count}<\/span>/)}
+    it{expect(subject).to match(/bi-file-earmark.*<span>#{obj.attachment_files.count}<\/span>/)}
     context "current" do
       subject{obj.tree_node(true)}
       it{expect(subject).to match("<strong>.*</strong>")}
@@ -105,7 +105,7 @@ describe BoxDecorator do
       let(:stone){FactoryBot.create(:stone)}
       before{obj.stones << stone}
       it{expect(subject).to include("<span>#{count}</span>")}
-      it{expect(subject).to include("<span class=\"glyphicon glyphicon-#{icon}\"></span>")}
+      it{expect(subject).to match(/bi-cloud/)}
     end
   end
 
@@ -121,7 +121,7 @@ describe BoxDecorator do
       let(:child){FactoryBot.create(:box)}
       before{obj.children << child}
       it{expect(subject).to include("<span>#{count}</span>")}
-      it{expect(subject).to include("<span class=\"glyphicon glyphicon-#{icon}\"></span>")}
+      it{expect(subject).to match(/bi-folder/)}
     end
   end
 
@@ -139,7 +139,7 @@ describe BoxDecorator do
       before{stone.analyses  << analysis}
       before{obj.stones << stone}
       it{expect(subject).to include("<span>#{count}</span>")}
-      it{expect(subject).to include("<span class=\"glyphicon glyphicon-#{icon}\"></span>")}
+      it{expect(subject).to match(/bi-graph-up/)}
     end
   end
 
@@ -155,7 +155,7 @@ describe BoxDecorator do
       let(:bib){FactoryBot.create(:bib)}
       before{obj.bibs << bib}
       it{expect(subject).to include("<span>#{count}</span>")}
-      it{expect(subject).to include("<span class=\"glyphicon glyphicon-#{icon}\"></span>")}
+      it{expect(subject).to match(/bi-book/)}
     end
   end
 
@@ -171,7 +171,7 @@ describe BoxDecorator do
       let(:attachment_file){FactoryBot.create(:attachment_file)}
       before{obj.attachment_files << attachment_file}
       it{expect(subject).to include("<span>#{count}</span>")}
-      it{expect(subject).to include("<span class=\"glyphicon glyphicon-#{icon}\"></span>")}
+      it{expect(subject).to match(/bi-file-earmark/)}
     end
   end
 

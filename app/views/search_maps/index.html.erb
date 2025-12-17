@@ -6,7 +6,7 @@
   <tbody>
       <tr><th colspan="3">  <%= text_field_tag :per_page, (params[:per_page] || SearchMap.default_per_page), size: 1 %> Entries per page 
 	<%= f.button class: "btn btn-default" do %>
-       <span class="glyphicon glyphicon-refresh"></span>
+       <%= bi_icon('refresh') %>
         <% end %></th><th></th><th></th> 
       </tr>
            
@@ -27,7 +27,7 @@
 	</tr>      
 
        <tr>
-		<th><span class="glyphicon glyphicon-time"/></th>
+		<th><%= bi_icon('time') %></th>
 		<th><%= f.text_field :date_gteq, class: "form-control input-sm datepicker", placeholder: "from:", size: 8 %></th>
 		<th><%= f.text_field :date_lteq, class: "form-control input-sm datepicker", placeholder: "to:", size: 8 %></th>
 	</tr>	

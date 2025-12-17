@@ -3,10 +3,10 @@
     <div class="row btn-toolbar tool-selector" role="toolbar">
       <div class="btn-group btn-group-sm">
         <%= link_to picture_spot_path(@spot), class: "btn btn-default activate", remote: true do  %>
-          <span class="glyphicon glyphicon-picture"></span>
+          <%= bi_icon('picture') %>
         <% end %>
         <%= link_to property_spot_path(@spot), class: "btn btn-default", remote: true do  %>
-          <span class="glyphicon glyphicon-cog"></span>
+          <%= bi_icon('cog') %>
         <% end %>
       </div>
     </div>
@@ -28,7 +28,7 @@
 	<%= f.text_field :target_uid, class: "form-control input-sm" %>
 	<span class="input-group-addon">
 	  <%= link_to records_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#spot_target_uid" do %>
-	  <span class="glyphicon glyphicon-search"></span>
+	  <%= bi_icon('search') %>
 	  <% end %>
 	</span>
       </div>

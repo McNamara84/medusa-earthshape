@@ -11,22 +11,21 @@ describe StoneDecorator do
     subject{obj.name_with_id}
     it{expect(subject).to include(obj.name)}
     it{expect(subject).to include(obj.global_id)}
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-cloud\"></span>")} 
+    it{expect(subject).to match(/bi-cloud/)} 
   end
 
   describe ".path" do
-    let(:me){"<span class=\"glyphicon glyphicon-cloud\"></span>me"}
     subject{obj.path}
     before { allow(obj.h).to receive(:can?).and_return(true) }
     context "box is nil" do
       before{obj.box = nil}
-      it{expect(subject).to eq me} 
+      it{expect(subject).to match(/bi-cloud.*me/)} 
     end
     context "box is not nil" do
       before{obj.box = box}
-      it{expect(subject).to include("<span class=\"glyphicon glyphicon-folder-close\"></span>")} 
+      it{expect(subject).to match(/bi-folder/)} 
       it{expect(subject).to include("<a href=\"/boxes/#{box.id}\">#{box.name}</a>")} 
-      it{expect(subject).to include(me)} 
+      it{expect(subject).to match(/bi-cloud.*me/)} 
     end
   end
 
@@ -61,7 +60,7 @@ describe StoneDecorator do
     subject{obj.family_tree}
     before { allow(obj.h).to receive(:can?).and_return(true) }
     it{expect(subject).to match("<div class=\"tree-node\" data-depth=\"1\">.*</div>")}
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-cloud\"></span>")} 
+    it{expect(subject).to match(/bi-cloud/)} 
     it{expect(subject).to match("<a href=\"/stones/#{obj.id}\">.*</a>")}
     it{expect(subject).to include("<strong>#{obj.name}</strong>")} 
   end
@@ -73,7 +72,7 @@ describe StoneDecorator do
     let(:analysis){FactoryBot.create(:analysis)}
     let(:bib){FactoryBot.create(:bib)}
     let(:attachment_file){FactoryBot.create(:attachment_file)}
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-cloud\"></span>")} 
+    it{expect(subject).to match(/bi-cloud/)} 
     it{expect(subject).to include("#{obj.name}")} 
     before do
       obj.children << child
@@ -81,10 +80,10 @@ describe StoneDecorator do
       obj.bibs << bib 
       obj.attachment_files << attachment_file 
     end
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-cloud\"></span><span>#{obj.children.count}</span>")} 
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-stats\"></span><span>#{obj.analyses.count}</span>")} 
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-book\"></span><span>#{obj.bibs.count}</span>")} 
-    it{expect(subject).to include("<span class=\"glyphicon glyphicon-file\"></span><span>#{obj.attachment_files.count}</span>")} 
+    it{expect(subject).to match(/bi-cloud.*<span>#{obj.children.count}<\/span>/)} 
+    it{expect(subject).to match(/bi-graph-up.*<span>#{obj.analyses.count}<\/span>/)} 
+    it{expect(subject).to match(/bi-book.*<span>#{obj.bibs.count}<\/span>/)} 
+    it{expect(subject).to match(/bi-file-earmark.*<span>#{obj.attachment_files.count}<\/span>/)} 
     context "current" do
       subject{obj.tree_node(true)}
       it{expect(subject).to match("<strong>.*</strong>")} 
@@ -123,7 +122,7 @@ describe StoneDecorator do
       let(:analysis){FactoryBot.create(:analysis)}
       before{obj.analyses << analysis}
       it{expect(subject).to include("<span>#{count}</span>")} 
-      it{expect(subject).to include("<span class=\"glyphicon glyphicon-#{icon}\"></span>")} 
+      it{expect(subject).to match(/bi-graph-up/)} 
     end
   end
 
@@ -139,7 +138,7 @@ describe StoneDecorator do
       let(:bib){FactoryBot.create(:bib)}
       before{obj.bibs << bib}
       it{expect(subject).to include("<span>#{count}</span>")} 
-      it{expect(subject).to include("<span class=\"glyphicon glyphicon-#{icon}\"></span>")} 
+      it{expect(subject).to match(/bi-book/)} 
     end
   end
 
@@ -155,7 +154,7 @@ describe StoneDecorator do
       let(:attachment_file){FactoryBot.create(:attachment_file)}
       before{obj.attachment_files << attachment_file}
       it{expect(subject).to include("<span>#{count}</span>")} 
-      it{expect(subject).to include("<span class=\"glyphicon glyphicon-#{icon}\"></span>")} 
+      it{expect(subject).to match(/bi-file-earmark/)} 
     end
   end
 

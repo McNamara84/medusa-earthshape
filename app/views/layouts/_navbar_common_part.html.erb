@@ -2,19 +2,19 @@
       <li><%= link_to "EarthShape Project", "http://www.geo.uni-tuebingen.de/projekte/earthshape/htdocs/", target: "_blank", title: "EarthShape Project Website" %></li>
   <li>
   <%= link_to root_path do %>
-    <span class="glyphicon glyphicon-home"></span>
+    <%= bi_icon('home') %>
   <% end %>
   </li>
   <% if current_user.admin? %>
   <li>
   <%= link_to system_preference_path ,title: "system preference" do %>
-    <span class="glyphicon glyphicon-wrench"></span>
+    <%= bi_icon('wrench') %>
   <% end %>
   </li>
 <% if false %>  
   <li>
   <%= link_to system_lab_preference_path ,title: "preparation preference" do %>
-    <span class="glyphicon glyphicon-asterisk"></span>
+    <%= bi_icon('asterisk') %>
   <% end %>
   </li>
 <% end %>  
@@ -22,17 +22,17 @@
   <% end %>
   <li>
   <%= link_to edit_account_path,title: "my account" do %>
-    <span class="glyphicon glyphicon-user"></span>
+    <%= bi_icon('user') %>
   <% end %>
   </li>
   <li>
   <%= link_to destroy_user_session_path, method: :delete, data: {confirm: t("confirm.logout")}, title: "logout" do %>
-    <span class="glyphicon glyphicon-off"></span>
+    <%= bi_icon('off') %>
   <% end %>
   </li>
   <li>
   <%= link_to Settings.help_url, title: "help" do %>
-    <span class="glyphicon glyphicon-question-sign"></span>
+    <%= bi_icon('question-sign') %>
   <% end %>
   </li>
 </ul>

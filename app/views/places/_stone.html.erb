@@ -7,7 +7,7 @@
 				<%= select_tag :global_id, options_for_select(Stone.choose_global_id(@current_user)), { include_blank: true  , id: "stone-global-id", class: "form-control input-sm"} %>
 				<span class="input-group-addon">
 				<%= link_to stones_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#stone-global-id" do %>
-				  <span class="glyphicon glyphicon-search"></span>
+				  <%= bi_icon('search') %>
 				  <% end %>
 				</span>
 			      </div>
@@ -15,7 +15,7 @@
 		     <div style="float:left; margin-top:20px; margin-left:5px">
 					  <div>	     
 						      <%= button_tag title: "link sample by global id", class: "btn btn-default" do %>
-							<span class="glyphicon glyphicon-save"></span>
+							<%= bi_icon('save') %>
 						      <% end %>
 					  </div>
 			      
@@ -55,7 +55,7 @@
 <% end %>
 	<td>
             <%= link_to place_stone_path(@place,stone) + tab_param(__FILE__), method: :delete ,title: "unlink sample",data: {confirm: t("confirm.unlink")} do %>
-              <span class="glyphicon glyphicon-remove"></span>
+              <%= bi_icon('remove') %>
             <% end %>
           </td>
         </tr>
@@ -88,7 +88,7 @@
 
 				  <div style="margin-top:20px;">
 				      <%= f.button title:"add sample", class: "btn btn-default" do %> 
-					<span class="glyphicon glyphicon-save"></span>
+					<%= bi_icon('save') %>
 				      <% end %>
 				  </div>
 			</div>

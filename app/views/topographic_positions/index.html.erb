@@ -11,13 +11,13 @@
     <tr>
       <td>
         <%= link_to edit_topographic_position_path(topographic_position) do %>
-        <span class="glyphicon glyphicon-edit"></span>
+        <%= bi_icon('edit') %>
         <% end %>
       </td>
         <td><%= topographic_position.name %></td>
       <td>
         <%= link_to topographic_position_path(topographic_position), method: :delete, data: {confirm: t("confirm.delete")} do %>
-        <span class="glyphicon glyphicon-remove"></span>
+        <%= bi_icon('remove') %>
         <% end %>
       </td>
     </tr>
@@ -31,7 +31,7 @@
       <td><%= f.text_field :name, class: "form-control input-sm" %></td>  
       <td>
         <%= f.button class: "btn btn-default" do %>
-        <span class="glyphicon glyphicon-save"></span>
+        <%= bi_icon('save') %>
         <% end %>
       </td>
     </tr>

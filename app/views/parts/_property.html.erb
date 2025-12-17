@@ -60,9 +60,9 @@
     </div>
   <% end %>
   <%= form.button class: "btn btn-default" do %>
-  <span class="glyphicon glyphicon-save"></span>
+  <%= bi_icon('save') %>
   <% end %>
   <%= link_to record_path(record.global_id), class: "btn btn-default", method: :delete , data: {confirm: t("confirm.delete")} do %>
-  <span class="glyphicon glyphicon-remove"></span>
+  <%= bi_icon('remove') %>
   <% end %>
 <% end %>
