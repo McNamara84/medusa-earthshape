@@ -1,6 +1,6 @@
 <div class="display-type">
   <div id="display-type-html">
-    <table class="table table-condensed table-striped">
+    <table class="table table-sm table-striped">
       <thead>
         <tr>
           <th></th>
@@ -51,7 +51,7 @@
     </table>
     
      
-    <%= link_to "bundle edit", "#", onclick: "$('#stone-bundle-form').submit();; return false;", class: "btn btn-default" %>
+    <%= link_to "bundle edit", "#", onclick: "$('#stone-bundle-form').submit();; return false;", class: "btn btn-secondary" %>
   </div>
   <div class="hidden" id="display-type-tex">
     <pre><code><%= @stone.to_tex %></code></pre>
@@ -79,7 +79,7 @@
 	      <div style="float:left; margin:5x">
 			<div class="input-group">
 			<%= select_tag :global_id, options_for_select(Stone.choose_global_id(@current_user)), { include_blank: true  , id: "daughter-global-id", class: "form-control input-sm"} %>				
-			<span class="input-group-addon">
+			<span class="input-group-text">
 			  <%= link_to stones_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#daughter-global-id" do %>
 			  <%= bi_icon('search') %>
 			  <% end %>
@@ -88,7 +88,7 @@
 	    </div>
 	     <div style="float:left; margin-top:0px; margin-left:5px">
 				  <div>	     
-					      <%= button_tag title: "link sample by global id", class: "btn btn-default" do %>
+					      <%= button_tag title: "link sample by global id", class: "btn btn-secondary" do %>
 						<%= bi_icon('save') %>
 					      <% end %>
 				  </div>

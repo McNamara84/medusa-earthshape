@@ -12,16 +12,16 @@
   <div id="show-tools" class="col-lg-4">
     <div class="row btn-toolbar tool-selector" role="toolbar">
       <div class="btn-group btn-group-sm">
-	<%= link_to map_place_path(@place), class: "btn btn-default activate", remote: true do %>
+	<%= link_to map_place_path(@place), class: "btn btn-secondary activate", remote: true do %>
 	  <%= bi_icon('globe') %>
 	<% end %>
       </div>
       <% if can? :update, @place %>
       <div class="btn-group btn-group-sm">
-	<%= link_to edit_place_path(@place), class: "btn btn-default", remote: true do %>
+	<%= link_to edit_place_path(@place), class: "btn btn-secondary", remote: true do %>
 	  <%= bi_icon('pencil') %>
 	<% end %>
-	<%= link_to property_place_path(@place), class: "btn btn-default", remote: true do %>
+	<%= link_to property_place_path(@place), class: "btn btn-secondary", remote: true do %>
 	  <%= bi_icon('cog') %>
 	<% end %>
       </div>

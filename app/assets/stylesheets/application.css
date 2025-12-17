@@ -39,11 +39,11 @@ fieldset.collectorfieldset a.add_fields {margin-left:10px;padding-bottom:10px}
 
 #newentry u {font-size: 18px}
 
-fieldset.stonefieldset div.form-group {width:200px; float:left; margin: 10px}
+fieldset.stonefieldset div.mb-3 {width:200px; float:left; margin: 10px}
 fieldset.stonefieldset select {max-width:100%}
 fieldset.stonefieldset legend {font-size: 12px;  margin-top: 10px}
 
-fieldset.collectorfieldset div.form-group  {width:200px; float:left; margin-left:10px; margin-right:5px}
+fieldset.collectorfieldset div.mb-3  {width:200px; float:left; margin-left:10px; margin-right:5px}
 fieldset.collectorfieldset legend {font-size: 12px; margin-top: 10px}
 div.input-group {max-width: 200px}
 

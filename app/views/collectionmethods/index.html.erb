@@ -9,7 +9,7 @@
 <br><br>
 
 <%= paginate @collectionmethods %>
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th></th>
@@ -40,7 +40,7 @@
       <td></td>
       <td><%= f.text_field :name, class: "form-control input-sm" %></td>      
       <td>
-        <%= f.button class: "btn btn-default" do %>
+        <%= f.button class: "btn btn-secondary" do %>
         <%= bi_icon('save') %>
         <% end %>
       </td>

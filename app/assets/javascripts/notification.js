@@ -11,7 +11,7 @@
     },
     errorMessages: function(errors) {
       var $dl = $("<dl>");
-      $dl.addClass("dl-horizontal");
+      $dl.addClass("row");
       $.each(errors, function(key, message) {
         $dl.append("<dd>" + message + "</dd>");
       });

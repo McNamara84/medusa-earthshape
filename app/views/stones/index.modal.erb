@@ -1,10 +1,10 @@
 <%= paginate @stones, remote: true %>
 <%= search_form_for @search, url: polymorphic_path(@search.klass, format: :modal), remote: true do |f| %>
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th>
-        <%= f.button class: "btn btn-default" do %>
+        <%= f.button class: "btn btn-secondary" do %>
         <%= bi_icon('refresh') %>
         <% end %>
       </th>

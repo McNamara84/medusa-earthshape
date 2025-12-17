@@ -10,19 +10,19 @@
 	  <span> IGSN: 
 		<%= link_to @stone.igsn, 'http://igsn.org/'+@stone.igsn %>
 <!--                (registration not yet available)-->
-<!--		<%= link_to igsn_register_stone_path(@stone), class: "btn btn-default", title:"register IGSN", id: "tag-button" do %>
+<!--		<%= link_to igsn_register_stone_path(@stone), class: "btn btn-secondary", title:"register IGSN", id: "tag-button" do %>
 		  <%= bi_icon('tag') %>
 		<% end %>
 -->
 
-		 <%= link_to igsn_register_stone_path(@stone), class: "btn btn-default", title:"register IGSN", id: "tag-button" do %>
+		 <%= link_to igsn_register_stone_path(@stone), class: "btn btn-secondary", title:"register IGSN", id: "tag-button" do %>
                   <span> Register/Update IGSN </span>
                 <% end %>
 
 	  </span>
    <%else %>
 	  <span> IGSN:
-		<%= link_to igsn_create_stone_path(@stone), class: "btn btn-default", title:"create IGSN", id: "tag-button" do %>
+		<%= link_to igsn_create_stone_path(@stone), class: "btn btn-secondary", title:"create IGSN", id: "tag-button" do %>
 		  Create
 		  <% end %>
 		</span>

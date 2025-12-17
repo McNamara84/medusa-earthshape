@@ -40,10 +40,10 @@
 <% if false %>
 
 <%= search_form_for @records_search, url: records_path, class: "navbar-form navbar-right" do |f| %>
-  <div class="form-group">
+  <div class="mb-3">
     <%= f.text_field(:name_or_global_id_cont, class: "form-control") %>
   </div>
-  <%= f.submit "search", class: "btn btn-default" %>
+  <%= f.submit "search", class: "btn btn-secondary" %>
 <% end %>
 
 <% end %>

@@ -9,12 +9,12 @@
 <br><br>
 
 <%= paginate @devices %>
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <%= search_form_for @search do |f| %>
     <tr>
       <th>
-        <%= f.button class: "btn btn-default" do %>
+        <%= f.button class: "btn btn-secondary" do %>
         <%= bi_icon('refresh') %>
         <% end %>
       </th>
@@ -73,7 +73,7 @@
       <td></td>
       <td><%= f.text_field :name, class: "form-control input-sm" %></td>
       <td>
-        <%= f.button class: "btn btn-default", id: "save-button" do %>
+        <%= f.button class: "btn btn-secondary", id: "save-button" do %>
         <%= bi_icon('save') %>
         <% end %>
       </td>

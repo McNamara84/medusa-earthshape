@@ -1,4 +1,4 @@
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th></th>
@@ -40,7 +40,7 @@
     </tr>
   </tfoot>
 </table>
-<%= link_to "edit", "#", onclick: "$('#analysis-bundle-form').submit();; return false;", class: "btn btn-default" %>
+<%= link_to "edit", "#", onclick: "$('#analysis-bundle-form').submit();; return false;", class: "btn btn-secondary" %>
 <hr>
  <div style="clear:both">Create analysis</div>	
 
@@ -48,22 +48,22 @@
       <%= form_for Analysis.new, url: attachment_file_analyses_path(@attachment_file) do |f|%>
         <%= hidden_tabname_tag(__FILE__) %>
         
-     <div class="form-group form-group-sm" style="width:200px;float:left">
+     <div class="mb-3 mb-3-sm" style="width:200px;float:left">
             <%= f.label :name,  class: "small" %>
             <%= f.text_field :name, class: "form-control input-sm" %>
      </div>          
-     <div class="form-group form-group-sm" style="width:200px;float:left;margin-left:10px">
+     <div class="mb-3 mb-3-sm" style="width:200px;float:left;margin-left:10px">
             <%= f.label :operator,  class: "small" %>
             <%= f.text_field :operator, class: "form-control input-sm" %>
      </div>           
         
-   <div class="form-group form-group-sm" style="width:150px;float:left;margin-left:10px">
+   <div class="mb-3 mb-3-sm" style="width:150px;float:left;margin-left:10px">
     <%= f.label :device_id, class: "small" %>
     <%= f.select :device_id, Device.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %>
   </div> 
 
   <div style="float:left;margin-left:10px;margin-top:17px">
-          <%= f.button title:"add analysis file",class: "btn btn-default" do %>
+          <%= f.button title:"add analysis file",class: "btn btn-secondary" do %>
             <%= bi_icon('save') %>
           <% end %>
 </div>
@@ -78,14 +78,14 @@
 
 	  <div class="input-group" style="float:left;width:190px">
    	    <%= select_tag :global_id, options_for_select(Analysis.choose_global_id(@current_user)), { include_blank: true  , id: "analysis-global-id", class: "form-control input-sm"} %>
-	    <span class="input-group-addon">
+	    <span class="input-group-text">
 	      <%= link_to analyses_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#analysis-global-id" do %>
 	      <%= bi_icon('search') %>
 	      <% end %>
 	    </span>
 	  </div>	  
   <div style="float:left;margin-left:10px">
-          <%= button_tag title: "link analysis by global id",class: "btn btn-default" do %>
+          <%= button_tag title: "link analysis by global id",class: "btn btn-secondary" do %>
             <%= bi_icon('save') %>
           <% end %>
   </div>

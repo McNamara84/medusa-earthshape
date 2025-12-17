@@ -4,12 +4,12 @@
 
 <%= paginate @users %>
 <%= link_to "new...",new_user_path %>
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <%= search_form_for @search do |f| %>
     <tr>
       <th>
-        <%= f.button class: "btn btn-default" do %>
+        <%= f.button class: "btn btn-secondary" do %>
         <%= bi_icon('refresh') %>
         <% end %>
       </th>

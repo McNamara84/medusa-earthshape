@@ -21,7 +21,7 @@
       '<button type="button" class="close" data-dismiss="modal">&times;</button>' +
       '<h4>Error</h4></div>' +
       '<div class="modal-body"><p class="error-message"></p></div>' +
-      '<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>'
+      '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>'
     );
     // Use text() to safely escape the error message (XSS prevention)
     $content.find('.error-message').text('Failed to load content: ' + errorMessage);

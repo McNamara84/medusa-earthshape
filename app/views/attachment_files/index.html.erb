@@ -1,8 +1,8 @@
 <%= paginate @attachment_files %>
 
-<%= link_to "New Entry", attachment_files_path(anchor: "newentry"), class: "btn btn-default newentrybutton" %>
+<%= link_to "New Entry", attachment_files_path(anchor: "newentry"), class: "btn btn-secondary newentrybutton" %>
 
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead class="searchheader">
     <%= search_form_for @search do |f| %>
      <tr>
@@ -33,7 +33,7 @@
     </tr>
     <tr>
       <th><%= text_field_tag :per_page, (params[:per_page] || AttachmentFile.default_per_page), size: 1 %>
-             <%= f.button class: "btn btn-default" do %>
+             <%= f.button class: "btn btn-secondary" do %>
        <%= bi_icon('refresh') %>
         <% end %> 
       </th>
@@ -85,7 +85,7 @@
  <tfoot>
 <!---     <%= render partial: "new", locals: { attachment_file: AttachmentFile.new } %>-->
       <tr><th><%= check_box_tag nil, nil, false, class: "select-row-all" %> Select all </th></tr>
-      <tr><th><%= link_to "bundle edit", "#", onclick: "$('#bundle-form').submit();; return false;", class: "btn btn-default" %></th></tr>
+      <tr><th><%= link_to "bundle edit", "#", onclick: "$('#bundle-form').submit();; return false;", class: "btn btn-secondary" %></th></tr>
   </tfoot>
 </table>
 

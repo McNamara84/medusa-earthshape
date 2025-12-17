@@ -1,10 +1,10 @@
 <%= paginate @records, remote: true %>
 <%= search_form_for @records_search, url: records_path(format: :modal), remote: true do |f| %>
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th>
-        <%= f.button class: "btn btn-default" do %>
+        <%= f.button class: "btn btn-secondary" do %>
         <%= bi_icon('refresh') %>
         <% end %>
       </th>
@@ -46,7 +46,7 @@
     <% @records.each do |record| %>
     <tr>
       <td>
-	<%= button_tag class: "btn btn-default btn-xs determine", "data-id" => record.global_id do %>
+	<%= button_tag class: "btn btn-secondary btn-sm determine", "data-id" => record.global_id do %>
 	<%= bi_icon('link') %>
 	<% end %>
       </td>

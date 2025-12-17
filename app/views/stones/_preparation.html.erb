@@ -1,4 +1,4 @@
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th>Preparation type</th>
@@ -39,7 +39,7 @@
         <th><%= f.select :preparation_type_id, PreparationForClassification.joins(:preparation_type).where("classification_id=? OR classification_id=?",@stone.classification_id,@stone.classification.try!(:parent_id)).order("preparation_types.name").pluck(:name, :preparation_type_id ), { include_blank: true }, class: "form-control input-sm" %></th>
         <th><%= f.text_field :info, class: "form-control input-sm" %></th>
 	<th>
-          <%= f.button title:"add analysis file",class: "btn btn-default" do %>
+          <%= f.button title:"add analysis file",class: "btn btn-secondary" do %>
             <%= bi_icon('save') %>
           <% end %>
         </th>

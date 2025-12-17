@@ -15,7 +15,7 @@
   </th>
   <% end %>
   <th>
-    <%= f.button class: "btn btn-default" do %>
+    <%= f.button class: "btn btn-secondary" do %>
     <%= bi_icon('save') %>
     <% end %>
   </th>
@@ -35,7 +35,7 @@
 <%= form_for attachment_file, remote: false, format: :html, html: { class: "create"} do |f| %>
 
 <div style="float:left; margin:10px">
-  <div class="form-group form-group-sm">
+  <div class="mb-3 mb-3-sm">
     <%= f.label :filetopic_id, class: "small" %>
     <div class="input-group">
       <%= f.select :filetopic_id, Filetopic.order(:name).pluck(:name, :id), { :prompt =>  '- select required topic -'  }, class: "form-control input-sm" %>         
@@ -43,7 +43,7 @@
    </div>
 </div>
 <div style="float:left; margin:10px">
-   <div class="form-group form-group-sm">
+   <div class="mb-3 mb-3-sm">
     <%= f.label "Upload File here:", class: "small" %>
     <div class="input-group">
       <%= f.file_field :data%>         
@@ -51,16 +51,16 @@
    </div>  
 </div>
 <div style="float:left; margin:10px">   
-   <div  style="display:none" class="form-group form-group-sm">
+   <div  style="display:none" class="mb-3 mb-3-sm">
 	  <%= f.label :@current_user, "Owner", class: "small" %>
 	    <div class="input-group">
-		<span class="input-group-addon">		      
+		<span class="input-group-text">		      
 			<%= @current_user.username %>
 		</span>
 	    </div>  
 	</div>
 
-	  <div class="form-group form-group-sm">
+	  <div class="mb-3 mb-3-sm">
 		  <%= f.fields_for :record_property_attributes do |r| %>
 			  <label class="small">Group</label>
 			  <div >
@@ -81,10 +81,10 @@
   </div>
 <div style="float:left; margin:10px">
 
-	  <div class="form-group form-group-sm">
+	  <div class="mb-3 mb-3-sm">
 		  <label class="small">Save</label>
 		  <div>
-		    <%= f.button class: "btn btn-default" do %>
+		    <%= f.button class: "btn btn-secondary" do %>
 		    <%= bi_icon('save') %>
 		    <% end %>
 		  </div>

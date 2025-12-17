@@ -1,28 +1,28 @@
 <%= form_for @box, remote: true, format: :json, html: { class: "update", role: "form" } do |f| %>
-  <div class="form-group form-group-sm">
+  <div class="mb-3 mb-3-sm">
     <%= f.label :name, class: "small" %>
     <%= f.text_field :name, class: "form-control input-sm" %>
   </div>
-  <div class="form-group form-group-sm">
+  <div class="mb-3 mb-3-sm">
     <%= f.label :box_type_id, class: "small" %>
     <%= f.select :box_type_id, BoxType.order(:name).pluck(:name, :id), {include_blank: true}, class: "form-control input-sm" %>
   </div>
-  <div class="form-group form-group-sm">
+  <div class="mb-3 mb-3-sm">
     <%= f.label :tag_list, class: "small" %>
     <%= f.text_field :tag_list, class: "form-control input-sm" %>
   </div>
-  <div class="form-group form-group-sm">
+  <div class="mb-3 mb-3-sm">
     <%= f.label :parent_global_id, class: "small" %>
     <div class="input-group">
       <%= f.text_field :parent_global_id, class: "form-control input-sm" %>
-      <span class="input-group-addon">
+      <span class="input-group-text">
 	<%= link_to boxes_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#box_parent_global_id" do %>
 	<%= bi_icon('search') %>
 	<% end %>
       </span>
     </div>
   </div>
-  <%= f.button class: "btn btn-default" do %>
+  <%= f.button class: "btn btn-secondary" do %>
   <%= bi_icon('save') %>
   <% end %>
 <% end %>

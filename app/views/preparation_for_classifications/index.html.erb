@@ -8,7 +8,7 @@
 </div>
 <br><br>
 <%= paginate @preparation_for_classifications %>
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th></th>
@@ -41,7 +41,7 @@
       <td><%= f.select :classification_id, Classification.order(:full_name).pluck(:full_name,:id), { include_blank: true }, class: "form-control input-sm" %></td>
       <td><%= f.select :preparation_type_id, PreparationType.order(:full_name).pluck(:full_name,:id), { include_blank: true }, class: "form-control input-sm" %></td>      
       <td>
-        <%= f.button class: "btn btn-default" do %>
+        <%= f.button class: "btn btn-secondary" do %>
         <%= bi_icon('save') %>
         <% end %>
       </td>

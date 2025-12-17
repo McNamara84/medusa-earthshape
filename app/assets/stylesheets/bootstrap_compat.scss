@@ -4,10 +4,10 @@
 // These classes can be removed after full migration is complete.
 
 // =================================
-// Phase 0: Preparation - Custom btn-xs class
-// Bootstrap 4/5 removed btn-xs, this recreates it
+// Phase 0: Preparation - Custom btn-sm class
+// Bootstrap 4/5 removed btn-sm, this recreates it
 // =================================
-.btn-xs {
+.btn-sm {
   padding: 0.125rem 0.25rem;
   font-size: 0.75rem;
   line-height: 1.5;
@@ -22,10 +22,10 @@
 // will need to be updated to use .bi-chevron-left/right after icon migration
 
 // =================================
-// Custom form-group-sm spacing (Bootstrap 3 specific)
+// Custom mb-3-sm spacing (Bootstrap 3 specific)
 // Keep this for form layout compatibility
 // =================================
-.form-group-sm {
+.mb-3-sm {
   margin-bottom: 0.5rem;
 }
 

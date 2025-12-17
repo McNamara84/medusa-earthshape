@@ -14,7 +14,7 @@ end
 %>
 
 <%= form_for Collection.new, url: bundle_update_collections_path do |f| %>
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th></th>
@@ -66,7 +66,7 @@ end
       <% end %>
       <th><%= f.select :group_id ,@current_user.groups.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>   
       <th>
-        <%= f.button class: "btn btn-default" do %>
+        <%= f.button class: "btn btn-secondary" do %>
           <%= bi_icon('save') %>
         <% end %>
       </th>

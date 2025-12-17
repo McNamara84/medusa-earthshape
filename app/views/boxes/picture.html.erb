@@ -7,7 +7,7 @@
           <td>
             <div class="input-group">
               <%= f.text_field :target_uid, class: "form-control input-sm" %>
-              <span class="input-group-addon">
+              <span class="input-group-text">
                 <%= link_to records_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#spot_target_uid",  id: "record-property-search" do %>
                   <%= bi_icon('search') %>
                 <% end %>
@@ -23,7 +23,7 @@
           <%= f.hidden_field :fill_color ,value: "blue" %>
           <%= f.hidden_field :opacity ,value: "0" %>
           <%= f.hidden_field :with_cross ,value: "false" %>
-          <%= f.button title:"add new spot", class: "btn btn-default" do %>
+          <%= f.button title:"add new spot", class: "btn btn-secondary" do %>
             <%= bi_icon('save') %>
           <% end %>
         </td>

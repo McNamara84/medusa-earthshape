@@ -2,10 +2,10 @@
   <div id="show-tools" class="col-lg-4">
     <div class="row btn-toolbar tool-selector" role="toolbar">
       <div class="btn-group btn-group-sm">
-        <%= link_to picture_spot_path(@spot), class: "btn btn-default activate", remote: true do  %>
+        <%= link_to picture_spot_path(@spot), class: "btn btn-secondary activate", remote: true do  %>
           <%= bi_icon('picture') %>
         <% end %>
-        <%= link_to property_spot_path(@spot), class: "btn btn-default", remote: true do  %>
+        <%= link_to property_spot_path(@spot), class: "btn btn-secondary", remote: true do  %>
           <%= bi_icon('cog') %>
         <% end %>
       </div>
@@ -17,16 +17,16 @@
     <%= form_for @spot, html: {class: "col-lg-4"} do |f| %>
     <%= error_notification(@spot.errors) %>
 
-    <div class="form-group form-group-sm">
+    <div class="mb-3 mb-3-sm">
       <%= f.label :name, class: "small" %>
       <%= f.text_field :name, class: "form-control input-sm" %>
     </div>
 
-    <div class="form-group form-group-sm">
+    <div class="mb-3 mb-3-sm">
       <%= f.label "link ID", class: "small" %>
       <div class="input-group">
 	<%= f.text_field :target_uid, class: "form-control input-sm" %>
-	<span class="input-group-addon">
+	<span class="input-group-text">
 	  <%= link_to records_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#spot_target_uid" do %>
 	  <%= bi_icon('search') %>
 	  <% end %>
@@ -34,32 +34,32 @@
       </div>
     </div>
 
-    <div class="form-group form-group-sm">
+    <div class="mb-3 mb-3-sm">
       <%= f.label :radius_in_percent, class: "small" %>
       <%= f.text_field :radius_in_percent, class: "form-control input-sm" %>
     </div>
 
-    <div class="form-group form-group-sm">
+    <div class="mb-3 mb-3-sm">
       <%= f.label :stroke_width, class: "small" %>
       <%= f.text_field :stroke_width, class: "form-control input-sm" %>
     </div>
 
-    <div class="form-group form-group-sm">
+    <div class="mb-3 mb-3-sm">
       <%= f.label :stroke_color, class: "small" %>
       <%= f.text_field :stroke_color, class: "form-control input-sm" %>
     </div>
 
-    <div class="form-group form-group-sm">
+    <div class="mb-3 mb-3-sm">
       <%= f.label :fill_color, class: "small" %>
       <%= f.text_field :fill_color, class: "form-control input-sm" %>
     </div>
 
-    <div class="form-group form-group-sm">
+    <div class="mb-3 mb-3-sm">
       <%= f.label :opacity, class: "small" %>
       <%= f.text_field :opacity, class: "form-control input-sm" %>
     </div>
 
-    <div class="form-group form-group-sm">
+    <div class="mb-3 mb-3-sm">
       <%= f.label :opacity, class: "checkbox-inline" do%>
       <%= f.check_box :opacity, class: "form-control input-sm" %> cross line
       <% end %>

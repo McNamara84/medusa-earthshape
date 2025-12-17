@@ -1,4 +1,4 @@
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th></th>
@@ -48,7 +48,7 @@
     	 <tr><th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th><th>Select All</th></tr>
   </tfoot>
 </table>
-<%= link_to "edit", "#", onclick: "$('#attachment-file-bundle-form').submit();; return false;", class: "btn btn-default" %>
+<%= link_to "edit", "#", onclick: "$('#attachment-file-bundle-form').submit();; return false;", class: "btn btn-secondary" %>
 
 
 
@@ -70,7 +70,7 @@
 				<%= f.file_field :data %>
 			</div>
 			<div style="float:left; margin:5px;margin-top:25px">
-			  <%= f.button title:"add attachment file", class: "btn btn-default" do %>
+			  <%= f.button title:"add attachment file", class: "btn btn-secondary" do %>
 			    <%= bi_icon('save') %>
 			  <% end %>
 			</div>
@@ -88,7 +88,7 @@
 	  
 	  <div class="input-group">
             <%= select_tag :global_id, options_for_select(AttachmentFile.choose_global_id(@current_user)), { include_blank: true  , id: "attachment-file-global-id", class: "form-control input-sm"} %>	  
-	    <span class="input-group-addon">
+	    <span class="input-group-text">
 	      <%= link_to attachment_files_path(per_page: 5, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#attachment-file-global-id" do %>
 	      <%= bi_icon('search') %>
 	      <% end %>
@@ -98,7 +98,7 @@
 	  
 	</div>
         <div style="float:left; margin:5px;margin-top:25px">
-          <%= button_tag title: "link attachment file by global id", class: "btn btn-default" do %>
+          <%= button_tag title: "link attachment file by global id", class: "btn btn-secondary" do %>
             <%= bi_icon('save') %>
           <% end %>
         </div>
