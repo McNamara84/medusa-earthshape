@@ -5,6 +5,17 @@
 # This helper provides a compatibility layer for migrating from
 # Bootstrap 3 Glyphicons to Bootstrap Icons.
 #
+# IMPORTANT: The ICON_MAP below translates legacy Glyphicon names to valid
+# Bootstrap Icons names. This allows views to continue using familiar names
+# like 'remove', 'edit', 'save' while rendering the correct Bootstrap Icon.
+#
+# Translation Examples:
+#   bi_icon('remove')   → ICON_MAP['remove']='x'       → <i class="bi bi-x"></i>
+#   bi_icon('edit')     → ICON_MAP['edit']='pencil-square' → <i class="bi bi-pencil-square"></i>
+#   bi_icon('save')     → ICON_MAP['save']='floppy'   → <i class="bi bi-floppy"></i>
+#   bi_icon('refresh')  → ICON_MAP['refresh']='arrow-clockwise' → <i class="bi bi-arrow-clockwise"></i>
+#   bi_icon('link')     → ICON_MAP['link']='link'     → <i class="bi bi-link"></i>
+#
 # Usage:
 #   bi_icon('cloud')           # => <i class="bi bi-cloud"></i>
 #   bi_icon('cloud', class: 'text-primary')  # => <i class="bi bi-cloud text-primary"></i>
