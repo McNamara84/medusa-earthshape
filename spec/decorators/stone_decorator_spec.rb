@@ -11,7 +11,7 @@ describe StoneDecorator do
     subject{obj.name_with_id}
     it{expect(subject).to include(obj.name)}
     it{expect(subject).to include(obj.global_id)}
-    it{expect(subject).to match(/bi-cloud/)} 
+    it{expect(subject).to match(/class="bi bi-cloud"/)} 
   end
 
   describe ".path" do
@@ -19,13 +19,13 @@ describe StoneDecorator do
     before { allow(obj.h).to receive(:can?).and_return(true) }
     context "box is nil" do
       before{obj.box = nil}
-      it{expect(subject).to match(/bi-cloud.*me/)} 
+      it{expect(subject).to match(/class="bi bi-cloud".*<\/i>.*me/)} 
     end
     context "box is not nil" do
       before{obj.box = box}
-      it{expect(subject).to match(/bi-folder/)} 
+      it{expect(subject).to match(/class="bi bi-folder"/)} 
       it{expect(subject).to include("<a href=\"/boxes/#{box.id}\">#{box.name}</a>")} 
-      it{expect(subject).to match(/bi-cloud.*me/)} 
+      it{expect(subject).to match(/class="bi bi-cloud".*<\/i>.*me/)} 
     end
   end
 

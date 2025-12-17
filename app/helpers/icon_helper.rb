@@ -33,7 +33,7 @@ module IconHelper
     'remove' => 'x',
     'ok' => 'check',
     'ok-sign' => 'check-circle',
-    'save' => 'download',
+    'save' => 'floppy',           # Bootstrap Icons has 'floppy' for save icon (disk symbol)
     'refresh' => 'arrow-clockwise',
     'trash' => 'trash',
     'edit' => 'pencil-square',

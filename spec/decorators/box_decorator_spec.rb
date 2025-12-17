@@ -78,11 +78,11 @@ describe BoxDecorator do
       obj.bibs << bib
       obj.attachment_files << attachment_file
     end
-    it{expect(subject).to match(/bi-cloud.*<span>#{obj.stones.count}<\/span>/)}
-    it{expect(subject).to match(/bi-folder.*<span>#{obj.stones.count}<\/span>/)}
-    it{expect(subject).to match(/bi-graph-up.*<span>#{obj.analyses.count}<\/span>/)}
-    it{expect(subject).to match(/bi-book.*<span>#{obj.bibs.count}<\/span>/)}
-    it{expect(subject).to match(/bi-file-earmark.*<span>#{obj.attachment_files.count}<\/span>/)}
+    it{expect(subject).to match(/class="bi bi-cloud".*<span>#{obj.stones.count}<\/span>/)}
+    it{expect(subject).to match(/class="bi bi-folder".*<span>#{obj.children.count}<\/span>/)}
+    it{expect(subject).to match(/class="bi bi-graph-up".*<span>#{obj.analyses.count}<\/span>/)}
+    it{expect(subject).to match(/class="bi bi-book".*<span>#{obj.bibs.count}<\/span>/)}
+    it{expect(subject).to match(/class="bi bi-file-earmark".*<span>#{obj.attachment_files.count}<\/span>/)}
     context "current" do
       subject{obj.tree_node(true)}
       it{expect(subject).to match("<strong>.*</strong>")}
