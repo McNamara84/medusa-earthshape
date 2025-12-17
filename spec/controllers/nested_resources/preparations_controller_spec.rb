@@ -4,7 +4,7 @@ describe NestedResources::PreparationsController do
   let(:parent_name) { :stone }
   let(:child_name) { :preparation }
   let(:parent) { FactoryBot.create(parent_name) }
-  let(:child) { FactoryBot.create(child_name, stone: parent) }
+  let(:child) { FactoryBot.create(child_name, :with_preparation_type, stone: parent) }
   let(:user) { FactoryBot.create(:user) }
   let(:url) { "where_i_came_from" }
   let(:preparation_type) { FactoryBot.create(:preparation_type) }
@@ -50,9 +50,33 @@ describe NestedResources::PreparationsController do
       end
     end
 
+    context "without stone (testing model optionality)" do
+      it "allows preparation to be created without stone via model" do
+        preparation = FactoryBot.build(:preparation, stone: nil)
+        expect(preparation).to be_valid
+      end
+    end
+
     context "with invalid attributes" do
-      # Currently Preparation has no required validations other than associations
-      # which are now optional. This context is for future validations.
+      # Since Preparation currently has no required validations,
+      # we simulate a validation failure by stubbing valid? to return false
+      before do
+        allow_any_instance_of(Preparation).to receive(:valid?).and_return(false)
+        allow_any_instance_of(Preparation).to receive_message_chain(:errors, :empty?).and_return(false)
+        method
+      end
+      
+      it "does not create a new preparation" do
+        # Note: The first call already happened in before block
+        # We need to check count didn't change during that first call
+        initial_count = Preparation.count
+        post :create, params: { parent_resource: parent_name, stone_id: parent, preparation: attributes, association_name: :preparations }
+        expect(Preparation.count).to eq initial_count
+      end
+      
+      it "renders error template" do
+        expect(response).to render_template("error")
+      end
     end
   end
 

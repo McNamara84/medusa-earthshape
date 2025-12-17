@@ -47,7 +47,7 @@ describe NestedResources::BibsController do
       it { expect{method}.to raise_error(ActiveRecord::RecordNotFound)}
     end
   end
-  describe "DELETE destory" do
+  describe "DELETE destroy" do
     let(:method){ delete :destroy, params: {parent_resource: parent_name, analysis_id: parent, id: child_id, association_name: :analysiss} }
     before { parent.bibs << child}
     let(:child_id){child.id}
