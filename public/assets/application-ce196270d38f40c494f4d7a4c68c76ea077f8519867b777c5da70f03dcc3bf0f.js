@@ -20619,7 +20619,9 @@ window['bootstrap']._originalGlobalThis = null;
     $modal.find("div.modal-header").removeClass("alert-success alert-warning alert-danger").addClass(alertClass);
     $("#notification-modal-label").html(title);
     $modal.find("div.modal-body").html(message);
-    $modal.modal();
+    // Bootstrap 5: Use native Modal API
+    var modalInstance = bootstrap.Modal.getOrCreateInstance($modal[0]);
+    modalInstance.show();
   }
 }) (jQuery);
 (function($) {
@@ -20637,7 +20639,10 @@ window['bootstrap']._originalGlobalThis = null;
 
   function determine() {
     $(input).val($(this).data("id"));
-    $("#search-modal").modal("hide");
+    // Bootstrap 5: Use native Modal API
+    var modalEl = document.getElementById("search-modal");
+    var modalInstance = bootstrap.Modal.getInstance(modalEl);
+    if (modalInstance) modalInstance.hide();
     return false;
   }
 
@@ -20651,19 +20656,19 @@ window['bootstrap']._originalGlobalThis = null;
     var errorMessage = xhr.status ? (xhr.status + ' ' + xhr.statusText) : 'Unknown error';
     var $content = $(
       '<div class="modal-header alert alert-danger">' +
-      '<button type="button" class="close" data-dismiss="modal">&times;</button>' +
+      '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
       '<h4>Error</h4></div>' +
       '<div class="modal-body"><p class="error-message"></p></div>' +
-      '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div>'
+      '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>'
     );
     // Use text() to safely escape the error message (XSS prevention)
     $content.find('.error-message').text('Failed to load content: ' + errorMessage);
     $modal.find("div.modal-content").html($content);
   }
 
-  // Bootstrap 3 removed the automatic remote loading feature for modals.
-  // We need to manually load the content via AJAX when the modal link is clicked.
-  $(document).on("click", "[data-toggle='modal'][data-target='#search-modal']", function(e) {
+  // Bootstrap 5: Updated data attributes (data-bs-toggle, data-bs-target)
+  // Also support legacy data-toggle for backward compatibility during migration
+  $(document).on("click", "[data-bs-toggle='modal'][data-bs-target='#search-modal'], [data-toggle='modal'][data-target='#search-modal']", function(e) {
     e.preventDefault();
     var $link = $(this);
     var url = $link.attr("href");
@@ -20672,7 +20677,9 @@ window['bootstrap']._originalGlobalThis = null;
     // Show the modal first
     var $modal = $("#search-modal");
     $modal.find("div.modal-content").html('<div class="modal-body"><p>Loading...</p></div>');
-    $modal.modal("show");
+    // Bootstrap 5: Use native Modal API
+    var modalInstance = bootstrap.Modal.getOrCreateInstance($modal[0]);
+    modalInstance.show();
 
     // Load the content via AJAX
     $.ajax({
@@ -20689,7 +20696,7 @@ window['bootstrap']._originalGlobalThis = null;
   });
 
   // Handle show-modal for detail views (e.g., clicking a row to see details)
-  $(document).on("click", "[data-toggle='modal'][data-target='#show-modal']", function(e) {
+  $(document).on("click", "[data-bs-toggle='modal'][data-bs-target='#show-modal'], [data-toggle='modal'][data-target='#show-modal']", function(e) {
     e.preventDefault();
     var $link = $(this);
     var url = $link.attr("href");
@@ -20697,7 +20704,9 @@ window['bootstrap']._originalGlobalThis = null;
     // Show the modal first
     var $modal = $("#show-modal");
     $modal.find("div.modal-content").html('<div class="modal-body"><p>Loading...</p></div>');
-    $modal.modal("show");
+    // Bootstrap 5: Use native Modal API
+    var modalInstance = bootstrap.Modal.getOrCreateInstance($modal[0]);
+    modalInstance.show();
 
     // Load the content via AJAX
     $.ajax({
@@ -20718,12 +20727,13 @@ window['bootstrap']._originalGlobalThis = null;
     bindDetermineHandler($(this));
   });
 
+  // Bootstrap 5: Clean up modal instance on hide
   $(document).on("hidden.bs.modal", "#search-modal", function() {
-    $(this).removeData("bs.modal");
+    // Bootstrap 5 manages instances internally, no need to removeData
   });
 
   $(document).on("hidden.bs.modal", "#show-modal", function() {
-    $(this).removeData("bs.modal");
+    // Bootstrap 5 manages instances internally, no need to removeData
   });
 
 })(jQuery);
