@@ -14,7 +14,8 @@
 //= require jquery_ujs
 //= require jquery-ui/widgets/datepicker
 //= require jquery-ui/widget
-//= require bootstrap
+//= require popper
+//= require bootstrap-sprockets
 //= require underscore
 //= require gmaps/google
 //= require_tree .

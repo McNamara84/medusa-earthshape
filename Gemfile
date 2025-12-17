@@ -100,7 +100,9 @@ gem 'config'  # Settings management (replaces settingslogic)
 # gem 'acts_as_mappable'
 # gem 'with_recursive'
 gem 'thinreports', '>= 0.8.0'
-gem 'bootstrap-sass'
+gem 'bootstrap', '~> 5.3'  # Bootstrap 5.3.x (upgraded from bootstrap-sass 3.4.1)
+# gem 'bootstrap-sass'  # DEPRECATED: Bootstrap 3.x, replaced by 'bootstrap' gem
+gem 'autoprefixer-rails', '>= 9.1.0'  # Required by Bootstrap 5 gem
 gem 'ransack'
 gem 'whenever', require: false
 gem 'acts_as_list', '~> 1.0'  # Updated for Rails 5 compatibility (was 0.4.0)
