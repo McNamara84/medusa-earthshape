@@ -1,0 +1,40 @@
+// Bootstrap 5 Compatibility Layer
+// =================================
+// This file provides temporary compatibility classes during the Bootstrap 3 → 5 migration.
+// These classes can be removed after full migration is complete.
+
+// =================================
+// Phase 0: Preparation - Custom btn-xs class
+// Bootstrap 4/5 removed btn-xs, this recreates it
+// =================================
+.btn-xs {
+  padding: 0.125rem 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+}
+
+// =================================
+// Glyphicon pagination button styles
+// These will be migrated to Bootstrap Icons in Phase 1
+// =================================
+// Note: Current styles in application.css for .glyphicon-chevron-left/right
+// will need to be updated to use .bi-chevron-left/right after icon migration
+
+// =================================
+// Custom form-group-sm spacing (Bootstrap 3 specific)
+// Keep this for form layout compatibility
+// =================================
+.form-group-sm {
+  margin-bottom: 0.5rem;
+}
+
+// =================================
+// Tree view icon spacing
+// Will be updated after icon migration
+// =================================
+.tree-node {
+  .bi {
+    margin: 0px 5px;
+  }
+}
