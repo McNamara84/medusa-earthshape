@@ -21,7 +21,7 @@
      <!-- Nav tabs -->
     <ul class="nav nav-tabs">
       <% tab_info.each do |key,array,title| %>
-       <li class="<%= active_if_current(key) %>" ><a href="#<%= key %>" data-toggle="tab"><%= (title.blank? ? key : title)  + data_count(array) %></a></li>
+       <li class="<%= active_if_current(key) %>" ><a href="#<%= key %>" data-bs-toggle="tab"><%= (title.blank? ? key : title)  + data_count(array) %></a></li>
       <% end %>
     </ul>
     
