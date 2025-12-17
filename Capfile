@@ -7,7 +7,7 @@ require 'capistrano/deploy'
 require 'capistrano/rbenv'
 
 set :rbenv_type, :user
-set :rbenv_ruby, '3.4.7'
+set :rbenv_ruby, '3.4.8'
 
 require 'capistrano/bundler'
 require 'capistrano/rails/assets'
