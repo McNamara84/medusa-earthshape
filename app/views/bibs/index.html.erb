@@ -1,6 +1,6 @@
 <%= paginate @bibs %>
 
-<%= link_to "New Entry", bibs_path(anchor: "newentry"), class: "btn btn-secondary newentrybutton" %>
+<%= link_to "New Entry", bibs_path(anchor: "newentry"), class: "btn btn-secondary btn-sm newentrybutton" %>
 
 
 <br>The Bibliography is used to store publications related to the project. <br><br>
@@ -88,7 +88,7 @@
   </tbody>
   <tfoot>
        <tr><th><%= check_box_tag nil, nil, false, class: "select-row-all" %> Select all </th></tr>
-      <tr><th><%= link_to "bundle edit", "#", onclick: "$('#bundle-form').submit();; return false;", class: "btn btn-secondary" %></th></tr>   
+      <tr><th><%= link_to "bundle edit", "#", onclick: "$('#bundle-form').submit();; return false;", class: "btn btn-secondary btn-sm" %></th></tr>   
   </tfoot>
 </table>
 

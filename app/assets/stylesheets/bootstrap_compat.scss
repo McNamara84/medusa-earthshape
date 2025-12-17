@@ -43,3 +43,73 @@ select.input-sm {
     margin: 0px 5px;
   }
 }
+
+// =================================
+// Kaminari Pagination styling for Bootstrap 5
+// Ensures proper spacing between pagination elements
+// Uses smaller size similar to .pagination-sm
+// =================================
+nav .pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  padding-left: 0;
+  list-style: none;
+  
+  .page-item {
+    .page-link {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+      margin-left: 0;
+      border-radius: 0.25rem;
+    }
+    
+    &.active .page-link {
+      z-index: 3;
+    }
+    
+    &.disabled .page-link {
+      color: #6c757d;
+      pointer-events: none;
+      background-color: #fff;
+      border-color: #dee2e6;
+    }
+  }
+}
+
+// Fallback for pagination without nav wrapper (legacy Kaminari)
+span.pagination, div.pagination {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  
+  a, span, em {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    color: #0d6efd;
+    
+    &:hover {
+      background-color: #e9ecef;
+      border-color: #dee2e6;
+    }
+  }
+  
+  em, .current {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+    font-style: normal;
+  }
+  
+  .disabled, .gap {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #dee2e6;
+  }
+}

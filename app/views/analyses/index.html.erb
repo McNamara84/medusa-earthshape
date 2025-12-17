@@ -75,7 +75,7 @@
     <%= render partial: "new", locals: { analysis: Analysis.new } %>
   </tfoot>
 </table>
-<%= link_to bi_icon('pencil'), "#", onclick: "$('#bundle-form').submit();; return false;", class: "btn btn-secondary" %>
+<%= link_to bi_icon('pencil'), "#", onclick: "$('#bundle-form').submit();; return false;", class: "btn btn-secondary btn-sm" %>
 
 <div id="csv-control">
   To create analysis records at once, download a template (

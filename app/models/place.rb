@@ -25,7 +25,7 @@ class Place < ApplicationRecord
    scope :choose_parent_global_id, ->(user) { 
 	ids = Place.where(is_parent: true).pluck(:id)
 	return [] if ids.empty?
-	RecordProperty.readables(user).where(datum_type: self).where(datum_id: ids).order(:name).pluck(:name, :global_id)
+	RecordProperty.readables(user).where(datum_type: "Place").where(datum_id: ids).order(:name).pluck(:name, :global_id)
    }
    
    # Virtual attribute for forms: allows setting parent via global_id

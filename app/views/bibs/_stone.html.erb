@@ -41,7 +41,7 @@
     </tr>
   </tfoot>
 </table>
-<%= link_to "bundle edit", "#", onclick: "$('#stone-bundle-form').submit();; return false;", class: "btn btn-secondary" %>
+<%= link_to "bundle edit", "#", onclick: "$('#stone-bundle-form').submit();; return false;", class: "btn btn-secondary btn-sm" %>
 <% if false %>
       <%= form_for Stone.new, url: bib_stones_path(@bib) do |f|%>
         <%= hidden_tabname_tag(__FILE__) %>

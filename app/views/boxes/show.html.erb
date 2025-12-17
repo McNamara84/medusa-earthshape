@@ -15,26 +15,26 @@
           <%= bi_icon('tree-conifer') %>
         <% end %>
         <% if @box.has_image? %>
-          <%= link_to picture_box_path(@box), class: "btn btn-secondary", id: "picture-button", remote: true do %>
+          <%= link_to picture_box_path(@box), class: "btn btn-secondary btn-sm", id: "picture-button", remote: true do %>
             <%= bi_icon('picture') %>
           <% end %>
         <% end %>
       </div>
       <% if can? :update, @box %>
       <div class="btn-group btn-group-sm">
-        <%= link_to edit_box_path(@box), class: "btn btn-secondary", id: "pencil-button", remote: true do %>
+        <%= link_to edit_box_path(@box), class: "btn btn-secondary btn-sm", id: "pencil-button", remote: true do %>
           <%= bi_icon('pencil') %>
         <% end %>
-        <%= link_to property_box_path(@box), class: "btn btn-secondary", id: "cog-button", remote: true do %>
+        <%= link_to property_box_path(@box), class: "btn btn-secondary btn-sm", id: "cog-button", remote: true do %>
           <%= bi_icon('cog') %>
         <% end %>
       </div>
       <% end %>
       <div class="btn-group btn-group-sm">
-        <%= link_to download_label_box_path(@box), class: "btn btn-secondary", id: "tag-button" do %>
+        <%= link_to download_label_box_path(@box), class: "btn btn-secondary btn-sm", id: "tag-button" do %>
           <%= bi_icon('tag') %>
         <% end %>
-        <%= link_to download_card_box_path(@box), class: "btn btn-secondary", id: "file-button" do %>
+        <%= link_to download_card_box_path(@box), class: "btn btn-secondary btn-sm", id: "file-button" do %>
           <%= bi_icon('file') %>
         <% end %>
       </div>

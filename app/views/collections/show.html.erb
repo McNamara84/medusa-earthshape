@@ -13,10 +13,10 @@
       </div>    
       <% if can? :update, @place %>
       <div class="btn-group btn-group-sm">
-	<%= link_to edit_collection_path(@collection), class: "btn btn-secondary", remote: true do %>
+	<%= link_to edit_collection_path(@collection), class: "btn btn-secondary btn-sm", remote: true do %>
 	  <%= bi_icon('pencil') %>
 	<% end %>
-	<%= link_to property_collection_path(@collection), class: "btn btn-secondary", remote: true do %>
+	<%= link_to property_collection_path(@collection), class: "btn btn-secondary btn-sm", remote: true do %>
 	  <%= bi_icon('cog') %>
 	<% end %>
       </div>

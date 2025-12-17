@@ -46,7 +46,7 @@
 </table>
 
 
-<%= link_to "bundle edit", "#", onclick: "$('#bib-bundle-form').submit();; return false;", class: "btn btn-secondary" %>
+<%= link_to "bundle edit", "#", onclick: "$('#bib-bundle-form').submit();; return false;", class: "btn btn-secondary btn-sm" %>
 <hr>
 <div>Link Bibliography from inventory</div>
     <%= form_tag link_by_global_id_box_bibs_path(@box),method: :post do %>

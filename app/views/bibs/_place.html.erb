@@ -41,7 +41,7 @@
     </tr>
   </tfoot>
 </table>
-<%= link_to "bundle edit", "#", onclick: "$('#place-bundle-form').submit();; return false;", class: "btn btn-secondary" %>
+<%= link_to "bundle edit", "#", onclick: "$('#place-bundle-form').submit();; return false;", class: "btn btn-secondary btn-sm" %>
 <% if false %>
       <%= form_for Place.new, url: bib_places_path(@bib) do |f|%>
         <%= hidden_tabname_tag(__FILE__) %>

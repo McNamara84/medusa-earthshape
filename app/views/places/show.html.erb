@@ -18,10 +18,10 @@
       </div>
       <% if can? :update, @place %>
       <div class="btn-group btn-group-sm">
-	<%= link_to edit_place_path(@place), class: "btn btn-secondary", remote: true do %>
+	<%= link_to edit_place_path(@place), class: "btn btn-secondary btn-sm", remote: true do %>
 	  <%= bi_icon('pencil') %>
 	<% end %>
-	<%= link_to property_place_path(@place), class: "btn btn-secondary", remote: true do %>
+	<%= link_to property_place_path(@place), class: "btn btn-secondary btn-sm", remote: true do %>
 	  <%= bi_icon('cog') %>
 	<% end %>
       </div>

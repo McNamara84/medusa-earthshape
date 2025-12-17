@@ -1,6 +1,6 @@
 <%= paginate @attachment_files %>
 
-<%= link_to "New Entry", attachment_files_path(anchor: "newentry"), class: "btn btn-secondary newentrybutton" %>
+<%= link_to "New Entry", attachment_files_path(anchor: "newentry"), class: "btn btn-secondary btn-sm newentrybutton" %>
 
 <table class="table table-sm table-striped">
   <thead class="searchheader">
@@ -85,7 +85,7 @@
  <tfoot>
 <!---     <%= render partial: "new", locals: { attachment_file: AttachmentFile.new } %>-->
       <tr><th><%= check_box_tag nil, nil, false, class: "select-row-all" %> Select all </th></tr>
-      <tr><th><%= link_to "bundle edit", "#", onclick: "$('#bundle-form').submit();; return false;", class: "btn btn-secondary" %></th></tr>
+      <tr><th><%= link_to "bundle edit", "#", onclick: "$('#bundle-form').submit();; return false;", class: "btn btn-secondary btn-sm" %></th></tr>
   </tfoot>
 </table>
 

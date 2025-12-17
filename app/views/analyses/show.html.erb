@@ -19,10 +19,10 @@
       </div>
       <% if can? :update, @analysis %>
       <div class="btn-group btn-group-sm">
-        <%= link_to edit_analysis_path(@analysis), class: "btn btn-secondary", id: "pencil-button", remote: true do %>
+        <%= link_to edit_analysis_path(@analysis), class: "btn btn-secondary btn-sm", id: "pencil-button", remote: true do %>
           <%= bi_icon('pencil') %>
         <% end %>
-        <%= link_to property_analysis_path(@analysis), class: "btn btn-secondary", id: "cog-button", remote: true do %>
+        <%= link_to property_analysis_path(@analysis), class: "btn btn-secondary btn-sm", id: "cog-button", remote: true do %>
           <%= bi_icon('cog') %>
         <% end %>
       </div>

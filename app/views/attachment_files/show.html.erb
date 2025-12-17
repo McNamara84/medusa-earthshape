@@ -17,10 +17,10 @@
       </div>
       <% if can? :update, @attachment_file %>
       <div class="btn-group btn-group-sm">
-        <%= link_to edit_attachment_file_path(@attachment_file), class: "btn btn-secondary", remote: true do %>
+        <%= link_to edit_attachment_file_path(@attachment_file), class: "btn btn-secondary btn-sm", remote: true do %>
           <%= bi_icon('pencil') %>
         <% end %>
-        <%= link_to property_attachment_file_path(@attachment_file), class: "btn btn-secondary", remote: true do %>
+        <%= link_to property_attachment_file_path(@attachment_file), class: "btn btn-secondary btn-sm", remote: true do %>
           <%= bi_icon('cog') %>
         <% end %>
       </div>
