@@ -41,7 +41,7 @@
       <td><%= f.select :parent_id, PreparationType.order(:full_name).pluck(:full_name,:id), { include_blank: true }, class: "form-control input-sm" %></td>
       <td><%= f.text_field :name, class: "form-control input-sm" %></td>
       <td>
-        <%= f.button class: "btn btn-secondary" do %>
+        <%= f.button class: "btn btn-secondary btn-sm" do %>
         <%= bi_icon('save') %>
         <% end %>
       </td>

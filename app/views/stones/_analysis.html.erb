@@ -42,7 +42,7 @@
 	<th><%= f.text_field :operator, class: "form-control input-sm", size: 15 %></th>  	
         <th><%= f.select :device_id, Device.order(:name).pluck(:name, :id), { include_blank: true }, class: "form-control input-sm" %></th>
         <th>
-          <%= f.button title:"add analysis file",class: "btn btn-secondary" do %>
+          <%= f.button title:"add analysis file",class: "btn btn-secondary btn-sm" do %>
             <%= bi_icon('save') %>
           <% end %>
         </th>
@@ -61,7 +61,7 @@
 	  </div>
 	</th>
         <th>
-          <%= button_tag title: "link analysis by global id", class: "btn btn-secondary" do %>
+          <%= button_tag title: "link analysis by global id", class: "btn btn-secondary btn-sm" do %>
             <%= bi_icon('save') %>
           <% end %>
         </th>

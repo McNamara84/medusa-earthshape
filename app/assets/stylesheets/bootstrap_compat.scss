@@ -4,14 +4,19 @@
 // These classes can be removed after full migration is complete.
 
 // =================================
-// Phase 0: Preparation - Custom btn-sm class
-// Bootstrap 4/5 removed btn-sm, this recreates it
+// Bootstrap 3 → 5 form size compatibility
+// input-sm was renamed to form-control-sm in Bootstrap 4/5
 // =================================
-.btn-sm {
-  padding: 0.125rem 0.25rem;
-  font-size: 0.75rem;
-  line-height: 1.5;
-  border-radius: 0.2rem;
+.input-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
+}
+
+select.input-sm {
+  height: calc(1.5em + 0.5rem + 2px);
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
 }
 
 // =================================
