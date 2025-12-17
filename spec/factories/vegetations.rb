@@ -3,6 +3,5 @@
 FactoryBot.define do
   factory :vegetation do
     sequence(:name) { |n| "Vegetation #{n}" }
-    association :place
   end
 end

@@ -8,6 +8,21 @@
     return false;
   }
 
+  // Display error message in modal with XSS-safe text insertion
+  function showModalError($modal, xhr) {
+    var errorMessage = xhr.status ? (xhr.status + ' ' + xhr.statusText) : 'Unknown error';
+    var $content = $(
+      '<div class="modal-header alert alert-danger">' +
+      '<button type="button" class="close" data-dismiss="modal">&times;</button>' +
+      '<h4>Error</h4></div>' +
+      '<div class="modal-body"><p class="error-message"></p></div>' +
+      '<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>'
+    );
+    // Use text() to safely escape the error message (XSS prevention)
+    $content.find('.error-message').text('Failed to load content: ' + errorMessage);
+    $modal.find("div.modal-content").html($content);
+  }
+
   // Bootstrap 3 removed the automatic remote loading feature for modals.
   // We need to manually load the content via AJAX when the modal link is clicked.
   $(document).on("click", "[data-toggle='modal'][data-target='#search-modal']", function(e) {
@@ -30,14 +45,8 @@
         // Bind the determine function to the selection links
         $modal.find(".determine").on("click", determine);
       },
-      error: function(xhr, status, error) {
-        $modal.find("div.modal-content").html(
-          '<div class="modal-header alert alert-danger">' +
-          '<button type="button" class="close" data-dismiss="modal">&times;</button>' +
-          '<h4>Error</h4></div>' +
-          '<div class="modal-body"><p>Failed to load content: ' + error + '</p></div>' +
-          '<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>'
-        );
+      error: function(xhr) {
+        showModalError($modal, xhr);
       }
     });
   });
@@ -60,20 +69,14 @@
       success: function(data) {
         $modal.find("div.modal-content").html(data);
       },
-      error: function(xhr, status, error) {
-        $modal.find("div.modal-content").html(
-          '<div class="modal-header alert alert-danger">' +
-          '<button type="button" class="close" data-dismiss="modal">&times;</button>' +
-          '<h4>Error</h4></div>' +
-          '<div class="modal-body"><p>Failed to load content: ' + error + '</p></div>' +
-          '<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>'
-        );
+      error: function(xhr) {
+        showModalError($modal, xhr);
       }
     });
   });
 
   // Handle AJAX form submissions within the modal (for search/filter)
-  $(document).on("ajax:success", "#search-modal", function(event, data, status) {
+  $(document).on("ajax:success", "#search-modal", function(event, data) {
     $(this).find("div.modal-content").html(data);
     // Re-bind the determine function after content update
     $(this).find(".determine").on("click", determine);
@@ -87,4 +90,4 @@
     $(this).removeData("bs.modal");
   });
 
-}) (jQuery);
+})(jQuery);

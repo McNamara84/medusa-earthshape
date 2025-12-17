@@ -4,7 +4,7 @@
 # This spec verifies that:
 # 1. Controllers respond to the :modal format without errors
 # 2. The correct templates and partials are rendered
-# 
+#
 # These tests use controller specs (not request specs) to avoid
 # Warden/host configuration issues in the test environment.
 
@@ -13,24 +13,25 @@ require 'spec_helper'
 shared_examples "modal index response" do |controller_class, factory_name|
   describe "#{controller_class}#index with modal format" do
     let(:user) { FactoryBot.create(:user) }
-    
+
     before do
       sign_in user
       User.current = user
     end
-    
+
     after do
       User.current = nil
     end
-    
+
     it "responds successfully to modal format" do
       # Create a record to ensure the index has data
+      # Some factories may fail due to missing associations, skip record creation
       begin
         FactoryBot.create(factory_name)
-      rescue => e
-        # Some factories may fail due to missing associations, skip record creation
+      rescue ActiveRecord::RecordInvalid, FactoryBot::InvalidFactoryError
+        # Expected for factories with missing required associations
       end
-      
+
       get :index, params: { per_page: 10 }, format: :modal
       expect(response).to have_http_status(:success)
     end
