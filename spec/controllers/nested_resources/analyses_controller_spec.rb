@@ -47,7 +47,7 @@ describe NestedResources::AnalysesController do
     end
   end
   
-  describe "DELETE destory" do
+  describe "DELETE destroy" do
     let(:method){ delete :destroy, params: {parent_resource: parent_name, bib_id: parent, id: child_id, association_name: :analyses} }
     before { parent.analyses << child}
     let(:child_id){child.id}

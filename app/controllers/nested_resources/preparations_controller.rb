@@ -11,7 +11,7 @@ class NestedResources::PreparationsController < ApplicationController
 
   def create
     @preparation = Preparation.new(preparation_params)
-    @parent.preparations << @preparation if @preparation.save
+    @parent.preparations << @preparation
     respond_with @preparation, location: adjust_url_by_requesting_tab(request.referer), action: "error"
   end
 

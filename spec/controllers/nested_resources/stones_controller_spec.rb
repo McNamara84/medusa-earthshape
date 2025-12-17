@@ -66,7 +66,7 @@ describe NestedResources::StonesController do
     end
   end
 
-  describe "DELETE destory" do
+  describe "DELETE destroy" do
     let(:method){ delete :destroy, params: {parent_resource: parent_name, bib_id: parent, id: child_id, association_name: :stones} }
     before { parent.stones << child}
     let(:child_id){child.id}
@@ -96,7 +96,7 @@ describe NestedResources::StonesController do
       it { expect{method}.to raise_error(ActiveRecord::RecordNotFound)}
     end
   end
-  describe "DELETE destory" do
+  describe "DELETE destroy" do
     let(:method){ delete :destroy, params: {parent_resource: parent_name, bib_id: parent, id: child_id, association_name: :stones} }
     before { parent.stones << child}
     let(:child_id){child.id}

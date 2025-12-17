@@ -51,7 +51,7 @@ describe NestedResources::SpotsController do
     end
   end
 
-  describe "DELETE destory" do
+  describe "DELETE destroy" do
     let(:method){ delete :destroy, params: {parent_resource: parent_name, attachment_file_id: parent, id: child_id, association_name: :spots} }
     before { parent.spots << child}
     let(:child_id){child.id}
