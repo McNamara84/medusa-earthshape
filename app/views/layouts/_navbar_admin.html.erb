@@ -1,51 +1,56 @@
-<nav class="navbar navbar-inverse" role="navigation">
-  <div class="collapse navbar-collapse" id="menubar">
-    <ul class="nav navbar-nav">
-      <li><%= active_link_to "site", system_preference_path %></li>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menubar" aria-controls="menubar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="menubar">
+      <ul class="navbar-nav me-auto">
+      <li class="nav-item"><%= active_link_to "site", system_preference_path, class: "nav-link" %></li>
       
       <% if is_active_link?(groups_path, :inclusive) %>
-	<li><%= active_link_to "Access", groups_path %></li>
+	<li class="nav-item"><%= active_link_to "Access", groups_path, class: "nav-link" %></li>
       <% else %>      
-	<li><%= active_link_to "Access", users_path %></li>
+	<li class="nav-item"><%= active_link_to "Access", users_path, class: "nav-link" %></li>
       <% end %>
       
       <% if is_active_link?(preparation_types_path, :inclusive) %>
-	<li><%= active_link_to  "Sample", preparation_types_path %></li>
+	<li class="nav-item"><%= active_link_to  "Sample", preparation_types_path, class: "nav-link" %></li>
       <% elsif is_active_link?(preparation_for_classifications_path, :inclusive) %>      
-        <li><%= active_link_to "Sample", preparation_for_classifications_path %></li>
+        <li class="nav-item"><%= active_link_to "Sample", preparation_for_classifications_path, class: "nav-link" %></li>
       <% elsif is_active_link?(preparations_path, :inclusive) %>     	
-        <li><%= active_link_to "Sample", preparations_path %></li>
+        <li class="nav-item"><%= active_link_to "Sample", preparations_path, class: "nav-link" %></li>
       <% elsif is_active_link?(collectionmethods_path, :inclusive) %>         
-        <li><%= active_link_to "Sample", collectionmethods_path %></li>
+        <li class="nav-item"><%= active_link_to "Sample", collectionmethods_path, class: "nav-link" %></li>
       <% elsif is_active_link?(quantityunits_path, :inclusive) %>         
-        <li><%= active_link_to "Sample", quantityunits_path %></li>	
+        <li class="nav-item"><%= active_link_to "Sample", quantityunits_path, class: "nav-link" %></li>	
       <% else %> 
-        <li><%= active_link_to "Sample", classifications_path %></li>
+        <li class="nav-item"><%= active_link_to "Sample", classifications_path, class: "nav-link" %></li>
       <% end %>
       
       <% if is_active_link?(stonecontainer_types_path, :inclusive) %>
-        <li><%= active_link_to "Storage", stonecontainer_types_path %></li>     
+        <li class="nav-item"><%= active_link_to "Storage", stonecontainer_types_path, class: "nav-link" %></li>     
       <% else %> 
-        <li><%= active_link_to "Storage", box_types_path %></li>
+        <li class="nav-item"><%= active_link_to "Storage", box_types_path, class: "nav-link" %></li>
       <% end %>     
 
-	<li><%= active_link_to "File", filetopics_path %></li> 
+	<li class="nav-item"><%= active_link_to "File", filetopics_path, class: "nav-link" %></li> 
 
       <% if is_active_link?(authors_path, :inclusive) %>
-        <li><%= active_link_to "Analysis", authors_path %></li>
+        <li class="nav-item"><%= active_link_to "Analysis", authors_path, class: "nav-link" %></li>
       <% elsif is_active_link?(units_path, :inclusive) %>      
-        <li><%= active_link_to "Analysis", units_path %></li>
+        <li class="nav-item"><%= active_link_to "Analysis", units_path, class: "nav-link" %></li>
       <% elsif is_active_link?(techniques_path, :inclusive) %>     	
-        <li><%= active_link_to "Analysis", techniques_path %></li>
+        <li class="nav-item"><%= active_link_to "Analysis", techniques_path, class: "nav-link" %></li>
       <% elsif is_active_link?(devices_path, :inclusive) %>         
-        <li><%= active_link_to "Analysis", devices_path %></li>
+        <li class="nav-item"><%= active_link_to "Analysis", devices_path, class: "nav-link" %></li>
       <% elsif is_active_link?(measurement_categories_path, :inclusive) %>         
-        <li><%= active_link_to "Analysis", measurement_categories_path %></li>
+        <li class="nav-item"><%= active_link_to "Analysis", measurement_categories_path, class: "nav-link" %></li>
       <% else %> 
-	<li><%= active_link_to  "Analysis", measurement_items_path %></li>	
+	<li class="nav-item"><%= active_link_to  "Analysis", measurement_items_path, class: "nav-link" %></li>	
       <% end %>
 
     </ul>
     <%= render partial: "layouts/navbar_common_part" %>
+    </div>
   </div>
 </nav>

@@ -1,11 +1,16 @@
-<nav class="navbar navbar-inverse" role="navigation">
-  <div class="collapse navbar-collapse" id="menubar">
-    <ul class="nav navbar-nav">
-      <li><%= active_link_to "preparations", preparation_for_classifications_path %></li>
-      <li><%= active_link_to "collection methods", collectionmethods_path %></li>
-      <li><%= active_link_to "sample containers", stonecontainer_types_path %></li>
-      <li><%= active_link_to "field measurement types", filetopics_path %></li>
-    </ul>
-    <%= render partial: "layouts/navbar_common_part" %>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menubar" aria-controls="menubar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="menubar">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><%= active_link_to "preparations", preparation_for_classifications_path, class: "nav-link" %></li>
+        <li class="nav-item"><%= active_link_to "collection methods", collectionmethods_path, class: "nav-link" %></li>
+        <li class="nav-item"><%= active_link_to "sample containers", stonecontainer_types_path, class: "nav-link" %></li>
+        <li class="nav-item"><%= active_link_to "field measurement types", filetopics_path, class: "nav-link" %></li>
+      </ul>
+      <%= render partial: "layouts/navbar_common_part" %>
+    </div>
   </div>
 </nav>

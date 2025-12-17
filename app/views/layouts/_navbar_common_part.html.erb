@@ -1,37 +1,37 @@
-<ul class="nav navbar-nav navbar-right">
-      <li><%= link_to "EarthShape Project", "http://www.geo.uni-tuebingen.de/projekte/earthshape/htdocs/", target: "_blank", title: "EarthShape Project Website" %></li>
-  <li>
-  <%= link_to root_path do %>
+<ul class="navbar-nav ms-auto">
+      <li class="nav-item"><%= link_to "EarthShape Project", "http://www.geo.uni-tuebingen.de/projekte/earthshape/htdocs/", target: "_blank", title: "EarthShape Project Website", class: "nav-link" %></li>
+  <li class="nav-item">
+  <%= link_to root_path, class: "nav-link" do %>
     <%= bi_icon('home') %>
   <% end %>
   </li>
   <% if current_user.admin? %>
-  <li>
-  <%= link_to system_preference_path ,title: "system preference" do %>
+  <li class="nav-item">
+  <%= link_to system_preference_path, title: "system preference", class: "nav-link" do %>
     <%= bi_icon('wrench') %>
   <% end %>
   </li>
 <% if false %>  
-  <li>
-  <%= link_to system_lab_preference_path ,title: "preparation preference" do %>
+  <li class="nav-item">
+  <%= link_to system_lab_preference_path, title: "preparation preference", class: "nav-link" do %>
     <%= bi_icon('asterisk') %>
   <% end %>
   </li>
 <% end %>  
   
   <% end %>
-  <li>
-  <%= link_to edit_account_path,title: "my account" do %>
+  <li class="nav-item">
+  <%= link_to edit_account_path, title: "my account", class: "nav-link" do %>
     <%= bi_icon('user') %>
   <% end %>
   </li>
-  <li>
-  <%= link_to destroy_user_session_path, method: :delete, data: {confirm: t("confirm.logout")}, title: "logout" do %>
+  <li class="nav-item">
+  <%= link_to destroy_user_session_path, method: :delete, data: {confirm: t("confirm.logout")}, title: "logout", class: "nav-link" do %>
     <%= bi_icon('off') %>
   <% end %>
   </li>
-  <li>
-  <%= link_to Settings.help_url, title: "help" do %>
+  <li class="nav-item">
+  <%= link_to Settings.help_url, title: "help", class: "nav-link" do %>
     <%= bi_icon('question-sign') %>
   <% end %>
   </li>
@@ -39,7 +39,7 @@
 
 <% if false %>
 
-<%= search_form_for @records_search, url: records_path, class: "navbar-form navbar-right" do |f| %>
+<%= search_form_for @records_search, url: records_path, class: "d-flex" do |f| %>
   <div class="mb-3">
     <%= f.text_field(:name_or_global_id_cont, class: "form-control") %>
   </div>
