@@ -1,5 +1,6 @@
-# Use Ruby 3.4.7 - Based on Debian Bookworm (12)
-FROM ruby:3.4.7
+# Use Ruby 3.4 (latest 3.4.x) - Based on Debian Bookworm (12)
+# Note: Update to ruby:3.4.8 once the Docker image is published (typically 1-2 days after release)
+FROM ruby:3.4
 
 # Install system dependencies (PhantomJS not available in Bookworm, but not needed for production)
 RUN apt-get update -qq && apt-get install -y \
