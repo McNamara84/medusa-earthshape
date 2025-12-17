@@ -1,5 +1,5 @@
 class StonecontainerTypesController < ApplicationController
- respond_to :html, :xml, :json, :modal	
+  respond_to :html, :xml, :json, :modal
   before_action  :find_resource, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
   layout "admin"

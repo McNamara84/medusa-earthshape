@@ -8,6 +8,11 @@
     return false;
   }
 
+  // Bind determine click handler, unbinding first to prevent memory leaks
+  function bindDetermineHandler($modal) {
+    $modal.find(".determine").off("click", determine).on("click", determine);
+  }
+
   // Display error message in modal with XSS-safe text insertion
   function showModalError($modal, xhr) {
     var errorMessage = xhr.status ? (xhr.status + ' ' + xhr.statusText) : 'Unknown error';
@@ -42,8 +47,7 @@
       dataType: "html",
       success: function(data) {
         $modal.find("div.modal-content").html(data);
-        // Bind the determine function to the selection links
-        $modal.find(".determine").on("click", determine);
+        bindDetermineHandler($modal);
       },
       error: function(xhr) {
         showModalError($modal, xhr);
@@ -78,8 +82,7 @@
   // Handle AJAX form submissions within the modal (for search/filter)
   $(document).on("ajax:success", "#search-modal", function(event, data) {
     $(this).find("div.modal-content").html(data);
-    // Re-bind the determine function after content update
-    $(this).find(".determine").on("click", determine);
+    bindDetermineHandler($(this));
   });
 
   $(document).on("hidden.bs.modal", "#search-modal", function() {

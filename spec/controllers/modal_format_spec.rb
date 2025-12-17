@@ -28,8 +28,9 @@ shared_examples "modal index response" do |controller_class, factory_name|
       # Some factories may fail due to missing associations, skip record creation
       begin
         FactoryBot.create(factory_name)
-      rescue ActiveRecord::RecordInvalid, FactoryBot::InvalidFactoryError
-        # Expected for factories with missing required associations
+      rescue ActiveRecord::RecordInvalid, FactoryBot::InvalidFactoryError => e
+        # Log which factory failed for debugging purposes
+        Rails.logger.debug { "Factory #{factory_name} skipped: #{e.message}" }
       end
 
       get :index, params: { per_page: 10 }, format: :modal
