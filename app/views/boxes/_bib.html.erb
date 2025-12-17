@@ -55,7 +55,7 @@
 	  <div class="input-group">
             <%= select_tag :global_id, options_for_select(Bib.choose_global_id(@current_user)), { include_blank: true  , id: "bib-global-id", class: "form-control input-sm"} %> 	  
 	    <span class="input-group-text">
-	      <%= link_to bibs_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#bib-global-id" do %>
+	      <%= link_to bibs_path(per_page: 10, format: :modal), "data-bs-toggle" => "modal", "data-bs-target" => "#search-modal", "data-input" => "#bib-global-id" do %>
 	      <%= bi_icon('search') %>
 	      <% end %>
 	    </span>

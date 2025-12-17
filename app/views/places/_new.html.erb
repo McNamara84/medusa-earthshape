@@ -46,7 +46,7 @@
     <div class="input-group">
       <%= f.select :topographic_position_id, TopographicPosition.order(:name).pluck(:name, :id), { :prompt =>  '- required -' }, class: "form-control input-sm" %>
       <span class="input-group-text">
-	<%= link_to topographic_positions_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#place_topographic_position_id" do %>
+	<%= link_to topographic_positions_path(per_page: 10, format: :modal), "data-bs-toggle" => "modal", "data-bs-target" => "#search-modal", "data-input" => "#place_topographic_position_id" do %>
 	<%= bi_icon('search') %>
 	<% end %>
       </span>
@@ -58,7 +58,7 @@
     <div class="input-group">
       <%= f.select :vegetation_id, Vegetation.order(:name).pluck(:name, :id),  { include_blank: true }, class: "form-control input-sm" %>
       <span class="input-group-text">
-	<%= link_to vegetations_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#place_vegetation_id" do %>
+	<%= link_to vegetations_path(per_page: 10, format: :modal), "data-bs-toggle" => "modal", "data-bs-target" => "#search-modal", "data-input" => "#place_vegetation_id" do %>
 	<%= bi_icon('search') %>
 	<% end %>
       </span>
@@ -71,7 +71,7 @@
     <div class="input-group">
       <%= f.select :landuse_id, Landuse.order(:name).pluck(:name, :id),  { include_blank: true }, class: "form-control input-sm" %>
       <span class="input-group-text">
-	<%= link_to landuses_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#place_landuse_id" do %>
+	<%= link_to landuses_path(per_page: 10, format: :modal), "data-bs-toggle" => "modal", "data-bs-target" => "#search-modal", "data-input" => "#place_landuse_id" do %>
 	<%= bi_icon('search') %>
 	<% end %>
       </span>

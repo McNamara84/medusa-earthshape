@@ -104,7 +104,7 @@
 	  <div class="input-group">
             <%= select_tag :global_id, options_for_select(AttachmentFile.choose_global_id(@current_user)), { include_blank: true  , id: "attachment-file-global-id", class: "form-control input-sm"} %>     	  
 	    <span class="input-group-text">
-	      <%= link_to attachment_files_path(per_page: 5, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#attachment-file-global-id" do %>
+	      <%= link_to attachment_files_path(per_page: 5, format: :modal), "data-bs-toggle" => "modal", "data-bs-target" => "#search-modal", "data-input" => "#attachment-file-global-id" do %>
 	      <%= bi_icon('search') %>
 	      <% end %>
 	    </span>

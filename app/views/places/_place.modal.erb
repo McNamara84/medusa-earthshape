@@ -4,7 +4,7 @@
     <%= bi_icon('link') %>
     <% end %>
   </td>
-  <td><%= link_to place.name, place_path(place, format: :modal), "data-toggle" => "modal", "data-target" => "#show-modal" %></td>
+  <td><%= link_to place.name, place_path(place, format: :modal), "data-bs-toggle" => "modal", "data-bs-target" => "#show-modal" %></td>
   <td><%= place.latitude_to_text %></td>
   <td><%= place.longitude_to_text %></td>
   <td><%= place.elevation_to_text %></td>

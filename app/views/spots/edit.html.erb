@@ -27,7 +27,7 @@
       <div class="input-group">
 	<%= f.text_field :target_uid, class: "form-control input-sm" %>
 	<span class="input-group-text">
-	  <%= link_to records_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#spot_target_uid" do %>
+	  <%= link_to records_path(per_page: 10, format: :modal), "data-bs-toggle" => "modal", "data-bs-target" => "#search-modal", "data-input" => "#spot_target_uid" do %>
 	  <%= bi_icon('search') %>
 	  <% end %>
 	</span>

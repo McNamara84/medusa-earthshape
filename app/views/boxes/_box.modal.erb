@@ -4,7 +4,7 @@
     <%= bi_icon('link') %>
     <% end %>
   </td>
-  <td><%= link_to box.name, box_path(box, format: :modal), "data-toggle" => "modal", "data-target" => "#show-modal" %></td>
+  <td><%= link_to box.name, box_path(box, format: :modal), "data-bs-toggle" => "modal", "data-bs-target" => "#show-modal" %></td>
   <td><%= box.parent.try!(:name) %></td>
   <td><%= box.box_type.try!(:name) %></td>
   <td><%= box.group.try!(:name) %></td>
