@@ -3,21 +3,7 @@ class Analysis < ApplicationRecord
   include HasRecordProperty
   include HasViewSpot
   include HasAttachmentFile
-
-  # Extended list of CSV MIME types to handle browser/OS variations
-  # - application/octet-stream: Often sent by browsers for unknown file types
-  # - text/x-csv, application/x-csv: Alternative CSV MIME types
-  # - text/comma-separated-values: Official IANA MIME type for CSV
-  PERMIT_IMPORT_TYPES = [
-    "text/plain",
-    "text/csv",
-    "text/x-csv",
-    "text/comma-separated-values",
-    "application/csv",
-    "application/x-csv",
-    "application/vnd.ms-excel",
-    "application/octet-stream"
-  ].freeze
+  include CsvImportable
 
   has_many :chemistries
   has_many :referrings, as: :referable, dependent: :destroy
