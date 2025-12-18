@@ -1,7 +1,7 @@
 <div><%= link_to_unless_current Classification.model_name.human.downcase,classifications_path %>
 <%= link_to_unless_current PhysicalForm.model_name.human.downcase,physical_forms_path %></div>
 <%= paginate @physical_forms %>
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th></th>
@@ -13,14 +13,14 @@
     <tr>
       <td>
         <%= link_to edit_physical_form_path(physical_form) do %>
-        <span class="glyphicon glyphicon-edit"></span>
+        <%= bi_icon('edit') %>
         <% end %>
       </td>
       <td><%= physical_form.name %></td>
       <td></td>
       <td>
         <%= link_to physical_form_path(physical_form), method: :delete, data: {confirm: t("confirm.delete")} do %>
-        <span class="glyphicon glyphicon-remove"></span>
+        <%= bi_icon('remove') %>
         <% end %>
       </td>
     </tr>
@@ -32,8 +32,8 @@
       <td></td>
       <td><%= f.text_field :name, class: "form-control input-sm" %></td>
       <td>
-        <%= f.button class: "btn btn-default" do %>
-        <span class="glyphicon glyphicon-save"></span>
+        <%= f.button class: "btn btn-secondary btn-sm" do %>
+        <%= bi_icon('save') %>
         <% end %>
       </td>
       <td></td>

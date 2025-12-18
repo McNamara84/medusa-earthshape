@@ -8,7 +8,7 @@ class BibDecorator < Draper::Decorator
   end
 
   def name_with_id
-	h.content_tag(:span, nil, class: "glyphicon glyphicon-book") + " #{name} < #{global_id} >"
+    h.bi_icon('book') + " #{name} < #{global_id} >"
   end
 
   # def as_json(options = {})

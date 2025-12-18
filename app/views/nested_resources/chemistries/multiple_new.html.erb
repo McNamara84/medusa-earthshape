@@ -6,7 +6,7 @@
   <li>modified at <%= difference_from_now(@parent.updated_at) -%></li>
 </ul>
 <%= form_tag  multiple_create_analysis_chemistries_path(@parent),method: :post do %>
-  <table class="table table-condensed table-striped">
+  <table class="table table-sm table-striped">
     <thead>
       <tr>
         <th>measured</th>

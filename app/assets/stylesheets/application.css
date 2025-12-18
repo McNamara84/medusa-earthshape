@@ -16,11 +16,12 @@
 .navbar-nav .active {font-weight:bold; text-decoration:underline}
 .searchheader {background-color:#d7fef8}
 a.newentrybutton {margin-bottom:15px}
-.glyphicon-chevron-right {padding: 6px 12px; border-radius: 4px; color:#333333; background-color: white; border-color: #adadad;border: 1px solid #cccccc;}
-.glyphicon-chevron-left  {padding: 6px 12px; border-radius: 4px; color:#333333; background-color:  white; border-color: #adadad;border: 1px solid #cccccc;}
+/* Bootstrap Icons pagination buttons (migrated from Glyphicons) */
+.bi-chevron-right {padding: 6px 12px; border-radius: 4px; color:#333333; background-color: white; border-color: #adadad;border: 1px solid #cccccc;}
+.bi-chevron-left  {padding: 6px 12px; border-radius: 4px; color:#333333; background-color:  white; border-color: #adadad;border: 1px solid #cccccc;}
 
-.glyphicon-chevron-right:hover {color: #333333; background-color: #ebebeb; border-color: #adadad}
-.glyphicon-chevron-left:hover {color: #333333; background-color: #ebebeb; border-color: #adadad} 
+.bi-chevron-right:hover {color: #333333; background-color: #ebebeb; border-color: #adadad}
+.bi-chevron-left:hover {color: #333333; background-color: #ebebeb; border-color: #adadad} 
 
 table.stagingstable {border: 3px solid black; margin-top:10px}
 table.stagingstable tr {border: 1px solid black;}
@@ -38,11 +39,11 @@ fieldset.collectorfieldset a.add_fields {margin-left:10px;padding-bottom:10px}
 
 #newentry u {font-size: 18px}
 
-fieldset.stonefieldset div.form-group {width:200px; float:left; margin: 10px}
+fieldset.stonefieldset div.mb-3 {width:200px; float:left; margin: 10px}
 fieldset.stonefieldset select {max-width:100%}
 fieldset.stonefieldset legend {font-size: 12px;  margin-top: 10px}
 
-fieldset.collectorfieldset div.form-group  {width:200px; float:left; margin-left:10px; margin-right:5px}
+fieldset.collectorfieldset div.mb-3  {width:200px; float:left; margin-left:10px; margin-right:5px}
 fieldset.collectorfieldset legend {font-size: 12px; margin-top: 10px}
 div.input-group {max-width: 200px}
 

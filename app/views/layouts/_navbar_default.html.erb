@@ -1,17 +1,22 @@
-<nav class="navbar navbar-default" role="navigation">
-  <div class="collapse navbar-collapse" id="menubar">
-    <ul class="nav navbar-nav">
-      <li><%= active_link_to "View all entries", records_path %></li>
-      <li><%= active_link_to "Map", root_path, :active => :exclusive %></li> 
-      <li><%= active_link_to Collection.model_name.human, collections_path %></li>      
-      <li><%= active_link_to Place.model_name.human, places_path %></li>
-      <li><%= active_link_to Box.model_name.human, boxes_path %></li>
-      <li><%= active_link_to Stone.model_name.human, stones_path %></li>
-      <li><%= active_link_to Analysis.model_name.human, analyses_path %></li>
-      <li><%= active_link_to AttachmentFile.model_name.human, attachment_files_path %></li>      
-      <li><%= active_link_to Bib.model_name.human, bibs_path %></li>
-      <li><%= active_link_to Staging.model_name.human, stagings_path %></li>      
-    </ul>
-    <%= render partial: "layouts/navbar_common_part" %>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menubar" aria-controls="menubar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="menubar">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><%= active_link_to "View all entries", records_path, class: "nav-link" %></li>
+        <li class="nav-item"><%= active_link_to "Map", root_path, :active => :exclusive, class: "nav-link" %></li> 
+        <li class="nav-item"><%= active_link_to Collection.model_name.human, collections_path, class: "nav-link" %></li>      
+        <li class="nav-item"><%= active_link_to Place.model_name.human, places_path, class: "nav-link" %></li>
+        <li class="nav-item"><%= active_link_to Box.model_name.human, boxes_path, class: "nav-link" %></li>
+        <li class="nav-item"><%= active_link_to Stone.model_name.human, stones_path, class: "nav-link" %></li>
+        <li class="nav-item"><%= active_link_to Analysis.model_name.human, analyses_path, class: "nav-link" %></li>
+        <li class="nav-item"><%= active_link_to AttachmentFile.model_name.human, attachment_files_path, class: "nav-link" %></li>      
+        <li class="nav-item"><%= active_link_to Bib.model_name.human, bibs_path, class: "nav-link" %></li>
+        <li class="nav-item"><%= active_link_to Staging.model_name.human, stagings_path, class: "nav-link" %></li>      
+      </ul>
+      <%= render partial: "layouts/navbar_common_part" %>
+    </div>
   </div>
 </nav>

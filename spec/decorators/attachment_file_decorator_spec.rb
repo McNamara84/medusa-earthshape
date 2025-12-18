@@ -41,12 +41,12 @@ describe AttachmentFileDecorator do
     context "file is image" do
       before { allow(attachment_file).to receive(:image?).and_return(true) }
       it { expect(link).to have_css("img") }
-      it { expect(link).to_not have_css("span.glyphicon") }
+      it { expect(link).to_not have_css("i.bi") }
     end
     context "file is not image" do
       before { allow(attachment_file).to receive(:image?).and_return(false) }
       it { expect(link).to_not have_css("img") }
-      it { expect(link).to have_css("span.glyphicon") }
+      it { expect(link).to have_css("i.bi") }
     end
   end
 

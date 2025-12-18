@@ -12,34 +12,34 @@
   <div id="show-tools" class="col-lg-4">
     <div class="row btn-toolbar tool-selector" role="toolbar">
       <div class="btn-group btn-group-sm">
-        <%= link_to family_stone_path(@stone), class: "btn btn-default activate", id: "tree-conifer-button", remote: true do %>
-          <span class="glyphicon glyphicon-tree-conifer"></span>
+        <%= link_to family_stone_path(@stone), class: "btn btn-secondary activate", id: "tree-conifer-button", remote: true do %>
+          <%= bi_icon('tree-conifer') %>
         <% end %>
         <% if @stone.has_image? %>
-          <%= link_to picture_stone_path(@stone), class: "btn btn-default", id: "picture-button", remote: true do %>
-            <span class="glyphicon glyphicon-picture"></span>
+          <%= link_to picture_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "picture-button", remote: true do %>
+            <%= bi_icon('picture') %>
           <% end %>
         <% end %>
-        <%= link_to map_stone_path(@stone), class: "btn btn-default", id: "globe-button", remote: true do %>
-          <span class="glyphicon glyphicon-globe"></span>
+        <%= link_to map_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "globe-button", remote: true do %>
+          <%= bi_icon('globe') %>
         <% end %>
       </div>
       <% if can? :update, @stone %>
       <div class="btn-group btn-group-sm">
-        <%= link_to edit_stone_path(@stone), class: "btn btn-default", id: "pencil-button", remote: true do %>
-          <span class="glyphicon glyphicon-pencil"></span>
+        <%= link_to edit_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "pencil-button", remote: true do %>
+          <%= bi_icon('pencil') %>
         <% end %>
-        <%= link_to property_stone_path(@stone), class: "btn btn-default", id: "cog-button", remote: true do %>
-          <span class="glyphicon glyphicon-cog"></span>
+        <%= link_to property_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "cog-button", remote: true do %>
+          <%= bi_icon('cog') %>
         <% end %>
       </div>
       <% end %>
       <div class="btn-group btn-group-sm">
-        <%= link_to download_label_stone_path(@stone), class: "btn btn-default", id: "tag-button" do %>
-          <span class="glyphicon glyphicon-tag"></span>
+        <%= link_to download_label_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "tag-button" do %>
+          <%= bi_icon('tag') %>
         <% end %>
-        <%= link_to download_card_stone_path(@stone), class: "btn btn-default", id: "file-button" do %>
-          <span class="glyphicon glyphicon-file"></span>
+        <%= link_to download_card_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "file-button" do %>
+          <%= bi_icon('file') %>
         <% end %>
       </div>
     </div>
@@ -69,14 +69,14 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs">
       <% tab_info.each do |key,array,title| %>
-       <li class="<%= active_if_current(key) %>" ><a href="#<%= key %>" data-toggle="tab"><%= (title.blank? ? key : title)  + data_count(array) %></a></li>
+       <li class="nav-item"><a class="nav-link<%= ' active' if active_if_current(key).present? %>" href="#<%= key %>" data-bs-toggle="tab"><%= (title.blank? ? key : title)  + data_count(array) %></a></li>
       <% end %>
 
     </ul>
     <!-- Tab panes -->
     <div class="tab-content">
       <% tab_info.each do |key,array| %>
-        <div class="tab-pane<%= active_if_current(key) %>" id="<%= key %>"><%= render partial: key.underscore %></div>
+        <div class="tab-pane<%= ' active' if active_if_current(key).present? %>" id="<%= key %>"><%= render partial: key.underscore %></div>
       <% end %>
     </div>
   </div>

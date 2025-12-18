@@ -1,11 +1,11 @@
 <%= paginate @filetopics, remote: true %>
 <%= search_form_for @search, url: polymorphic_path(@search.klass, format: :modal), remote: true do |f| %>
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th>
-        <%= f.button class: "btn btn-default" do %>
-        <span class="glyphicon glyphicon-refresh"></span>
+        <%= f.button class: "btn btn-secondary btn-sm" do %>
+        <%= bi_icon('refresh') %>
         <% end %>
       </th>      
       <th><%= sort_link @search, :name, "name", { format: :modal }, remote: true %></th>

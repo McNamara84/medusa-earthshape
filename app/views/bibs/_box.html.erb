@@ -1,4 +1,4 @@
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th></th>
@@ -26,7 +26,7 @@
  <% end %>
 	  <td>
             <%= link_to bib_box_path(@bib,box) + tab_param(__FILE__), method: :delete ,title: "unlink box",data: {confirm: t("confirm.unlink")} do %>
-              <span class="glyphicon glyphicon-remove"></span>
+              <%= bi_icon('remove') %>
             <% end %>
           </td>
         </tr>
@@ -39,7 +39,7 @@
     </tr>
   </tfoot>
 </table>
-<%= link_to "bundle edit", "#", onclick: "$('#box-bundle-form').submit();; return false;", class: "btn btn-default" %>
+<%= link_to "bundle edit", "#", onclick: "$('#box-bundle-form').submit();; return false;", class: "btn btn-secondary btn-sm" %>
 
 
   
@@ -48,13 +48,13 @@
       <%= form_for Box.new, url: bib_boxes_path(@bib) do |f|%>
         <%= hidden_tabname_tag(__FILE__) %>
 		<div style="float:left; margin:10px">
-		   <div class="form-group form-group-sm">
+		   <div class="mb-3 mb-3-sm">
 		    <%= f.label :name, class: "small" %>
 		    <%= f.text_field :name, class: "form-control input-sm", placeholder: "- required -" %>
 		  </div>
 		</div>
 		<div style="float:left; margin:10px">   
-			  <div class="form-group form-group-sm">
+			  <div class="mb-3 mb-3-sm">
 			    <%= f.label :box_type_id, class: "small" %>
 				    <div class="input-group">
 				      <%= f.select :box_type_id, BoxType.order(:name).pluck(:name, :id), { :prompt =>  '- please select -'  }, class: "form-control input-sm" %>         
@@ -62,7 +62,7 @@
 			   </div>
 		 </div>
 			<div style="float:left; margin:10px">   
-				  <div class="form-group form-group-sm">
+				  <div class="mb-3 mb-3-sm">
 					  <%= f.fields_for :record_property_attributes do |r| %>
 						  <label class="small">Group</label>
 						  <div >
@@ -76,11 +76,11 @@
 	
 			 <div style="float:left; margin:10px">
 
-				  <div class="form-group form-group-sm">
+				  <div class="mb-3 mb-3-sm">
 					  <label class="small">Save</label>
 					  <div>
-					    <%= f.button class: "btn btn-default" do %>
-					    <span class="glyphicon glyphicon-save"></span>
+					    <%= f.button class: "btn btn-secondary btn-sm" do %>
+					    <%= bi_icon('save') %>
 					    <% end %>
 					  </div>
 				</div>
@@ -96,16 +96,16 @@
 	<div style="float:left; margin:10px">
 	  <div class="input-group">
           <%= select_tag :global_id, options_for_select(Box.choose_global_id(@current_user)), { include_blank: true  , id: "box-global-id", class: "form-control input-sm"} %>		  
-	    <span class="input-group-addon">
-	      <%= link_to boxes_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#box-global-id" do %>
-	      <span class="glyphicon glyphicon-search"></span>
+	    <span class="input-group-text">
+	      <%= link_to boxes_path(per_page: 10, format: :modal), "data-bs-toggle" => "modal", "data-bs-target" => "#search-modal", "data-input" => "#box-global-id" do %>
+	      <%= bi_icon('search') %>
 	      <% end %>
 	    </span>
 	  </div>
 	</div>
 	<div style="float:left; margin:10px">
-          <%= button_tag title: "link box by global id", class: "btn btn-default" do %>
-            <span class="glyphicon glyphicon-save"></span>
+          <%= button_tag title: "link box by global id", class: "btn btn-secondary btn-sm" do %>
+            <%= bi_icon('save') %>
           <% end %>
 	</div>
       <% end %>

@@ -1,10 +1,10 @@
 <tr>
   <td>
-    <%= button_tag class: "btn btn-default btn-xs determine", "data-id" => analysis.global_id do %>
-    <span class="glyphicon glyphicon-link"></span>
+    <%= button_tag class: "btn btn-secondary btn-sm determine", "data-id" => analysis.global_id do %>
+    <%= bi_icon('link') %>
     <% end %>
   </td>
-  <td><%= link_to analysis.name, analysis_path(analysis, format: :modal), "data-toggle" => "modal", "data-target" => "#show-modal" %></td>
+  <td><%= link_to analysis.name, analysis_path(analysis, format: :modal), "data-bs-toggle" => "modal", "data-bs-target" => "#show-modal" %></td>
   <td><%= analysis.device.try!(:name) %></td>
   <td>
   <% analysis.stones.each do |stone|%>

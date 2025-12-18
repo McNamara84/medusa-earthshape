@@ -1,4 +1,4 @@
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th></th>
@@ -18,7 +18,7 @@
           <td><%= bib.try!(:global_id) %></td>
           <td>
             <%= link_to analysis_bib_path(@analysis,bib) + tab_param(__FILE__), method: :delete ,title: "unlink bib",data: {confirm: t("confirm.unlink")} do %>
-              <span class="glyphicon glyphicon-remove"></span>
+              <%= bi_icon('remove') %>
             <% end %>
           </td>
         </tr>
@@ -32,8 +32,8 @@
         <th><%= check_box_tag nil, nil, false, class: "select-row-all" %></th>
         <th><%#= f.text_field :name, class: "form-control input-sm" %></th>
         <th>
-          <%#= f.button title:"add bib",class: "btn btn-default" do %>
-          <%#  <span class="glyphicon glyphicon-save"></span> %>
+          <%#= f.button title:"add bib",class: "btn btn-secondary btn-sm" do %>
+          <%#  <%= bi_icon('save') %> %>
           <%# end %>
         </th>
       <% end %>
@@ -42,21 +42,21 @@
         <th>
 	  <div class="input-group">
 	    <%= text_field_tag :global_id, "", id: "bib-global-id", class: "form-control input-sm" %>
-	    <span class="input-group-addon">
-	      <%= link_to bibs_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#bib-global-id" do %>
-	      <span class="glyphicon glyphicon-search"></span>
+	    <span class="input-group-text">
+	      <%= link_to bibs_path(per_page: 10, format: :modal), "data-bs-toggle" => "modal", "data-bs-target" => "#search-modal", "data-input" => "#bib-global-id" do %>
+	      <%= bi_icon('search') %>
 	      <% end %>
 	    </span>
 	  </div>
 	</th>
         <th>
-          <%= button_tag title: "link bib by global id",class: "btn btn-default" do %>
-            <span class="glyphicon glyphicon-save"></span>
+          <%= button_tag title: "link bib by global id",class: "btn btn-secondary btn-sm" do %>
+            <%= bi_icon('save') %>
           <% end %>
         </th>
       <% end %>
     <tr>
   </tfoot>
 </table>
-<%= link_to "edit", "#", onclick: "$('#bib-bundle-form').submit();; return false;", class: "btn btn-default" %>
+<%= link_to "edit", "#", onclick: "$('#bib-bundle-form').submit();; return false;", class: "btn btn-secondary btn-sm" %>
 

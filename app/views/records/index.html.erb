@@ -1,5 +1,5 @@
 <%= paginate @records %>
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead  class="searchheader">
     <%= search_form_for @records_search, url: records_path do |f| %>
     <tr>
@@ -17,8 +17,8 @@
     </tr>
     <tr>
       <th><%= text_field_tag :per_page, (params[:per_page] || RecordProperty.default_per_page), size: 1 %>
-        <%= f.button class: "btn btn-default" do %>
-        <span class="glyphicon glyphicon-refresh"></span>
+        <%= f.button class: "btn btn-secondary btn-sm" do %>
+        <%= bi_icon('refresh') %>
         <% end %></th>
       <th><%= f.text_field :name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
       <th><%= f.select :datum_type_eq, RecordProperty.readables(current_user).where.not(datum_type: ["Chemistry", "Spot"]).order(:datum_type).map{|r|[r.datum_type.constantize.model_name.human,r.datum_type]}.uniq,{:include_blank =>  'search:' }, class: "form-control input-sm" %></th>

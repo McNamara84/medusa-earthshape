@@ -1,0 +1,8 @@
+/* Bootstrap Icons tag button with CSV background image */
+/* line 2, app/assets/stylesheets/adjustments.css.scss */
+.bi-tag {
+  color: #000;
+  color: rgba(0, 0, 0, 0);
+  width: 24px;
+  background: url(/assets/csv-051a44803d7d16fd81523af79625adcafaae9ce8aa3691e30607e2fe4908514b.png) 0 0;
+}

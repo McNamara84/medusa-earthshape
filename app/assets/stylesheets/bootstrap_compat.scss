@@ -1,0 +1,115 @@
+// Bootstrap 5 Compatibility Layer
+// =================================
+// This file provides temporary compatibility classes during the Bootstrap 3 → 5 migration.
+// These classes can be removed after full migration is complete.
+
+// =================================
+// Bootstrap 3 → 5 form size compatibility
+// input-sm was renamed to form-control-sm in Bootstrap 4/5
+// =================================
+.input-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
+}
+
+select.input-sm {
+  height: calc(1.5em + 0.5rem + 2px);
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+// =================================
+// Glyphicon pagination button styles
+// These will be migrated to Bootstrap Icons in Phase 1
+// =================================
+// Note: Current styles in application.css for .glyphicon-chevron-left/right
+// will need to be updated to use .bi-chevron-left/right after icon migration
+
+// =================================
+// Custom mb-3-sm spacing (Bootstrap 3 specific)
+// Keep this for form layout compatibility
+// =================================
+.mb-3-sm {
+  margin-bottom: 0.5rem;
+}
+
+// =================================
+// Tree view icon spacing
+// Will be updated after icon migration
+// =================================
+.tree-node {
+  .bi {
+    margin: 0px 5px;
+  }
+}
+
+// =================================
+// Kaminari Pagination styling for Bootstrap 5
+// Ensures proper spacing between pagination elements
+// Uses smaller size similar to .pagination-sm
+// =================================
+nav .pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  padding-left: 0;
+  list-style: none;
+  
+  .page-item {
+    .page-link {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+      margin-left: 0;
+      border-radius: 0.25rem;
+    }
+    
+    &.active .page-link {
+      z-index: 3;
+    }
+    
+    &.disabled .page-link {
+      color: #6c757d;
+      pointer-events: none;
+      background-color: #fff;
+      border-color: #dee2e6;
+    }
+  }
+}
+
+// Fallback for pagination without nav wrapper (legacy Kaminari)
+span.pagination, div.pagination {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  
+  a, span, em {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    color: #0d6efd;
+    
+    &:hover {
+      background-color: #e9ecef;
+      border-color: #dee2e6;
+    }
+  }
+  
+  em, .current {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+    font-style: normal;
+  }
+  
+  .disabled, .gap {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #dee2e6;
+  }
+}

@@ -1,11 +1,11 @@
 <%= paginate @analyses %>
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <%= search_form_for @search do |f| %>
     <tr>
       <th>
-        <%= f.button class: "btn btn-default" do %>
-        <span class="glyphicon glyphicon-refresh"></span>
+        <%= f.button class: "btn btn-secondary btn-sm" do %>
+        <%= bi_icon('refresh') %>
         <% end %>
       </th>
       <th><%= sort_link @search, :name, "name" %></th>
@@ -75,7 +75,7 @@
     <%= render partial: "new", locals: { analysis: Analysis.new } %>
   </tfoot>
 </table>
-<%= link_to content_tag(:span, nil, class: "glyphicon glyphicon-pencil"), "#", onclick: "$('#bundle-form').submit();; return false;", class: "btn btn-default" %>
+<%= link_to bi_icon('pencil'), "#", onclick: "$('#bundle-form').submit();; return false;", class: "btn btn-secondary btn-sm" %>
 
 <div id="csv-control">
   To create analysis records at once, download a template (

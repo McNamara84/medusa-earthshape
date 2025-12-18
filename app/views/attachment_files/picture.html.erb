@@ -9,9 +9,9 @@
       <td>
 	<div class="input-group">
 	  <%= f.text_field :target_uid, class: "form-control input-sm" %>
-	  <span class="input-group-addon">
-	    <%= link_to records_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#spot_target_uid" do %>
-	    <span class="glyphicon glyphicon-search"></span>
+	  <span class="input-group-text">
+	    <%= link_to records_path(per_page: 10, format: :modal), "data-bs-toggle" => "modal", "data-bs-target" => "#search-modal", "data-input" => "#spot_target_uid" do %>
+	    <%= bi_icon('search') %>
 	    <% end %>
 	  </span>
 	</div>
@@ -25,8 +25,8 @@
         <%= f.hidden_field :fill_color ,value: "blue" %>
         <%= f.hidden_field :opacity ,value: "0" %>
         <%= f.hidden_field :with_cross ,value: "false" %>
-        <%= f.button title:"add new spot", class: "btn btn-default" do %>
-          <span class="glyphicon glyphicon-save"></span>
+        <%= f.button title:"add new spot", class: "btn btn-secondary btn-sm" do %>
+          <%= bi_icon('save') %>
         <% end %>
       </td>
     </tr>

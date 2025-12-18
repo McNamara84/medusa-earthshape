@@ -11,26 +11,26 @@
   <div id="show-tools" class="col-lg-4">
     <div class="row btn-toolbar tool-selector" role="toolbar">
       <div class="btn-group btn-group-sm">
-        <%= link_to picture_attachment_file_path(@attachment_file), class: "btn btn-default activate", remote: true do %>
-          <span class="glyphicon glyphicon-picture"></span>
+        <%= link_to picture_attachment_file_path(@attachment_file), class: "btn btn-secondary activate", remote: true do %>
+          <%= bi_icon('picture') %>
         <% end %>
       </div>
       <% if can? :update, @attachment_file %>
       <div class="btn-group btn-group-sm">
-        <%= link_to edit_attachment_file_path(@attachment_file), class: "btn btn-default", remote: true do %>
-          <span class="glyphicon glyphicon-pencil"></span>
+        <%= link_to edit_attachment_file_path(@attachment_file), class: "btn btn-secondary btn-sm", remote: true do %>
+          <%= bi_icon('pencil') %>
         <% end %>
-        <%= link_to property_attachment_file_path(@attachment_file), class: "btn btn-default", remote: true do %>
-          <span class="glyphicon glyphicon-cog"></span>
+        <%= link_to property_attachment_file_path(@attachment_file), class: "btn btn-secondary btn-sm", remote: true do %>
+          <%= bi_icon('cog') %>
         <% end %>
       </div>
       <% end %>
       <div class="btn-group btn-group-sm">
-        <%= link_to @attachment_file.path, class: "btn btn-default " do %>
-          <span class="glyphicon glyphicon-picture"></span>
+        <%= link_to @attachment_file.path, class: "btn btn-secondary " do %>
+          <%= bi_icon('picture') %>
         <% end %>
-        <%= link_to download_attachment_file_path(@attachment_file), class: "btn btn-default" do %>
-          <span class="glyphicon glyphicon-file"></span>
+        <%= link_to download_attachment_file_path(@attachment_file), class: "btn btn-secondary btn-sm" do %>
+          <%= bi_icon('file') %>
         <% end %>
       </div>
     </div>
@@ -57,14 +57,14 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs">
       <% tab_info.each do |key,array,title| %>
-       <li class="<%= active_if_current(key) %>" ><a href="#<%= key %>" data-toggle="tab"><%= (title.blank? ? key : title) + data_count(array) %></a></li>
+       <li class="nav-item"><a class="nav-link<%= ' active' if active_if_current(key).present? %>" href="#<%= key %>" data-bs-toggle="tab"><%= (title.blank? ? key : title) + data_count(array) %></a></li>
       <% end %>
 
     </ul>
     <!-- Tab panes -->
     <div class="tab-content">
       <% tab_info.each do |key,array| %>
-        <div class="tab-pane<%= active_if_current(key) %>" id="<%= key %>"><%= render partial: key.underscore %></div>
+        <div class="tab-pane<%= ' active' if active_if_current(key).present? %>" id="<%= key %>"><%= render partial: key.underscore %></div>
       <% end %>
     </div>
   </div>

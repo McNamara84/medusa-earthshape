@@ -1,0 +1,17 @@
+/* line 10, app/assets/stylesheets/bootstrap_compat.scss */
+.btn-sm {
+  padding: 0.125rem 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+}
+
+/* line 28, app/assets/stylesheets/bootstrap_compat.scss */
+.mb-3-sm {
+  margin-bottom: 0.5rem;
+}
+
+/* line 37, app/assets/stylesheets/bootstrap_compat.scss */
+.tree-node .bi {
+  margin: 0px 5px;
+}

@@ -1,8 +1,8 @@
 <tr>
 
   <td>
-    <%= button_tag class: "btn btn-default btn-xs determine", "data-id" => classification.id do %>
-    <span class="glyphicon glyphicon-link"></span>
+    <%= button_tag class: "btn btn-secondary btn-sm determine", "data-id" => classification.id do %>
+    <%= bi_icon('link') %>
     <% end %>
   </td>
   <td><%= classification.full_name %></td>

@@ -1,12 +1,12 @@
 <%= paginate @bibs %>
 
-<%= link_to "New Entry", bibs_path(anchor: "newentry"), class: "btn btn-default newentrybutton" %>
+<%= link_to "New Entry", bibs_path(anchor: "newentry"), class: "btn btn-secondary btn-sm newentrybutton" %>
 
 
 <br>The Bibliography is used to store publications related to the project. <br><br>
 
 
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead class="searchheader">
     <%= search_form_for @search do |f| %>
     <tr>
@@ -37,8 +37,8 @@
     </tr>
     <tr>
       <th><%= text_field_tag :per_page, (params[:per_page] || Bib.default_per_page), size: 1 %>
-             <%= f.button class: "btn btn-default" do %>
-       <span class="glyphicon glyphicon-refresh"></span>
+             <%= f.button class: "btn btn-secondary btn-sm" do %>
+       <%= bi_icon('refresh') %>
         <% end %> 
       </th>
       <th><%= f.text_field :name_cont, class: "form-control input-sm", placeholder: "search:", size: 15 %></th>
@@ -88,7 +88,7 @@
   </tbody>
   <tfoot>
        <tr><th><%= check_box_tag nil, nil, false, class: "select-row-all" %> Select all </th></tr>
-      <tr><th><%= link_to "bundle edit", "#", onclick: "$('#bundle-form').submit();; return false;", class: "btn btn-default" %></th></tr>   
+      <tr><th><%= link_to "bundle edit", "#", onclick: "$('#bundle-form').submit();; return false;", class: "btn btn-secondary btn-sm" %></th></tr>   
   </tfoot>
 </table>
 

@@ -1,4 +1,4 @@
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th></th>
@@ -28,7 +28,7 @@
  <% end %>
           <td>
             <%= link_to bib_place_path(@bib, place) + tab_param(__FILE__), method: :delete, title: "unlink place", data: {confirm: t("confirm.unlink")} do %>
-              <span class="glyphicon glyphicon-remove"></span>
+              <%= bi_icon('remove') %>
             <% end %>
           </td>
         </tr>
@@ -41,7 +41,7 @@
     </tr>
   </tfoot>
 </table>
-<%= link_to "bundle edit", "#", onclick: "$('#place-bundle-form').submit();; return false;", class: "btn btn-default" %>
+<%= link_to "bundle edit", "#", onclick: "$('#place-bundle-form').submit();; return false;", class: "btn btn-secondary btn-sm" %>
 <% if false %>
       <%= form_for Place.new, url: bib_places_path(@bib) do |f|%>
         <%= hidden_tabname_tag(__FILE__) %>
@@ -50,8 +50,8 @@
         <th><%= f.text_field :latitude, class: "form-control input-sm" %></th>
         <th><%= f.text_field :longitude, class: "form-control input-sm" %></th>
         <th>
-          <%= f.button title:"add box file", class: "btn btn-default" do %>
-            <span class="glyphicon glyphicon-save"></span>
+          <%= f.button title:"add box file", class: "btn btn-secondary btn-sm" do %>
+            <%= bi_icon('save') %>
           <% end %>
         </th>
       <% end %>
@@ -63,16 +63,16 @@
 	<div style="float:left; margin:10px">
 	  <div class="input-group">
           <%= select_tag :global_id, options_for_select(Place.choose_global_id(@current_user)), { include_blank: true  , id: "place-global-id", class: "form-control input-sm"} %>
-	    <span class="input-group-addon">
-	      <%= link_to places_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#place-global-id" do %>
-	      <span class="glyphicon glyphicon-search"></span>
+	    <span class="input-group-text">
+	      <%= link_to places_path(per_page: 10, format: :modal), "data-bs-toggle" => "modal", "data-bs-target" => "#search-modal", "data-input" => "#place-global-id" do %>
+	      <%= bi_icon('search') %>
 	      <% end %>
 	    </span>
 	  </div>
 	</div>
 	<div style="float:left; margin:10px">
-          <%= button_tag title: "link place by global id",class: "btn btn-default" do %>
-            <span class="glyphicon glyphicon-save"></span>
+          <%= button_tag title: "link place by global id",class: "btn btn-secondary btn-sm" do %>
+            <%= bi_icon('save') %>
           <% end %>
 	</div>
       <% end %>

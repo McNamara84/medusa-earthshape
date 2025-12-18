@@ -1,10 +1,10 @@
 <tr>
   <td>
-    <%= button_tag class: "btn btn-default btn-xs determine", "data-id" => stone.global_id do %>
-    <span class="glyphicon glyphicon-link"></span>
+    <%= button_tag class: "btn btn-secondary btn-sm determine", "data-id" => stone.global_id do %>
+    <%= bi_icon('link') %>
     <% end %>
   </td>
-  <td><%= link_to stone.name, stone_path(stone, format: :modal), "data-toggle" => "modal", "data-target" => "#show-modal" %></td>
+  <td><%= link_to stone.name, stone_path(stone, format: :modal), "data-bs-toggle" => "modal", "data-bs-target" => "#show-modal" %></td>
   <td><%= stone.parent.try!(:name) %></td>
   <td><%= stone.physical_form.try!(:name) %></td>
   <td><%= stone.classification.try!(:name) %></td>

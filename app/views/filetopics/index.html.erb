@@ -4,7 +4,7 @@
 <br><br>
 
 <%= paginate @filetopics %>
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th></th>
@@ -16,14 +16,14 @@
     <tr>
       <td>
         <%= link_to edit_filetopic_path(filetopic) do %>
-        <span class="glyphicon glyphicon-edit"></span>
+        <%= bi_icon('edit') %>
         <% end %>
       </td>
       <td><%= filetopic.name  %></td>
       <td></td>
       <td>
         <%= link_to filetopic_path(filetopic), method: :delete, data: {confirm: t("confirm.delete")} do %>
-        <span class="glyphicon glyphicon-remove"></span>
+        <%= bi_icon('remove') %>
         <% end %>
       </td>
     </tr>
@@ -35,8 +35,8 @@
       <td></td>
       <td><%= f.text_field :name, class: "form-control input-sm" %></td>      
       <td>
-        <%= f.button class: "btn btn-default" do %>
-        <span class="glyphicon glyphicon-save"></span>
+        <%= f.button class: "btn btn-secondary btn-sm" do %>
+        <%= bi_icon('save') %>
         <% end %>
       </td>
       <td></td>

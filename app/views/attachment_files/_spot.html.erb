@@ -1,4 +1,4 @@
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th></th>
@@ -15,7 +15,7 @@
           <td><%= spot.target_link %></td>
           <td>
             <%= link_to attachment_file_spot_path(@attachment_file,spot)+ tab_param(__FILE__), method: :delete ,title: "delete spot",data: {confirm: t("confirm.delete")} do %>
-              <span class="glyphicon glyphicon-remove"></span>
+              <%= bi_icon('remove') %>
             <% end %>
           </td>
         </tr>

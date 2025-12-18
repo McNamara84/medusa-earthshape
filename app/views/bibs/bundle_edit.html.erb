@@ -2,7 +2,7 @@
   <% bib_ids = @bibs.pluck(:id) %>
   <div class="text-right">
     <%= link_to download_bundle_label_bibs_path(ids: bib_ids) do %>
-      <i class="glyphicon glyphicon-tag"></i>
+      <%= bi_icon('tag') %>
     <% end %>
     ,<%= link_to("bibtex", download_to_tex_bibs_path(ids: bib_ids)) %>
     ,<%= link_to(image_tag("icon_pdf_1.png", size: "24x24"), download_bundle_card_bibs_path(ids: bib_ids)) %>,
@@ -11,7 +11,7 @@
 <% end %>
 
 <%= form_for Bib.new, url: bundle_update_bibs_path do |f| %>
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th></th>
@@ -47,8 +47,8 @@
         <%= f.select :published ,[true, false], { include_blank: true }, class: "form-control input-sm" %>
       <% end %>
       <th>
-        <%= f.button class: "btn btn-default" do %>
-          <span class="glyphicon glyphicon-save"></span>
+        <%= f.button class: "btn btn-secondary btn-sm" do %>
+          <%= bi_icon('save') %>
         <% end %>
       </th>
       <th></th>

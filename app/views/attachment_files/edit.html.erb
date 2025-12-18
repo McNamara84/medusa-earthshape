@@ -1,11 +1,11 @@
 <%= @attachment_file.picture %>
 <%= form_for @attachment_file, remote: true, format: :json, html: { class: "update", role: "form" } do |f| %>
-  <div class="form-group form-group-sm">
+  <div class="mb-3 mb-3-sm">
     <%= f.label :affine_matrix, class: "small" -%>
     ex.) [1, 0, 0; 0, 1, 0; 0, 0, 1]
     <%= f.text_field :affine_matrix_in_string, class: "form-control input-sm" %>
   </div>
-  <div class="form-group form-group-sm">
+  <div class="mb-3 mb-3-sm">
     <%= f.label :name, class: "small" %>
     <%= f.text_field :name, class: "form-control input-sm" %>
   </div>
@@ -13,12 +13,12 @@
 	<label class="small" for="attachment_file_filetopic_id"><%=AttachmentFile.human_attribute_name("filetopic")%></label>
 	<%= f.select :filetopic_id, Filetopic.order(:name).pluck(:name, :id), { :prompt =>  '- required -'  }, class: "form-control input-sm" %>
 </div>		  
-  <div class="form-group form-group-sm">
+  <div class="mb-3 mb-3-sm">
     <%= f.label :description, class: "small" %>
     <%= f.text_area :description, class: "form-control input-sm", row: 3 %>
   </div>
-  <%= f.button class: "btn btn-default" do %>
-  <span class="glyphicon glyphicon-save"></span>
+  <%= f.button class: "btn btn-secondary btn-sm" do %>
+  <%= bi_icon('save') %>
   <% end %>
 <% end %>
 

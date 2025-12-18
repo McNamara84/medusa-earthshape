@@ -6,7 +6,7 @@
   </div>
 <% end %>
 <%= form_for Analysis.new, url: bundle_update_analyses_path do |f| %>
-<table class="table table-condensed table-striped">
+<table class="table table-sm table-striped">
   <thead>
     <tr>
       <th></th>
@@ -35,9 +35,9 @@
       <th>
 	<div class="input-group">
 	  <%= f.text_field :stone_global_id, class: "form-control input-sm" %>
-	  <span class="input-group-addon">
-	    <%= link_to stones_path(per_page: 10, format: :modal), "data-toggle" => "modal", "data-target" => "#search-modal", "data-input" => "#analysis_stone_global_id" do %>
-	    <span class="glyphicon glyphicon-search"></span>
+	  <span class="input-group-text">
+	    <%= link_to stones_path(per_page: 10, format: :modal), "data-bs-toggle" => "modal", "data-bs-target" => "#search-modal", "data-input" => "#analysis_stone_global_id" do %>
+	    <%= bi_icon('search') %>
 	    <% end %>
 	  </span>
 	</div>
@@ -52,8 +52,8 @@
         <%= f.select :published ,[true, false], { include_blank: true }, class: "form-control input-sm" %>
       <% end %>
       <th>
-        <%= f.button class: "btn btn-default" do %>
-          <span class="glyphicon glyphicon-save"></span>
+        <%= f.button class: "btn btn-secondary btn-sm" do %>
+          <%= bi_icon('save') %>
         <% end %>
       </th>
       <th></th>

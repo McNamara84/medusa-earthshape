@@ -4,7 +4,7 @@ class BoxDecorator < Draper::Decorator
   delegate :as_json
   
   def name_with_id
-	h.content_tag(:span, nil, class: "glyphicon glyphicon-folder-close") + " #{name} < #{global_id} >"	
+    h.bi_icon('folder-close') + " #{name} < #{global_id} >"
   end
 
   def primary_picture(width: 250, height: 250)
@@ -25,7 +25,7 @@ class BoxDecorator < Draper::Decorator
 
   def tree_node(current=false)
     link = current ? h.content_tag(:strong, name) : name
-    icon = h.content_tag(:span, nil, class: "glyphicon glyphicon-folder-close")
+    icon = h.bi_icon('folder-close')
     icon + h.link_to_if(h.can?(:read, self), link, self) + stones_count + boxes_count + analyses_count + bibs_count + files_count
   end
 
@@ -88,7 +88,7 @@ class BoxDecorator < Draper::Decorator
     if box
       nodes += box.ancestors.map { |b| box_node(b) }
     end
-    nodes += [h.content_tag(:span, nil, class: "glyphicon glyphicon-folder-close") + "me"]
+    nodes += [h.bi_icon('folder-close') + "me"]
     h.raw(nodes.join("／"))
   end
 
@@ -99,11 +99,11 @@ class BoxDecorator < Draper::Decorator
   private
 
   def box_node(box)
-    h.content_tag(:span, nil, class: "glyphicon glyphicon-folder-close") + h.link_to_if(h.can?(:read, box), box.name, box)
+    h.bi_icon('folder-close') + h.link_to_if(h.can?(:read, box), box.name, box)
   end
 
   def icon_with_count(icon, count)
-    h.content_tag(:span, nil, class: "glyphicon glyphicon-#{icon}") + h.content_tag(:span, count) if count.nonzero?
+    h.bi_icon(icon) + h.content_tag(:span, count) if count.nonzero?
   end
 
 end

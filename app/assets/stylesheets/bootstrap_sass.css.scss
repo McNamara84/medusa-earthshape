@@ -1,9 +1,15 @@
-// Rails 5.2: Configure Bootstrap font paths before import
-$icon-font-path: "bootstrap/";
+// Bootstrap 5.3 Import
+// Note: $icon-font-path is no longer needed - Bootstrap Icons is separate library
+// The bootstrap gem provides bootstrap.scss which imports all components
+
+// Optional: Customize Bootstrap variables before import
+// $primary: #0d6efd;
+// $secondary: #6c757d;
 
 @import "bootstrap";
 
-.form-group.form-group-sm {
+// Legacy compatibility styles
+.mb-3.mb-3-sm {
   margin-bottom: 8px;
 }
 

@@ -17,6 +17,6 @@ module TreeViewHelper
   end
 
   def route_icon(depth)
-    content_tag(:span, nil, class: "glyphicon glyphicon-arrow-right")
+    bi_icon('arrow-right')
   end
 end
