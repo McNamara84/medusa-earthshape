@@ -4,8 +4,12 @@ describe Analysis do
 
   describe "constants" do
     describe "PERMIT_IMPORT_TYPES" do
-      subject { Analysis::PERMIT_IMPORT_TYPES }
-      it { expect(subject).to include("text/plain", "text/csv", "application/csv", "application/vnd.ms-excel") }
+      it "includes CsvImportable" do
+        expect(Analysis.ancestors).to include(CsvImportable)
+      end
+      it "has access to PERMIT_IMPORT_TYPES via CsvImportable" do
+        expect(CsvImportable::PERMIT_IMPORT_TYPES).to include("text/plain", "text/csv", "application/csv", "application/vnd.ms-excel")
+      end
     end
   end
 
