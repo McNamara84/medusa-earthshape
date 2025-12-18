@@ -39,6 +39,14 @@ describe PlacesController do
     end
 
     before do
+      # Ensure all groups are created first (force eager evaluation)
+      group_1
+      group_2
+      group_3
+      # Ensure all users are created
+      user_2
+      user_3
+      # Create places and their dependencies
       place_1
       place_2
       place_3
@@ -51,7 +59,6 @@ describe PlacesController do
       record_property_2.reload.update!(user_id: user_2.id, group_id: group_2.id, guest_readable: true, guest_writable: true, owner_readable: true, owner_writable: true)
       # place_3 owned by user_3, guest readable
       record_property_3.reload.update!(user_id: user_3.id, group_id: group_3.id, guest_readable: true, guest_writable: true, owner_readable: true, owner_writable: true)
-#      get :index, params
     end
     describe "search" do
       before do
