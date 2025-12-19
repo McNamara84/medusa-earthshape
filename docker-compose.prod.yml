@@ -108,6 +108,42 @@ services:
       - "traefik.http.services.esm-service.loadbalancer.server.port=3000"
       # Network configuration: Traefik must connect via 'traefik' network
       - "traefik.docker.network=traefik"
+
+  # =============================================================================
+  # FILE MANAGER - Temporary service for uploading legacy attachment files
+  # =============================================================================
+  # This service provides a web-based file manager to upload legacy attachment
+  # files that were not migrated with the database. It mounts the same volume
+  # as the web service, allowing direct file uploads to /app/public/system.
+  #
+  # ACCESS: https://${TRAEFIK_HOST}/esm-files
+  # DEFAULT CREDENTIALS: admin / admin (CHANGE IMMEDIATELY after first login!)
+  #
+  # IMPORTANT: This service should be REMOVED or STOPPED after migration is complete!
+  # To disable: Comment out this entire section or stop the container in Portainer.
+  # =============================================================================
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    volumes:
+      # Mount the same uploads volume - files uploaded here are immediately available to Rails
+      - app_uploads:/srv/attachment_files
+      # Persist FileBrowser configuration and database
+      - filebrowser_data:/database
+    environment:
+      # FileBrowser runs on port 80 by default
+      FB_BASEURL: /esm-files
+    networks:
+      - traefik
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # Router: accessible at /esm-files
+      - "traefik.http.routers.filebrowser-router.rule=Host(`${TRAEFIK_HOST:-env.rz-vm499.gfz.de}`) && PathPrefix(`/esm-files`)"
+      - "traefik.http.routers.filebrowser-router.entrypoints=https"
+      - "traefik.http.routers.filebrowser-router.service=filebrowser-service"
+      - "traefik.http.services.filebrowser-service.loadbalancer.server.port=80"
+      - "traefik.docker.network=traefik"
+
 volumes:
   postgres_data_prod:
     driver: local
@@ -120,6 +156,8 @@ volumes:
   bundle_cache:
     driver: local
   node_modules:
+    driver: local
+  filebrowser_data:
     driver: local
 
 networks:
