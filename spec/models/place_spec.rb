@@ -8,8 +8,12 @@ describe Place do
       it { expect(subject).to eq "name,latitude(decimal degree),longitude(decimal degree),elevation(m),description\n" }
     end
     describe "PERMIT_IMPORT_TYPES" do
-      subject { Place::PERMIT_IMPORT_TYPES }
-      it { expect(subject).to include("text/plain", "text/csv", "application/csv", "application/vnd.ms-excel") }
+      it "includes CsvImportable" do
+        expect(Place.ancestors).to include(CsvImportable)
+      end
+      it "has access to PERMIT_IMPORT_TYPES via CsvImportable" do
+        expect(CsvImportable::PERMIT_IMPORT_TYPES).to include("text/plain", "text/csv", "application/csv", "application/vnd.ms-excel")
+      end
     end
   end
 
@@ -34,10 +38,10 @@ describe Place do
       analysis
     end
     before do
-      stone_1;stone_2;stone_3;      
+      stone_1;stone_2;stone_3;
       analysis_1;analysis_2;analysis_3;
     end
-    it { expect(obj.analyses).to match_array([analysis_1,analysis_2,analysis_3])}    
+    it { expect(obj.analyses).to match_array([analysis_1,analysis_2,analysis_3])}
   end
 
   describe ".import_csv" do

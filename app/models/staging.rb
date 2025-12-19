@@ -1,6 +1,6 @@
 class Staging < ApplicationRecord
-  include HasRecordProperty	
-  PERMIT_IMPORT_TYPES = ["text/plain", "text/csv", "text/comma-separated-values","application/csv", "application/vnd.ms-excel"]
+  include HasRecordProperty
+  include CsvImportable
 
   def self.import_csv(file)
 
