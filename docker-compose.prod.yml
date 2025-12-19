@@ -124,14 +124,13 @@ services:
   # =============================================================================
   filebrowser:
     image: filebrowser/filebrowser:latest
+    # Explicitly set baseurl via command - more reliable than environment variable
+    command: --baseurl /esm-files --root /srv --database /database/filebrowser.db
     volumes:
       # Mount the same uploads volume - files uploaded here are immediately available to Rails
       - app_uploads:/srv/attachment_files
       # Persist FileBrowser configuration and database
       - filebrowser_data:/database
-    environment:
-      # FileBrowser runs on port 80 by default
-      FB_BASEURL: /esm-files
     networks:
       - traefik
     restart: unless-stopped
