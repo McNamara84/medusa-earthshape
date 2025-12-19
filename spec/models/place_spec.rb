@@ -38,10 +38,10 @@ describe Place do
       analysis
     end
     before do
-      stone_1;stone_2;stone_3;      
+      stone_1;stone_2;stone_3;
       analysis_1;analysis_2;analysis_3;
     end
-    it { expect(obj.analyses).to match_array([analysis_1,analysis_2,analysis_3])}    
+    it { expect(obj.analyses).to match_array([analysis_1,analysis_2,analysis_3])}
   end
 
   describe ".import_csv" do

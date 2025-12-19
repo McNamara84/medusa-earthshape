@@ -278,5 +278,5 @@ describe Analysis do
       it{expect(subject).to eq spot1}
     end
   end
-    
+
 end
