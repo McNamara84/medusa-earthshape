@@ -30,11 +30,16 @@ Rails.application.config.after_initialize do
 
   # Check if Unit table exists and has the required attributes for Alchemist registration
   # Guard: Only register units once (Alchemist.register is not idempotent)
-  if defined?(Unit) && Unit.table_exists? && Unit.attribute_method?(:name) && Unit.attribute_method?(:conversion)
-    AlchemistMedusaConfig.register_units_once do
-      Unit.pluck(:name, :conversion).each do |name, conversion|
-        Alchemist.register(:mass, name.to_sym, 1.to_d / conversion)
+  begin
+    if defined?(Unit) && Unit.table_exists? && Unit.attribute_method?(:name) && Unit.attribute_method?(:conversion)
+      AlchemistMedusaConfig.register_units_once do
+        Unit.pluck(:name, :conversion).each do |name, conversion|
+          Alchemist.register(:mass, name.to_sym, 1.to_d / conversion)
+        end
       end
     end
+  rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished
+    # Database tasks like `db:create` may run before the DB exists.
+    # Skip registration in that case; it will run on the next boot.
   end
 end

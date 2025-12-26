@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '>= 3.4.7', '< 3.5'  # Ruby 3.4.8 released 2025-12-17, Docker image pending
+ruby '>= 4.0.0', '< 4.1'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -111,24 +111,27 @@ gem 'builder'
 gem 'ffi', '~> 1.15.0'  # Lock to version compatible with RubyGems 3.0.x (1.17+ requires RubyGems 3.3.22+)
 gem 'test-unit', '~> 3.0'  # Required for rspec-rails with Ruby 2.2+
 gem 'bootsnap', '>= 1.1.0', require: false  # Rails 5.2: Speeds up boot time
-group :development, :test do
+group :development do
   gem 'rak'
   gem 'pry-rails'
   gem 'pry-doc'
   gem 'pry-stack_explorer'
   gem 'pry-byebug'
+  gem 'spring', '~> 2.1.0'  # Legacy; keep development-only to avoid test/runtime coupling
+  gem 'guard-rspec', '>= 4.7.3', require: false  # Updated to support RSpec 3.9+
+  gem 'capistrano'
+  gem 'capistrano-rails'
+  gem 'capistrano-rbenv'
+  gem 'capistrano-bundler'
+end
+
+group :development, :test do
   gem 'rspec-rails', '~> 6.1.0'  # Rails 7.1 requires RSpec-Rails 6.x
   # Sorbet static type checker
   gem 'sorbet', require: false
   gem 'sorbet-runtime'
   gem 'tapioca', require: false  # RBI generator for gems and Rails
   gem 'rails-controller-testing'  # Required for Rails 5.0+ (assigns, assert_template)
-  gem 'spring', '~> 2.1.0'  # Lock to version compatible with Ruby 2.5 (v4+ requires Ruby 2.7+)
-  gem 'guard-rspec', '>= 4.7.3', require: false  # Updated to support RSpec 3.9+
-  gem 'capistrano'
-  gem 'capistrano-rails'
-  gem 'capistrano-rbenv'
-  gem 'capistrano-bundler'
 end
 
 group :test do
