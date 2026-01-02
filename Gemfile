@@ -65,7 +65,7 @@ end
 gem 'unicorn'
 
 # Use puma for Capybara request specs (Rails 7.1 requires Puma 6+ for Rack 3)
-gem 'puma', '~> 6.0'  # Rails 7.1 uses Rack 3 which requires Puma 6+
+gem 'puma', '~> 7.1'  # Rails/Rack 3 compatible; allow update to Puma 7.1.x
 
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
