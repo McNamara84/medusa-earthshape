@@ -198,7 +198,7 @@ Commit
 ## 10) spring (2.1.1 → 4.4.0) (Major, dev)
 
 Status
-- Im Gemfile steht `spring`, `~> 2.1.0`.
+- Erledigt
 
 Änderung
 - Gemfile anpassen: `gem 'spring', '~> 4.4'`
@@ -238,5 +238,6 @@ Commit
 ## Troubleshooting (kurz)
 
 - Wenn `bundle update ...` sehr lange braucht: einmal `docker compose run --rm --entrypoint bundle web config set without 'development'` ist NICHT empfohlen; lieber beim aktuellen Setup bleiben.
+- Wenn Bundler meldet, dass Gems in der Gruppe `development` nicht aktualisiert wurden: einmalig für den Update-Command eine neutrale Bundler-App-Config nutzen, z.B. `docker compose run --rm -e BUNDLE_APP_CONFIG=/tmp/bundle-config --entrypoint bundle web update <gem>`.
 - Wenn native Gems (z.B. `ffi`, `mini_racer`) Probleme machen: `docker compose build --no-cache web` für genau diesen Schritt.
 - Wenn Tests DB benötigen: vor `rspec` sicherstellen, dass `db` läuft: `docker compose up -d db`.
