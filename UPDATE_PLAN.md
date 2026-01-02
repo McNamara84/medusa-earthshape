@@ -149,6 +149,9 @@ Commit
 
 ## 7) test-unit (3.7.3 → 3.7.7)
 
+Status
+- Erledigt
+
 Änderung
 - `bundle update test-unit`
 
