@@ -16,7 +16,7 @@ Voraussetzungen
 Allgemeines Vorgehen pro Schritt
 1. Update genau einer Abhängigkeit (Gemfile/Gemfile.lock).
 2. Container neu bauen (damit native Gems sauber neu installiert werden): `docker compose build web`
-3. Testsuite laufen lassen: `docker compose run --rm --entrypoint bundle web exec rspec`
+3. Testsuite laufen lassen: `docker compose run --rm -e RAILS_ENV=test --entrypoint bundle web exec rspec`
 4. Commit erstellen (nur die Dateien aus Schritt 1; i.d.R. `Gemfile` und/oder `Gemfile.lock`).
 
 Hinweis zum Test-Command
@@ -29,11 +29,14 @@ Hinweis zum Test-Command
 Einmalig vor dem ersten Update:
 - `docker compose up -d --build`
 - Optional: Baseline-Tests laufen lassen:
-  - `docker compose run --rm --entrypoint bundle web exec rspec`
+  - `docker compose run --rm -e RAILS_ENV=test --entrypoint bundle web exec rspec`
 
 ---
 
 ## 1) loofah (2.24.1 → 2.25.0)
+
+Status
+- Erledigt
 
 Änderung
 - `bundle update loofah`
@@ -51,6 +54,9 @@ Commit
 
 ## 2) mini_racer (0.19.1 → 0.19.2)
 
+Status
+- Erledigt
+
 Änderung
 - `bundle update mini_racer`
 
@@ -67,7 +73,7 @@ Commit
 ## 3) ffi (1.15.5 → 1.17.3)
 
 Status
-- Aktuell ist `ffi` im Gemfile auf `~> 1.15.0` gepinnt; das verhindert das Update.
+- Erledigt
 
 Änderung
 - Gemfile anpassen: `gem 'ffi', '~> 1.17'`
@@ -88,7 +94,7 @@ Commit
 ## 4) puma (6.6.1 → 7.1.0) (Major)
 
 Status
-- Im Gemfile steht `puma`, `~> 6.0`.
+- Erledigt
 
 Änderung
 - Gemfile anpassen: `gem 'puma', '~> 7.1'`
@@ -107,6 +113,9 @@ Commit
 
 ## 5) bootsnap (1.19.0 → 1.20.1)
 
+Status
+- Erledigt
+
 Änderung
 - `bundle update bootsnap`
 
@@ -121,6 +130,9 @@ Commit
 ---
 
 ## 6) bigdecimal (3.3.1 → 4.0.1) (Major)
+
+Status
+- Vorerst übersprungen (Updates-only / keine Downgrades): ein Update auf bigdecimal 4.x kollidiert aktuell mit transitativen Constraints (u.a. aus dem Reporting-Stack wie `ttfunk`), und ein "forciertes" Update würde zu Downgrades anderer Gems führen.
 
 Änderung
 - `bundle update bigdecimal`
