@@ -28,7 +28,9 @@ services:
     # Note: This entrypoint is used in local development.
     # In CI (.github/workflows/test.yml), it's overridden via docker-compose.override.yml
     # to skip permission-sensitive operations and enable direct test execution.
-    entrypoint: /app/docker-entrypoint.sh
+    # Run via bash so it works even when the repo is bind-mounted
+    # and the host file permissions don't include the executable bit.
+    entrypoint: ["bash", "/app/docker-entrypoint.sh"]
     command: bundle exec rails server -b 0.0.0.0
     volumes:
       - .:/app

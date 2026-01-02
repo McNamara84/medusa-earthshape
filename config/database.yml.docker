@@ -1,0 +1,33 @@
+# Docker-friendly database configuration using environment variables
+#
+# This file is used by docker-entrypoint.sh when config/database.yml is missing
+# (e.g. when the repo is bind-mounted for local development).
+#
+# Environment variables:
+# - DATABASE_HOST
+# - DATABASE_USER
+# - DATABASE_PASSWORD
+# - DATABASE_NAME
+# - DATABASE_NAME_TEST (optional)
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
+  host: <%= ENV.fetch("DATABASE_HOST", "db") %>
+  username: <%= ENV.fetch("DATABASE_USER", "medusa") %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD", "medusa_development") %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: <%= ENV.fetch("DATABASE_NAME", "medusa_development") %>
+
+test:
+  <<: *default
+  database: <%= ENV.fetch("DATABASE_NAME_TEST", "medusa_test") %>
+
+production:
+  <<: *default
+  database: <%= ENV.fetch("DATABASE_NAME", "medusa_production") %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD", "medusa_production") %>

@@ -33,6 +33,18 @@ trap cleanup EXIT
 # Remove a potentially pre-existing server.pid for Rails
 rm -f /app/tmp/pids/server.pid
 
+# Ensure database.yml exists when the repo is bind-mounted.
+# The image build creates config/database.yml, but a bind mount can hide it.
+if [ ! -f /app/config/database.yml ]; then
+  if [ -f /app/config/database.yml.docker ]; then
+    echo "config/database.yml missing - creating from config/database.yml.docker"
+    cp /app/config/database.yml.docker /app/config/database.yml
+  else
+    echo "[ERROR] config/database.yml missing and no docker template found"
+    exit 1
+  fi
+fi
+
 # Wait for database to be ready
 echo "Waiting for database..."
 until PGPASSWORD=$DATABASE_PASSWORD psql -h "$DATABASE_HOST" -U "$DATABASE_USER" -d "$DATABASE_NAME" -c '\q' 2>/dev/null; do
@@ -80,8 +92,8 @@ if [ "$TABLE_COUNT" = "0" ] || [ "$TABLE_COUNT" = "" ]; then
     if bundle exec rake db:seed; then
       echo "[OK] Database seeded successfully"
     else
-      echo "[ERROR] Seeding failed, creating minimal admin user..."
-      # Fallback: Create admin user manually if seeding fails
+      echo "[ERROR] Seeding failed, creating minimal users..."
+      # Fallback: Create users manually if seeding fails
       bundle exec rails runner "
         unless User.exists?(username: 'admin')
           admin = User.create!(
@@ -99,6 +111,24 @@ if [ "$TABLE_COUNT" = "0" ] || [ "$TABLE_COUNT" = "" ]; then
           admin.box_id = admin_box.id
           admin.save!
           puts '[OK] Admin user created: admin / admin123'
+        end
+
+        unless User.exists?(username: 'test')
+          test_user = User.create!(
+            username: 'test',
+            administrator: false,
+            email: 'test@medusa-dev.local',
+            password: 'test123',
+            password_confirmation: 'test123'
+          )
+          test_group = Group.create!(name: 'test')
+          test_group.users << test_user
+          test_box = Box.create!(name: 'test')
+          test_box.user = test_user
+          test_box.group = test_group
+          test_user.box_id = test_box.id
+          test_user.save!
+          puts '[OK] Test user created: test / test123'
         end
       "
     fi
