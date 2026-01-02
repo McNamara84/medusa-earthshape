@@ -108,7 +108,7 @@ gem 'whenever', require: false
 gem 'acts_as_list', '~> 1.0'  # Updated for Rails 5 compatibility (was 0.4.0)
 gem 'listen', '~> 3.3'  # Required by ActiveSupport file watcher (Rails 6.x)
 gem 'builder'
-gem 'ffi', '~> 1.15.0'  # Lock to version compatible with RubyGems 3.0.x (1.17+ requires RubyGems 3.3.22+)
+gem 'ffi', '~> 1.17'  # Allow update to latest 1.17.x
 gem 'test-unit', '~> 3.0'  # Required for rspec-rails with Ruby 2.2+
 gem 'bootsnap', '>= 1.1.0', require: false  # Rails 5.2: Speeds up boot time
 group :development do
