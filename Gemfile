@@ -117,7 +117,7 @@ group :development do
   gem 'pry-doc'
   gem 'pry-stack_explorer'
   gem 'pry-byebug'
-  gem 'spring', '~> 2.1.0'  # Legacy; keep development-only to avoid test/runtime coupling
+  gem 'spring', '~> 4.4'  # Legacy; keep development-only to avoid test/runtime coupling
   gem 'guard-rspec', '>= 4.7.3', require: false  # Updated to support RSpec 3.9+
   gem 'capistrano'
   gem 'capistrano-rails'
