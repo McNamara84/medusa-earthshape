@@ -86,7 +86,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :records, { id: /((?!\.(html$|json$|xml$|pml$)).)*/ } do
+  resources :records, id: /((?!\.(html$|json$|xml$|pml$)).)*/ do
     member do
       get 'record_property' => 'records#property'
       get 'casteml'
