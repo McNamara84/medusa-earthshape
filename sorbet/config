@@ -2,6 +2,7 @@
 .
 --ignore=/tmp/
 --ignore=/vendor/bundle
+--ignore=/vendor/gems/ttfunk-1.8.0
 --ignore=/db/migrate/
 --ignore=sorbet/rbi/gems/raindrops
 --ignore=app/decorators/spot_decorator.rb

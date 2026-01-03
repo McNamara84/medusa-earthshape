@@ -65,7 +65,7 @@ end
 gem 'unicorn'
 
 # Use puma for Capybara request specs (Rails 7.1 requires Puma 6+ for Rack 3)
-gem 'puma', '~> 6.0'  # Rails 7.1 uses Rack 3 which requires Puma 6+
+gem 'puma', '~> 7.1'  # Rails/Rack 3 compatible; allow update to Puma 7.1.x
 
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
@@ -82,10 +82,14 @@ gem 'barby'
 gem 'rqrcode'
 gem 'chunky_png'
 gem 'csv'  # Ruby 3.4: csv moved from default gem to bundled gem
-gem 'bigdecimal'  # Ruby 3.4: bigdecimal moved from default gem to bundled gem
+gem 'bigdecimal', '~> 4.0'  # Ruby 3.4: bigdecimal moved from default gem to bundled gem
 gem 'mutex_m'  # Ruby 3.4: mutex_m moved from default gem to bundled gem
 gem 'base64'  # Ruby 3.4: base64 moved from default gem to bundled gem
 gem 'drb'  # Ruby 3.4: drb moved from default gem to bundled gem
+
+# Reporting stack dependency override (unblocks bigdecimal 4.x without downgrades)
+gem 'ttfunk', path: 'vendor/gems/ttfunk-1.8.0'
+
 gem 'alchemist', git: 'https://github.com/halogenandtoast/alchemist'
 gem 'geonames'
 gem 'rubyzip'
@@ -108,7 +112,7 @@ gem 'whenever', require: false
 gem 'acts_as_list', '~> 1.0'  # Updated for Rails 5 compatibility (was 0.4.0)
 gem 'listen', '~> 3.3'  # Required by ActiveSupport file watcher (Rails 6.x)
 gem 'builder'
-gem 'ffi', '~> 1.15.0'  # Lock to version compatible with RubyGems 3.0.x (1.17+ requires RubyGems 3.3.22+)
+gem 'ffi', '~> 1.17'  # Allow update to latest 1.17.x
 gem 'test-unit', '~> 3.0'  # Required for rspec-rails with Ruby 2.2+
 gem 'bootsnap', '>= 1.1.0', require: false  # Rails 5.2: Speeds up boot time
 group :development do
@@ -117,7 +121,7 @@ group :development do
   gem 'pry-doc'
   gem 'pry-stack_explorer'
   gem 'pry-byebug'
-  gem 'spring', '~> 2.1.0'  # Legacy; keep development-only to avoid test/runtime coupling
+  gem 'spring', '~> 4.4'  # Legacy; keep development-only to avoid test/runtime coupling
   gem 'guard-rspec', '>= 4.7.3', require: false  # Updated to support RSpec 3.9+
   gem 'capistrano'
   gem 'capistrano-rails'
@@ -126,7 +130,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'rspec-rails', '~> 6.1.0'  # Rails 7.1 requires RSpec-Rails 6.x
+  gem 'rspec-rails', '~> 8.0'
   # Sorbet static type checker
   gem 'sorbet', require: false
   gem 'sorbet-runtime'

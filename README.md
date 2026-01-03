@@ -43,7 +43,8 @@ docker compose up -d
 
 **Access the application:**
 - URL: http://localhost:3000
-- Default login: `admin` / `admin123`
+- Default login (Admin): `admin` / `admin123`
+- Test login (Non-Admin): `test` / `test123`
 
 **Stop the application:**
 ```bash
