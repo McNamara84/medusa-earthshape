@@ -132,21 +132,43 @@ Commit
 ## 6) bigdecimal (3.3.1 → 4.0.1) (Major)
 
 Status
-- Vorerst übersprungen (Updates-only / keine Downgrades): ein Update auf bigdecimal 4.x kollidiert aktuell mit transitativen Constraints im Reporting-Stack. Ein erzwungenes `bigdecimal (~> 4.0)` würde u.a. Downgrades wie `ttfunk 1.8.0 → 1.7.0`, `prawn 2.5.x → 2.4.0` und `pdf-core 0.10.0 → 0.9.0` nach sich ziehen.
-
-Unblock-Versuch (Updates-only)
-- Konservative Updates für `ttfunk`, `prawn`, `pdf-core` und `thinreports` brachten keine Versionsänderung (Bundler: "version stayed the same"). Damit bleibt `bigdecimal` 4.x ohne Downgrades aktuell nicht erreichbar.
+- Erledigt (via Reporting-Override in Schritt 6a): Durch ein lokales Override von `ttfunk` (Dependency-Relax auf `bigdecimal >= 3.1`) ist `bigdecimal` 4.x ohne Downgrades möglich.
 
 Änderung
-- `bundle update bigdecimal`
+- Gemfile anpassen: `gem 'bigdecimal', '~> 4.0'`
+- Dann: `bundle update bigdecimal --conservative`
 
 Befehle
-- `docker compose run --rm --entrypoint bundle web update bigdecimal`
+- Edit: `Gemfile` (Constraint)
+- `docker compose run --rm -e BUNDLE_APP_CONFIG=/tmp/bundle-config --entrypoint bundle web update bigdecimal --conservative`
 - `docker compose build web`
 - `docker compose run --rm --entrypoint bundle web exec rspec`
 
 Commit
 - `chore(deps): update bigdecimal`
+
+---
+
+## 6a) Reporting-Stack Override: ttfunk (Dependency-Relax für bigdecimal)
+
+Status
+- Erledigt
+
+Änderung
+- `ttfunk` wird als lokales Path-Gem unter `vendor/gems/ttfunk-1.8.0` eingebunden.
+- In `vendor/gems/ttfunk-1.8.0/ttfunk.gemspec` wird `bigdecimal` von `~> 3.1` auf `>= 3.1` relaxiert.
+- Dockerfile passt sich an, damit das Path-Gem bereits vor `bundle install` ins Image kopiert wird.
+
+Befehle
+- `docker compose run --rm -w /app/vendor/gems --entrypoint gem web fetch ttfunk -v 1.8.0`
+- `docker compose run --rm -w /app/vendor/gems --entrypoint gem web unpack ttfunk-1.8.0.gem`
+- Edit: `Gemfile` (Path-Override) + `vendor/gems/ttfunk-1.8.0/ttfunk.gemspec` + `Dockerfile`
+- `docker compose run --rm -e BUNDLE_APP_CONFIG=/tmp/bundle-config --entrypoint bundle web install`
+- `docker compose build web`
+- `docker compose run --rm -e RAILS_ENV=test --entrypoint bundle web exec rspec`
+
+Commit
+- `chore(deps): vendor ttfunk to unblock bigdecimal`
 
 ---
 
