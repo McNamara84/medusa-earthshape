@@ -76,21 +76,29 @@ class ApplicationController < ActionController::Base
 
     begin
       referer_uri = URI.parse(referer)
-      
-      # Allow relative URLs (no host means same-origin)
-      return referer if referer_uri.host.nil?
-      
-      # For absolute URLs, verify same origin (host, port, and scheme)
+
+      # Reject dangerous schemes (e.g. javascript:, data:)
+      if referer_uri.scheme.present? && !%w[http https].include?(referer_uri.scheme)
+        return root_path
+      end
+
+      # Relative URLs (no host means same-origin). Normalize to leading '/'
+      # and reject protocol-relative redirects like "//evil.com".
+      if referer_uri.host.nil?
+        relative = referer_uri.to_s
+        return root_path if relative.blank?
+        return root_path if relative.start_with?('//')
+
+        return relative.start_with?('/') ? relative : "/#{relative}"
+      end
+
+      # Absolute URLs: verify same origin (host, port, and scheme)
       request_uri = URI.parse(request.url)
       same_host = referer_uri.host == request_uri.host
       same_port = referer_uri.port == request_uri.port
       same_scheme = referer_uri.scheme == request_uri.scheme
-      
-      if same_host && same_port && same_scheme
-        referer
-      else
-        root_path
-      end
+
+      (same_host && same_port && same_scheme) ? referer : root_path
     rescue URI::InvalidURIError
       root_path
     end

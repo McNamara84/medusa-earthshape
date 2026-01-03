@@ -12,25 +12,25 @@ class NestedResources::BoxesController < ApplicationController
   def create
     @box = Box.new(box_params)
     @parent.send(params[:association_name]) << @box if @box.save
-    respond_with @box, location: adjust_url_by_requesting_tab(request.referer), action: "error"
+    respond_with @box, location: adjust_url_by_requesting_tab(safe_referer_url), action: "error"
   end
 
   def update
     @box = Box.find(params[:id])
     @parent.send(params[:association_name]) << @box
-    respond_with @box, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @box, location: adjust_url_by_requesting_tab(safe_referer_url)
   end
 
   def destroy
     @box = Box.find(params[:id])
     @parent.send(params[:association_name]).delete(@box)
-    respond_with @box, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @box, location: adjust_url_by_requesting_tab(safe_referer_url)
   end
 
   def link_by_global_id
     @box = Box.joins(:record_property).where(record_properties: {global_id: params[:global_id]}).readonly(false)
     @parent.send(params[:association_name]) << @box
-    respond_with @box, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @box, location: adjust_url_by_requesting_tab(safe_referer_url)
   rescue
     duplicate_global_id
   end

@@ -64,10 +64,10 @@ describe ApplicationController do
         expect(response.body).to eq('/stones/123')
       end
 
-      it 'allows relative path without leading slash' do
+      it 'normalizes relative path without leading slash' do
         request.env['HTTP_REFERER'] = 'stones/123'
         get :test_safe_referer
-        expect(response.body).to eq('stones/123')
+        expect(response.body).to eq('/stones/123')
       end
 
       it 'allows relative path with query params' do

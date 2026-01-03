@@ -12,25 +12,25 @@ class NestedResources::PreparationsController < ApplicationController
   def create
     @preparation = Preparation.new(preparation_params)
     @parent.preparations << @preparation
-    respond_with @preparation, location: adjust_url_by_requesting_tab(request.referer), action: "error"
+    respond_with @preparation, location: adjust_url_by_requesting_tab(safe_referer_url), action: "error"
   end
 
   def update
     @preparation= Preparation.find(params[:id])
     @parent.preparations << @preparation
-    respond_with @preparation, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @preparation, location: adjust_url_by_requesting_tab(safe_referer_url)
   end
 
   def destroy
     @preparation= Preparation.find(params[:id])
     @parent.preparations.delete(@preparation)
-    respond_with @preparation, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @preparation, location: adjust_url_by_requesting_tab(safe_referer_url)
   end
 
   def link_by_global_id
     @preparation= Preparation.joins(:record_property).where(record_properties: {global_id: params[:global_id]}).readonly(false)
     @parent.preparations << @preparation
-    respond_with @preparation, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @preparation, location: adjust_url_by_requesting_tab(safe_referer_url)
   rescue
     duplicate_global_id
   end
