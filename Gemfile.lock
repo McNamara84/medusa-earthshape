@@ -4,6 +4,12 @@ GIT
   specs:
     alchemist (0.1.8)
 
+PATH
+  remote: vendor/gems/ttfunk-1.8.0
+  specs:
+    ttfunk (1.8.0)
+      bigdecimal (>= 3.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -536,8 +542,6 @@ GEM
     tilt (2.6.1)
     timeout (0.5.0)
     tsort (0.2.0)
-    ttfunk (1.8.0)
-      bigdecimal (~> 3.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicorn (6.1.0)
@@ -638,6 +642,7 @@ DEPENDENCIES
   terser
   test-unit (~> 3.0)
   thinreports (>= 0.8.0)
+  ttfunk!
   unicorn
   whenever
 

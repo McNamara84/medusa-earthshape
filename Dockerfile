@@ -31,6 +31,9 @@ RUN gem update --system 3.3.22 && \
 # Copy Gemfile and Gemfile.lock
 COPY Gemfile Gemfile.lock ./
 
+# If the bundle uses local path gems, they must be present before `bundle install`
+COPY vendor/gems/ttfunk-1.8.0 vendor/gems/ttfunk-1.8.0
+
 # Install dependencies (including test gems for CI/CD)
 # Only exclude development group (IRB, debugging tools not needed in container)
 RUN bundle config set --local without 'development' && \

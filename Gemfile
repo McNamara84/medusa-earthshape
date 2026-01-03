@@ -86,6 +86,10 @@ gem 'bigdecimal'  # Ruby 3.4: bigdecimal moved from default gem to bundled gem
 gem 'mutex_m'  # Ruby 3.4: mutex_m moved from default gem to bundled gem
 gem 'base64'  # Ruby 3.4: base64 moved from default gem to bundled gem
 gem 'drb'  # Ruby 3.4: drb moved from default gem to bundled gem
+
+# Reporting stack dependency override (unblocks bigdecimal 4.x without downgrades)
+gem 'ttfunk', path: 'vendor/gems/ttfunk-1.8.0'
+
 gem 'alchemist', git: 'https://github.com/halogenandtoast/alchemist'
 gem 'geonames'
 gem 'rubyzip'
