@@ -13,12 +13,13 @@
 # - After a deploy window (e.g. > session expiration), switch to :json to stop
 #   accepting Marshal payloads entirely.
 #
-# Use `COOKIES_SERIALIZER=json` after the migration window to fully disable Marshal.
+# Phase 2 (step 2): default to JSON to fully disable Marshal.
+# If you need an emergency rollback, set `COOKIES_SERIALIZER=hybrid` temporarily.
 serializer_env = ENV["COOKIES_SERIALIZER"]
-serializer = (serializer_env && !serializer_env.strip.empty?) ? serializer_env.strip.downcase.to_sym : :hybrid
+serializer = (serializer_env && !serializer_env.strip.empty?) ? serializer_env.strip.downcase.to_sym : :json
 
 unless %i[hybrid json].include?(serializer)
-	raise ArgumentError, "Invalid COOKIES_SERIALIZER=#{serializer_env.inspect}. Allowed: hybrid, json."
+  raise ArgumentError, "Invalid COOKIES_SERIALIZER=#{serializer_env.inspect}. Allowed: hybrid, json."
 end
 
 Rails.application.config.action_dispatch.cookies_serializer = serializer
