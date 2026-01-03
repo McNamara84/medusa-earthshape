@@ -167,6 +167,9 @@ Commit
 
 ## 8) sorbet (0.6.12846 → 0.6.12872)
 
+Status
+- Vorerst übersprungen: `bundle update sorbet` lässt die Version aktuell unverändert (vermutlich wegen `sorbet-static`/Plattform-Artifact-Constraints im sorbet-* Stack). Bitte bei Bedarf separat debuggen.
+
 Änderung
 - `bundle update sorbet`
 
@@ -181,6 +184,9 @@ Commit
 ---
 
 ## 9) sorbet-runtime (0.6.12846 → 0.6.12872)
+
+Status
+- Vorerst übersprungen: hängt im sorbet-* Stack an der gleichen Versionsfamilie (u.a. über `sorbet-static-and-runtime`), und lässt sich hier aktuell nicht isoliert anheben.
 
 Änderung
 - `bundle update sorbet-runtime`
@@ -218,7 +224,7 @@ Commit
 ## 11) rspec-rails (6.1.5 → 8.0.2) (Major, dev/test)
 
 Status
-- Im Gemfile steht `rspec-rails`, `~> 6.1.0`.
+- Erledigt
 
 Änderung
 - Gemfile anpassen: `gem 'rspec-rails', '~> 8.0'`
