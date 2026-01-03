@@ -134,6 +134,9 @@ Commit
 Status
 - Vorerst übersprungen (Updates-only / keine Downgrades): ein Update auf bigdecimal 4.x kollidiert aktuell mit transitativen Constraints im Reporting-Stack. Ein erzwungenes `bigdecimal (~> 4.0)` würde u.a. Downgrades wie `ttfunk 1.8.0 → 1.7.0`, `prawn 2.5.x → 2.4.0` und `pdf-core 0.10.0 → 0.9.0` nach sich ziehen.
 
+Unblock-Versuch (Updates-only)
+- Konservative Updates für `ttfunk`, `prawn`, `pdf-core` und `thinreports` brachten keine Versionsänderung (Bundler: "version stayed the same"). Damit bleibt `bigdecimal` 4.x ohne Downgrades aktuell nicht erreichbar.
+
 Änderung
 - `bundle update bigdecimal`
 
