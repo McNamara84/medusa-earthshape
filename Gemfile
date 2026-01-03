@@ -126,7 +126,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'rspec-rails', '~> 6.1.0'  # Rails 7.1 requires RSpec-Rails 6.x
+  gem 'rspec-rails', '~> 8.0'
   # Sorbet static type checker
   gem 'sorbet', require: false
   gem 'sorbet-runtime'
