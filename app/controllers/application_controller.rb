@@ -106,11 +106,6 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  def verified_request?
-    # REST-API対応のため、主要ブラウザ以外はcsrf-tokenをチェックしない
-    super || request.user_agent !~ /^(Mozilla|Opera)/
-  end
-
   private
   
   def deny_access
