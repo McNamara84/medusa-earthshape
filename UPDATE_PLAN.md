@@ -168,13 +168,13 @@ Commit
 ## 8) sorbet (0.6.12846 → 0.6.12872)
 
 Status
-- Vorerst übersprungen: `bundle update sorbet` lässt die Version aktuell unverändert (vermutlich wegen `sorbet-static`/Plattform-Artifact-Constraints im sorbet-* Stack). Bitte bei Bedarf separat debuggen.
+- Erledigt (als sorbet-* Stack). Hinweis: Das initiale „ändert sich nicht“ lag an Bundler-Konfiguration im Container (`without` schließt `development` aus). Mit neutraler Bundler-App-Config ließ sich der Stack sauber aktualisieren.
 
 Änderung
-- `bundle update sorbet`
+- `bundle update sorbet sorbet-runtime sorbet-static sorbet-static-and-runtime`
 
 Befehle
-- `docker compose run --rm --entrypoint bundle web update sorbet`
+- `docker compose run --rm -e BUNDLE_APP_CONFIG=/tmp/bundle-config --entrypoint bundle web update sorbet sorbet-runtime sorbet-static sorbet-static-and-runtime`
 - `docker compose build web`
 - `docker compose run --rm --entrypoint bundle web exec rspec`
 
@@ -186,18 +186,16 @@ Commit
 ## 9) sorbet-runtime (0.6.12846 → 0.6.12872)
 
 Status
-- Vorerst übersprungen: hängt im sorbet-* Stack an der gleichen Versionsfamilie (u.a. über `sorbet-static-and-runtime`), und lässt sich hier aktuell nicht isoliert anheben.
+- Erledigt (zusammen mit Schritt 8 / sorbet-* Stack).
 
 Änderung
-- `bundle update sorbet-runtime`
+- Keine separate Änderung nötig (wird im sorbet-* Stack mitgezogen).
 
 Befehle
-- `docker compose run --rm --entrypoint bundle web update sorbet-runtime`
-- `docker compose build web`
-- `docker compose run --rm --entrypoint bundle web exec rspec`
+- Siehe Schritt 8.
 
 Commit
-- `chore(deps): update sorbet-runtime`
+- Siehe Schritt 8.
 
 ---
 
