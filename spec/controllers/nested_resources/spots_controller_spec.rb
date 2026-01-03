@@ -11,7 +11,7 @@ describe NestedResources::SpotsController do
   let(:parent) { FactoryBot.create(parent_name) }
   let(:child) { FactoryBot.create(child_name) }
   let(:user) { FactoryBot.create(:user) }
-  let(:url){"where_i_came_from"}
+  let(:url){"http://test.host/where_i_came_from"}
   let(:spot_x){1}
   let(:attributes) { {spot_x: spot_x,spot_y: 0} }
   before { request.env["HTTP_REFERER"]  = url }

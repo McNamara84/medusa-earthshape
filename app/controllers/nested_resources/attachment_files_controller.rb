@@ -12,7 +12,7 @@ class NestedResources::AttachmentFilesController < ApplicationController
   def create
     @attachment_file = AttachmentFile.new(attachment_file_params)
     @parent.attachment_files << @attachment_file if @attachment_file.save
-    respond_with @attachment_file, location: adjust_url_by_requesting_tab(request.referer), action: "error"      
+    respond_with @attachment_file, location: adjust_url_by_requesting_tab(safe_referer_url), action: "error"      
   end
 
   def update
@@ -24,7 +24,7 @@ class NestedResources::AttachmentFilesController < ApplicationController
   def destroy
     @attachment_file = AttachmentFile.find(params[:id])
     @parent.attachment_files.delete(@attachment_file)
-    respond_with @attachment_file, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @attachment_file, location: adjust_url_by_requesting_tab(safe_referer_url)
   end
 
   def link_by_global_id
@@ -39,7 +39,7 @@ class NestedResources::AttachmentFilesController < ApplicationController
     end
     
     @parent.attachment_files << @attachment_file
-    respond_with @attachment_file, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @attachment_file, location: adjust_url_by_requesting_tab(safe_referer_url)
   rescue
     duplicate_global_id
   end

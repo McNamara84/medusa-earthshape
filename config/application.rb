@@ -19,36 +19,11 @@ module Medusa
     # Rails 7.2: Zeitwerk is the only autoloader
     # Ensure all autoloaded paths follow Zeitwerk naming conventions
 
-    # Rails 7.0+: Disable open redirect protection
+    # Open redirect protection
     #
-    # SECURITY NOTE: This setting is disabled for legacy compatibility.
-    #
-    # Current state:
-    # - The application uses `respond_with location: request.referer` pattern in 39 places
-    #   across nested resource controllers for UX continuity after CRUD operations
-    # - Only 1 controller has been migrated to use `safe_referer_url`:
-    #   - CategoryMeasurementItemsController (move_to_top, destroy)
-    # - AttachingsController passes raw `request.referer` to `adjust_url_by_requesting_tab()`
-    #   (a URL utility that only manipulates query params, does not validate hosts)
-    # - The remaining 37 locations still use raw `request.referer` without validation
-    #
-    # Risk mitigation:
-    # - The application is an internal scientific data management system
-    # - Access requires authentication (Devise)
-    # - The referer-based redirects only occur after successful CRUD operations
-    #
-    # The `safe_referer_url` helper is available in ApplicationController for future use:
-    # - Allows same-host absolute URLs
-    # - Allows relative URLs (implicitly same-host)
-    # - Falls back to root_path for cross-host URLs
-    #
-    # TODO: Migrate all 39 locations to use `respond_with @resource, location: safe_referer_url`
-    # pattern (for respond_with usage) or `redirect_to safe_referer_url` (for direct redirects),
-    # then re-enable this protection. Note: `redirect_to url, allow_other_host: false` is not
-    # applicable with respond_with as it uses the `location:` option which doesn't support
-    # the allow_other_host parameter.
-    # See: https://github.com/McNamara84/medusa-earthshape/issues (create tracking issue)
-    config.action_controller.raise_on_open_redirects = false
+    # We rely on ApplicationController#safe_referer_url which only allows same-origin
+    # redirects and normalizes relative paths.
+    config.action_controller.action_on_open_redirect = :raise
 
     # Rails 8.1: Path-relative redirect protection
     #
@@ -60,9 +35,8 @@ module Medusa
     # "where_i_came_from" which are path-relative. In production, request.referer
     # always provides absolute URLs, so this is a test-only concern.
     #
-    # Setting to :log to maintain compatibility with existing test patterns.
-    # TODO: Update controller specs to use absolute URL mocks instead of relative paths,
-    # then consider enabling :raise for stricter security.
-    config.action_controller.action_on_path_relative_redirect = :log
+    # Stricter security: disallow path-relative redirects ("some/path")
+    # Use absolute URLs or leading-slash paths ("/some/path").
+    config.action_controller.action_on_path_relative_redirect = :raise
   end
 end

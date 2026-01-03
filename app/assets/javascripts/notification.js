@@ -22,13 +22,24 @@
     }
   };
 
+  function showModal($modal) {
+    if (window.bootstrap && bootstrap.Modal && $modal[0]) {
+      var modalInstance = bootstrap.Modal.getOrCreateInstance($modal[0]);
+      modalInstance.show();
+      return;
+    }
+
+    if (typeof $modal.modal === "function") {
+      $modal.modal("show");
+    }
+  }
+
   function notify(alertClass, title, message) {
     var $modal = $("#notification-modal");
     $modal.find("div.modal-header").removeClass("alert-success alert-warning alert-danger").addClass(alertClass);
     $("#notification-modal-label").html(title);
     $modal.find("div.modal-body").html(message);
-    // Bootstrap 5: Use native Modal API
-    var modalInstance = bootstrap.Modal.getOrCreateInstance($modal[0]);
-    modalInstance.show();
+
+    showModal($modal);
   }
 }) (jQuery);

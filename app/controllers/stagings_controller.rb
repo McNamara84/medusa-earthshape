@@ -199,7 +199,7 @@ end
 		box=Box.new(params)
 		box.save!
 	end
-  	respond_with @stagings, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
  rescue
     render "box_invalid"		
 end
@@ -212,7 +212,7 @@ end
 		place=Place.new(params)
 		place.save!
 	end	 
-  	respond_with @stagings, location: adjust_url_by_requesting_tab(request.referer)
+  respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
   rescue
     render "place_invalid"		
  end
@@ -225,7 +225,7 @@ end
 		collection=Collection.new(params)
 		collection.save!
 	end	 
-  	respond_with @stagings, location: adjust_url_by_requesting_tab(request.referer)
+  respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
   rescue
     render "collection_invalid"		
 end
@@ -238,7 +238,7 @@ end
 		stone=Stone.new(params)
 		stone.save!
 	end	 
-  	respond_with @stagings, location: adjust_url_by_requesting_tab(request.referer)
+  respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
   rescue
     render "stone_invalid"	
  end

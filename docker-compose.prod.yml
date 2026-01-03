@@ -83,6 +83,8 @@ services:
       # Generate locally with: bundle exec rake secret
       # Then add as environment variable in Portainer Web UI
       SECRET_KEY_BASE: ${SECRET_KEY_BASE:?SECRET_KEY_BASE must be set - generate with 'bundle exec rake secret'}
+      # Optional: separate Devise secret key (if unset, Devise falls back to secret_key_base)
+      DEVISE_SECRET_KEY: ${DEVISE_SECRET_KEY:-}
       # Rails relative URL root for /esm prefix
       # CRITICAL: This must match the Traefik PathPrefix and stripprefix configuration
       RAILS_RELATIVE_URL_ROOT: /esm

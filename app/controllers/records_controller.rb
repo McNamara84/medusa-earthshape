@@ -41,7 +41,7 @@ class RecordsController < ApplicationController
   end
 
   def casteml
-    send_data([@record].to_pml,
+	  send_data(Pml::Serializer.call(@record),
               :type => 'application/xml',
               :filename => @record.global_id + '.pml', 
               :disposition=>'attached')    

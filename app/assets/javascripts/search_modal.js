@@ -2,12 +2,33 @@
 
   var input;
 
+  function showModal($modal) {
+    if (window.bootstrap && bootstrap.Modal && $modal[0]) {
+      var modalInstance = bootstrap.Modal.getOrCreateInstance($modal[0]);
+      modalInstance.show();
+      return;
+    }
+
+    if (typeof $modal.modal === "function") {
+      $modal.modal("show");
+    }
+  }
+
+  function hideModal($modal) {
+    if (window.bootstrap && bootstrap.Modal && $modal[0]) {
+      var modalInstance = bootstrap.Modal.getInstance($modal[0]);
+      if (modalInstance) modalInstance.hide();
+      return;
+    }
+
+    if (typeof $modal.modal === "function") {
+      $modal.modal("hide");
+    }
+  }
+
   function determine() {
     $(input).val($(this).data("id"));
-    // Bootstrap 5: Use native Modal API
-    var modalEl = document.getElementById("search-modal");
-    var modalInstance = bootstrap.Modal.getInstance(modalEl);
-    if (modalInstance) modalInstance.hide();
+    hideModal($("#search-modal"));
     return false;
   }
 
@@ -42,9 +63,7 @@
     // Show the modal first
     var $modal = $("#search-modal");
     $modal.find("div.modal-content").html('<div class="modal-body"><p>Loading...</p></div>');
-    // Bootstrap 5: Use native Modal API
-    var modalInstance = bootstrap.Modal.getOrCreateInstance($modal[0]);
-    modalInstance.show();
+    showModal($modal);
 
     // Load the content via AJAX
     $.ajax({
@@ -69,9 +88,7 @@
     // Show the modal first
     var $modal = $("#show-modal");
     $modal.find("div.modal-content").html('<div class="modal-body"><p>Loading...</p></div>');
-    // Bootstrap 5: Use native Modal API
-    var modalInstance = bootstrap.Modal.getOrCreateInstance($modal[0]);
-    modalInstance.show();
+    showModal($modal);
 
     // Load the content via AJAX
     $.ajax({

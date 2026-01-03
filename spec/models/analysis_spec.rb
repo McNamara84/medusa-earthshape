@@ -241,8 +241,8 @@ describe Analysis do
       obj3
     end
     it { expect(obj.to_pml).to be_present }
-    it { expect(objs.to_pml).to be_eql([obj, obj2, obj3].to_pml) }
-    it { expect(objs2.to_pml).to be_eql([obj, obj2, obj3].to_pml) }
+      it { expect(Pml::Serializer.call(objs)).to be_eql(Pml::Serializer.call([obj, obj2, obj3])) }
+      it { expect(Pml::Serializer.call(objs2)).to be_eql(Pml::Serializer.call([obj, obj2, obj3])) }
   end
 
   describe ".get_spot" do

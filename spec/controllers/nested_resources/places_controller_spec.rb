@@ -6,7 +6,7 @@ describe NestedResources::PlacesController do
   let(:parent) { FactoryBot.create(parent_name) }
   let(:child) { FactoryBot.create(child_name) }
   let(:user) { FactoryBot.create(:user) }
-  let(:url){"where_i_came_from"}
+  let(:url){"http://test.host/where_i_came_from"}
   # Place.initialize requires latitude and longitude to be strings (not nil) for gsub!
   let(:attributes) { {name: name, latitude: "1.0", longitude: "2.0", elevation: "0", is_parent: true} }
   let(:name){"child_name"}

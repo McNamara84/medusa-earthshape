@@ -45,7 +45,7 @@ module HasRecordProperty
   end
 
   def to_pml
-    [self].to_pml
+	  Pml::Serializer.call(self)
   end
   
 

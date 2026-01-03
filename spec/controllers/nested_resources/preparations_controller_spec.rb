@@ -6,7 +6,7 @@ describe NestedResources::PreparationsController do
   let(:parent) { FactoryBot.create(parent_name) }
   let(:child) { FactoryBot.create(child_name, :with_preparation_type, stone: parent) }
   let(:user) { FactoryBot.create(:user) }
-  let(:url) { "where_i_came_from" }
+  let(:url) { "http://test.host/where_i_came_from" }
   let(:preparation_type) { FactoryBot.create(:preparation_type) }
   let(:attributes) { { info: "New preparation info", preparation_type_id: preparation_type.id } }
   

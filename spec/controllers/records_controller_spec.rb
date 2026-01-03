@@ -524,7 +524,7 @@ describe RecordsController do
     let(:obj) { FactoryBot.create(:stone) }
     let(:analysis_1){ FactoryBot.create(:analysis, :stone_id => obj.id )}
     let(:analysis_2){ FactoryBot.create(:analysis, :stone_id => obj.id )}
-    let(:casteml){[analysis_2, analysis_1].to_pml}
+    let(:casteml){Pml::Serializer.call([analysis_2, analysis_1])}
     before do
       obj
       analysis_1
