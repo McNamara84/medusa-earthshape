@@ -1,6 +1,6 @@
 # Update-Plan (Schritt für Schritt, 1 Dependency = 1 Commit)
 
-Stand: 2026-01-02
+Stand: 2026-01-03
 
 Grundlage: Ausgabe von `bundle outdated --only-explicit` (im Docker-Container) und die zuletzt priorisierte Reihenfolge.
 
@@ -261,6 +261,27 @@ Befehle
 
 Commit
 - `chore(deps): update rspec-rails`
+
+---
+
+## Verbleibend: 4 transitive „outdated“ Gems (derzeit blockiert)
+
+Aktuell zeigt `bundle outdated` (inkl. transitive Abhängigkeiten) weiterhin diese 4 Gems als „outdated“:
+- `http-accept` (installed 1.7.0, newest 2.2.1)
+- `lumberjack` (installed 1.4.2, newest 2.0.3)
+- `marcel` (installed 1.0.4, newest 1.1.0)
+- `pry` (installed 0.15.2, newest 0.16.0)
+
+Ein gezielter Versuch ohne `--conservative` hat keine Versionen bewegt:
+- `docker compose run --rm -e BUNDLE_APP_CONFIG=/tmp/bundle-config --entrypoint bundle web update http-accept lumberjack marcel pry`
+
+Ursache: Upper-Bounds/Constraints aus anderen Gems verhindern die jeweils neueste Version:
+- `http-accept`: durch `rest-client 2.1.0` (`http-accept < 2.0`) blockiert.
+- `lumberjack`: durch `guard 2.19.1` (`lumberjack < 2.0`) blockiert.
+- `marcel`: durch `kt-paperclip 7.2.2` (`marcel ~> 1.0.1`, d.h. `< 1.1.0`) blockiert.
+- `pry`: durch `pry-byebug 3.11.0` (`pry < 0.16`) blockiert.
+
+Fazit: Ohne Updates/Ersetzungen der jeweiligen „blockierenden“ Gems (oder ein Override wie bei `ttfunk`) ist ein Update auf die jeweils neueste Version aktuell nicht möglich.
 
 ---
 
