@@ -87,8 +87,7 @@ class Stone < ApplicationRecord
 
   def to_pml
     # Sort analyses by id descending for consistent PML output
-    # Rails 5.0+: Convert to Array before calling to_pml
-    analyses.order(id: :desc).to_a.to_pml
+      Pml::Serializer.call(analyses.order(id: :desc))
   end
 
   def copy_associations (parent)
