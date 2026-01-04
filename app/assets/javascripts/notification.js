@@ -31,6 +31,11 @@
 
     if (typeof $modal.modal === "function") {
       $modal.modal("show");
+      return;
+    }
+
+    if (window.console && console.warn) {
+      console.warn("Modal API not available (neither Bootstrap.Modal nor jQuery modal).", $modal[0]);
     }
   }
 

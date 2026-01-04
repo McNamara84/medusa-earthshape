@@ -1,11 +1,12 @@
 class ActionController::Parameters
   def only_presence
-    # Intentionally only operates on already-permitted parameters.
-    # Returning a plain Hash avoids accidentally widening permissions via `permit!`.
-    raise ActionController::UnfilteredParameters unless permitted?
+    raw_hash = permitted? ? to_h : to_unsafe_h
 
-    to_h.each_with_object({}) do |(key, value), dst|
+    filtered = raw_hash.each_with_object({}) do |(key, value), dst|
       dst[key] = value if value.present?
     end
+
+    result = ActionController::Parameters.new(filtered)
+    permitted? ? result.permit! : result
   end
 end

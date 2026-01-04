@@ -85,11 +85,18 @@ class ApplicationController < ActionController::Base
       # Relative URLs (no host means same-origin). Normalize to leading '/'
       # and reject protocol-relative redirects like "//evil.com".
       if referer_uri.host.nil?
-        relative = referer_uri.to_s
-        return root_path if relative.blank?
-        return root_path if relative.start_with?('//')
+        path = referer_uri.path.to_s
+        query = referer_uri.query
+        fragment = referer_uri.fragment
 
-        return relative.start_with?('/') ? relative : "/#{relative}"
+        return root_path if path.blank?
+        return root_path if path.start_with?("//")
+
+        normalized = path.start_with?("/") ? path : "/#{path}"
+        normalized += "?#{query}" if query.present?
+        normalized += "##{fragment}" if fragment.present?
+
+        return normalized
       end
 
       # Absolute URLs: verify same origin (host, port, and scheme)

@@ -5,7 +5,14 @@ Devise.setup do |config|
   # Prefer ENV; otherwise fall back to Rails' secret_key_base.
   # Changing this key will render invalid all existing confirmation/reset/unlock
   # tokens in the database.
-  config.secret_key = ENV["DEVISE_SECRET_KEY"].presence || Rails.application.secret_key_base
+  # Prefer ENV; otherwise fall back to Rails' secret_key_base.
+  # Rails 8 no longer exposes Rails.application.secrets.
+  fallback_secret_key = ENV["SECRET_KEY_BASE"].presence || Rails.application.secret_key_base
+  config.secret_key = ENV["DEVISE_SECRET_KEY"].presence || fallback_secret_key
+
+  if config.secret_key.blank?
+    raise "Devise secret_key is missing. Set DEVISE_SECRET_KEY or SECRET_KEY_BASE."
+  end
 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
