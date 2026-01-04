@@ -42,8 +42,9 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
-  # Print deprecation notices to the stderr.
-  config.active_support.deprecation = :stderr
+  # In CI we want to catch new Rails deprecations early.
+  # Locally we keep them as warnings to avoid interrupting development.
+  config.active_support.deprecation = (ENV["CI"] && !ENV["CI"].empty?) ? :raise : :stderr
 
   # Allow Capybara/Rack::Test default hosts.
   config.hosts << "www.example.com"
