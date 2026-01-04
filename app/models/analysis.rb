@@ -212,7 +212,7 @@ class Analysis < ApplicationRecord
         end
       end
     end
-    
+
   end
 
   def get_spot

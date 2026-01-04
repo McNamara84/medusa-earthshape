@@ -85,11 +85,50 @@ describe ApplicationController do
       end
     end
 
+    context 'when referer uses a dangerous or unsupported scheme' do
+      it 'rejects javascript: URLs' do
+        request.env['HTTP_REFERER'] = 'javascript:alert(1)'
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
+
+      it 'rejects data: URLs' do
+        request.env['HTTP_REFERER'] = 'data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=='
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
+
+      it 'rejects file: URLs' do
+        request.env['HTTP_REFERER'] = 'file:///etc/passwd'
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
+
+      it 'rejects other non-http/https schemes' do
+        request.env['HTTP_REFERER'] = 'ftp://test.host/path'
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
+    end
+
     context 'edge cases' do
       it 'handles protocol-relative URLs as different host' do
         request.env['HTTP_REFERER'] = '//other.host/path'
         get :test_safe_referer
         # Protocol-relative URLs have a host, so they should be rejected
+        expect(response.body).to eq('/')
+      end
+
+      it 'rejects protocol-relative URLs even without a scheme' do
+        request.env['HTTP_REFERER'] = '//evil.com/path'
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
+
+      it 'rejects relative-looking paths starting with // (host nil branch)' do
+        # Ruby parses "////..." as host=nil with a path starting with "//".
+        request.env['HTTP_REFERER'] = '////evil.com/path'
+        get :test_safe_referer
         expect(response.body).to eq('/')
       end
 

@@ -45,9 +45,8 @@ module HasRecordProperty
   end
 
   def to_pml
-	  Pml::Serializer.call(self)
+    Pml::Serializer.call(self)
   end
-  
 
   def form_name
     return self.physical_form.name if self.respond_to?(:physical_form) && self.physical_form
