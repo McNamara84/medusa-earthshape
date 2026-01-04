@@ -54,22 +54,23 @@ describe "attachment_file" do
       end
       
       before do
-        # Rails 5.0: Login, visit attachment_file show page, then click at-a-glance tab
+        # Rails 5.0: Login and visit attachment_file show page.
+        # Tabs are Bootstrap/JS-driven; request specs run with rack_test (no JS),
+        # so we assert on the rendered DOM instead of clicking tabs.
         login login_user
         visit attachment_file_path(attachment_file)
-        click_link("at-a-glance")
       end
       describe "pdf icon" do
         context "data_content_type is pdf" do
           let(:data_content_type) { "application/pdf" }
           it "show pdf icon" do
-            expect(page).to have_link("file-#{attachment_file.id}-button")
+            expect(page).to have_css("a#file-#{attachment_file.id}-button", visible: :all)
           end
         end
         context "data_content_type is jpeg" do
           let(:data_content_type) { "image/jpeg" }
           it "do not show pdf icon" do
-            expect(page).to have_no_link("file-#{attachment_file.id}-button")
+            expect(page).to have_no_css("a#file-#{attachment_file.id}-button", visible: :all)
           end
         end
       end

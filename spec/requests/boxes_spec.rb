@@ -56,8 +56,10 @@ describe "box" do
         end
       end
       describe "new spot" do
-        # Skip to avoid "FIXED" error
-        xit "new spot creation implementation is difficult, pending" do
+        it "new spot UI is available" do
+          click_link("picture-button")
+          expect(page).to have_link("record-property-search")
+          expect(page).to have_button("add new spot")
         end
       end
 

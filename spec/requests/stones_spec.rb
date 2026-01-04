@@ -57,8 +57,10 @@ describe "stone" do
       end
 
       describe "new spot" do
-        # Skip to avoid "FIXED" error
-        xit "new spot creation implementation is difficult, pending" do
+        it "new spot UI is available" do
+          click_link("picture-button")
+          expect(page).to have_link("record-property-search")
+          expect(page).to have_button("add new spot")
         end
       end
 
@@ -80,36 +82,34 @@ describe "stone" do
     end
     
     describe "at-a-glance tab" do
-      before { click_link("at-a-glance") }
       describe "pdf icon" do
         context "data_content_type is pdf" do
           let(:data_type) { "application/pdf" }
           it "show icon" do
-            expect(page).to have_link("file-#{attachment_file.id}-button")
+            expect(page).to have_css("a#file-#{attachment_file.id}-button", visible: :all)
           end
         end
         context "data_content_type is jpeg" do
           let(:data_type) { "image/jpeg" }
           it "do not show icon" do
-            expect(page).not_to have_link("file-#{attachment_file.id}-button")
+            expect(page).to have_no_css("a#file-#{attachment_file.id}-button", visible: :all)
           end
         end
       end
     end
     
     describe "file tab" do
-      before { click_link("file (1)") }
       describe "pdf icon" do
         context "data_content_type is pdf" do
           let(:data_type) { "application/pdf" }
           it "show icon" do
-            expect(page).to have_link("file-#{attachment_file.id}-button")
+            expect(page).to have_css("a#file-#{attachment_file.id}-button", visible: :all)
           end
         end
         context "data_content_type is jpeg" do
           let(:data_type) { "image/jpeg" }
           it "do not show icon" do
-            expect(page).not_to have_link("file-#{attachment_file.id}-button")
+            expect(page).to have_no_css("a#file-#{attachment_file.id}-button", visible: :all)
           end
         end
       end
