@@ -45,9 +45,10 @@ Rails.application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
-  # Rails 6+: Allow test hosts in test environment for RSpec request specs
+  # Allow Capybara/Rack::Test default hosts.
   config.hosts << "www.example.com"
   config.hosts << "example.com"
+  config.hosts << "example.org"
 
   # Raise exceptions for disallowed deprecations.
   config.active_support.disallowed_deprecation = :raise

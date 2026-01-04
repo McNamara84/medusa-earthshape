@@ -360,22 +360,28 @@ describe "group master" do
     end
   end
   
-  describe "create", js: true do
-    pending "Modal window does not display when clicking create button in test" do
-      # TODO: Modal window does not display when clicking create button in test, verification pending
-      before do
-        new_record_condition
-        click_button("save-button")
+  describe "create" do
+    # The create form on the index page is submitted via JS (remote: true) to
+    # /groups.json. In request specs we avoid modal/JS behavior and submit the
+    # JSON request directly.
+
+    context "new record creation failed" do
+      it "returns validation errors" do
+        page.driver.submit :post, groups_path(format: :json), { group: { name: "" } }
+
+        expect(page.status_code).to eq(422)
+        expect(page.body).to include("can't be blank")
       end
-      context "new record creation failed" do
-        let(:new_record_condition) { fill_in("group_name", with: "") }
-        it "dialog content is displayed" do
-        end
-      end
-      context "new record creation succeeded" do
-        let(:new_record_condition) { fill_in("group_name", with: "test") }
-        it "dialog content is displayed" do
-        end
+    end
+
+    context "new record creation succeeded" do
+      it "creates a new group" do
+        expect do
+          page.driver.submit :post, groups_path(format: :json), { group: { name: "test" } }
+        end.to change(Group, :count).by(1)
+
+        expect(page.status_code).to be_between(200, 299)
+        expect(Group.order(:id).last.name).to eq("test")
       end
     end
   end

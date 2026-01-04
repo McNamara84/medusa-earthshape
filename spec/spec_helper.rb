@@ -1,5 +1,8 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV["RAILS_ENV"] ||= 'test'
+# In container setups the web service often exports RAILS_ENV=development.
+# Specs must run in test mode regardless.
+ENV["RAILS_ENV"] = 'test'
+ENV["RACK_ENV"] = 'test'
 require File.expand_path("../../config/environment", __FILE__)
 
 require 'rspec/rails'
@@ -35,10 +38,23 @@ RSpec.configure do |config|
   config.before(:each, type: :controller) do
     Rails.application.reload_routes_unless_loaded
   end
+
+  config.before(:each, type: :request) do
+    Rails.application.reload_routes_unless_loaded
+  end
   
   # Include Devise test helpers FIRST, then custom helpers
   # This ensures ControllerSpecHelper.sign_in can call super
   config.include Devise::Test::ControllerHelpers, type: :controller
+
+  # Request specs (used with Capybara rack_test in this repo) should use Devise
+  # integration helpers to ensure the session is correctly established.
+  config.include Devise::Test::IntegrationHelpers, type: :request
+
+  # Request specs run through Capybara (rack_test). Use Warden test helpers for
+  # stable authentication without depending on the login form markup.
+  config.include Warden::Test::Helpers, type: :request
+  config.after(:each, type: :request) { Warden.test_reset! }
   # CRITICAL: Only include Capybara::DSL for request specs, NOT controller specs
   # Including globally causes controller specs to hang indefinitely
   config.include Capybara::DSL, type: :request
@@ -53,7 +69,7 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of

@@ -140,7 +140,7 @@ end
 
 group :test do
   gem 'capybara', '>= 2.2.0'
-  gem 'poltergeist', '~> 1.18.0'  # Updated to support PhantomJS 2.x
+  gem 'database_cleaner-active_record'
   gem 'simplecov', :require => false
   gem 'simplecov-rcov', :require => false
   gem 'ci_reporter'
