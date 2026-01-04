@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe "attachment_file" do
-  let(:login_user) { FactoryBot.create(:user, administrator: true) }  # Rails 5.0: Use admin to bypass readables
+  let(:login_user) { FactoryBot.create(:user, administrator: true) }  # Use admin to bypass readables
   
-  # Rails 5.0: INDEX page tests with readables scope don't work reliably in request specs
+  # INDEX page tests with readables scope don't work reliably in request specs.
   # The PDF icon is displayed in the _attachment_file partial on index page, but
   # readables filtering prevents attachment_files from appearing. Skipping these tests.
   # The at-a-glance tab tests below cover the same functionality on show page.
@@ -12,7 +12,7 @@ describe "attachment_file" do
     describe "view spot" do
       describe "view spot edit screen" do
         let(:attachment_file) do
-          # Rails 5.0: Set User.current before creating attachment_file
+          # Set User.current before creating attachment_file
           User.current = login_user
           FactoryBot.create(:attachment_file)
         end
@@ -22,7 +22,7 @@ describe "attachment_file" do
         end
         
         before do
-          # Rails 5.0: Login first, then create spot, then visit page
+          # Login first, then create spot, then visit page
           login login_user
           spot  # Trigger lazy evaluation
           visit picture_spot_path(spot.id)
@@ -48,13 +48,13 @@ describe "attachment_file" do
 
     describe "at-a-glance tab" do
       let(:attachment_file) do
-        # Rails 5.0: Set User.current before creating attachment_file
+        # Set User.current before creating attachment_file
         User.current = login_user
         FactoryBot.create(:attachment_file, data_file_name: "file_name", data_content_type: data_content_type, original_geometry: "", affine_matrix: [])
       end
       
       before do
-        # Rails 5.0: Login and visit attachment_file show page.
+        # Login and visit attachment_file show page.
         # Tabs are Bootstrap/JS-driven; request specs run with rack_test (no JS),
         # so we assert on the rendered DOM instead of clicking tabs.
         login login_user

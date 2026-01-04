@@ -2,43 +2,9 @@
 
   var input;
 
-  function showModal($modal) {
-    if (window.bootstrap && bootstrap.Modal && $modal[0]) {
-      var modalInstance = bootstrap.Modal.getOrCreateInstance($modal[0]);
-      modalInstance.show();
-      return;
-    }
-
-    if (typeof $modal.modal === "function") {
-      $modal.modal("show");
-      return;
-    }
-
-    if (window.console && console.warn) {
-      console.warn("Modal API not available (neither Bootstrap.Modal nor jQuery modal).", $modal[0]);
-    }
-  }
-
-  function hideModal($modal) {
-    if (window.bootstrap && bootstrap.Modal && $modal[0]) {
-      var modalInstance = bootstrap.Modal.getInstance($modal[0]);
-      if (modalInstance) modalInstance.hide();
-      return;
-    }
-
-    if (typeof $modal.modal === "function") {
-      $modal.modal("hide");
-      return;
-    }
-
-    if (window.console && console.warn) {
-      console.warn("Modal API not available (neither Bootstrap.Modal nor jQuery modal).", $modal[0]);
-    }
-  }
-
   function determine() {
     $(input).val($(this).data("id"));
-    hideModal($("#search-modal"));
+    window.Medusa.ModalHelpers.hide($("#search-modal"));
     return false;
   }
 
@@ -73,7 +39,7 @@
     // Show the modal first
     var $modal = $("#search-modal");
     $modal.find("div.modal-content").html('<div class="modal-body"><p>Loading...</p></div>');
-    showModal($modal);
+    window.Medusa.ModalHelpers.show($modal);
 
     // Load the content via AJAX
     $.ajax({
@@ -98,7 +64,7 @@
     // Show the modal first
     var $modal = $("#show-modal");
     $modal.find("div.modal-content").html('<div class="modal-body"><p>Loading...</p></div>');
-    showModal($modal);
+    window.Medusa.ModalHelpers.show($modal);
 
     // Load the content via AJAX
     $.ajax({

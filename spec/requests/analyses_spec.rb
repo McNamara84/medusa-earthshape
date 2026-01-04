@@ -5,15 +5,15 @@ describe "analysis" do
   
   describe "analysis detail screen" do
     let(:analysis) do
-      # Rails 5.0: Set User.current before creating analysis to ensure proper record_property
+      # Set User.current before creating analysis to ensure proper record_property
       User.current = login_user
       FactoryBot.create(:analysis)
     end
     before do
-      # Rails 5.0: Login first, then create data, then visit page
+      # Login first, then create data, then visit page
       login login_user
       analysis.attachment_files << attachment_file
-      # Rails 5.0: Visit analysis show page directly to avoid index page readables filtering
+      # Visit analysis show page directly to avoid index page readables filtering
       visit analysis_path(analysis)
     end
     let(:attachment_file) { FactoryBot.create(:attachment_file, data_file_name: "file_name", data_content_type: data_type) }

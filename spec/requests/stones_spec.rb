@@ -5,7 +5,7 @@ describe "stone" do
   
   describe "stone detail screen" do
     let(:stone) do
-      # Rails 5.0: Set User.current before creating stone to ensure proper record_property
+      # Set User.current before creating stone to ensure proper record_property
       User.current = login_user
       FactoryBot.create(:stone)
     end
@@ -14,7 +14,7 @@ describe "stone" do
     let(:skip_attachment) { false }
     
     before do
-      # Rails 5.0: Login first, then create data, then visit show page directly
+      # Login first, then create data, then visit show page directly
       login login_user
       stone.attachment_files << attachment_file unless skip_attachment
       visit stone_path(stone)

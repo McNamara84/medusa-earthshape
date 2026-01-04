@@ -5,14 +5,14 @@ describe "place" do
   
   describe "place detail screen" do
     let(:place) do
-      # Rails 5.0: Set User.current before creating place to ensure proper record_property
+      # Set User.current before creating place to ensure proper record_property
       User.current = login_user
       FactoryBot.create(:place)
     end
     let(:attachment_file) { FactoryBot.create(:attachment_file, data_file_name: "file_name", data_content_type: data_type) }
     
     before do
-      # Rails 5.0: Login first, then create data, then visit show page directly
+      # Login first, then create data, then visit show page directly
       login login_user
       place.attachment_files << attachment_file
       visit place_path(place)

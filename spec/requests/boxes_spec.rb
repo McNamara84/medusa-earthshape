@@ -5,7 +5,7 @@ describe "box" do
   
   describe "box detail screen" do
     let(:box) do
-      # Rails 5.0: Set User.current before creating box to ensure proper record_property
+      # Set User.current before creating box to ensure proper record_property
       User.current = login_user
       FactoryBot.create(:box)
     end
@@ -14,7 +14,7 @@ describe "box" do
     let(:skip_attachment) { false }
     
     before do
-      # Rails 5.0: Login first, then create data, then visit show page directly
+      # Login first, then create data, then visit show page directly
       login login_user
       box.attachment_files << attachment_file unless skip_attachment
       visit box_path(box)
