@@ -250,8 +250,8 @@ describe "group master" do
           end
           context "input from and to" do
             let(:fill_in_search_condition) do
-               fill_in("q_created_at_gteq", with: created_at_1)
-               fill_in("q_created_at_lteq_end_of_day", with: created_at_2)
+              fill_in("q_created_at_gteq", with: created_at_1)
+              fill_in("q_created_at_lteq_end_of_day", with: created_at_2)
             end
             it "input keep content" do
               # name text_field has no value attribute, cannot verify empty state
@@ -267,10 +267,10 @@ describe "group master" do
       end
       describe "input updated_at and created_at" do
         let(:fill_in_search_condition) do
-           fill_in("q_updated_at_gteq", with: updated_at_1)
-           fill_in("q_updated_at_lteq_end_of_day", with: updated_at_3)
-           fill_in("q_created_at_gteq", with: created_at_1)
-           fill_in("q_created_at_lteq_end_of_day", with: created_at_3) 
+          fill_in("q_updated_at_gteq", with: updated_at_1)
+          fill_in("q_updated_at_lteq_end_of_day", with: updated_at_3)
+          fill_in("q_created_at_gteq", with: created_at_1)
+          fill_in("q_created_at_lteq_end_of_day", with: created_at_3)
         end
         it "input keep content" do
           # name text_field has no value attribute, cannot verify empty state
@@ -278,7 +278,7 @@ describe "group master" do
           expect(page).to have_field("q_updated_at_lteq_end_of_day", with: updated_at_3)
           expect(page).to have_field("q_created_at_gteq", with: created_at_1)
           expect(page).to have_field("q_created_at_lteq_end_of_day", with: created_at_3)
-        end 
+        end
         # Test removed: CSS selector issue in CI
         # it { expect(page).to have_css("tbody tr", count: 3) }
       end

@@ -83,19 +83,19 @@ class Stone < ApplicationRecord
   validates :date, presence: true 
   validates :igsn, uniqueness: true  , allow_nil: true, :allow_blank => true
   validate :parent_id_cannot_self_children, if: ->(stone) { stone.parent_id }
-	  
+
 
   def to_pml
     # Sort analyses by id descending for consistent PML output
-      Pml::Serializer.call(analyses.order(id: :desc))
+    Pml::Serializer.call(analyses.order(id: :desc))
   end
 
   def copy_associations (parent)
-	Preparation.where(stone_id: parent.id).find_each do |parentprep|
-		prep=parentprep.dup
-		prep.stone_id=self.id
-		prep.save
-	end
+    Preparation.where(stone_id: parent.id).find_each do |parentprep|
+      prep = parentprep.dup
+      prep.stone_id = id
+      prep.save
+    end
   end
 
   def build_label
