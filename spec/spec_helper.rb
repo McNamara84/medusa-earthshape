@@ -4,24 +4,6 @@
 ENV["RAILS_ENV"] = 'test'
 ENV["RACK_ENV"] = 'test'
 
-# Keep spec output readable: some third-party gems (e.g. geonames) trigger a
-# Ruby warning about future frozen string literal behavior. We filter only this
-# specific message in specs.
-if defined?(Warning) && Warning.respond_to?(:warn)
-  module Warning
-    class << self
-      unless method_defined?(:warn_without_medusa_filter)
-        alias_method :warn_without_medusa_filter, :warn
-      end
-
-      def warn(message)
-        return if message.include?("literal string will be frozen in the future")
-        warn_without_medusa_filter(message)
-      end
-    end
-  end
-end
-
 require File.expand_path("../../config/environment", __FILE__)
 
 require 'rspec/rails'

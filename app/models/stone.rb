@@ -90,7 +90,7 @@ class Stone < ApplicationRecord
     Pml::Serializer.call(analyses.order(id: :desc))
   end
 
-  def copy_associations (parent)
+  def copy_associations(parent)
     Preparation.where(stone_id: parent.id).find_each do |parentprep|
       prep = parentprep.dup
       prep.stone_id = id
