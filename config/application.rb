@@ -27,6 +27,9 @@ module Medusa
     # Keeping this strict is a safety net: if any controller accidentally redirects
     # to an untrusted URL, Rails will raise instead of silently allowing an open
     # redirect.
+    #
+    # NOTE: Rails 8.1 deprecates `raise_on_open_redirects` in favor of
+    # `action_on_open_redirect`.
     config.action_controller.action_on_open_redirect = :raise
 
     # Rails 8.1: Path-relative redirect protection

@@ -248,10 +248,13 @@ class StagingsController < ApplicationController
     end
     rescue ActiveRecord::RecordInvalid => invalid
       render "import_invalid", :locals => {:error => invalid.record.errors} 
-    rescue StandardError => invalid
-      render "import_invalid", :locals => {:error => invalid.message} 
+    rescue StandardError => e
+      logger.error("[StagingsController#import] CSV import failed: #{e.class}: #{e.message}")
+      logger.error(e.full_message(highlight: false))
+      render "import_invalid", :locals => {:error => e.message} 
     rescue Exception => e
-      logger.info e.inspect
+      logger.error("[StagingsController#import] Unexpected exception during CSV import: #{e.class}: #{e.message}")
+      logger.error(e.full_message(highlight: false))
       render "import_invalid", :locals => {:error => "error parsing file"}       
   end  
 
@@ -267,7 +270,12 @@ class StagingsController < ApplicationController
       end
 
       respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
-    rescue StandardError
+    rescue StandardError => e
+      logger.error(
+        "[StagingsController#ingest_record] Failed (#{model_class}): #{e.class}: #{e.message} " \
+        "attributes_key=#{attributes_key.inspect}"
+      )
+      logger.error(e.full_message(highlight: false))
       render invalid_template
     end
 
