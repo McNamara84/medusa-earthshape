@@ -3,6 +3,18 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  # Medusa also exposes a REST API (JSON/XML/etc.) authenticated via HTTP Basic
+  # (see README). These clients are typically stateless and do not have a CSRF
+  # token or a browser session cookie.
+  #
+  # We keep strict CSRF protection for browser (cookie-session) requests, but
+  # skip it for stateless API requests that:
+  # - are non-HTML
+  # - include an Authorization header
+  # - do NOT include the Rails session cookie
+  prepend_before_action :authenticate_with_http_basic_for_api, if: :stateless_api_request?
+  skip_before_action :verify_authenticity_token, if: :stateless_api_request?
+
   helper_method :adjust_url_by_requesting_tab
   helper_method :safe_referer_url
 
@@ -28,8 +40,30 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def authenticate_with_http_basic_for_api
+    authenticate_or_request_with_http_basic do |name, password|
+      resource = User.find_by(username: name)
+      next false unless resource&.valid_password?(password)
+
+      # Do not create a session for stateless API calls.
+      request.env["warden"]&.set_user(resource, scope: :user, store: false)
+      User.current = resource
+      true
+    end
+  end
+
   def format_html_or_signed_in?
     request.format.html? || user_signed_in?
+  end
+
+  def stateless_api_request?
+    return false if request.format.html?
+    return false if request.authorization.blank?
+
+    session_key = Rails.application.config.session_options[:key].to_s
+    return false if session_key.blank?
+
+    cookies[session_key].blank?
   end
 
   def configure_permitted_parameters

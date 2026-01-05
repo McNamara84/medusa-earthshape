@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require_relative "../support/env"
 
 # The test environment is used exclusively to run your application's
 # test suite. You never need to work with it otherwise. Remember that
@@ -44,7 +45,7 @@ Rails.application.configure do
 
   # In CI we want to catch new Rails deprecations early.
   # Locally we keep them as warnings to avoid interrupting development.
-  ci_enabled = ENV["CI"].present? && !%w[0 false].include?(ENV["CI"].to_s.strip.downcase)
+  ci_enabled = MedusaEnv.truthy?(ENV["CI"])
   config.active_support.deprecation = ci_enabled ? :raise : :stderr
 
   # Allow Capybara/Rack::Test default hosts.

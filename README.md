@@ -482,6 +482,10 @@ For traditional server deployment (Ubuntu/Debian + Apache/Nginx + Unicorn), see 
 
 Medusa provides a REST API for all resources. Authentication uses HTTP Basic Auth.
 
+For write operations (POST/PATCH/PUT/DELETE), the API is intended to be used as a
+stateless client (no Rails session cookie). Browser-based requests still require
+a valid CSRF token.
+
 ### Example API Calls
 
 ```bash

@@ -28,17 +28,19 @@ module Medusa
     # to an untrusted URL, Rails will raise instead of silently allowing an open
     # redirect.
     #
-    # NOTE: Rails 8.1 deprecates `raise_on_open_redirects` in favor of
-    # `action_on_open_redirect`.
+    # NOTE: In newer Rails versions, `raise_on_open_redirects` is deprecated in
+    # favor of `action_on_open_redirect`. This app runs CI with deprecations
+    # configured to raise, so we avoid deprecated settings here.
     config.action_controller.action_on_open_redirect = :raise
 
-    # Rails 8.1: Path-relative redirect protection
+    # Path-relative redirect protection (enabled by the defaults configured
+    # above).
     #
-    # Rails 8.1 introduces stricter protection against path-relative redirects
+    # Newer Rails defaults include stricter protection against path-relative redirects
     # (e.g., redirecting to "some/path" instead of "/some/path" or absolute URLs).
     # This is a security feature to prevent open redirect attacks through relative paths.
     #
-    # The default in Rails 8.1 is :raise. We keep it strict and normalize relative
+    # We keep it strict and normalize relative
     # referers via safe_referer_url to ensure redirect targets are always absolute
     # URLs or leading-slash paths ("/some/path").
     #

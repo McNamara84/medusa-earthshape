@@ -1,4 +1,9 @@
 (function($) {
+  // Compatibility layer for mixed Bootstrap versions.
+  // - Bootstrap 5 provides `bootstrap.Modal`
+  // - Bootstrap 3/4 commonly use jQuery's `$().modal()` API
+  // Views may include both `data-dismiss` and `data-bs-dismiss` attributes to
+  // support legacy and newer markup.
   function warnMissingApi(element) {
     try {
       if (element && element.getAttribute && element.getAttribute("data-medusa-modal-api-warning") === "1") {
@@ -9,7 +14,9 @@
         element.setAttribute("data-medusa-modal-api-warning", "1");
       }
     } catch (e) {
-      // noop
+      if (window.console && console.warn) {
+        console.warn("Unable to set modal API warning flag.", e);
+      }
     }
 
     if (window.console && console.warn) {

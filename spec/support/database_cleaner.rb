@@ -6,14 +6,12 @@ RSpec.configure do |config|
   end
 
   config.around(:each) do |example|
-    # Capybara-driven specs issue requests through the Rack stack and may use a
-    # separate DB connection from the example. Transactions can make data
-    # invisible to the app; truncation avoids that.
+    # These request specs run in-process (Capybara rack_test + Rails integration),
+    # so they share the DB connection and can safely use transactions.
     #
-    # Trade-off: truncation is slower than transactions. If performance becomes
-    # a concern, we can revisit using transactions + shared connection, or opt-in
-    # truncation only for specs that truly need multi-connection behavior.
-    DatabaseCleaner.strategy = example.metadata[:type] == :request ? :truncation : :transaction
+    # Opt-in truncation per-example if a spec truly needs multi-connection
+    # behavior (e.g. external drivers): `it "...", :truncation do ... end`.
+    DatabaseCleaner.strategy = example.metadata[:truncation] ? :truncation : :transaction
 
     DatabaseCleaner.cleaning do
       example.run

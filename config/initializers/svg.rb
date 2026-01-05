@@ -16,6 +16,7 @@ ActionController::Renderers.add :svg do |obj, options|
         [obj]
       end
 
+    # Empty collections intentionally render an empty SVG (no placeholder).
     items.map { |item| item.respond_to?(:to_svg) ? item.to_svg : item.to_s }.join("")
   end
 

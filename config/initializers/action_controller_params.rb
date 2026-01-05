@@ -12,6 +12,8 @@ class ActionController::Parameters
 
   def deep_only_presence(value)
     case value
+    when ActionController::Parameters
+      deep_only_presence(value.permitted? ? value.to_h : value.to_unsafe_h)
     when Hash
       value.each_with_object({}) do |(key, child), dst|
         filtered_child = deep_only_presence(child)

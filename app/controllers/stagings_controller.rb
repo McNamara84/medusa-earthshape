@@ -246,21 +246,26 @@ class StagingsController < ApplicationController
     else
       render "import_invalid", :locals => {:error => "error reading file"}
     end
-    rescue ActiveRecord::RecordInvalid => invalid
-      render "import_invalid", :locals => {:error => invalid.record.errors} 
-    rescue StandardError => e
-      logger.error("[StagingsController#import] CSV import failed: #{e.class}: #{e.message}")
-      logger.error(e.full_message(highlight: false))
-      render "import_invalid", :locals => {:error => e.message} 
-    rescue Exception => e
-      logger.error("[StagingsController#import] Unexpected exception during CSV import: #{e.class}: #{e.message}")
-      logger.error(e.full_message(highlight: false))
-      render "import_invalid", :locals => {:error => "error parsing file"}       
-  end  
+  rescue ActiveRecord::RecordInvalid => invalid
+    render "import_invalid", :locals => {:error => invalid.record.errors}
+  rescue StandardError => e
+    logger.error("[StagingsController#import] CSV import failed: #{e.class}: #{e.message}")
+    logger.error(e.full_message(highlight: false))
+    render "import_invalid", :locals => {:error => e.message}
+  end
 
   private
     def ingest_record(attributes_key, model_class, invalid_template)
-      attrs = staging_params.fetch(attributes_key)
+      attrs = staging_params[attributes_key]
+      unless attrs
+        logger.warn(
+          "[StagingsController#ingest_record] Missing params: attributes_key=#{attributes_key.inspect} " \
+          "model_class=#{model_class}"
+        )
+        render invalid_template, status: :bad_request
+        return
+      end
+
       if attrs[:id].present?
         record = model_class.find(attrs[:id])
         record.update!(attrs)
