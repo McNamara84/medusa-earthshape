@@ -5,134 +5,165 @@ class StagingsController < ApplicationController
   # GET /stagings.json
   def index
     @stagings = []
-    @boxes=Hash.new
-    @stones=Hash.new
-    @collections=Hash.new
-    @places=Hash.new
-    @preparations=Hash.new
-    
+    @boxes = Hash.new
+    @stones = Hash.new
+    @collections = Hash.new
+    @places = Hash.new
+    @preparations = Hash.new
+
     Staging.all.each do |s|
-       if s.writable?(current_user)
-	  @stagings.push(s)
-       end
+      if s.writable?(current_user)
+        @stagings.push(s)
+      end
     end
 
-   @stagings.each do |staging|
-	    box=findbox(staging)
-	    place=findplace(staging)
-	    collection=findcollection(staging)
-	    stone=findstone(staging, getboxbyname(staging), getlocationbyname(staging), getcampaignbyname(staging))	    
-#	    preparations=findpreparation(staging)
-	    @boxes[staging.id]=box
-	    @places[staging.id]=place
-	    @collections[staging.id]=collection
-	    @stones[staging.id]=stone
-#	    @preparations[staging.id]=preparations
-#	    logger.info @places.inspect
+    @stagings.each do |staging|
+      box = findbox(staging)
+      place = findplace(staging)
+      collection = findcollection(staging)
+      stone = findstone(staging, getboxbyname(staging), getlocationbyname(staging), getcampaignbyname(staging))
+
+      # preparations = findpreparation(staging)
+      @boxes[staging.id] = box
+      @places[staging.id] = place
+      @collections[staging.id] = collection
+      @stones[staging.id] = stone
+      # @preparations[staging.id] = preparations
+      # logger.info @places.inspect
     end
   end
   
   def findpreparation(staging)
-	ret1=PreparationType.where("name ILIKE ?","#{staging.treatment_preparation1 }%").take.try!(:id).try(:to_i)
-	ret2=PreparationType.where("name ILIKE ?","#{staging.treatment_preparation2 }%").take.try!(:id).try(:to_i)
-	ret3=PreparationType.where("name ILIKE ?","#{staging.treatment_preparation3 }%").take.try!(:id).try(:to_i)	
-	return [ret1, ret2, ret3]
+      ret1 = PreparationType.where("name ILIKE ?", "#{staging.treatment_preparation1 }%").take.try!(:id).try(:to_i)
+      ret2 = PreparationType.where("name ILIKE ?", "#{staging.treatment_preparation2 }%").take.try!(:id).try(:to_i)
+      ret3 = PreparationType.where("name ILIKE ?", "#{staging.treatment_preparation3 }%").take.try!(:id).try(:to_i)
+      [ret1, ret2, ret3]
   end
   
   def getboxbyname(staging)
-          Box.where("name ILIKE ?","#{staging.sample_storageroom }%").take.try!(:id).try(:to_i)
+      Box.where("name ILIKE ?", "#{staging.sample_storageroom }%").take.try!(:id).try(:to_i)
   end
   
   def getlocationbyname(staging)
-          Place.where("is_parent IS NOT TRUE AND name ILIKE ?","#{staging.sample_location }%").take.try!(:id).try(:to_i)
+      Place.where("is_parent IS NOT TRUE AND name ILIKE ?", "#{staging.sample_location }%").take.try!(:id).try(:to_i)
   end
 
   def getcampaignbyname(staging)
-          Collection.where("name ILIKE ?","#{staging.sample_campaign}%").take.try!(:id).try(:to_i)
+    Collection.where("name ILIKE ?", "#{staging.sample_campaign}%").take.try!(:id).try(:to_i)
   end  
   
   def findbox (staging)
-	 #search for box
-	type=BoxType.where("name ILIKE ?","#{staging.box_type }%").take.try!(:id).try(:to_i)
-	groupid=Group.where("name = ?","#{staging.box_group}").take.try!(:id).try(:to_i)
-	parent=nil
-	if staging.box_parent.present?
-	        parent=Box.where("name ILIKE ?","#{staging.box_parent }%").take.try!(:id).try(:to_i)
-	else
-		parent=nil
-	end
-	ret={:name=>staging.box_name, :parent_id => parent, :box_type =>staging.box_type, :box_type_id=> type, :box_group_id => groupid}	 
-	 logger.info ret
-	return ret;
+    # search for box
+    type = BoxType.where("name ILIKE ?", "#{staging.box_type }%").take.try!(:id).try(:to_i)
+    groupid = Group.where("name = ?", "#{staging.box_group}").take.try!(:id).try(:to_i)
+
+    parent = nil
+    if staging.box_parent.present?
+      parent = Box.where("name ILIKE ?", "#{staging.box_parent }%").take.try!(:id).try(:to_i)
+    else
+      parent = nil
+    end
+
+    ret = {:name => staging.box_name, :parent_id => parent, :box_type => staging.box_type, :box_type_id => type, :box_group_id => groupid}
+    logger.info ret
+    ret
   end
 
   def findplace (staging)
-	vegetation=Vegetation.where("name ILIKE ?","#{staging.place_vegetation }%").take.try!(:id).try(:to_i)
-	landuse=Landuse.where("name ILIKE ?","#{staging.place_landuse }%").take.try!(:id).try(:to_i)
-	topographic_position=TopographicPosition.where("name ILIKE ?","#{staging.place_topographic_position }%").take.try!(:id).try(:to_i)	  
-	parent_global_id=Place.where("is_parent IS TRUE AND places.name ILIKE ?","#{staging.place_parent }%").joins(:record_property).take.try!(:global_id)
-	groupid=Group.where("name = ?","#{staging.place_group}").take.try!(:id).try(:to_i)
+    vegetation = Vegetation.where("name ILIKE ?", "#{staging.place_vegetation }%").take.try!(:id).try(:to_i)
+    landuse = Landuse.where("name ILIKE ?", "#{staging.place_landuse }%").take.try!(:id).try(:to_i)
+    topographic_position = TopographicPosition.where("name ILIKE ?", "#{staging.place_topographic_position }%").take.try!(:id).try(:to_i)
+    parent_global_id = Place.where("is_parent IS TRUE AND places.name ILIKE ?", "#{staging.place_parent }%").joins(:record_property).take.try!(:global_id)
+    groupid = Group.where("name = ?", "#{staging.place_group}").take.try!(:id).try(:to_i)
 
-	
-	ret={:name => staging.place_name, :parent_global_id=>parent_global_id, :longitude => staging.place_longitude, :latitude => staging.place_latitude, :elevation => staging.place_elevation,:topographic_position_id => topographic_position,
-		:slope_description => staging.place_slopedescription, :aspect => staging.place_aspect, :vegetation_id => vegetation, :landuse_id => landuse, :description => staging.place_description, 
-		:lightsituation => staging.place_lightsituation, :place_group_id =>groupid}
+    ret = {
+      :name => staging.place_name,
+      :parent_global_id => parent_global_id,
+      :longitude => staging.place_longitude,
+      :latitude => staging.place_latitude,
+      :elevation => staging.place_elevation,
+      :topographic_position_id => topographic_position,
+      :slope_description => staging.place_slopedescription,
+      :aspect => staging.place_aspect,
+      :vegetation_id => vegetation,
+      :landuse_id => landuse,
+      :description => staging.place_description,
+      :lightsituation => staging.place_lightsituation,
+      :place_group_id => groupid
+    }
 
-	
-	return ret		
+    ret
   end
 
   def findcollection (staging)
-	  
-	groupid=Group.where("name = ?","#{staging.collection_group}").take.try!(:id).try(:to_i)
-	
-	ret={:name => staging.collection_name, :project => staging.collection_project, :timeseries =>staging.collection_timeseries, 
-		  :comment => staging.collection_comment, :samplingstrategy =>staging.collection_strategy, :weather_conditions => staging.collection_weather, :collection_group_id => groupid}
+    groupid = Group.where("name = ?", "#{staging.collection_group}").take.try!(:id).try(:to_i)
 
+    ret = {
+      :name => staging.collection_name,
+      :project => staging.collection_project,
+      :timeseries => staging.collection_timeseries,
+      :comment => staging.collection_comment,
+      :samplingstrategy => staging.collection_strategy,
+      :weather_conditions => staging.collection_weather,
+      :collection_group_id => groupid
+    }
 
-	
-	return ret
-end
+    ret
+  end
 
-def findstone (staging, box_id, place_id, collection_id)
-	
-	#determine classification_id
-	material_id=Classification.where("parent_id IS NULL AND name ILIKE ?","#{staging.sample_material }%").take.try!(:id).try(:to_i)	
-	classification_id=Classification.where("parent_id = ? AND name ILIKE ?",material_id,"#{staging.sample_classification }%").take.try!(:id).try(:to_i)
-	if classification_id.blank? and staging.sample_classification.present?
-		classificationarray=staging.sample_classification.split(" ")
-		if classificationarray.length>0
-			classification_id=Classification.where("parent_id = ? AND name ILIKE ?",material_id,"#{ classificationarray[1]}%").take.try!(:id).try(:to_i)	
-		end
-	end
+  def findstone (staging, box_id, place_id, collection_id)
+    # determine classification_id
+    material_id = Classification.where("parent_id IS NULL AND name ILIKE ?", "#{staging.sample_material }%").take.try!(:id).try(:to_i)
+    classification_id = Classification.where("parent_id = ? AND name ILIKE ?", material_id, "#{staging.sample_classification }%").take.try!(:id).try(:to_i)
+    if classification_id.blank? and staging.sample_classification.present?
+      classificationarray = staging.sample_classification.split(" ")
+      if classificationarray.length > 0
+        classification_id = Classification.where("parent_id = ? AND name ILIKE ?", material_id, "#{ classificationarray[1]}%").take.try!(:id).try(:to_i)
+      end
+    end
 
-	stonecontainer_type_id=StonecontainerType.where("name ILIKE ?","#{staging.sample_container }%").take.try!(:id).try(:to_i)
-	
-	groupid=Group.where("name = ?","#{staging.sample_group}").take.try!(:id).try(:to_i)
-	
-	collectionmethod=Collectionmethod.where("name ILIKE ?","#{staging.sample_collectionmethod }%").take.try!(:id).try(:to_i)	
-	
-	
-        if staging.sample_parent.present?
-                parent_id=Stone.where("stones.name ILIKE ?","#{staging.sample_parent }%").take.try!(:id)
-        else
-                parent_id=nil
-        end
-        
-	ret={:name => staging.sample_name, :parent_id => parent_id, :igsn => staging.sample_igsn, :labname => staging.sample_labname, :date => staging.sample_date, :sampledepth => staging.sample_depth, :description => staging.sample_comment,
-		:material_id => material_id,  :classification_id => classification_id, :stonecontainer_type_id => stonecontainer_type_id, :quantity_initial => staging.sample_quantityinitial, :quantity_unit => staging.sample_unit, :quantity => staging.sample_quantity,  :box_id => box_id,
-		:place_id => place_id, :collection_id => collection_id, :collectionmethod_id => collectionmethod, :collector=>staging.sample_collector, :affiliation=>staging.sample_affiliation, :stone_group_id=>groupid}
+    stonecontainer_type_id = StonecontainerType.where("name ILIKE ?", "#{staging.sample_container }%").take.try!(:id).try(:to_i)
 
-		
-		
-	return ret		
-end
-					
+    groupid = Group.where("name = ?", "#{staging.sample_group}").take.try!(:id).try(:to_i)
+
+    collectionmethod = Collectionmethod.where("name ILIKE ?", "#{staging.sample_collectionmethod }%").take.try!(:id).try(:to_i)
+
+    if staging.sample_parent.present?
+      parent_id = Stone.where("stones.name ILIKE ?", "#{staging.sample_parent }%").take.try!(:id)
+    else
+      parent_id = nil
+    end
+
+    ret = {
+      :name => staging.sample_name,
+      :parent_id => parent_id,
+      :igsn => staging.sample_igsn,
+      :labname => staging.sample_labname,
+      :date => staging.sample_date,
+      :sampledepth => staging.sample_depth,
+      :description => staging.sample_comment,
+      :material_id => material_id,
+      :classification_id => classification_id,
+      :stonecontainer_type_id => stonecontainer_type_id,
+      :quantity_initial => staging.sample_quantityinitial,
+      :quantity_unit => staging.sample_unit,
+      :quantity => staging.sample_quantity,
+      :box_id => box_id,
+      :place_id => place_id,
+      :collection_id => collection_id,
+      :collectionmethod_id => collectionmethod,
+      :collector => staging.sample_collector,
+      :affiliation => staging.sample_affiliation,
+      :stone_group_id => groupid
+    }
+
+    ret
+  end
   def clear
-	Staging.all.each do |staging|		
-		staging.destroy if staging.user_id===@current_user.id
-	end	  
-	redirect_to stagings_path
+    Staging.all.each do |staging|
+      staging.destroy if staging.user_id===@current_user.id
+    end
+    redirect_to stagings_path
   end
 
 # GET /stagings/1
@@ -190,61 +221,65 @@ end
     end
   end
 
- def ingest_box
-	params=staging_params[:box_create_attributes]
-	if params[:id].present?
-		box=Box.find(params[:id])
-		box.update!(params)		 
-	else
-		box=Box.new(params)
-		box.save!
-	end
+  def ingest_box
+    params = staging_params[:box_create_attributes]
+    if params[:id].present?
+      box = Box.find(params[:id])
+      box.update!(params)
+    else
+      box = Box.new(params)
+      box.save!
+    end
     respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
- rescue
-    render "box_invalid"		
-end
- def ingest_place
-	params=staging_params[:place_create_attributes]
-	if params[:id].present?
-		place=Place.find(params[:id])
-		place.update!(params)		 
-	else
-		place=Place.new(params)
-		place.save!
-	end	 
-  respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
   rescue
-    render "place_invalid"		
- end
- def ingest_collection
-	params=staging_params[:collection_create_attributes]
-	if params[:id].present?
-		collection=Collection.find(params[:id])
-		collection.update!(params)		 
-	else
-		collection=Collection.new(params)
-		collection.save!
-	end	 
-  respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
+    render "box_invalid"
+  end
+
+  def ingest_place
+    params = staging_params[:place_create_attributes]
+    if params[:id].present?
+      place = Place.find(params[:id])
+      place.update!(params)
+    else
+      place = Place.new(params)
+      place.save!
+    end
+    respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
   rescue
-    render "collection_invalid"		
-end
- def ingest_stone
-	params=staging_params[:stone_create_attributes]
-	if params[:id].present?
-		stone=Stone.find(params[:id])
-		stone.update!(params)		 
-	else
-		stone=Stone.new(params)
-		stone.save!
-	end	 
-  respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
+    render "place_invalid"
+  end
+
+  def ingest_collection
+    params = staging_params[:collection_create_attributes]
+    if params[:id].present?
+      collection = Collection.find(params[:id])
+      collection.update!(params)
+    else
+      collection = Collection.new(params)
+      collection.save!
+    end
+    respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
   rescue
-    render "stone_invalid"	
- end
+    render "collection_invalid"
+  end
+
+  def ingest_stone
+    params = staging_params[:stone_create_attributes]
+    if params[:id].present?
+      stone = Stone.find(params[:id])
+      stone.update!(params)
+    else
+      stone = Stone.new(params)
+      stone.save!
+    end
+    respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
+  rescue
+    render "stone_invalid"
+  end
+
   def ingest
-	#unused function
-	redirect_to stagings_path	
+    # unused function
+    redirect_to stagings_path
   end
 
   
