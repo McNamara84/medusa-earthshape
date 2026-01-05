@@ -83,7 +83,8 @@ class ApplicationController < ActionController::Base
       end
 
       # Relative URLs (no host means same-origin). Normalize to leading '/'
-      # and reject protocol-relative redirects like "//evil.com".
+      # to avoid Rails 8.1 path-relative redirect protections raising, and reject
+      # protocol-relative redirects like "//evil.com".
       if referer_uri.host.nil?
         path = referer_uri.path.to_s
         query = referer_uri.query

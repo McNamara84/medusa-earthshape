@@ -1,5 +1,5 @@
 class VegetationsController < ApplicationController
-  respond_to :html, :xml, :json, :modal	
+  respond_to :html, :xml, :json, :modal
   before_action  :find_resource, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
   layout "admin_lab"
@@ -22,12 +22,12 @@ class VegetationsController < ApplicationController
   def create
     @vegetation = Vegetation.new(vegetation_params)
     @vegetation.save
-    respond_with @vegetation	  	  
+    respond_with @vegetation
   end
 
   def update
     @vegetation.update(vegetation_params)
-    redirect_to vegetations_path	  
+    redirect_to vegetations_path
   end
 
   def destroy

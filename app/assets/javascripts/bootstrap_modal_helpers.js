@@ -1,5 +1,17 @@
 (function($) {
   function warnMissingApi(element) {
+    try {
+      if (element && element.getAttribute && element.getAttribute("data-medusa-modal-api-warning") === "1") {
+        return;
+      }
+
+      if (element && element.setAttribute) {
+        element.setAttribute("data-medusa-modal-api-warning", "1");
+      }
+    } catch (e) {
+      // noop
+    }
+
     if (window.console && console.warn) {
       console.warn(
         "Modal API not available (neither Bootstrap.Modal nor jQuery modal).",

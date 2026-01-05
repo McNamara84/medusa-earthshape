@@ -23,6 +23,10 @@ module Medusa
     #
     # We rely on ApplicationController#safe_referer_url which only allows same-origin
     # redirects and normalizes relative paths.
+    #
+    # Keeping this strict is a safety net: if any controller accidentally redirects
+    # to an untrusted URL, Rails will raise instead of silently allowing an open
+    # redirect.
     config.action_controller.action_on_open_redirect = :raise
 
     # Rails 8.1: Path-relative redirect protection
@@ -31,9 +35,9 @@ module Medusa
     # (e.g., redirecting to "some/path" instead of "/some/path" or absolute URLs).
     # This is a security feature to prevent open redirect attacks through relative paths.
     #
-    # The default in Rails 8.1 is :raise, but our tests use mock referers like
-    # "where_i_came_from" which are path-relative. In production, request.referer
-    # always provides absolute URLs, so this is a test-only concern.
+    # The default in Rails 8.1 is :raise. We keep it strict and normalize relative
+    # referers via safe_referer_url to ensure redirect targets are always absolute
+    # URLs or leading-slash paths ("/some/path").
     #
     # Stricter security: disallow path-relative redirects ("some/path")
     # Use absolute URLs or leading-slash paths ("/some/path").

@@ -6,7 +6,7 @@ Devise.setup do |config|
   # Changing this key will render invalid all existing confirmation/reset/unlock
   # tokens in the database.
   # Rails 8 no longer exposes Rails.application.secrets.
-  fallback_secret_key = ENV["SECRET_KEY_BASE"].presence || Rails.application.secret_key_base
+  fallback_secret_key = Rails.application.secret_key_base
   config.secret_key = ENV["DEVISE_SECRET_KEY"].presence || fallback_secret_key
 
   if config.secret_key.blank?

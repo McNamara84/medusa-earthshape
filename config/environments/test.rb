@@ -44,7 +44,8 @@ Rails.application.configure do
 
   # In CI we want to catch new Rails deprecations early.
   # Locally we keep them as warnings to avoid interrupting development.
-  config.active_support.deprecation = (ENV["CI"] && !ENV["CI"].empty?) ? :raise : :stderr
+  ci_enabled = ENV["CI"].present? && !%w[0 false].include?(ENV["CI"].to_s.strip.downcase)
+  config.active_support.deprecation = ci_enabled ? :raise : :stderr
 
   # Allow Capybara/Rack::Test default hosts.
   config.hosts << "www.example.com"

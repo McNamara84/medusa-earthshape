@@ -100,5 +100,13 @@ RSpec.describe Pml::Serializer do
       expect(acquisitions_element(xml)).not_to be_nil
       expect(acquisitions_children_names(xml)).to eq([])
     end
+
+    it "ignores unsupported item types" do
+      unsupported = Object.new
+      xml = described_class.call([unsupported])
+
+      expect(acquisitions_element(xml)).not_to be_nil
+      expect(acquisitions_children_names(xml)).to eq([])
+    end
   end
 end

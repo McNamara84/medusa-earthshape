@@ -12,7 +12,7 @@ class StonecontainerTypesController < ApplicationController
   end
 
   def show
-    respond_with @stonecontainer_type	  
+    respond_with @stonecontainer_type
   end
 
   def edit
@@ -22,12 +22,12 @@ class StonecontainerTypesController < ApplicationController
   def create
     @stonecontainer_type = StonecontainerType.new(stonecontainer_type_params)
     @stonecontainer_type.save
-    respond_with @stonecontainer_type	  	  
+    respond_with @stonecontainer_type
   end
 
   def update
     @stonecontainer_type.update(stonecontainer_type_params)
-    redirect_to stonecontainer_types_path	  
+    redirect_to stonecontainer_types_path
   end
 
   def destroy
