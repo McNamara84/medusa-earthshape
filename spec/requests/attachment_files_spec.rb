@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe "attachment_file" do
-  let(:login_user) { FactoryBot.create(:user, administrator: true) }  # Use admin to bypass readables
+  let(:login_user) { FactoryBot.create(:user, administrator: true) }  # Use an admin user to bypass readables
   
-  # INDEX page tests with readables scope don't work reliably in request specs.
+  # INDEX page tests with readables scope do not work reliably in request specs.
   # The PDF icon is displayed in the _attachment_file partial on index page, but
   # readables filtering prevents attachment_files from appearing. Skipping these tests.
   # The at-a-glance tab tests below cover the same functionality on show page.

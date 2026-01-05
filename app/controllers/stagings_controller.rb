@@ -41,11 +41,11 @@ class StagingsController < ApplicationController
   end
   
   def getboxbyname(staging)
-      Box.where("name ILIKE ?", "#{staging.sample_storageroom }%").take.try!(:id).try(:to_i)
+    Box.where("name ILIKE ?", "#{staging.sample_storageroom }%").take.try!(:id).try(:to_i)
   end
   
   def getlocationbyname(staging)
-      Place.where("is_parent IS NOT TRUE AND name ILIKE ?", "#{staging.sample_location }%").take.try!(:id).try(:to_i)
+    Place.where("is_parent IS NOT TRUE AND name ILIKE ?", "#{staging.sample_location }%").take.try!(:id).try(:to_i)
   end
 
   def getcampaignbyname(staging)
@@ -57,11 +57,8 @@ class StagingsController < ApplicationController
     type = BoxType.where("name ILIKE ?", "#{staging.box_type }%").take.try!(:id).try(:to_i)
     groupid = Group.where("name = ?", "#{staging.box_group}").take.try!(:id).try(:to_i)
 
-    parent = nil
-    if staging.box_parent.present?
-      parent = Box.where("name ILIKE ?", "#{staging.box_parent }%").take.try!(:id).try(:to_i)
-    else
-      parent = nil
+    parent = if staging.box_parent.present?
+      Box.where("name ILIKE ?", "#{staging.box_parent }%").take.try!(:id).try(:to_i)
     end
 
     ret = {:name => staging.box_name, :parent_id => parent, :box_type => staging.box_type, :box_type_id => type, :box_group_id => groupid}
@@ -222,59 +219,19 @@ class StagingsController < ApplicationController
   end
 
   def ingest_box
-    params = staging_params[:box_create_attributes]
-    if params[:id].present?
-      box = Box.find(params[:id])
-      box.update!(params)
-    else
-      box = Box.new(params)
-      box.save!
-    end
-    respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
-  rescue
-    render "box_invalid"
+    ingest_record(:box_create_attributes, Box, "box_invalid")
   end
 
   def ingest_place
-    params = staging_params[:place_create_attributes]
-    if params[:id].present?
-      place = Place.find(params[:id])
-      place.update!(params)
-    else
-      place = Place.new(params)
-      place.save!
-    end
-    respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
-  rescue
-    render "place_invalid"
+    ingest_record(:place_create_attributes, Place, "place_invalid")
   end
 
   def ingest_collection
-    params = staging_params[:collection_create_attributes]
-    if params[:id].present?
-      collection = Collection.find(params[:id])
-      collection.update!(params)
-    else
-      collection = Collection.new(params)
-      collection.save!
-    end
-    respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
-  rescue
-    render "collection_invalid"
+    ingest_record(:collection_create_attributes, Collection, "collection_invalid")
   end
 
   def ingest_stone
-    params = staging_params[:stone_create_attributes]
-    if params[:id].present?
-      stone = Stone.find(params[:id])
-      stone.update!(params)
-    else
-      stone = Stone.new(params)
-      stone.save!
-    end
-    respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
-  rescue
-    render "stone_invalid"
+    ingest_record(:stone_create_attributes, Stone, "stone_invalid")
   end
 
   def ingest
@@ -299,6 +256,21 @@ class StagingsController < ApplicationController
   end  
 
   private
+    def ingest_record(attributes_key, model_class, invalid_template)
+      attrs = staging_params.fetch(attributes_key)
+      if attrs[:id].present?
+        record = model_class.find(attrs[:id])
+        record.update!(attrs)
+      else
+        record = model_class.new(attrs)
+        record.save!
+      end
+
+      respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
+    rescue StandardError
+      render invalid_template
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_staging
       @staging = Staging.find(params[:id])
