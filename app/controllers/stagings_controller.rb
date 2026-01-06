@@ -285,6 +285,12 @@ class StagingsController < ApplicationController
       logger.error(e.full_message(highlight: false))
       error_message = e.record&.errors&.full_messages&.join(", ") || e.message
       render invalid_template, status: :unprocessable_entity, locals: { error: error_message }
+    rescue ActiveRecord::RecordNotFound => e
+      logger.warn(
+        "[StagingsController#ingest_record] Record not found (#{model_class}): #{e.class}: #{e.message} " \
+        "attributes_key=#{attributes_key.inspect}"
+      )
+      render invalid_template, status: :not_found, locals: { error: "record not found" }
     rescue StandardError => e
       logger.error(
         "[StagingsController#ingest_record] Failed (#{model_class}): #{e.class}: #{e.message} " \

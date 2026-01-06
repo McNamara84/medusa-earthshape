@@ -60,7 +60,11 @@ class ApplicationController < ActionController::Base
     return false if request.format.html?
     return false if request.authorization.blank?
 
-    session_key = Rails.application.config.session_options[:key].to_s
+    session_key = begin
+      Rails.application.config.session_options&.[](:key).to_s
+    rescue StandardError
+      ""
+    end
     return false if session_key.blank?
 
     cookies[session_key].blank?

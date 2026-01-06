@@ -41,6 +41,7 @@ module Pml
         item.analysis.to_pml(xml)
       elsif item.respond_to?(:analyses)
         analyses = item.analyses
+        analyses ||= []
         analyses = analyses.order(id: :desc) if analyses.respond_to?(:order)
         analyses = analyses.to_a if analyses.respond_to?(:to_a)
 
