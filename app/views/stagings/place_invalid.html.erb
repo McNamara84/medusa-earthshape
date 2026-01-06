@@ -1,5 +1,5 @@
 <div class="alert alert-danger">
- <div><%= link_to :back, adjust_url_by_requesting_tab(request.referer) %></div>
+ <div><%= link_to :back, adjust_url_by_requesting_tab(safe_referer_url) %></div>
   Can not create sampling location.
   <% if local_assigns[:error].present? %>
     <br><br>

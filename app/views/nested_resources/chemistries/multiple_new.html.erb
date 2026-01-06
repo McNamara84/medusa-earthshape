@@ -28,5 +28,5 @@
     </tbody>
   </table>
   <%= submit_tag "create",class: "btn btn-sm" %>
-  <%= link_to "cancel", request.referer, class: "btn btn-sm" %>
+  <%= link_to "cancel", safe_referer_url, class: "btn btn-sm" %>
 <% end %>

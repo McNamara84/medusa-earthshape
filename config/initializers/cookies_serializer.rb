@@ -13,8 +13,11 @@
 # - After a deploy window (e.g. > session expiration), switch to :json to stop
 #   accepting Marshal payloads entirely.
 
-# Final state: JSON only.
+# Current setting: :hybrid.
 #
-# This app is configured to use JSON for signed/encrypted cookies and does not
-# accept legacy Marshal payloads.
-Rails.application.config.action_dispatch.cookies_serializer = :json
+# :hybrid writes JSON but still reads legacy Marshal cookies. This avoids
+# invalidating all existing sessions immediately on deploy.
+#
+# After a deploy window (e.g. > session expiration), switch to :json to stop
+# accepting Marshal payloads entirely.
+Rails.application.config.action_dispatch.cookies_serializer = :hybrid

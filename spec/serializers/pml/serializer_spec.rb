@@ -33,7 +33,7 @@ RSpec.describe Pml::Serializer do
     end
 
     it "serializes a single Analysis as one <acquisition>" do
-      analysis = FactoryBot.create(:analysis, description: "説明１")
+      analysis = FactoryBot.create(:analysis, description: "Description 1")
       xml = described_class.call(analysis)
 
       acquisitions = acquisitions_element(xml)
@@ -42,7 +42,7 @@ RSpec.describe Pml::Serializer do
 
       acquisition = acquisitions.elements[1]
       expect(acquisition.elements["global_id"]&.text).to eq(analysis.global_id)
-      expect(acquisition.elements["description"]&.text).to eq("説明１")
+      expect(acquisition.elements["description"]&.text).to eq("Description 1")
     end
 
     it "serializes arrays by iterating over each item" do
