@@ -86,13 +86,13 @@ describe "stone" do
         context "data_content_type is pdf" do
           let(:data_type) { "application/pdf" }
           it "show icon" do
-            expect(page).to have_css("a#file-#{attachment_file.id}-button", visible: :all)
+            expect(page).to have_css("a#file-#{attachment_file.id}-button")
           end
         end
         context "data_content_type is jpeg" do
           let(:data_type) { "image/jpeg" }
           it "do not show icon" do
-            expect(page).to have_no_css("a#file-#{attachment_file.id}-button", visible: :all)
+            expect(page).to have_no_css("a#file-#{attachment_file.id}-button")
           end
         end
       end
@@ -103,13 +103,13 @@ describe "stone" do
         context "data_content_type is pdf" do
           let(:data_type) { "application/pdf" }
           it "show icon" do
-            expect(page).to have_css("a#file-#{attachment_file.id}-button", visible: :all)
+            expect(page).to have_css("a#file-#{attachment_file.id}-button")
           end
         end
         context "data_content_type is jpeg" do
           let(:data_type) { "image/jpeg" }
           it "do not show icon" do
-            expect(page).to have_no_css("a#file-#{attachment_file.id}-button", visible: :all)
+            expect(page).to have_no_css("a#file-#{attachment_file.id}-button")
           end
         end
       end

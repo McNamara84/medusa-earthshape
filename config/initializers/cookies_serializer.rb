@@ -13,6 +13,8 @@
 # - After a deploy window (e.g. > session expiration), switch to :json to stop
 #   accepting Marshal payloads entirely.
 
-# Phase 2 (step 3): lock in the final state.
-# We now fully disable Marshal by using JSON only.
+# Final state: JSON only.
+#
+# This app is configured to use JSON for signed/encrypted cookies and does not
+# accept legacy Marshal payloads.
 Rails.application.config.action_dispatch.cookies_serializer = :json

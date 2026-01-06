@@ -59,6 +59,8 @@ class StagingsController < ApplicationController
 
     parent = if staging.box_parent.present?
       Box.where("name ILIKE ?", "#{staging.box_parent }%").take.try!(:id).try(:to_i)
+    else
+      nil
     end
 
     ret = {:name => staging.box_name, :parent_id => parent, :box_type => staging.box_type, :box_type_id => type, :box_group_id => groupid}
@@ -262,7 +264,7 @@ class StagingsController < ApplicationController
           "[StagingsController#ingest_record] Missing params: attributes_key=#{attributes_key.inspect} " \
           "model_class=#{model_class}"
         )
-        render invalid_template, status: :bad_request
+        render invalid_template, status: :bad_request, locals: { error: "missing parameters" }
         return
       end
 
@@ -275,13 +277,21 @@ class StagingsController < ApplicationController
       end
 
       respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
+    rescue ActiveRecord::RecordInvalid => e
+      logger.error(
+        "[StagingsController#ingest_record] Validation failed (#{model_class}): #{e.class}: #{e.message} " \
+        "attributes_key=#{attributes_key.inspect}"
+      )
+      logger.error(e.full_message(highlight: false))
+      error_message = e.record&.errors&.full_messages&.join(", ") || e.message
+      render invalid_template, status: :unprocessable_entity, locals: { error: error_message }
     rescue StandardError => e
       logger.error(
         "[StagingsController#ingest_record] Failed (#{model_class}): #{e.class}: #{e.message} " \
         "attributes_key=#{attributes_key.inspect}"
       )
       logger.error(e.full_message(highlight: false))
-      render invalid_template
+      render invalid_template, status: :unprocessable_entity, locals: { error: e.message }
     end
 
     # Use callbacks to share common setup or constraints between actions.
