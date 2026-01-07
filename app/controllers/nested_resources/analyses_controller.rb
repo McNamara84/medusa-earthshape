@@ -12,24 +12,24 @@ class NestedResources::AnalysesController < ApplicationController
   def create
     @analysis = Analysis.new(analysis_params)
     @parent.analyses << @analysis if @analysis.save
-    respond_with @analysis, location: adjust_url_by_requesting_tab(request.referer), action: "error"      
+    respond_with @analysis, location: adjust_url_by_requesting_tab(safe_referer_url), action: "error"      
 
   end
 
   def update
     @parent.analyses << @analysis
-    respond_with @analysis, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @analysis, location: adjust_url_by_requesting_tab(safe_referer_url)
   end
 
   def destroy
     @parent.analyses.delete(@analysis)
-    respond_with @analysis, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @analysis, location: adjust_url_by_requesting_tab(safe_referer_url)
   end
 
   def link_by_global_id
     @analysis = Analysis.joins(:record_property).where(record_properties: {global_id: params[:global_id]}).readonly(false)
     @parent.analyses << @analysis
-    respond_with @analysis, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @analysis, location: adjust_url_by_requesting_tab(safe_referer_url)
   rescue
     duplicate_global_id
   end

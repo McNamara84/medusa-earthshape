@@ -1,7 +1,21 @@
 class ApplicationController < ActionController::Base
+  SESSION_KEY_WARNING_MUTEX = Mutex.new
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+
+  # Medusa also exposes a REST API (JSON/XML/etc.) authenticated via HTTP Basic
+  # (see README). These clients are typically stateless and do not have a CSRF
+  # token or a browser session cookie.
+  #
+  # We keep strict CSRF protection for browser (cookie-session) requests, but
+  # skip it for stateless API requests that:
+  # - are non-HTML
+  # - include an Authorization header
+  # - do NOT include the Rails session cookie
+  prepend_before_action :authenticate_with_http_basic_for_api, if: :stateless_api_request?
+  skip_before_action :verify_authenticity_token, if: :stateless_api_request?
 
   helper_method :adjust_url_by_requesting_tab
   helper_method :safe_referer_url
@@ -28,8 +42,65 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def authenticate_with_http_basic_for_api
+    authenticate_or_request_with_http_basic do |name, password|
+      resource = User.find_by(username: name)
+
+      unless resource&.valid_password?(password)
+        logger.warn(
+          "[ApplicationController#authenticate_with_http_basic_for_api] Failed HTTP Basic auth " \
+          "username=#{name.inspect} ip=#{request.remote_ip} user_agent=#{request.user_agent.to_s.inspect}"
+        )
+
+        # Rate limiting is best handled at the edge (reverse proxy) or via a
+        # Rack middleware such as Rack::Attack.
+        next false
+      end
+
+      # Do not create a session for stateless API calls.
+      # User.current is thread-local and safe per-request.
+      request.env["warden"]&.set_user(resource, scope: :user, store: false)
+      User.current = resource
+      true
+    end
+  end
+
   def format_html_or_signed_in?
     request.format.html? || user_signed_in?
+  end
+
+  def stateless_api_request?
+    return false if request.format.html?
+    return false if request.authorization.blank?
+
+    session_key_error = nil
+    session_key = begin
+      Rails.application.config.session_options&.[](:key).to_s
+    rescue StandardError => e
+      session_key_error = e
+      ""
+    end
+
+    if session_key_error
+      should_warn = false
+      self.class::SESSION_KEY_WARNING_MUTEX.synchronize do
+        unless self.class.instance_variable_defined?(:@_warned_session_key_error)
+          self.class.instance_variable_set(:@_warned_session_key_error, true)
+          should_warn = true
+        end
+      end
+
+      if should_warn
+        logger.warn(
+          "[ApplicationController#stateless_api_request?] Unable to read session_options[:key]: " \
+          "#{session_key_error.class}: #{session_key_error.message}"
+        )
+      end
+    end
+
+    return false if session_key.blank?
+
+    cookies[session_key].blank?
   end
 
   def configure_permitted_parameters
@@ -71,37 +142,53 @@ class ApplicationController < ActionController::Base
   # - URLs without host - treated as same-origin
   # - URLs with fragments (e.g., "/path#section")
   def safe_referer_url
+    # These ivars are request-scoped: Rails instantiates a fresh controller
+    # instance per request.
+    return @_safe_referer_url if defined?(@_safe_referer_url)
+
     referer = request.referer
-    return root_path if referer.blank?
+    return (@_safe_referer_url = root_path) if referer.blank?
 
     begin
       referer_uri = URI.parse(referer)
-      
-      # Allow relative URLs (no host means same-origin)
-      return referer if referer_uri.host.nil?
-      
-      # For absolute URLs, verify same origin (host, port, and scheme)
-      request_uri = URI.parse(request.url)
+
+      # Reject dangerous schemes (e.g. javascript:, data:)
+      if referer_uri.scheme.present? && !%w[http https].include?(referer_uri.scheme)
+        return (@_safe_referer_url = root_path)
+      end
+
+      # Relative URLs (no host means same-origin). Normalize to leading '/'
+      # to avoid Rails 8.1 path-relative redirect protections raising, and reject
+      # protocol-relative redirects like "//evil.com".
+      if referer_uri.host.nil?
+        path = referer_uri.path.to_s
+        query = referer_uri.query
+        fragment = referer_uri.fragment
+
+        return (@_safe_referer_url = root_path) if path.blank?
+        return (@_safe_referer_url = root_path) if path.start_with?("//")
+
+        normalized = path.start_with?("/") ? path : "/#{path}"
+        normalized += "?#{query}" if query.present?
+        normalized += "##{fragment}" if fragment.present?
+
+        return (@_safe_referer_url = normalized)
+      end
+
+      # Absolute URLs: verify same origin (host, port, and scheme)
+      # Cache parsed request URL for the duration of the request.
+      request_uri = @_safe_referer_request_uri ||= URI.parse(request.url)
       same_host = referer_uri.host == request_uri.host
       same_port = referer_uri.port == request_uri.port
       same_scheme = referer_uri.scheme == request_uri.scheme
-      
-      if same_host && same_port && same_scheme
-        referer
-      else
-        root_path
-      end
+
+      @_safe_referer_url = (same_host && same_port && same_scheme) ? referer : root_path
     rescue URI::InvalidURIError
-      root_path
+      @_safe_referer_url = root_path
     end
   end
 
   protected
-
-  def verified_request?
-    # REST-API対応のため、主要ブラウザ以外はcsrf-tokenをチェックしない
-    super || request.user_agent !~ /^(Mozilla|Opera)/
-  end
 
   private
   

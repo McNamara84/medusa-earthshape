@@ -7,7 +7,7 @@ describe CategoryMeasurementItemsController do
   describe "POST move_to_top" do
     let(:category_measurement_item) { FactoryBot.create(:category_measurement_item) }
     before do
-      request.env["HTTP_REFERER"]  = "where_i_came_from"
+      request.env["HTTP_REFERER"]  = "http://test.host/where_i_came_from"
       category_measurement_item
     end
     it { expect { post :move_to_top, params: {id: category_measurement_item.id} }.to change(CategoryMeasurementItem, :count).by(0) }
@@ -22,7 +22,7 @@ describe CategoryMeasurementItemsController do
     let(:category_measurement_item) { FactoryBot.create(:category_measurement_item) }
     let(:measurement_category){category_measurement_item.measurement_category}
     before do
-      request.env["HTTP_REFERER"]  = "where_i_came_from"
+      request.env["HTTP_REFERER"]  = "http://test.host/where_i_came_from"
       category_measurement_item
       measurement_category
     end

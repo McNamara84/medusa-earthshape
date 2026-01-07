@@ -15,7 +15,7 @@ class NestedResources::StonesController < ApplicationController
 #    logger.info @stone.inspect    
     @parent.send(params[:association_name]) << @stone if @stone.save
     @stone.copy_associations(@parent)    
-    respond_with @stone, location: adjust_url_by_requesting_tab(request.referer), action: "error" 
+    respond_with @stone, location: adjust_url_by_requesting_tab(safe_referer_url), action: "error" 
   end
 
   def update
@@ -27,13 +27,13 @@ class NestedResources::StonesController < ApplicationController
   def destroy
     @stone = Stone.find(params[:id])
     @parent.send(params[:association_name]).delete(@stone)
-    respond_with @stone, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @stone, location: adjust_url_by_requesting_tab(safe_referer_url)
   end
 
   def link_by_global_id
     @stone = Stone.joins(:record_property).where(record_properties: {global_id: params[:global_id]}).readonly(false)
     @parent.send(params[:association_name]) << @stone
-    respond_with @stone, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @stone, location: adjust_url_by_requesting_tab(safe_referer_url)
   rescue
     duplicate_global_id
   end

@@ -8,7 +8,7 @@ describe NestedResources::AttachmentFilesController do
   # Use :with_real_file for JSON format tests (as_json calls path methods that need real file)
   let(:child) { FactoryBot.create(child_name, :with_real_file) }
   let(:user) { FactoryBot.create(:user) }
-  let(:url){"where_i_came_from"}
+  let(:url){"http://test.host/where_i_came_from"}
   let(:filetopic) { FactoryBot.create(:filetopic) }
   let(:attributes) { {data: data, filetopic_id: filetopic.id} }
   let(:data){ Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg'), 'image/jpeg') }

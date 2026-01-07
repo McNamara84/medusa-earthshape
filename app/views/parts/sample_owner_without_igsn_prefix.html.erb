@@ -1,4 +1,4 @@
 <div class="alert alert-danger">
-  <div><%= link_to :back, adjust_url_by_requesting_tab(request.referer) %></div>
+  <div><%= link_to :back, adjust_url_by_requesting_tab(safe_referer_url) %></div>
   the owner of this sample has no IGSN prefix attached.
 </div>

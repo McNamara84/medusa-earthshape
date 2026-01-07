@@ -1,7 +1,7 @@
 # Use Ruby 4.0 - Based on Debian Bookworm (12)
 FROM ruby:4.0
 
-# Install system dependencies (PhantomJS not available in Bookworm, but not needed for production)
+# Install system dependencies
 RUN apt-get update -qq && apt-get install -y \
     build-essential \
     libpq-dev \
@@ -10,15 +10,7 @@ RUN apt-get update -qq && apt-get install -y \
     imagemagick \
     libmagickwand-dev \
     git \
-    xvfb \
     && rm -rf /var/lib/apt/lists/*
-
-# Note: PhantomJS was removed in Debian Bullseye and is not available in Bookworm
-# Poltergeist tests (gem 'poltergeist', '~> 1.18.0') require PhantomJS to run
-# Options: 1) Install PhantomJS from archived builds (wget from phantomjs.org/download.html)
-#          2) Migrate to modern headless browser (Selenium + Chrome headless)
-#          3) Skip Poltergeist tests in environments without PhantomJS
-# Current: Poltergeist tests are skipped in CI (.rspec excludes spec/requests/*)
 
 # Set working directory
 WORKDIR /app

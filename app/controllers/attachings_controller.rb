@@ -4,7 +4,7 @@ class AttachingsController < ApplicationController
 
   def move_to_top
     @attaching.move_to_top
-    respond_with @attaching, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @attaching, location: adjust_url_by_requesting_tab(safe_referer_url)
   end
 
 end

@@ -27,8 +27,7 @@
     $modal.find("div.modal-header").removeClass("alert-success alert-warning alert-danger").addClass(alertClass);
     $("#notification-modal-label").html(title);
     $modal.find("div.modal-body").html(message);
-    // Bootstrap 5: Use native Modal API
-    var modalInstance = bootstrap.Modal.getOrCreateInstance($modal[0]);
-    modalInstance.show();
+
+    window.Medusa.ModalHelpers.show($modal);
   }
 }) (jQuery);

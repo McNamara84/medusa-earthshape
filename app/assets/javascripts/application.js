@@ -16,6 +16,8 @@
 //= require jquery-ui/widget
 //= require popper
 //= require bootstrap-sprockets
+//= require bootstrap_modal_helpers
+//= require bootstrap_compat
 //= require underscore
 //= require gmaps/google
 //= require_tree .

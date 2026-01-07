@@ -66,7 +66,7 @@
     </div>
 
     <%= f.submit "update spot", class: "btn btn-sm" %>
-    <%= link_to "cancel", request.referer, class: "btn btn-sm" %>
+    <%= link_to "cancel", safe_referer_url, class: "btn btn-sm" %>
     <% end %>
   </div>
 </div>

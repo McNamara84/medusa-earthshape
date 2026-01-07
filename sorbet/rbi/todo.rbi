@@ -14,6 +14,5 @@ module ActiveRecord::Railties::JobRuntime; end
 module ActiveSupport::Executor::TestHelper; end
 module Backup::Settings; end
 module Barby::QrCode; end
-module Capybara::Poltergeist::Driver; end
 module OutputPdf::ClassMethods::ThinReports::Report; end
 class Zip::CentralDirectory; end  # Changed from module to class

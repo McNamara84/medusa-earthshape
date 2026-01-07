@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require_relative "../support/env"
 
 # The test environment is used exclusively to run your application's
 # test suite. You never need to work with it otherwise. Remember that
@@ -42,12 +43,16 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
-  # Print deprecation notices to the stderr.
-  config.active_support.deprecation = :stderr
+  # In CI we want to catch new Rails deprecations early.
+  # Locally we keep them as warnings to avoid interrupting development.
+  # If you want CI-like behavior locally, run tests with CI=true.
+  ci_enabled = MedusaEnv.truthy?(ENV["CI"])
+  config.active_support.deprecation = ci_enabled ? :raise : :stderr
 
-  # Rails 6+: Allow test hosts in test environment for RSpec request specs
+  # Allow Capybara/Rack::Test default hosts.
   config.hosts << "www.example.com"
   config.hosts << "example.com"
+  config.hosts << "example.org"
 
   # Raise exceptions for disallowed deprecations.
   config.active_support.disallowed_deprecation = :raise

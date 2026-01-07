@@ -1,46 +1,24 @@
 require 'capybara/rails'
 
-# Only configure Poltergeist if we're running request specs
-# This prevents PhantomJS/Xvfb issues in controller/model specs
+ALLOW_JS_SPECS = ENV["ALLOW_JS_SPECS"].to_s.strip.match?(/\A(1|true|yes)\z/i)
+
 RSpec.configure do |config|
   config.before(:suite) do
-    # Check if we're running request specs by looking at loaded files
-    if RSpec.configuration.files_to_run.any? { |f| f.include?('spec/requests/') }
-      require 'capybara/poltergeist'
-      
-      # Ensure DISPLAY environment variable is set for PhantomJS
-      ENV['DISPLAY'] ||= ':99'
-      
-      # Monkey-patch Cliver to skip version detection for PhantomJS
-      # This fixes "failed to detect theversion of the executable" error
-      module Cliver
-        class Dependency
-          alias_method :original_detect_version, :detect_version
-          
-          def detect_version(path)
-            # Return a dummy version for PhantomJS to bypass version detection
-            if path.to_s.include?('phantomjs')
-              '2.1.1' # Return a valid version string
-            else
-              original_detect_version(path)
-            end
-          end
-        end
-      end
-      
-      # Configure Poltergeist to use PhantomJS
-      Capybara.register_driver :poltergeist do |app|
-        Capybara::Poltergeist::Driver.new(app, {
-          phantomjs: '/usr/bin/phantomjs',
-          phantomjs_options: ['--ignore-ssl-errors=yes', '--ssl-protocol=any'],
-          inspector: false,
-          js_errors: false,
-          debug: false,
-          timeout: 60
-        })
-      end
-      
-      Capybara.javascript_driver = :poltergeist
-    end
+    # Request specs should be able to run in CI/containers without external
+    # browser dependencies.
+    Capybara.default_driver = :rack_test
+    # NOTE: rack_test does not execute JavaScript. This repo intentionally does
+    # not run JS-enabled specs in CI/containers.
+    Capybara.javascript_driver = :rack_test unless ALLOW_JS_SPECS
+  end
+
+  config.before(:each, js: true) do
+    next if ALLOW_JS_SPECS
+
+    raise(
+      "JS-driven specs (js: true) are not supported in CI/containers with the current rack_test setup. " \
+      "To run them locally, set ALLOW_JS_SPECS=true and configure a real JS driver " \
+      "(e.g. selenium with headless Chrome) plus the required browser dependencies."
+    )
   end
 end

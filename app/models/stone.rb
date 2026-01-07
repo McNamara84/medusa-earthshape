@@ -83,20 +83,38 @@ class Stone < ApplicationRecord
   validates :date, presence: true 
   validates :igsn, uniqueness: true  , allow_nil: true, :allow_blank => true
   validate :parent_id_cannot_self_children, if: ->(stone) { stone.parent_id }
-	  
+
 
   def to_pml
     # Sort analyses by id descending for consistent PML output
-    # Rails 5.0+: Convert to Array before calling to_pml
-    analyses.order(id: :desc).to_a.to_pml
+    Pml::Serializer.call(analyses.order(id: :desc))
   end
 
-  def copy_associations (parent)
-	Preparation.where(stone_id: parent.id).find_each do |parentprep|
-		prep=parentprep.dup
-		prep.stone_id=self.id
-		prep.save
-	end
+  # Copies Preparations from a parent Stone.
+  #
+  # Historically this method was named copy_associations even though it only
+  # copies preparations.
+  def copy_associations(parent)
+    copy_preparations(parent)
+  end
+
+  def copy_preparations(parent)
+    return unless persisted?
+
+    Preparation.transaction do
+      Preparation.where(stone_id: parent.id).find_each do |parentprep|
+        prep = parentprep.dup
+        prep.stone_id = id
+        begin
+          prep.save!
+        rescue ActiveRecord::ActiveRecordError => e
+          raise e.class,
+                "Failed to copy preparation parent_preparation_id=#{parentprep.id} " \
+                "from_stone_id=#{parent.id} to_stone_id=#{id}: #{e.message}",
+                e.backtrace
+        end
+      end
+    end
   end
 
   def build_label

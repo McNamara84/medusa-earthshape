@@ -41,7 +41,7 @@ describe AnalysesController do
         get :index, format: 'pml'
       end
       it { expect(assigns(:analyses).count).to eq 3 }
-      it { expect(response.body).to eq([obj_3, obj_2, obj_1].to_pml)}
+      it { expect(response.body).to eq(Pml::Serializer.call([obj_3, obj_2, obj_1]))}
     end
 
     describe "with query" do
@@ -67,7 +67,7 @@ describe AnalysesController do
         before do
           get :index, params: {:q => {:name_cont => 'xxx'}, :format => 'pml'}
         end
-        it { expect(response.body).to eq [].to_pml }
+        it { expect(response.body).to eq(Pml::Serializer.call([])) }
       end
 
 

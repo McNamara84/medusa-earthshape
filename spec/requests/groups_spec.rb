@@ -250,8 +250,8 @@ describe "group master" do
           end
           context "input from and to" do
             let(:fill_in_search_condition) do
-               fill_in("q_created_at_gteq", with: created_at_1)
-               fill_in("q_created_at_lteq_end_of_day", with: created_at_2)
+              fill_in("q_created_at_gteq", with: created_at_1)
+              fill_in("q_created_at_lteq_end_of_day", with: created_at_2)
             end
             it "input keep content" do
               # name text_field has no value attribute, cannot verify empty state
@@ -267,10 +267,10 @@ describe "group master" do
       end
       describe "input updated_at and created_at" do
         let(:fill_in_search_condition) do
-           fill_in("q_updated_at_gteq", with: updated_at_1)
-           fill_in("q_updated_at_lteq_end_of_day", with: updated_at_3)
-           fill_in("q_created_at_gteq", with: created_at_1)
-           fill_in("q_created_at_lteq_end_of_day", with: created_at_3) 
+          fill_in("q_updated_at_gteq", with: updated_at_1)
+          fill_in("q_updated_at_lteq_end_of_day", with: updated_at_3)
+          fill_in("q_created_at_gteq", with: created_at_1)
+          fill_in("q_created_at_lteq_end_of_day", with: created_at_3)
         end
         it "input keep content" do
           # name text_field has no value attribute, cannot verify empty state
@@ -278,7 +278,7 @@ describe "group master" do
           expect(page).to have_field("q_updated_at_lteq_end_of_day", with: updated_at_3)
           expect(page).to have_field("q_created_at_gteq", with: created_at_1)
           expect(page).to have_field("q_created_at_lteq_end_of_day", with: created_at_3)
-        end 
+        end
         # Test removed: CSS selector issue in CI
         # it { expect(page).to have_css("tbody tr", count: 3) }
       end
@@ -360,22 +360,28 @@ describe "group master" do
     end
   end
   
-  describe "create", js: true do
-    pending "Modal window does not display when clicking create button in test" do
-      # TODO: Modal window does not display when clicking create button in test, verification pending
-      before do
-        new_record_condition
-        click_button("save-button")
+  describe "create" do
+    # The create form on the index page is submitted via JS (remote: true) to
+    # /groups.json. In request specs we avoid modal/JS behavior and submit the
+    # JSON request directly.
+
+    context "new record creation failed" do
+      it "returns validation errors" do
+        page.driver.submit :post, groups_path(format: :json), { group: { name: "" } }
+
+        expect(page.status_code).to eq(422)
+        expect(page.body).to include("can't be blank")
       end
-      context "new record creation failed" do
-        let(:new_record_condition) { fill_in("group_name", with: "") }
-        it "dialog content is displayed" do
-        end
-      end
-      context "new record creation succeeded" do
-        let(:new_record_condition) { fill_in("group_name", with: "test") }
-        it "dialog content is displayed" do
-        end
+    end
+
+    context "new record creation succeeded" do
+      it "creates a new group" do
+        expect do
+          page.driver.submit :post, groups_path(format: :json), { group: { name: "test" } }
+        end.to change(Group, :count).by(1)
+
+        expect(page.status_code).to be_between(200, 299)
+        expect(Group.order(:id).last.name).to eq("test")
       end
     end
   end

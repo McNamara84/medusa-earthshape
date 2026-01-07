@@ -5,7 +5,7 @@ describe "box" do
   
   describe "box detail screen" do
     let(:box) do
-      # Rails 5.0: Set User.current before creating box to ensure proper record_property
+      # Set User.current before creating box to ensure proper record_property
       User.current = login_user
       FactoryBot.create(:box)
     end
@@ -14,7 +14,7 @@ describe "box" do
     let(:skip_attachment) { false }
     
     before do
-      # Rails 5.0: Login first, then create data, then visit show page directly
+      # Login first, then create data, then visit show page directly
       login login_user
       box.attachment_files << attachment_file unless skip_attachment
       visit box_path(box)
@@ -28,7 +28,7 @@ describe "box" do
           expect(page).to have_content("new spot with link(ID")
           # new spot with link(ID) field has no value option, so empty state verification is not performed
           expect(page).to have_link("record-property-search")
-          expect(page).to have_button("add new spot")
+          expect(page).to have_css('button[title="add new spot"]')
         end
       end
       context "picture-button is not display" do
@@ -40,7 +40,7 @@ describe "box" do
           it "new spot label not displayed" do
             expect(page).to have_no_content("new spot with link(ID")
             expect(page).to have_no_link("record-property-search")
-            expect(page).to have_no_button("add new spot")
+            expect(page).to have_no_css('button[title="add new spot"]')
           end
         end
         context "attachment_file is pdf" do
@@ -51,13 +51,15 @@ describe "box" do
           it "new spot label not displayed" do
             expect(page).to have_no_content("new spot with link(ID")
             expect(page).to have_no_link("record-property-search")
-            expect(page).to have_no_button("add new spot")
+            expect(page).to have_no_css('button[title="add new spot"]')
           end
         end
       end
       describe "new spot" do
-        # Skip to avoid "FIXED" error
-        xit "new spot creation implementation is difficult, pending" do
+        it "new spot UI is available" do
+          click_link("picture-button")
+          expect(page).to have_link("record-property-search")
+          expect(page).to have_css('button[title="add new spot"]')
         end
       end
 
@@ -79,7 +81,6 @@ describe "box" do
     end
     
     describe "at-a-glance tab" do
-      before { click_link("at-a-glance") }
       describe "pdf icon" do
         context "data_content_type is pdf" do
           let(:data_type) { "application/pdf" }
@@ -97,7 +98,6 @@ describe "box" do
     end
     
     describe "file tab" do
-      before { click_link("file (1)") }
       describe "pdf icon" do
         context "data_content_type is pdf" do
           let(:data_type) { "application/pdf" }

@@ -4,10 +4,7 @@
 
   function determine() {
     $(input).val($(this).data("id"));
-    // Bootstrap 5: Use native Modal API
-    var modalEl = document.getElementById("search-modal");
-    var modalInstance = bootstrap.Modal.getInstance(modalEl);
-    if (modalInstance) modalInstance.hide();
+    window.Medusa.ModalHelpers.hide($("#search-modal"));
     return false;
   }
 
@@ -42,9 +39,7 @@
     // Show the modal first
     var $modal = $("#search-modal");
     $modal.find("div.modal-content").html('<div class="modal-body"><p>Loading...</p></div>');
-    // Bootstrap 5: Use native Modal API
-    var modalInstance = bootstrap.Modal.getOrCreateInstance($modal[0]);
-    modalInstance.show();
+    window.Medusa.ModalHelpers.show($modal);
 
     // Load the content via AJAX
     $.ajax({
@@ -69,9 +64,7 @@
     // Show the modal first
     var $modal = $("#show-modal");
     $modal.find("div.modal-content").html('<div class="modal-body"><p>Loading...</p></div>');
-    // Bootstrap 5: Use native Modal API
-    var modalInstance = bootstrap.Modal.getOrCreateInstance($modal[0]);
-    modalInstance.show();
+    window.Medusa.ModalHelpers.show($modal);
 
     // Load the content via AJAX
     $.ajax({

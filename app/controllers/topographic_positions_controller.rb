@@ -1,5 +1,5 @@
 class TopographicPositionsController < ApplicationController
-  respond_to :html, :xml, :json, :modal	
+  respond_to :html, :xml, :json, :modal
   before_action  :find_resource, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
   layout "admin_lab"
@@ -22,12 +22,12 @@ class TopographicPositionsController < ApplicationController
   def create
     @topographic_position= TopographicPosition.new(topographic_position_params)
     @topographic_position.save
-    respond_with @topographic_position	  	  
+    respond_with @topographic_position
   end
 
   def update
     @topographic_position.update(topographic_position_params)
-    redirect_to topographic_positions_path	  
+    redirect_to topographic_positions_path
   end
 
   def destroy
