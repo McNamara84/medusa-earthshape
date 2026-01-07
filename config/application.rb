@@ -28,9 +28,10 @@ module Medusa
     # to an untrusted URL, Rails will raise instead of silently allowing an open
     # redirect.
     #
-    # NOTE: In newer Rails versions, `raise_on_open_redirects` is deprecated in
-    # favor of `action_on_open_redirect`. This app runs CI with deprecations
-    # configured to raise, so we avoid deprecated settings here.
+    # NOTE: `raise_on_open_redirects` is deprecated; `action_on_open_redirect` is
+    # the current (non-deprecated) setting.
+    # This app runs CI with deprecations configured to raise, so we avoid
+    # deprecated settings and keep this strict.
     config.action_controller.action_on_open_redirect = :raise
 
     # Path-relative redirect protection (enabled by the defaults configured

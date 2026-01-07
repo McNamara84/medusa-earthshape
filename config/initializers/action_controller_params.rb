@@ -15,6 +15,8 @@ class ActionController::Parameters
   # Note: Rails params shouldn't contain circular structures, but if they do
   # (e.g. manually constructed input), this avoids infinite recursion.
   def deep_only_presence(value, seen = nil)
+    object_id = nil
+
     if value.is_a?(ActionController::Parameters) || value.is_a?(Hash) || value.is_a?(Array)
       seen ||= Set.new
       object_id = value.object_id
@@ -36,6 +38,6 @@ class ActionController::Parameters
       value
     end
   ensure
-    seen&.delete(object_id) if defined?(object_id) && seen
+    seen&.delete(object_id) if object_id && seen
   end
 end

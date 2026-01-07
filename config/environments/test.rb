@@ -45,6 +45,7 @@ Rails.application.configure do
 
   # In CI we want to catch new Rails deprecations early.
   # Locally we keep them as warnings to avoid interrupting development.
+  # If you want CI-like behavior locally, run tests with CI=true.
   ci_enabled = MedusaEnv.truthy?(ENV["CI"])
   config.active_support.deprecation = ci_enabled ? :raise : :stderr
 

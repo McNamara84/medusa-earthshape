@@ -158,6 +158,7 @@ class StagingsController < ApplicationController
 
     ret
   end
+
   def clear
     Staging.all.each do |staging|
       staging.destroy if staging.user_id===@current_user.id
@@ -254,7 +255,9 @@ class StagingsController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid => invalid
     render "import_invalid", :locals => {:error => invalid.record.errors}
-  rescue ActiveRecord::RecordNotUnique
+  rescue ActiveRecord::RecordNotUnique => e
+    logger.warn("[StagingsController#import] Duplicate record: #{e.class}: #{e.message}")
+    logger.warn(e.full_message(highlight: false))
     render "import_invalid", :locals => {:error => "duplicate record"}
   rescue StandardError => e
     logger.error("[StagingsController#import] CSV import failed: #{e.class}: #{e.message}")
@@ -302,14 +305,8 @@ class StagingsController < ApplicationController
       "[StagingsController#create_or_update_from_staging] Not unique (#{model_class}): #{e.class}: #{e.message} " \
       "attributes_key=#{attributes_key.inspect}"
     )
+    logger.warn(e.full_message(highlight: false))
     render invalid_template, status: :conflict, locals: { error: "duplicate record" }
-  rescue StandardError => e
-    logger.error(
-      "[StagingsController#create_or_update_from_staging] Failed (#{model_class}): #{e.class}: #{e.message} " \
-      "attributes_key=#{attributes_key.inspect}"
-    )
-    logger.error(e.full_message(highlight: false))
-    render invalid_template, status: :unprocessable_entity, locals: { error: e.message }
   end
 
   # Use callbacks to share common setup or constraints between actions.

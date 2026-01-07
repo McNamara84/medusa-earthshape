@@ -90,14 +90,29 @@ class Stone < ApplicationRecord
     Pml::Serializer.call(analyses.order(id: :desc))
   end
 
+  # Copies Preparations from a parent Stone.
+  #
+  # Historically this method was named copy_associations even though it only
+  # copies preparations.
   def copy_associations(parent)
+    copy_preparations(parent)
+  end
+
+  def copy_preparations(parent)
     return unless persisted?
 
     Preparation.transaction do
       Preparation.where(stone_id: parent.id).find_each do |parentprep|
         prep = parentprep.dup
         prep.stone_id = id
-        prep.save!
+        begin
+          prep.save!
+        rescue ActiveRecord::ActiveRecordError => e
+          raise e.class,
+                "Failed to copy preparation parent_preparation_id=#{parentprep.id} " \
+                "from_stone_id=#{parent.id} to_stone_id=#{id}: #{e.message}",
+                e.backtrace
+        end
       end
     end
   end

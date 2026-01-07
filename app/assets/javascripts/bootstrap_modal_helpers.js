@@ -1,4 +1,5 @@
 (function($) {
+  var warnedMissingApiElements = typeof WeakSet !== "undefined" ? new WeakSet() : null;
   var warnedMissingApiOnce = false;
 
   // Compatibility layer for mixed Bootstrap versions.
@@ -7,16 +8,19 @@
   // Views may include both `data-dismiss` and `data-bs-dismiss` attributes to
   // support legacy and newer markup.
   function warnMissingApi(element) {
-    if (warnedMissingApiOnce) {
-      return;
-    }
-
-    // Use a module-level flag instead of per-element tracking:
-    // - avoids relying on DOM APIs like setAttribute()
-    // - still prevents noisy repeated warnings in mixed Bootstrap setups
-
     if (window.console && console.warn) {
-      warnedMissingApiOnce = true;
+      if (warnedMissingApiElements && element) {
+        if (warnedMissingApiElements.has(element)) {
+          return;
+        }
+        warnedMissingApiElements.add(element);
+      } else {
+        if (warnedMissingApiOnce) {
+          return;
+        }
+        warnedMissingApiOnce = true;
+      }
+
       console.warn(
         "Modal API not available (neither Bootstrap.Modal nor jQuery modal).",
         element

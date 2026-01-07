@@ -4,15 +4,33 @@ describe ApplicationController do
   # Create a test controller to expose protected methods for testing
   controller do
     skip_before_action :authenticate_user!, raise: false
+    skip_before_action :basic_authentication, raise: false
     
     def test_safe_referer
       render plain: safe_referer_url
+    end
+
+    def test_stateless_api
+      render plain: stateless_api_request?.to_s
+    end
+
+    def api_ping
+      head :ok
+    end
+
+    def api_create
+      head :ok
     end
   end
 
   describe '#safe_referer_url' do
     before do
-      routes.draw { get 'test_safe_referer' => 'anonymous#test_safe_referer' }
+      routes.draw do
+        get 'test_safe_referer' => 'anonymous#test_safe_referer'
+        get 'test_stateless_api' => 'anonymous#test_stateless_api'
+        get 'api_ping' => 'anonymous#api_ping'
+        post 'api_create' => 'anonymous#api_create'
+      end
     end
 
     context 'when referer is blank' do
@@ -109,6 +127,24 @@ describe ApplicationController do
         get :test_safe_referer
         expect(response.body).to eq('/')
       end
+
+      it 'rejects vbscript: URLs' do
+        request.env['HTTP_REFERER'] = 'vbscript:msgbox("x")'
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
+
+      it 'rejects about: URLs' do
+        request.env['HTTP_REFERER'] = 'about:blank'
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
+
+      it 'rejects blob: URLs' do
+        request.env['HTTP_REFERER'] = 'blob:https://test.host/123'
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
     end
 
     context 'edge cases' do
@@ -174,6 +210,81 @@ describe ApplicationController do
         # Request is http://test.host, referer is https://test.host
         expect(response.body).to eq('/')
       end
+    end
+  end
+
+  describe "stateless API requests and HTTP Basic auth" do
+    around do |example|
+      old = ActionController::Base.allow_forgery_protection
+      ActionController::Base.allow_forgery_protection = true
+      example.run
+    ensure
+      ActionController::Base.allow_forgery_protection = old
+    end
+
+    let(:username) { "apiuser" }
+    let(:password) { "secret" }
+    let(:authorization_header) do
+      ActionController::HttpAuthentication::Basic.encode_credentials(username, password)
+    end
+
+    it "identifies stateless API requests" do
+      request.env["HTTP_AUTHORIZATION"] = authorization_header
+      get :test_stateless_api, format: :json
+      expect(response.body).to eq("true")
+    end
+
+    it "treats requests without Authorization as non-stateless" do
+      get :test_stateless_api, format: :json
+      expect(response.body).to eq("false")
+    end
+
+    it "authenticates API requests via HTTP Basic" do
+      resource = instance_double(User)
+      allow(resource).to receive(:valid_password?).with(password).and_return(true)
+      allow(User).to receive(:find_by).with(username: username).and_return(resource)
+
+      warden = instance_double("Warden")
+      expect(warden).to receive(:set_user).with(resource, scope: :user, store: false)
+      request.env["warden"] = warden
+
+      request.env["HTTP_AUTHORIZATION"] = authorization_header
+      get :api_ping, format: :json
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "rejects API requests with invalid credentials" do
+      resource = instance_double(User)
+      allow(resource).to receive(:valid_password?).with(password).and_return(false)
+      allow(User).to receive(:find_by).with(username: username).and_return(resource)
+
+      request.env["HTTP_AUTHORIZATION"] = authorization_header
+      get :api_ping, format: :json
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it "skips CSRF verification only for stateless API requests" do
+      resource = instance_double(User)
+      allow(resource).to receive(:valid_password?).with(password).and_return(true)
+      allow(User).to receive(:find_by).with(username: username).and_return(resource)
+
+      request.env["HTTP_AUTHORIZATION"] = authorization_header
+      expect { post :api_create, format: :json }.not_to raise_error
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "enforces CSRF verification for non-stateless requests" do
+      expect { post :api_create, format: :json }.to raise_error(ActionController::InvalidAuthenticityToken)
+    end
+
+    it "handles missing or broken session key configuration" do
+      broken = instance_double("BrokenSessionOptions")
+      allow(broken).to receive(:[]).with(:key).and_raise(StandardError, "boom")
+      allow(Rails.application.config).to receive(:session_options).and_return(broken)
+
+      request.env["HTTP_AUTHORIZATION"] = authorization_header
+      get :test_stateless_api, format: :json
+      expect(response.body).to eq("false")
     end
   end
 

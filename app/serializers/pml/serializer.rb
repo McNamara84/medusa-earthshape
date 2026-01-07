@@ -23,11 +23,16 @@ module Pml
           []
         elsif object.is_a?(Array)
           object
+        elsif object.is_a?(String) || object.is_a?(Hash)
+          # Treat common scalars as a single item (Strings/Hashes respond to #each
+          # but are not intended to be treated as collections here).
+          [object]
         elsif defined?(ActiveRecord::Relation) && object.is_a?(ActiveRecord::Relation)
           object.to_a
         elsif defined?(ActiveRecord::Associations::CollectionProxy) && object.is_a?(ActiveRecord::Associations::CollectionProxy)
           object.to_a
         else
+          # Treat non-collection objects (including String/Hash) as a single item.
           [object]
         end
 

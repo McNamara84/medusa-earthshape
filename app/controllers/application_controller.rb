@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  SESSION_KEY_WARNING_MUTEX = Mutex.new
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
@@ -47,7 +49,7 @@ class ApplicationController < ActionController::Base
       unless resource&.valid_password?(password)
         logger.warn(
           "[ApplicationController#authenticate_with_http_basic_for_api] Failed HTTP Basic auth " \
-          "username=#{name.inspect} ip=#{request.remote_ip} user_agent=#{request.user_agent.inspect}"
+          "username=#{name.inspect} ip=#{request.remote_ip} user_agent=#{request.user_agent.to_s.inspect}"
         )
 
         # Rate limiting is best handled at the edge (reverse proxy) or via a
@@ -80,8 +82,15 @@ class ApplicationController < ActionController::Base
     end
 
     if session_key_error
-      unless self.class.instance_variable_defined?(:@_warned_session_key_error)
-        self.class.instance_variable_set(:@_warned_session_key_error, true)
+      should_warn = false
+      self.class::SESSION_KEY_WARNING_MUTEX.synchronize do
+        unless self.class.instance_variable_defined?(:@_warned_session_key_error)
+          self.class.instance_variable_set(:@_warned_session_key_error, true)
+          should_warn = true
+        end
+      end
+
+      if should_warn
         logger.warn(
           "[ApplicationController#stateless_api_request?] Unable to read session_options[:key]: " \
           "#{session_key_error.class}: #{session_key_error.message}"
@@ -133,6 +142,8 @@ class ApplicationController < ActionController::Base
   # - URLs without host - treated as same-origin
   # - URLs with fragments (e.g., "/path#section")
   def safe_referer_url
+    # These ivars are request-scoped: Rails instantiates a fresh controller
+    # instance per request.
     return @_safe_referer_url if defined?(@_safe_referer_url)
 
     referer = request.referer
@@ -165,6 +176,7 @@ class ApplicationController < ActionController::Base
       end
 
       # Absolute URLs: verify same origin (host, port, and scheme)
+      # Cache parsed request URL for the duration of the request.
       request_uri = @_safe_referer_request_uri ||= URI.parse(request.url)
       same_host = referer_uri.host == request_uri.host
       same_port = referer_uri.port == request_uri.port

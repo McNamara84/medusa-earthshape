@@ -20,4 +20,6 @@
 #
 # After a deploy window (e.g. > session expiration), switch to :json to stop
 # accepting Marshal payloads entirely.
+
+# TODO(2026-03-31): Switch to :json after a deploy window >= session expiration.
 Rails.application.config.action_dispatch.cookies_serializer = :hybrid
