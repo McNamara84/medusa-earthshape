@@ -168,6 +168,8 @@ class Analysis < ApplicationRecord
     xml = ::Builder::XmlMarkup.new(indent: 2)
     xml.instruct!
     xml.acquisitions do
+      # This method treats the input as a collection and renders each element.
+      # It intentionally does not call to_pml on the container object itself.
       objs.each do |obj|
         obj.to_pml(xml) if obj.respond_to?(:to_pml)
       end

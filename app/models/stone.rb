@@ -93,10 +93,12 @@ class Stone < ApplicationRecord
   def copy_associations(parent)
     return unless persisted?
 
-    Preparation.where(stone_id: parent.id).find_each do |parentprep|
-      prep = parentprep.dup
-      prep.stone_id = id
-      prep.save!
+    Preparation.transaction do
+      Preparation.where(stone_id: parent.id).find_each do |parentprep|
+        prep = parentprep.dup
+        prep.stone_id = id
+        prep.save!
+      end
     end
   end
 

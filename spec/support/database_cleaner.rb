@@ -6,11 +6,10 @@ RSpec.configure do |config|
   end
 
   config.around(:each) do |example|
-    # These request specs run in-process (Capybara rack_test + Rails integration),
-    # so they share the DB connection and can safely use transactions.
-    #
-    # Opt-in truncation per-example if a spec truly needs multi-connection
+    # Default for all specs in this repo is :transaction (fast, runs in-process).
+    # Use :truncation only for examples that truly require multi-connection
     # behavior (e.g. external drivers): `it "...", :truncation do ... end`.
+    #
     DatabaseCleaner.strategy = example.metadata[:truncation] ? :truncation : :transaction
 
     DatabaseCleaner.cleaning do

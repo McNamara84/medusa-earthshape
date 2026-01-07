@@ -10,7 +10,7 @@ Devise.setup do |config|
   config.secret_key = ENV["DEVISE_SECRET_KEY"].presence || fallback_secret_key
 
   if config.secret_key.blank?
-    raise "Devise secret_key is missing. Set DEVISE_SECRET_KEY or SECRET_KEY_BASE."
+    raise "Devise secret_key is missing. Set DEVISE_SECRET_KEY or SECRET_KEY_BASE (Rails secret_key_base)."
   end
 
   # ==> Mailer Configuration

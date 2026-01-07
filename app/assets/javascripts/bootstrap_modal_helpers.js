@@ -11,20 +11,9 @@
       return;
     }
 
-    try {
-      if (element && element.getAttribute && element.getAttribute("data-medusa-modal-api-warning") === "1") {
-        warnedMissingApiOnce = true;
-        return;
-      }
-
-      if (element && element.setAttribute) {
-        element.setAttribute("data-medusa-modal-api-warning", "1");
-      }
-    } catch (e) {
-      if (window.console && console.warn) {
-        console.warn("Unable to set modal API warning flag.", e);
-      }
-    }
+    // Use a module-level flag instead of per-element tracking:
+    // - avoids relying on DOM APIs like setAttribute()
+    // - still prevents noisy repeated warnings in mixed Bootstrap setups
 
     if (window.console && console.warn) {
       warnedMissingApiOnce = true;

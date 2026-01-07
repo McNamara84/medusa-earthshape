@@ -3,9 +3,9 @@ module RequestSpecHelper
     Warden.test_mode!
     login_as(user, scope: :user)
 
-    # Warden test helpers authenticate through the Rack middleware, so the user is
-    # available in request context. User.current is set for code paths that rely on
-    # thread-local access outside the request cycle.
+    # Warden test_mode simulates authentication for request specs by setting the
+    # user in the test session/env; it does not exercise the real login flow.
+    # User.current is set for code paths that rely on thread-local access.
     User.current = user
   end
 end

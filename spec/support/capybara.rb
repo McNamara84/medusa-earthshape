@@ -12,8 +12,9 @@ RSpec.configure do |config|
 
   config.before(:each, js: true) do
     raise(
-      "JS-enabled specs are disabled in this repo (Capybara is configured with rack_test only). " \
-      "If you add js: true specs, configure a real JS driver (e.g. selenium) and the required browser dependencies."
+      "JS-driven specs (js: true) are not supported in CI/containers with the current rack_test setup. " \
+      "To test JavaScript functionality, configure a real JS driver (e.g. selenium with headless Chrome) " \
+      "and install the required browser dependencies."
     )
   end
 end

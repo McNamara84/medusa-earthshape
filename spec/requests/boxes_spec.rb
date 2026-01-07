@@ -28,7 +28,7 @@ describe "box" do
           expect(page).to have_content("new spot with link(ID")
           # new spot with link(ID) field has no value option, so empty state verification is not performed
           expect(page).to have_link("record-property-search")
-          expect(page).to have_button("add new spot")
+          expect(page).to have_css('button[title="add new spot"]')
         end
       end
       context "picture-button is not display" do
@@ -40,7 +40,7 @@ describe "box" do
           it "new spot label not displayed" do
             expect(page).to have_no_content("new spot with link(ID")
             expect(page).to have_no_link("record-property-search")
-            expect(page).to have_no_button("add new spot")
+            expect(page).to have_no_css('button[title="add new spot"]')
           end
         end
         context "attachment_file is pdf" do
@@ -51,7 +51,7 @@ describe "box" do
           it "new spot label not displayed" do
             expect(page).to have_no_content("new spot with link(ID")
             expect(page).to have_no_link("record-property-search")
-            expect(page).to have_no_button("add new spot")
+            expect(page).to have_no_css('button[title="add new spot"]')
           end
         end
       end
@@ -59,7 +59,7 @@ describe "box" do
         it "new spot UI is available" do
           click_link("picture-button")
           expect(page).to have_link("record-property-search")
-          expect(page).to have_button("add new spot")
+          expect(page).to have_css('button[title="add new spot"]')
         end
       end
 

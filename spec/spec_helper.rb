@@ -1,8 +1,8 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 # In container setups the web service often exports RAILS_ENV=development.
 # Specs must run in test mode regardless.
-ENV["RAILS_ENV"] = 'test'
-ENV["RACK_ENV"] = 'test'
+ENV["RAILS_ENV"] ||= "test"
+ENV["RACK_ENV"] ||= "test"
 
 require File.expand_path("../../config/environment", __FILE__)
 

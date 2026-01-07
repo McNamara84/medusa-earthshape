@@ -221,19 +221,23 @@ class StagingsController < ApplicationController
   end
 
   def ingest_box
-    ingest_record(:box_create_attributes, Box, "box_invalid")
+    create_or_update_from_staging(attributes_key: :box_create_attributes, model_class: Box, invalid_template: "box_invalid")
   end
 
   def ingest_place
-    ingest_record(:place_create_attributes, Place, "place_invalid")
+    create_or_update_from_staging(attributes_key: :place_create_attributes, model_class: Place, invalid_template: "place_invalid")
   end
 
   def ingest_collection
-    ingest_record(:collection_create_attributes, Collection, "collection_invalid")
+    create_or_update_from_staging(
+      attributes_key: :collection_create_attributes,
+      model_class: Collection,
+      invalid_template: "collection_invalid"
+    )
   end
 
   def ingest_stone
-    ingest_record(:stone_create_attributes, Stone, "stone_invalid")
+    create_or_update_from_staging(attributes_key: :stone_create_attributes, model_class: Stone, invalid_template: "stone_invalid")
   end
 
   def ingest
@@ -244,12 +248,14 @@ class StagingsController < ApplicationController
   
   def import
     if Staging.import_csv(params[:data])
-       redirect_to stagings_path
+      redirect_to stagings_path
     else
       render "import_invalid", :locals => {:error => "error reading file"}
     end
   rescue ActiveRecord::RecordInvalid => invalid
     render "import_invalid", :locals => {:error => invalid.record.errors}
+  rescue ActiveRecord::RecordNotUnique
+    render "import_invalid", :locals => {:error => "duplicate record"}
   rescue StandardError => e
     logger.error("[StagingsController#import] CSV import failed: #{e.class}: #{e.message}")
     logger.error(e.full_message(highlight: false))
@@ -257,153 +263,160 @@ class StagingsController < ApplicationController
   end
 
   private
-    def ingest_record(attributes_key, model_class, invalid_template)
-      attrs = staging_params[attributes_key]
-      unless attrs
-        logger.warn(
-          "[StagingsController#ingest_record] Missing params: attributes_key=#{attributes_key.inspect} " \
-          "model_class=#{model_class}"
-        )
-        render invalid_template, status: :bad_request, locals: { error: "missing parameters" }
-        return
-      end
-
-      if attrs[:id].present?
-        record = model_class.find(attrs[:id])
-        record.update!(attrs)
-      else
-        record = model_class.new(attrs)
-        record.save!
-      end
-
-      respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
-    rescue ActiveRecord::RecordInvalid => e
-      logger.error(
-        "[StagingsController#ingest_record] Validation failed (#{model_class}): #{e.class}: #{e.message} " \
-        "attributes_key=#{attributes_key.inspect}"
-      )
-      logger.error(e.full_message(highlight: false))
-      error_message = e.record&.errors&.full_messages&.join(", ") || e.message
-      render invalid_template, status: :unprocessable_entity, locals: { error: error_message }
-    rescue ActiveRecord::RecordNotFound => e
+  def create_or_update_from_staging(attributes_key:, model_class:, invalid_template:)
+    attrs = staging_params[attributes_key]
+    unless attrs
       logger.warn(
-        "[StagingsController#ingest_record] Record not found (#{model_class}): #{e.class}: #{e.message} " \
-        "attributes_key=#{attributes_key.inspect}"
+        "[StagingsController#create_or_update_from_staging] Missing params: attributes_key=#{attributes_key.inspect} " \
+        "model_class=#{model_class}"
       )
-      render invalid_template, status: :not_found, locals: { error: "record not found" }
-    rescue StandardError => e
-      logger.error(
-        "[StagingsController#ingest_record] Failed (#{model_class}): #{e.class}: #{e.message} " \
-        "attributes_key=#{attributes_key.inspect}"
-      )
-      logger.error(e.full_message(highlight: false))
-      render invalid_template, status: :unprocessable_entity, locals: { error: e.message }
+      render invalid_template, status: :bad_request, locals: { error: "missing parameters" }
+      return
     end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_staging
-      @staging = Staging.find(params[:id])
+    if attrs[:id].present?
+      record = model_class.find(attrs[:id])
+      record.update!(attrs)
+    else
+      record = model_class.new(attrs)
+      record.save!
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def staging_params
-      params.require(:staging).permit(
+    respond_with @stagings, location: adjust_url_by_requesting_tab(safe_referer_url)
+  rescue ActiveRecord::RecordInvalid => e
+    logger.error(
+      "[StagingsController#create_or_update_from_staging] Validation failed (#{model_class}): #{e.class}: #{e.message} " \
+      "attributes_key=#{attributes_key.inspect}"
+    )
+    logger.error(e.full_message(highlight: false))
+    error_message = e.record&.errors&.full_messages&.join(", ") || e.message
+    render invalid_template, status: :unprocessable_entity, locals: { error: error_message }
+  rescue ActiveRecord::RecordNotFound => e
+    logger.warn(
+      "[StagingsController#create_or_update_from_staging] Record not found (#{model_class}): #{e.class}: #{e.message} " \
+      "attributes_key=#{attributes_key.inspect}"
+    )
+    render invalid_template, status: :not_found, locals: { error: "record not found" }
+  rescue ActiveRecord::RecordNotUnique => e
+    logger.warn(
+      "[StagingsController#create_or_update_from_staging] Not unique (#{model_class}): #{e.class}: #{e.message} " \
+      "attributes_key=#{attributes_key.inspect}"
+    )
+    render invalid_template, status: :conflict, locals: { error: "duplicate record" }
+  rescue StandardError => e
+    logger.error(
+      "[StagingsController#create_or_update_from_staging] Failed (#{model_class}): #{e.class}: #{e.message} " \
+      "attributes_key=#{attributes_key.inspect}"
+    )
+    logger.error(e.full_message(highlight: false))
+    render invalid_template, status: :unprocessable_entity, locals: { error: e.message }
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_staging
+    @staging = Staging.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def staging_params
+    params.require(:staging).permit(
       box_create_attributes: [
-              :id, 
-              :name,
-              :parent_id,
-              :box_type_id,
-              record_property_attributes: [
-                :global_id,
-                :user_id,
-                :group_id,
-                :owner_readable,
-                :owner_writable,
-                :group_readable,
-                :group_writable,
-                :guest_readable,
-                :guest_writable
-              ]
+        :id,
+        :name,
+        :parent_id,
+        :box_type_id,
+        record_property_attributes: [
+          :global_id,
+          :user_id,
+          :group_id,
+          :owner_readable,
+          :owner_writable,
+          :group_readable,
+          :group_writable,
+          :guest_readable,
+          :guest_writable
+        ]
       ],
       place_create_attributes: [
-              :id, 
-              :name, 
-              :latitude,
-              :parent_global_id, 
-              :longitude, 
-              :elevation, 
-              :topographic_position_id,
-              :slope_description, 
-              :aspect, 
-              :vegetation_id, 
-              :landuse_id, 
-              :description,
-              :lightsituation,
-              record_property_attributes: [
-                :global_id,
-                :user_id,
-                :group_id,
-                :owner_readable,
-                :owner_writable,
-                :group_readable,
-                :group_writable,
-                :guest_readable,
-                :guest_writable
-              ]
+        :id,
+        :name,
+        :latitude,
+        :parent_global_id,
+        :longitude,
+        :elevation,
+        :topographic_position_id,
+        :slope_description,
+        :aspect,
+        :vegetation_id,
+        :landuse_id,
+        :description,
+        :lightsituation,
+        record_property_attributes: [
+          :global_id,
+          :user_id,
+          :group_id,
+          :owner_readable,
+          :owner_writable,
+          :group_readable,
+          :group_writable,
+          :guest_readable,
+          :guest_writable
+        ]
       ],
       collection_create_attributes: [
-              :id,
-              :name, 
-              :project, 
-              :timeseries,
-              :comment,
-              :samplingstrategy, 
-              :weather_conditions,
-              record_property_attributes: [
-                :global_id,
-                :user_id,
-                :group_id,
-                :owner_readable,
-                :owner_writable,
-                :group_readable,
-                :group_writable,
-                :guest_readable,
-                :guest_writable
-              ]
+        :id,
+        :name,
+        :project,
+        :timeseries,
+        :comment,
+        :samplingstrategy,
+        :weather_conditions,
+        record_property_attributes: [
+          :global_id,
+          :user_id,
+          :group_id,
+          :owner_readable,
+          :owner_writable,
+          :group_readable,
+          :group_writable,
+          :guest_readable,
+          :guest_writable
+        ]
       ],
       stone_create_attributes: [
-              :id,
-              :name,
-              :parent_id,
-              :igsn,
-              :collectionmethod_id,
-              :classification_id,
-              :place_id,
-              :collection_id,
-              :sampledepth,
-              :date,
-              :quantity_initial,
-              :quantity_unit,
-              :quantity,
-              :labname,
-              :box_id,
-              :stonecontainer_type_id,
-              :description,
-              collectors_attributes: [
-                :name,
-                :affiliation,
-              ],
-              record_property_attributes: [
-                :global_id,
-                :user_id,
-                :group_id,
-                :owner_readable,
-                :owner_writable,
-                :group_readable,
-                :group_writable,
-                :guest_readable,
-                :guest_writable
-              ]
-      ])
-    end
+        :id,
+        :name,
+        :parent_id,
+        :igsn,
+        :collectionmethod_id,
+        :classification_id,
+        :place_id,
+        :collection_id,
+        :sampledepth,
+        :date,
+        :quantity_initial,
+        :quantity_unit,
+        :quantity,
+        :labname,
+        :box_id,
+        :stonecontainer_type_id,
+        :description,
+        collectors_attributes: [
+          :name,
+          :affiliation
+        ],
+        record_property_attributes: [
+          :global_id,
+          :user_id,
+          :group_id,
+          :owner_readable,
+          :owner_writable,
+          :group_readable,
+          :group_writable,
+          :guest_readable,
+          :guest_writable
+        ]
+      ]
+    )
+  end
 end

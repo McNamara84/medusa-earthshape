@@ -43,9 +43,20 @@ class ApplicationController < ActionController::Base
   def authenticate_with_http_basic_for_api
     authenticate_or_request_with_http_basic do |name, password|
       resource = User.find_by(username: name)
-      next false unless resource&.valid_password?(password)
+
+      unless resource&.valid_password?(password)
+        logger.warn(
+          "[ApplicationController#authenticate_with_http_basic_for_api] Failed HTTP Basic auth " \
+          "username=#{name.inspect} ip=#{request.remote_ip} user_agent=#{request.user_agent.inspect}"
+        )
+
+        # Rate limiting is best handled at the edge (reverse proxy) or via a
+        # Rack middleware such as Rack::Attack.
+        next false
+      end
 
       # Do not create a session for stateless API calls.
+      # User.current is thread-local and safe per-request.
       request.env["warden"]&.set_user(resource, scope: :user, store: false)
       User.current = resource
       true
@@ -60,11 +71,24 @@ class ApplicationController < ActionController::Base
     return false if request.format.html?
     return false if request.authorization.blank?
 
+    session_key_error = nil
     session_key = begin
       Rails.application.config.session_options&.[](:key).to_s
-    rescue StandardError
+    rescue StandardError => e
+      session_key_error = e
       ""
     end
+
+    if session_key_error
+      unless self.class.instance_variable_defined?(:@_warned_session_key_error)
+        self.class.instance_variable_set(:@_warned_session_key_error, true)
+        logger.warn(
+          "[ApplicationController#stateless_api_request?] Unable to read session_options[:key]: " \
+          "#{session_key_error.class}: #{session_key_error.message}"
+        )
+      end
+    end
+
     return false if session_key.blank?
 
     cookies[session_key].blank?
@@ -109,15 +133,17 @@ class ApplicationController < ActionController::Base
   # - URLs without host - treated as same-origin
   # - URLs with fragments (e.g., "/path#section")
   def safe_referer_url
+    return @_safe_referer_url if defined?(@_safe_referer_url)
+
     referer = request.referer
-    return root_path if referer.blank?
+    return (@_safe_referer_url = root_path) if referer.blank?
 
     begin
       referer_uri = URI.parse(referer)
 
       # Reject dangerous schemes (e.g. javascript:, data:)
       if referer_uri.scheme.present? && !%w[http https].include?(referer_uri.scheme)
-        return root_path
+        return (@_safe_referer_url = root_path)
       end
 
       # Relative URLs (no host means same-origin). Normalize to leading '/'
@@ -128,25 +154,25 @@ class ApplicationController < ActionController::Base
         query = referer_uri.query
         fragment = referer_uri.fragment
 
-        return root_path if path.blank?
-        return root_path if path.start_with?("//")
+        return (@_safe_referer_url = root_path) if path.blank?
+        return (@_safe_referer_url = root_path) if path.start_with?("//")
 
         normalized = path.start_with?("/") ? path : "/#{path}"
         normalized += "?#{query}" if query.present?
         normalized += "##{fragment}" if fragment.present?
 
-        return normalized
+        return (@_safe_referer_url = normalized)
       end
 
       # Absolute URLs: verify same origin (host, port, and scheme)
-      request_uri = URI.parse(request.url)
+      request_uri = @_safe_referer_request_uri ||= URI.parse(request.url)
       same_host = referer_uri.host == request_uri.host
       same_port = referer_uri.port == request_uri.port
       same_scheme = referer_uri.scheme == request_uri.scheme
 
-      (same_host && same_port && same_scheme) ? referer : root_path
+      @_safe_referer_url = (same_host && same_port && same_scheme) ? referer : root_path
     rescue URI::InvalidURIError
-      root_path
+      @_safe_referer_url = root_path
     end
   end
 

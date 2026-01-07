@@ -23,7 +23,9 @@ module Pml
           []
         elsif object.is_a?(Array)
           object
-        elsif object.respond_to?(:to_a) && !object.is_a?(String) && !object.is_a?(Hash)
+        elsif defined?(ActiveRecord::Relation) && object.is_a?(ActiveRecord::Relation)
+          object.to_a
+        elsif defined?(ActiveRecord::Associations::CollectionProxy) && object.is_a?(ActiveRecord::Associations::CollectionProxy)
           object.to_a
         else
           [object]
@@ -45,7 +47,10 @@ module Pml
         analyses = analyses.order(id: :desc) if analyses.respond_to?(:order)
         analyses = analyses.to_a if analyses.respond_to?(:to_a)
 
-        analyses.each { |analysis| analysis.to_pml(xml) }
+        # Expected interface: an enumerable of Analysis-like objects.
+        analyses = [analyses] unless analyses.respond_to?(:each)
+
+        analyses.each { |analysis| analysis.to_pml(xml) if analysis.respond_to?(:to_pml) }
       end
     end
 
