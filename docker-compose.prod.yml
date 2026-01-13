@@ -146,6 +146,85 @@ services:
       - "traefik.http.services.filebrowser-service.loadbalancer.server.port=80"
       - "traefik.docker.network=traefik"
 
+  # =============================================================================
+  # SEC INSTANCE - Second Medusa instance at /sec
+  # =============================================================================
+  # This is a separate Medusa instance with its own database (medusa_sec)
+  # accessible at https://env.rz-vm499.gfz.de/sec/
+  #
+  # SETUP REQUIRED:
+  # 1. Set SEC_SECRET_KEY_BASE environment variable in Portainer
+  #    (Generate with: bundle exec rake secret)
+  # 2. The database will be created automatically on first start
+  # =============================================================================
+  web-sec:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: /app/docker-entrypoint.sh
+    command: bundle exec rails server -b 0.0.0.0 -p 3000
+    volumes:
+      # Separate volumes for this instance
+      - sec_uploads:/app/public/system
+      - sec_logs:/app/log
+      # Shared bundle cache (same gems)
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_HOST: db
+      # Same PostgreSQL user, but DIFFERENT database
+      DATABASE_USER: ${POSTGRES_USER:-medusa}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-medusa_production}
+      DATABASE_NAME: ${SEC_DATABASE_NAME:-medusa_sec}
+      RAILS_ENV: production
+      RACK_ENV: production
+      RAILS_SERVE_STATIC_FILES: "true"
+      RAILS_LOG_TO_STDOUT: "true"
+      # IMPORTANT: Use a DIFFERENT secret key base for security!
+      SECRET_KEY_BASE: ${SEC_SECRET_KEY_BASE:?SEC_SECRET_KEY_BASE must be set - generate with 'bundle exec rake secret'}
+      # Rails relative URL root for /sec prefix
+      RAILS_RELATIVE_URL_ROOT: /sec
+      TRAEFIK_HOST: ${TRAEFIK_HOST:-env.rz-vm499.gfz.de}
+    stdin_open: true
+    tty: true
+    networks:
+      - default
+      - traefik
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # Router configuration: Match requests to https://env.rz-vm499.gfz.de/sec
+      - "traefik.http.routers.sec-router.rule=Host(`${TRAEFIK_HOST:-env.rz-vm499.gfz.de}`) && PathPrefix(`/sec`)"
+      - "traefik.http.routers.sec-router.entrypoints=https"
+      - "traefik.http.routers.sec-router.service=sec-service"
+      # Service configuration: Forward to Rails on port 3000
+      - "traefik.http.services.sec-service.loadbalancer.server.port=3000"
+      - "traefik.docker.network=traefik"
+
+  # =============================================================================
+  # FILE MANAGER FOR SEC - Temporary service for uploading files to /sec instance
+  # =============================================================================
+  filebrowser-sec:
+    image: filebrowser/filebrowser:latest
+    user: "0:0"
+    command: --baseurl /sec-files --root /srv --database /database/filebrowser.db
+    volumes:
+      - sec_uploads:/srv/attachment_files
+      - filebrowser_sec_data:/database
+    networks:
+      - traefik
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.filebrowser-sec-router.rule=Host(`${TRAEFIK_HOST:-env.rz-vm499.gfz.de}`) && PathPrefix(`/sec-files`)"
+      - "traefik.http.routers.filebrowser-sec-router.entrypoints=https"
+      - "traefik.http.routers.filebrowser-sec-router.service=filebrowser-sec-service"
+      - "traefik.http.services.filebrowser-sec-service.loadbalancer.server.port=80"
+      - "traefik.docker.network=traefik"
+
 volumes:
   postgres_data_prod:
     driver: local
@@ -160,6 +239,13 @@ volumes:
   node_modules:
     driver: local
   filebrowser_data:
+    driver: local
+  # Volumes for SEC instance
+  sec_uploads:
+    driver: local
+  sec_logs:
+    driver: local
+  filebrowser_sec_data:
     driver: local
 
 networks:
