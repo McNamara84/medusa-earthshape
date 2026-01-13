@@ -110,43 +110,6 @@ services:
       - "traefik.docker.network=traefik"
 
   # =============================================================================
-  # FILE MANAGER - Temporary service for uploading legacy attachment files
-  # =============================================================================
-  # This service provides a web-based file manager to upload legacy attachment
-  # files that were not migrated with the database. It mounts the same volume
-  # as the web service, allowing direct file uploads to /app/public/system.
-  #
-  # ACCESS: https://${TRAEFIK_HOST}/esm-files
-  # DEFAULT CREDENTIALS: admin / admin (CHANGE IMMEDIATELY after first login!)
-  #
-  # IMPORTANT: This service should be REMOVED or STOPPED after migration is complete!
-  # To disable: Comment out this entire section or stop the container in Portainer.
-  # =============================================================================
-  filebrowser:
-    image: filebrowser/filebrowser:latest
-    # Run as root to have write access to all directories in the volume
-    # This is acceptable for a temporary migration tool
-    user: "0:0"
-    # Explicitly set baseurl via command - more reliable than environment variable
-    command: --baseurl /esm-files --root /srv --database /database/filebrowser.db
-    volumes:
-      # Mount the same uploads volume - files uploaded here are immediately available to Rails
-      - app_uploads:/srv/attachment_files
-      # Persist FileBrowser configuration and database
-      - filebrowser_data:/database
-    networks:
-      - traefik
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      # Router: accessible at /esm-files
-      - "traefik.http.routers.filebrowser-router.rule=Host(`${TRAEFIK_HOST:-env.rz-vm499.gfz.de}`) && PathPrefix(`/esm-files`)"
-      - "traefik.http.routers.filebrowser-router.entrypoints=https"
-      - "traefik.http.routers.filebrowser-router.service=filebrowser-service"
-      - "traefik.http.services.filebrowser-service.loadbalancer.server.port=80"
-      - "traefik.docker.network=traefik"
-
-  # =============================================================================
   # SEC INSTANCE - Second Medusa instance at /sec
   # =============================================================================
   # This is a separate Medusa instance with its own database (medusa_sec)
@@ -202,27 +165,6 @@ services:
       - "traefik.http.routers.sec-router.service=sec-service"
       # Service configuration: Forward to Rails on port 3000
       - "traefik.http.services.sec-service.loadbalancer.server.port=3000"
-      - "traefik.docker.network=traefik"
-
-  # =============================================================================
-  # FILE MANAGER FOR SEC - Temporary service for uploading files to /sec instance
-  # =============================================================================
-  filebrowser-sec:
-    image: filebrowser/filebrowser:latest
-    user: "0:0"
-    command: --baseurl /sec-files --root /srv --database /database/filebrowser.db
-    volumes:
-      - sec_uploads:/srv/attachment_files
-      - filebrowser_sec_data:/database
-    networks:
-      - traefik
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.filebrowser-sec-router.rule=Host(`${TRAEFIK_HOST:-env.rz-vm499.gfz.de}`) && PathPrefix(`/sec-files`)"
-      - "traefik.http.routers.filebrowser-sec-router.entrypoints=https"
-      - "traefik.http.routers.filebrowser-sec-router.service=filebrowser-sec-service"
-      - "traefik.http.services.filebrowser-sec-service.loadbalancer.server.port=80"
       - "traefik.docker.network=traefik"
 
 volumes:
