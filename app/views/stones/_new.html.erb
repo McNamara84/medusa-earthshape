@@ -3,7 +3,7 @@
 <legend>Identification</legend>
 
    <div class="mb-3 mb-3-sm" >
-    <%= f.label :name, class: "small" %>
+    <%= f.label :name, "Sample Name", class: "small" %>
     <%= f.text_field :name, class: "form-control input-sm", placeholder: "- required -" %>
   </div>
     <div class="mb-3 mb-3-sm" style="width:200px">
@@ -34,7 +34,7 @@
 
 
    <div class="mb-3 mb-3-sm">
-    <%= f.label :collectionmethod_id, class: "small" %>
+    <%= f.label :collectionmethod_id, "Collection method", class: "small" %>
     <%= f.select :collectionmethod_id, Collectionmethod.order(:name).pluck(:name,:id), { include_blank: true }, class: "form-control input-sm" %>
   </div> 
 
@@ -64,7 +64,7 @@
   </div>
   
   <div class="mb-3 mb-3-sm">
-    <%= f.label :place_global_id, class: "small" %>
+    <%= f.label :place_global_id, "Sampling Location", class: "small" %>
     <div class="input-group">
     
       <%= f.select :place_global_id, Place.choose_global_id(@current_user), { :prompt =>  '- required -'  }, class: "form-control input-sm" %>         
@@ -78,7 +78,7 @@
 
 
    <div class="mb-3 mb-3-sm">
-    <%= f.label :collection_global_id,  class: "small" %>   	
+    <%= f.label :collection_global_id, "Sampling Campaign", class: "small" %>   	
     <div class="input-group">
       <%= f.select :collection_global_id, Collection.choose_global_id(@current_user), { :prompt =>  '- required -'  }, class: "form-control input-sm" %>
       <span class="input-group-text">
@@ -90,7 +90,7 @@
   </div> 
   
     <div class="mb-3 mb-3-sm">
-    <%= f.label :sampledepth, class: "small" %>
+    <%= f.label :sampledepth, "Depth (m from groundlevel)", class: "small" %>
     <%= f.text_field :sampledepth, class: "form-control input-sm", placeholder: "- required -", :title => 'above (+) or below (-)' %>
   </div>
   
@@ -103,15 +103,15 @@
 
 
   <div class="mb-3 mb-3-sm">
-    <%= f.label :quantityunit_id, class: "small" %>
+    <%= f.label :quantityunit_id, "Quantity unit", class: "small" %>
     <%= f.select :quantityunit_id, Quantityunit.order(:name).pluck(:name, :id), { :prompt =>  '- required -' }, class: "form-control input-sm" %>
   </div>  
     <div class="mb-3 mb-3-sm">
-    <%= f.label :quantity_initial, class: "small" %>
+    <%= f.label :quantity_initial, "Quantity (initial)", class: "small" %>
     <%= f.text_field :quantity_initial, placeholder: "- required -", class: "form-control input-sm" %>
   </div>
   <div class="mb-3 mb-3-sm">
-    <%= f.label :quantity, class: "small" %>
+    <%= f.label :quantity, "Quantity (current)", class: "small" %>
     <%= f.text_field :quantity, class: "form-control input-sm" %>
   </div>
 </fieldset>
@@ -125,7 +125,7 @@
     <%= f.text_field :labname, class: "form-control input-sm" %>
   </div>    
   <div class="mb-3 mb-3-sm">
-    <%= f.label :box_global_id, class: "small" %>
+    <%= f.label :box_global_id, "Storageroom/Box", class: "small" %>
     <div class="input-group">
       <%= f.select :box_global_id, Box.choose_global_id(@current_user), { :prompt =>  '- required -'  }, class: "form-control input-sm" %>      
       <span class="input-group-text">
@@ -137,7 +137,7 @@
   </div>  
   
      <div class="mb-3 mb-3-sm">
-    <%= f.label :container_id, class: "small" %>   
+    <%= f.label :container_id, "Container", class: "small" %>   
     <div class="input-group">
       <%= f.select :stonecontainer_type_id, StonecontainerType.order(:name).pluck(:name, :id), { :prompt =>  '- required -' }, class: "form-control input-sm" %>
       <span class="input-group-text">
