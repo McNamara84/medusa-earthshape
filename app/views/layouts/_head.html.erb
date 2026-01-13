@@ -44,19 +44,18 @@
     --bs-table-accent-bg: #d7fef8 !important;
   }
   
-  /* Fix Bootstrap Icons size in show page toolbars and tree views */
-  /* Bootstrap Icons are larger by default than the old Glyphicons */
-  #show-tools .bi,
-  .tool-selector .bi,
-  .tool-content .bi,
-  .tree-node .bi,
-  .btn-toolbar .bi,
-  .btn-group .bi,
-  .btn-group-sm .bi {
-    font-size: 14px !important;
+  /* Fix toolbar button sizes in show pages (Bootstrap 5 buttons are larger than Bootstrap 3) */
+  #show-tools .btn-group-sm .btn,
+  .tool-selector .btn-group-sm .btn {
+    padding: 0.25rem 0.4rem !important;
+    font-size: 0.75rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  /* Ensure icons inside small buttons are also appropriately sized */
+  #show-tools .btn-group-sm .btn .bi,
+  .tool-selector .btn-group-sm .btn .bi {
+    font-size: 0.875rem !important;
     vertical-align: middle !important;
-    line-height: 1 !important;
-    width: auto !important;
-    height: auto !important;
   }
 </style>

@@ -11,35 +11,35 @@
 <div class="row">
   <div id="show-tools" class="col-lg-4">
     <div class="row btn-toolbar tool-selector" role="toolbar">
-      <div class="btn-group btn-group-sm">
+      <div class="btn-group btn-group-sm" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .75rem;">
         <%= link_to family_stone_path(@stone), class: "btn btn-secondary activate", id: "tree-conifer-button", remote: true do %>
-          <%= bi_icon('tree-conifer') %>
+          <%= bi_icon('tree-conifer', size: '14px') %>
         <% end %>
         <% if @stone.has_image? %>
           <%= link_to picture_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "picture-button", remote: true do %>
-            <%= bi_icon('picture') %>
+            <%= bi_icon('picture', size: '14px') %>
           <% end %>
         <% end %>
         <%= link_to map_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "globe-button", remote: true do %>
-          <%= bi_icon('globe') %>
+          <%= bi_icon('globe', size: '14px') %>
         <% end %>
       </div>
       <% if can? :update, @stone %>
-      <div class="btn-group btn-group-sm">
+      <div class="btn-group btn-group-sm" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .75rem;">
         <%= link_to edit_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "pencil-button", remote: true do %>
-          <%= bi_icon('pencil') %>
+          <%= bi_icon('pencil', size: '14px') %>
         <% end %>
         <%= link_to property_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "cog-button", remote: true do %>
-          <%= bi_icon('cog') %>
+          <%= bi_icon('cog', size: '14px') %>
         <% end %>
       </div>
       <% end %>
-      <div class="btn-group btn-group-sm">
+      <div class="btn-group btn-group-sm" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .75rem;">
         <%= link_to download_label_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "tag-button" do %>
-          <%= bi_icon('tag') %>
+          <%= bi_icon('tag', size: '14px') %>
         <% end %>
         <%= link_to download_card_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "file-button" do %>
-          <%= bi_icon('file') %>
+          <%= bi_icon('file', size: '14px') %>
         <% end %>
       </div>
     </div>
