@@ -23,3 +23,24 @@
 <%= stylesheet_link_tag "application", media: "all" %>
 <%= javascript_include_tag "application" %>
 <%= csrf_meta_tags %>
+
+<!-- Override Bootstrap 5 table styles for searchheader turquoise background -->
+<style>
+  .searchheader,
+  .searchheader tr,
+  .searchheader tr th,
+  .searchheader tr td,
+  .table .searchheader,
+  .table .searchheader tr,
+  .table .searchheader tr th,
+  .table .searchheader tr td,
+  .table-striped .searchheader,
+  .table-striped .searchheader tr,
+  .table-striped .searchheader tr th,
+  .table-striped .searchheader tr td {
+    background-color: #d7fef8 !important;
+    --bs-table-bg: #d7fef8 !important;
+    --bs-table-striped-bg: #d7fef8 !important;
+    --bs-table-accent-bg: #d7fef8 !important;
+  }
+</style>
