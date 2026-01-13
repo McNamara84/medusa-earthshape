@@ -128,16 +128,21 @@ module IconHelper
   # @param options [Hash] Additional options
   # @option options [String] :class Additional CSS classes to add
   # @option options [String] :title Title attribute for the icon
+  # @option options [String] :size Font size for the icon (default: '1rem')
   # @option options [Hash] :data Data attributes
   # @return [String] HTML safe icon element
   #
   # @example Basic usage
   #   bi_icon('cloud')
-  #   # => <i class="bi bi-cloud"></i>
+  #   # => <i class="bi bi-cloud" style="font-size: 1rem;"></i>
   #
   # @example With additional classes
   #   bi_icon('cloud', class: 'text-primary me-2')
-  #   # => <i class="bi bi-cloud text-primary me-2"></i>
+  #   # => <i class="bi bi-cloud text-primary me-2" style="font-size: 1rem;"></i>
+  #
+  # @example With custom size
+  #   bi_icon('cloud', size: '1.5rem')
+  #   # => <i class="bi bi-cloud" style="font-size: 1.5rem;"></i>
   #
   def bi_icon(name, options = {})
     # Map old Glyphicon name to Bootstrap Icons name if needed
@@ -147,8 +152,13 @@ module IconHelper
     css_class = "bi bi-#{mapped_name}"
     css_class += " #{options[:class]}" if options[:class].present?
 
+    # Build style attribute with font-size (default 1rem for consistent icon sizing)
+    icon_size = options[:size] || '1rem'
+    style = "font-size: #{icon_size};"
+    style += " #{options[:style]}" if options[:style].present?
+
     # Build HTML attributes
-    html_options = { class: css_class }
+    html_options = { class: css_class, style: style }
     html_options[:title] = options[:title] if options[:title].present?
     html_options[:data] = options[:data] if options[:data].present?
     html_options[:'aria-hidden'] = 'true' unless options[:aria_label].present?

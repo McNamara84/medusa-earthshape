@@ -46,12 +46,17 @@
   
   /* Fix Bootstrap Icons size in show page toolbars and tree views */
   /* Bootstrap Icons are larger by default than the old Glyphicons */
-  #show-tools .btn .bi,
-  .tool-selector .btn .bi,
+  #show-tools .bi,
+  .tool-selector .bi,
   .tool-content .bi,
-  .tree-node .bi {
-    font-size: 14px;
-    vertical-align: middle;
-    line-height: 1;
+  .tree-node .bi,
+  .btn-toolbar .bi,
+  .btn-group .bi,
+  .btn-group-sm .bi {
+    font-size: 14px !important;
+    vertical-align: middle !important;
+    line-height: 1 !important;
+    width: auto !important;
+    height: auto !important;
   }
 </style>
