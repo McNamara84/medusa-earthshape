@@ -46,19 +46,24 @@ if [ ! -f /app/config/database.yml ]; then
 fi
 
 # Wait for database to be ready
-echo "Waiting for database..."
-until PGPASSWORD=$DATABASE_PASSWORD psql -h "$DATABASE_HOST" -U "$DATABASE_USER" -d "$DATABASE_NAME" -c '\q' 2>/dev/null; do
+# First, check if PostgreSQL server is accepting connections (without requiring specific database)
+echo "Waiting for PostgreSQL server..."
+until PGPASSWORD=$DATABASE_PASSWORD psql -h "$DATABASE_HOST" -U "$DATABASE_USER" -d "postgres" -c '\q' 2>/dev/null; do
   >&2 echo "Postgres is unavailable - sleeping"
   sleep 1
 done
 
-echo "Database is ready!"
+echo "PostgreSQL server is ready!"
 
-# Check if database exists and has tables
-if ! bundle exec rails runner "ActiveRecord::Base.connection" 2>/dev/null; then
-  echo "Database connection failed, attempting to create..."
+# Create database if it doesn't exist
+echo "Checking if database '$DATABASE_NAME' exists..."
+if ! PGPASSWORD=$DATABASE_PASSWORD psql -h "$DATABASE_HOST" -U "$DATABASE_USER" -d "$DATABASE_NAME" -c '\q' 2>/dev/null; then
+  echo "Database '$DATABASE_NAME' does not exist, creating..."
   bundle exec rake db:create
+  echo "[OK] Database created"
 fi
+
+echo "Database is ready!"
 
 # Precompile assets in production (only if not already done)
 if [ "$RAILS_ENV" = "production" ] && [ ! -d "public/assets" ]; then
