@@ -1,6 +1,6 @@
 <%= paginate @records %>
 <table class="table table-sm table-striped">
-  <thead  class="searchheader">
+  <thead class="searchheader" style="background-color: #d7fef8 !important;">
     <%= search_form_for @records_search, url: records_path do |f| %>
     <tr>
 	    <th></th><th colspan="6"><u> Search and filter Entries</u></th>

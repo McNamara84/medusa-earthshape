@@ -3,7 +3,7 @@
 <%= link_to "New Entry", stones_path(anchor: "newentry"), class: "btn btn-secondary btn-sm newentrybutton" %>
 
 <table class="table table-sm table-striped">
-  <thead class="searchheader">
+  <thead class="searchheader" style="background-color: #d7fef8 !important;">
     <%= search_form_for @search do |f| %>
 <% if params[:toggle_column] == "expand" %>
 <%= hidden_field_tag :toggle_column, params[:toggle_column] %>

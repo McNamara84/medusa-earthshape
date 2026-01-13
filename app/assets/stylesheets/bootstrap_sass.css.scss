@@ -27,15 +27,32 @@ label.small {
       }
     }
   }
-  
-  // Searchheader turquoise background - must be after Bootstrap import
-  // to override Bootstrap 5 table styling
-  thead.searchheader,
-  thead.searchheader > tr,
-  thead.searchheader > tr > th {
-    --bs-table-bg: #d7fef8 !important;
-    --bs-table-striped-bg: #d7fef8 !important;
-    --bs-table-accent-bg: #d7fef8 !important;
-    background-color: #d7fef8 !important;
-  }
+}
+
+// Searchheader turquoise background - must be after Bootstrap import
+// Override Bootstrap 5.3 table striping which uses nth-of-type selectors
+// Using high specificity selectors to ensure override
+table.table thead.searchheader {
+  background-color: #d7fef8 !important;
+}
+
+table.table thead.searchheader tr {
+  background-color: #d7fef8 !important;
+}
+
+table.table thead.searchheader tr th {
+  background-color: #d7fef8 !important;
+  --bs-table-bg: #d7fef8;
+  --bs-table-striped-bg: #d7fef8;
+  --bs-table-accent-bg: #d7fef8;
+}
+
+// Also override for table-striped specifically
+table.table.table-striped thead.searchheader,
+table.table.table-striped thead.searchheader tr,
+table.table.table-striped thead.searchheader tr th {
+  background-color: #d7fef8 !important;
+  --bs-table-bg: #d7fef8;
+  --bs-table-striped-bg: #d7fef8;
+  --bs-table-accent-bg: #d7fef8;
 }

@@ -3,7 +3,7 @@
 <%= link_to "New Entry", attachment_files_path(anchor: "newentry"), class: "btn btn-secondary btn-sm newentrybutton" %>
 
 <table class="table table-sm table-striped">
-  <thead class="searchheader">
+  <thead class="searchheader" style="background-color: #d7fef8 !important;">
     <%= search_form_for @search do |f| %>
      <tr>
 	    <th></th><th colspan="6"><u> Search and filter <%= AttachmentFile.model_name.human%></u></th><th></th><th></th>
