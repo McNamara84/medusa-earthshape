@@ -27,4 +27,15 @@ label.small {
       }
     }
   }
+  
+  // Searchheader turquoise background - must be after Bootstrap import
+  // to override Bootstrap 5 table styling
+  thead.searchheader,
+  thead.searchheader > tr,
+  thead.searchheader > tr > th {
+    --bs-table-bg: #d7fef8 !important;
+    --bs-table-striped-bg: #d7fef8 !important;
+    --bs-table-accent-bg: #d7fef8 !important;
+    background-color: #d7fef8 !important;
+  }
 }
