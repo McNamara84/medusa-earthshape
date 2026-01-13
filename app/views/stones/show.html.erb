@@ -11,34 +11,34 @@
 <div class="row">
   <div id="show-tools" class="col-lg-4">
     <div class="row btn-toolbar tool-selector" role="toolbar">
-      <div class="btn-group btn-group-sm" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .75rem;">
-        <%= link_to family_stone_path(@stone), class: "btn btn-secondary activate", id: "tree-conifer-button", remote: true do %>
+      <div class="btn-group">
+        <%= link_to family_stone_path(@stone), class: "btn btn-secondary", id: "tree-conifer-button", style: "padding: 0.25rem 0.5rem; font-size: 0.875rem;", remote: true do %>
           <%= bi_icon('tree-conifer', size: '14px') %>
         <% end %>
         <% if @stone.has_image? %>
-          <%= link_to picture_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "picture-button", remote: true do %>
+          <%= link_to picture_stone_path(@stone), class: "btn btn-secondary", id: "picture-button", style: "padding: 0.25rem 0.5rem; font-size: 0.875rem;", remote: true do %>
             <%= bi_icon('picture', size: '14px') %>
           <% end %>
         <% end %>
-        <%= link_to map_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "globe-button", remote: true do %>
+        <%= link_to map_stone_path(@stone), class: "btn btn-secondary", id: "globe-button", style: "padding: 0.25rem 0.5rem; font-size: 0.875rem;", remote: true do %>
           <%= bi_icon('globe', size: '14px') %>
         <% end %>
       </div>
       <% if can? :update, @stone %>
-      <div class="btn-group btn-group-sm" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .75rem;">
-        <%= link_to edit_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "pencil-button", remote: true do %>
+      <div class="btn-group">
+        <%= link_to edit_stone_path(@stone), class: "btn btn-secondary", id: "pencil-button", style: "padding: 0.25rem 0.5rem; font-size: 0.875rem;", remote: true do %>
           <%= bi_icon('pencil', size: '14px') %>
         <% end %>
-        <%= link_to property_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "cog-button", remote: true do %>
+        <%= link_to property_stone_path(@stone), class: "btn btn-secondary", id: "cog-button", style: "padding: 0.25rem 0.5rem; font-size: 0.875rem;", remote: true do %>
           <%= bi_icon('cog', size: '14px') %>
         <% end %>
       </div>
       <% end %>
-      <div class="btn-group btn-group-sm" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .75rem;">
-        <%= link_to download_label_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "tag-button" do %>
+      <div class="btn-group">
+        <%= link_to download_label_stone_path(@stone), class: "btn btn-secondary", id: "tag-button", style: "padding: 0.25rem 0.5rem; font-size: 0.875rem;" do %>
           <%= bi_icon('tag', size: '14px') %>
         <% end %>
-        <%= link_to download_card_stone_path(@stone), class: "btn btn-secondary btn-sm", id: "file-button" do %>
+        <%= link_to download_card_stone_path(@stone), class: "btn btn-secondary", id: "file-button", style: "padding: 0.25rem 0.5rem; font-size: 0.875rem;" do %>
           <%= bi_icon('file', size: '14px') %>
         <% end %>
       </div>
