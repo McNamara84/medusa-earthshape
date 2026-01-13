@@ -43,4 +43,15 @@
     --bs-table-striped-bg: #d7fef8 !important;
     --bs-table-accent-bg: #d7fef8 !important;
   }
+  
+  /* Fix Bootstrap Icons size in show page toolbars and tree views */
+  /* Bootstrap Icons are larger by default than the old Glyphicons */
+  #show-tools .btn .bi,
+  .tool-selector .btn .bi,
+  .tool-content .bi,
+  .tree-node .bi {
+    font-size: 14px;
+    vertical-align: middle;
+    line-height: 1;
+  }
 </style>

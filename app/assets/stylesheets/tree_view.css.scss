@@ -7,5 +7,24 @@
 .tree-node {
   .bi {
     margin: 0px 5px;
+    font-size: 14px;  // Match the old Glyphicon size
+    vertical-align: middle;
+  }
+}
+
+// Fix icon sizes in tool-content area (family tree, map, etc.)
+.tool-content {
+  .bi {
+    font-size: 14px;
+    vertical-align: middle;
+  }
+}
+
+// Fix icon sizes in show-tools toolbar
+#show-tools {
+  .btn .bi {
+    font-size: 14px;
+    vertical-align: middle;
+    line-height: 1;
   }
 }

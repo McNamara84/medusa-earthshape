@@ -1,3 +1,16 @@
 div.tool-selector {
   margin-bottom: 10px;
+  
+  // Fix Bootstrap Icons size in toolbar buttons
+  // Bootstrap Icons are larger by default than the old Glyphicons
+  .btn-group .btn .bi {
+    font-size: 14px;
+    vertical-align: middle;
+    line-height: 1;
+  }
+  
+  // Ensure consistent button sizing
+  .btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+  }
 }
