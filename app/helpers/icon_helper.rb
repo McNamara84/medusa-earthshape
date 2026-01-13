@@ -117,7 +117,9 @@ module IconHelper
     'flag' => 'flag',
     'bookmark' => 'bookmark',
     'fire' => 'fire',
-    'certificate' => 'award'
+    'certificate' => 'award',
+    'off' => 'power',             # Power/logout button
+    'wrench' => 'wrench'          # Settings/tools icon
   }.freeze
 
   # Renders a Bootstrap Icon
