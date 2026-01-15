@@ -55,15 +55,9 @@ done
 
 echo "PostgreSQL server is ready!"
 
-# Create database if it doesn't exist
-echo "Checking if database '$DATABASE_NAME' exists..."
-if ! PGPASSWORD=$DATABASE_PASSWORD psql -h "$DATABASE_HOST" -U "$DATABASE_USER" -d "$DATABASE_NAME" -c '\q' 2>/dev/null; then
-  echo "Database '$DATABASE_NAME' does not exist, creating..."
-  bundle exec rake db:create
-  echo "[OK] Database created"
-fi
-
-echo "Database is ready!"
+# Prepare database (creates, loads schema, runs migrations)
+echo "Preparing database..."
+bundle exec rake db:prepare
 
 # Precompile assets in production (only if not already done)
 if [ "$RAILS_ENV" = "production" ] && [ ! -d "public/assets" ]; then
@@ -72,24 +66,11 @@ if [ "$RAILS_ENV" = "production" ] && [ ! -d "public/assets" ]; then
   echo "[OK] Assets precompiled"
 fi
 
-# Check if database needs setup
+# Seed database if empty (after prepare)
 TABLE_COUNT=$(bundle exec rails runner "puts ActiveRecord::Base.connection.tables.count" 2>/dev/null || echo "0")
 
 if [ "$TABLE_COUNT" = "0" ] || [ "$TABLE_COUNT" = "" ]; then
-  echo "Database is empty, running setup..."
-  
-  # Create database for current environment
-  bundle exec rake db:create 2>/dev/null || true
-  
-  # In development, also create test database to prevent Rails 6.1 schema:load from failing
-  # (Rails 6.1 db:schema:load iterates all environments in database.yml)
-  if [ "$RAILS_ENV" = "development" ]; then
-    echo "Creating test database for development environment..."
-    bundle exec rake db:create RAILS_ENV=test 2>/dev/null || true
-  fi
-  
-  # Run database setup (schema load)
-  bundle exec rake db:schema:load
+  echo "Database is empty, running seeds..."
   
   # Run seeds to load CSV data and create admin user
   if [ -f "db/seeds.rb" ]; then
@@ -139,8 +120,7 @@ if [ "$TABLE_COUNT" = "0" ] || [ "$TABLE_COUNT" = "" ]; then
     fi
   fi
 else
-  echo "Database already set up, running migrations..."
-  bundle exec rake db:migrate
+  echo "Database already populated; skipping seeds"
 fi
 
 # Execute the main command

@@ -49,10 +49,31 @@ jobs:
       - name: Build Docker images
         run: docker compose build
 
-      - name: Start services (db + web)
+      - name: Start database
+        run: docker compose up -d db
+
+      - name: Wait for database to be ready
+        run: |
+          echo "Waiting for PostgreSQL to be ready..."
+          for i in {1..60}; do
+            if docker compose exec -T db pg_isready -U medusa > /dev/null 2>&1; then
+              echo "PostgreSQL is ready!"
+              break
+            fi
+            echo "Waiting... ($i/60)"
+            sleep 2
+          done
+
+      - name: Prepare database schema
         env:
           DISABLE_HTTP_BASIC: "1"
-        run: DISABLE_HTTP_BASIC="${DISABLE_HTTP_BASIC}" docker compose up -d db web
+        run: |
+          docker compose run --rm --entrypoint "" -e DISABLE_HTTP_BASIC="${DISABLE_HTTP_BASIC}" web bundle exec rails db:prepare
+
+      - name: Start services (web)
+        env:
+          DISABLE_HTTP_BASIC: "1"
+        run: DISABLE_HTTP_BASIC="${DISABLE_HTTP_BASIC}" docker compose up -d web
 
       - name: Wait for application to be ready
         run: |
