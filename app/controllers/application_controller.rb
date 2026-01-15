@@ -20,6 +20,9 @@ class ApplicationController < ActionController::Base
   before_action :basic_authentication, unless: :format_html_or_signed_in?  # Rails 5.1: before_filter → before_action
 
   def basic_authentication
+    # Allow disabling HTTP basic auth for automated browser tests (e.g., Playwright in CI)
+    return if ENV["DISABLE_HTTP_BASIC"].present?
+
     authenticate_or_request_with_http_basic do |name, password|
       resource = User.find_by(username: name)
       if resource.valid_password?(password)

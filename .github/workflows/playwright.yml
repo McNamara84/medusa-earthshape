@@ -44,7 +44,9 @@ jobs:
         run: docker compose build
 
       - name: Start services (db + web)
-        run: docker compose up -d db web
+        env:
+          DISABLE_HTTP_BASIC: "1"
+        run: DISABLE_HTTP_BASIC="${DISABLE_HTTP_BASIC}" docker compose up -d db web
 
       - name: Wait for application to be ready
         run: |
