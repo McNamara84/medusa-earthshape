@@ -68,6 +68,10 @@ jobs:
         run: |
           docker compose run --rm --entrypoint "" web bundle exec rails db:prepare
 
+      - name: Seed database (creates admin/test users)
+        run: |
+          docker compose run --rm --entrypoint "" web bundle exec rails db:seed
+
       - name: Start services (web)
         env:
           DISABLE_HTTP_BASIC: "1"
