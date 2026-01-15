@@ -61,6 +61,10 @@ npm run playwright:install
 PLAYWRIGHT_BASE_URL=http://localhost:3000 \
 MEDUSA_E2E_USERNAME=admin MEDUSA_E2E_PASSWORD=admin123 \
 npm run test:e2e
+
+# Run Playwright inside Docker (no host deps; expects web service already running)
+docker compose up -d web
+npm run test:e2e:docker
 ```
 
 - `MEDUSA_E2E_USERNAME` / `MEDUSA_E2E_PASSWORD` default to the seeded development admin (`admin` / `admin123`).
