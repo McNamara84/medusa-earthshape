@@ -1,7 +1,10 @@
 const { test, expect } = require('@playwright/test');
 
-const username = process.env.MEDUSA_E2E_USERNAME || 'admin';
-const password = process.env.MEDUSA_E2E_PASSWORD || 'admin123';
+const username = process.env.MEDUSA_E2E_USERNAME || process.env.MEDUSA_ADMIN_USERNAME || 'admin';
+const password =
+  process.env.MEDUSA_E2E_PASSWORD ||
+  process.env.MEDUSA_ADMIN_PASSWORD ||
+  'vQxPIFMZ';
 
 // Basic sanity check that a seeded user can sign in and reach the main search page.
 test('sign in and view search maps', async ({ page }) => {
