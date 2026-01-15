@@ -1,0 +1,31 @@
+{
+  "name": "medusa-earthshape",
+  "version": "1.0.0",
+  "description": "[![Test Suite](https://github.com/McNamara84/medusa-earthshape/actions/workflows/test.yml/badge.svg)](https://github.com/McNamara84/medusa-earthshape/actions/workflows/test.yml)",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0"
+  },
+  "scripts": {
+    "playwright:install": "playwright install --with-deps chromium",
+    "test": "npm run test:e2e",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "PWDEBUG=1 playwright test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/McNamara84/medusa-earthshape.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/McNamara84/medusa-earthshape/issues"
+  },
+  "homepage": "https://github.com/McNamara84/medusa-earthshape#readme"
+}
