@@ -1,0 +1,87 @@
+name: Playwright E2E
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  e2e:
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Create required config files
+        run: |
+          # Create database.yml with Docker service host
+          cat > config/database.yml << 'EOF'
+          development:
+            adapter: postgresql
+            encoding: unicode
+            database: medusa_development
+            pool: 5
+            username: medusa
+            password: medusa_development
+            host: db
+            port: 5432
+          EOF
+
+          # Create application.yml from example
+          cp config/application.yml.example config/application.yml
+
+      - name: Build Docker images
+        run: docker compose build
+
+      - name: Start services (db + web)
+        run: docker compose up -d db web
+
+      - name: Wait for application to be ready
+        run: |
+          echo "Waiting for http://127.0.0.1:3000/users/sign_in"
+          for i in {1..120}; do
+            if curl -fs "http://127.0.0.1:3000/users/sign_in" > /dev/null; then
+              echo "Application is ready";
+              exit 0;
+            fi
+            sleep 2
+          done
+          echo "Application did not become ready in time"
+          docker compose logs web
+          exit 1
+
+      - name: Install Playwright dependencies
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        env:
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
+          MEDUSA_E2E_USERNAME: admin
+          MEDUSA_E2E_PASSWORD: admin123
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/**
+            test-results/**
+          if-no-files-found: ignore
+
+      - name: Stop services
+        if: always()
+        run: docker compose down -v
