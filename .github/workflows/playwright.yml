@@ -22,6 +22,12 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Reset node_modules permissions
+        run: |
+          sudo rm -rf node_modules
+          mkdir -p node_modules
+          sudo chown -R "$USER:$USER" node_modules
+
       - name: Create required config files
         run: |
           # Create database.yml with Docker service host
