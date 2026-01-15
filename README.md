@@ -44,7 +44,28 @@ docker compose up -d
 **Access the application:**
 - URL: http://localhost:3000
 - Default login (Admin): `admin` / `admin123`
+
+### Playwright UI Tests
+
+Use Playwright to exercise the UI against the Dockerized app (default: http://localhost:3000):
+
+```bash
+# Install JS dependencies and browsers
+npm ci
+npm run playwright:install
+
+# Start the Rails app (Docker, development env)
 - Test login (Non-Admin): `test` / `test123`
+
+# Run the UI suite
+PLAYWRIGHT_BASE_URL=http://localhost:3000 \
+MEDUSA_E2E_USERNAME=admin MEDUSA_E2E_PASSWORD=admin123 \
+npm run test:e2e
+```
+
+- `MEDUSA_E2E_USERNAME` / `MEDUSA_E2E_PASSWORD` default to the seeded development admin (`admin` / `admin123`).
+- Override `PLAYWRIGHT_BASE_URL` to point at another environment (e.g., preview deployment).
+- Reports: `playwright-report/` (HTML), traces/videos in `test-results/`.
 
 **Stop the application:**
 ```bash
