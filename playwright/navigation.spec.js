@@ -40,14 +40,14 @@ test.describe('Primary navigation', () => {
   });
 
   test('samples index shows filter table', async ({ page }) => {
-    await page.getByRole('link', { name: 'Sample' }).click();
+    await page.getByRole('navigation').getByRole('link', { name: 'Sample', exact: true }).click();
     await expect(page).toHaveURL(new RegExp(`${baseURL}/stones`));
     await expect(page.locator('table.table.table-striped')).toBeVisible();
     await expect(page.getByRole('link', { name: 'New Entry' })).toBeVisible();
   });
 
   test('boxes index shows filter table', async ({ page }) => {
-    await page.getByRole('link', { name: 'Storageroom/Box' }).click();
+    await page.getByRole('navigation').getByRole('link', { name: 'Storageroom/Box', exact: true }).click();
     await expect(page).toHaveURL(new RegExp(`${baseURL}/boxes`));
     await expect(page.locator('table.table.table-striped')).toBeVisible();
     await expect(page.getByRole('link', { name: 'New Entry' })).toBeVisible();
