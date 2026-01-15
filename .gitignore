@@ -37,6 +37,10 @@ db_dump
 .env
 .env.prod
 docker-compose.override.yml
+node_modules/
+playwright-report/
+test-results/
+node_modules/.cache/ms-playwright/
 
 # Editor and IDE
 .vscode
