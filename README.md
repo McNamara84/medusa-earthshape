@@ -43,7 +43,9 @@ docker compose up -d
 
 **Access the application:**
 - URL: http://localhost:3000
-- Default login (Admin): `admin` / `admin123`
+- Default login (Admin): `admin` / `vQxPIFMZ` (from `config/application.yml.example` unless overridden by `MEDUSA_ADMIN_PASSWORD`)
+
+- Test login (Non-Admin): `test` / `test123`
 
 ### Playwright UI Tests
 
@@ -54,12 +56,9 @@ Use Playwright to exercise the UI against the Dockerized app (default: http://lo
 npm ci
 npm run playwright:install
 
-# Start the Rails app (Docker, development env)
-- Test login (Non-Admin): `test` / `test123`
-
-# Run the UI suite
+# Run the UI suite (app running on http://localhost:3000)
 PLAYWRIGHT_BASE_URL=http://localhost:3000 \
-MEDUSA_E2E_USERNAME=admin MEDUSA_E2E_PASSWORD=admin123 \
+MEDUSA_E2E_USERNAME=admin MEDUSA_E2E_PASSWORD=vQxPIFMZ \
 npm run test:e2e
 
 # Run Playwright inside Docker (no host deps; expects web service already running)
@@ -67,7 +66,7 @@ docker compose up -d web
 npm run test:e2e:docker
 ```
 
-- `MEDUSA_E2E_USERNAME` / `MEDUSA_E2E_PASSWORD` default to the seeded development admin (`admin` / `admin123`).
+- `MEDUSA_E2E_USERNAME` / `MEDUSA_E2E_PASSWORD` default to the seeded admin (`admin` / `vQxPIFMZ`) unless overridden (e.g., via `MEDUSA_ADMIN_PASSWORD`).
 - Override `PLAYWRIGHT_BASE_URL` to point at another environment (e.g., preview deployment).
 - Reports: `playwright-report/` (HTML), traces/videos in `test-results/`.
 
@@ -559,7 +558,7 @@ curl -u username:password -X POST \
 
 ## License
 
-TODO
+UNLICENSED (set final license before release)
 
 ## Support
 

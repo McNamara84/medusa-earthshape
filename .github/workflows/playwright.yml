@@ -65,10 +65,8 @@ jobs:
           done
 
       - name: Prepare database schema
-        env:
-          DISABLE_HTTP_BASIC: "1"
         run: |
-          docker compose run --rm --entrypoint "" -e DISABLE_HTTP_BASIC="${DISABLE_HTTP_BASIC}" web bundle exec rails db:prepare
+          docker compose run --rm --entrypoint "" web bundle exec rails db:prepare
 
       - name: Start services (web)
         env:
@@ -98,7 +96,7 @@ jobs:
         env:
           PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
           MEDUSA_E2E_USERNAME: admin
-          MEDUSA_E2E_PASSWORD: admin123
+          MEDUSA_E2E_PASSWORD: vQxPIFMZ
         run: npm run test:e2e
 
       - name: Upload Playwright report

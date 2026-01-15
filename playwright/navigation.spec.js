@@ -1,7 +1,10 @@
 const { test, expect } = require('@playwright/test');
 
-const username = process.env.MEDUSA_E2E_USERNAME || 'admin';
-const password = process.env.MEDUSA_E2E_PASSWORD || 'admin123';
+const username = process.env.MEDUSA_E2E_USERNAME || process.env.MEDUSA_ADMIN_USERNAME || 'admin';
+const password =
+  process.env.MEDUSA_E2E_PASSWORD ||
+  process.env.MEDUSA_ADMIN_PASSWORD ||
+  'vQxPIFMZ';
 const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:3000';
 
 async function login(page) {
