@@ -3,9 +3,11 @@ name: Test Suite
 on:
   push:
     branches:
+      - master
       - main
   pull_request:
     branches:
+      - master
       - main
 
 jobs:
@@ -84,17 +86,13 @@ jobs:
           docker compose exec -T db psql -U medusa -d postgres -c "CREATE DATABASE medusa_test OWNER medusa;"
           echo "Test database created successfully"
 
-      - name: Run development migrations (for initializers)
+      - name: Prepare development database (for initializers)
         run: |
-          # Temporarily start web container to run migrations (skip entrypoint in CI)
-          docker compose run --rm --entrypoint "" -e RAILS_ENV=development web bundle exec rake db:migrate || echo "Development migration completed"
+          docker compose run --rm --entrypoint "" -e RAILS_ENV=development web bundle exec rails db:prepare
           echo "Development database setup completed"
 
       - name: Create docker-compose override for CI
         run: |
-          # Override entrypoint for CI to avoid permission issues with entrypoint script
-          # Alternative: Could modify docker-entrypoint.sh to detect CI environment and skip
-          # permission-sensitive operations, but explicit override is clearer for CI debugging
           cat > docker-compose.override.yml << 'EOF'
           services:
             web:
@@ -124,10 +122,10 @@ jobs:
           fi
           echo "Web container is running"
 
-      - name: Run database migrations
+      - name: Prepare test database
         run: |
-          docker compose exec -T web bundle exec rake db:migrate RAILS_ENV=test
-          echo "Migrations completed successfully"
+          docker compose exec -T web bundle exec rails db:prepare RAILS_ENV=test
+          echo "Test database prepared"
 
       - name: Seed test database
         run: |

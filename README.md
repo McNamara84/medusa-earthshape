@@ -43,8 +43,35 @@ docker compose up -d
 
 **Access the application:**
 - URL: http://localhost:3000
-- Default login (Admin): `admin` / `admin123`
+- Default login (Admin): `admin` / `vQxPIFMZ` (from `config/application.yml.example` unless overridden by `MEDUSA_ADMIN_PASSWORD`)
+
 - Test login (Non-Admin): `test` / `test123`
+
+### Playwright UI Tests
+
+Use Playwright to exercise the UI against the Dockerized app (default: http://localhost:3000):
+
+```bash
+# Install JS dependencies and browsers
+npm ci
+npm run playwright:install
+
+# Run the UI suite (app running on http://localhost:3000)
+PLAYWRIGHT_BASE_URL=http://localhost:3000 \
+MEDUSA_E2E_USERNAME=admin MEDUSA_E2E_PASSWORD=vQxPIFMZ \
+npm run test:e2e
+
+# Run Playwright inside Docker (no host Node.js required)
+# First start the web service, then run tests from a separate container
+docker compose up -d web
+npm run test:e2e:docker
+```
+
+- `MEDUSA_E2E_USERNAME` / `MEDUSA_E2E_PASSWORD` default to the seeded admin (`admin` / `vQxPIFMZ`) unless overridden (e.g., via `MEDUSA_ADMIN_PASSWORD`).
+- Override `PLAYWRIGHT_BASE_URL` to point at another environment (e.g., preview deployment).
+- Reports: `playwright-report/` (HTML), traces/videos in `test-results/`.
+
+**CI/Test Password Behavior:** When running `db:seed` with `CI=true` or `MEDUSA_ADMIN_PASSWORD` set, the admin password is always reset to the specified value (even for existing users). This ensures consistent credentials for E2E tests. In local development without these variables, existing user passwords are preserved.
 
 **Stop the application:**
 ```bash
@@ -534,7 +561,7 @@ curl -u username:password -X POST \
 
 ## License
 
-TODO
+UNLICENSED (set final license before release)
 
 ## Support
 

@@ -1,0 +1,32 @@
+{
+  "name": "medusa-earthshape",
+  "version": "1.0.0",
+  "description": "E2E testing suite for Medusa EarthShape sample management system",
+  "directories": {
+    "lib": "lib"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0"
+  },
+  "scripts": {
+    "playwright:install": "playwright install --with-deps chromium",
+    "test": "npm run test:e2e",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "PWDEBUG=1 playwright test",
+    "_comment:test:e2e:docker": "One-shot CI command: installs deps, browser, and runs tests inside Docker",
+    "test:e2e:docker": "docker compose run --rm web bash -lc 'npm ci && npx playwright install chromium && PLAYWRIGHT_BASE_URL=http://web:3000 npm run test:e2e'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/McNamara84/medusa-earthshape.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/McNamara84/medusa-earthshape/issues"
+  },
+  "homepage": "https://github.com/McNamara84/medusa-earthshape#readme"
+}

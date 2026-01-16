@@ -23,7 +23,9 @@ def ensure_user_with_group_and_box!(username:, administrator:, email:, password:
   user.administrator = administrator
   user.email = email
 
-  if user.new_record?
+  # Set password for new users, or force reset in CI/test environments
+  # CI sets MEDUSA_ADMIN_PASSWORD to ensure known credentials for E2E tests
+  if user.new_record? || ENV['CI'].present? || ENV['MEDUSA_ADMIN_PASSWORD'].present?
     user.password = password
     user.password_confirmation = password
   end

@@ -46,6 +46,7 @@ services:
       DATABASE_USER: medusa
       DATABASE_PASSWORD: medusa_development
       DATABASE_NAME: medusa_development
+      DISABLE_HTTP_BASIC: ${DISABLE_HTTP_BASIC:-}
       RAILS_ENV: development
       RACK_ENV: development
     stdin_open: true
