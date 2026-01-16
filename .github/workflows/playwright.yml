@@ -69,8 +69,10 @@ jobs:
           docker compose run --rm --entrypoint "" web bundle exec rails db:prepare
 
       - name: Seed database (creates admin/test users)
+        env:
+          MEDUSA_ADMIN_PASSWORD: vQxPIFMZ
         run: |
-          docker compose run --rm --entrypoint "" web bundle exec rails db:seed
+          docker compose run --rm -e MEDUSA_ADMIN_PASSWORD="${MEDUSA_ADMIN_PASSWORD}" --entrypoint "" web bundle exec rails db:seed
 
       - name: Start services (web)
         env:
