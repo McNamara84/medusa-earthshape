@@ -36,14 +36,47 @@ en:
     unlink: "Are you sure you want to unlink?"
   activerecord:
     models:
+      # Main domain models
       stonecontainer_type: "Container"
       place: "Sampling Location"
       stone: "Sample"
       box: "Storageroom/Box"
       collection: "Sampling Campaign"
       attachment_file: "File"
-      bib: "Bibliography"      
+      bib: "Bibliography"
       staging: "Import of CSV"
+      analysis: "Analysis"
+      # Classification & Material
+      classification: "Classification"
+      physical_form: "Physical form"
+      # Measurement & Analysis
+      measurement_item: "Measurement item"
+      measurement_category: "Measurement category"
+      unit: "Unit"
+      technique: "Technique"
+      device: "Device"
+      author: "Author"
+      chemistry: "Chemistry"
+      spot: "Spot"
+      # Users & Groups
+      user: "User"
+      group: "Group"
+      # Location attributes
+      vegetation: "Vegetation"
+      topographic_position: "Topographic position"
+      landuse: "Land use"
+      # Storage
+      box_type: "Box type"
+      # Preparation & Methods
+      preparation_type: "Preparation type"
+      preparation_for_classification: "Preparation for classification"
+      preparation: "Preparation"
+      collectionmethod: "Collection method"
+      quantityunit: "Quantity unit"
+      # Other
+      record_property: "Record property"
+      attaching: "Attaching"
+      referring: "Referring"
     attributes:
       bib:
         doi: "DOI"
