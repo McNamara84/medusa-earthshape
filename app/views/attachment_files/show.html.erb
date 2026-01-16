@@ -9,9 +9,9 @@
 </div>
 <div class="row">
   <div id="show-tools" class="col-lg-4">
-    <div class="btn-toolbar mb-2" role="toolbar">
+    <div class="btn-toolbar tool-selector mb-2" role="toolbar">
       <div class="btn-group me-2">
-        <%= link_to picture_attachment_file_path(@attachment_file), class: "btn btn-outline-secondary btn-sm", remote: true do %>
+        <%= link_to picture_attachment_file_path(@attachment_file), class: "btn btn-outline-secondary btn-sm activate", remote: true do %>
           <%= bi_icon('picture', size: '14px') %>
         <% end %>
       </div>

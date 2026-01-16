@@ -9,9 +9,9 @@
 </div>
 <div class="row">
   <div id="show-tools" class="col-lg-4">
-    <div class="btn-toolbar mb-2" role="toolbar">
+    <div class="btn-toolbar tool-selector mb-2" role="toolbar">
       <div class="btn-group me-2">
-        <%= link_to family_box_path(@box), class: "btn btn-outline-secondary btn-sm", id: "tree-conifer-button", remote: true do %>
+        <%= link_to family_box_path(@box), class: "btn btn-outline-secondary btn-sm activate", id: "tree-conifer-button", remote: true do %>
           <%= bi_icon('tree-conifer', size: '14px') %>
         <% end %>
         <% if @box.has_image? %>
