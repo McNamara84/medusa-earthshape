@@ -74,30 +74,12 @@ jobs:
         run: |
           docker compose run --rm -e MEDUSA_ADMIN_PASSWORD="${MEDUSA_ADMIN_PASSWORD}" --entrypoint "" web bundle exec rails db:seed
 
-      - name: Verify admin user exists
+      - name: Verify admin user credentials
         run: |
           docker compose run --rm --entrypoint "" web bundle exec rails runner "
-            user = User.find_by(username: 'admin')
-            if user
-              puts 'Admin user found: ' + user.username
-              puts 'Administrator: ' + user.administrator.to_s
-              puts 'Email: ' + user.email.to_s
-              # Test authentication
-              if user.valid_password?('vQxPIFMZ')
-                puts 'Password vQxPIFMZ: VALID'
-              else
-                puts 'Password vQxPIFMZ: INVALID'
-                # Try other common passwords
-                %w[admin123 changeme].each do |pwd|
-                  if user.valid_password?(pwd)
-                    puts 'Password ' + pwd + ': VALID'
-                  end
-                end
-              end
-            else
-              puts 'ERROR: Admin user not found!'
-              puts 'All users: ' + User.pluck(:username).join(', ')
-            end
+            user = User.find_by!(username: 'admin')
+            raise 'Invalid password' unless user.valid_password?('vQxPIFMZ')
+            puts 'Admin user verified successfully'
           "
 
       - name: Start services (web)
@@ -123,7 +105,6 @@ jobs:
         run: |
           npm ci
           npx playwright install --with-deps chromium
-          mkdir -p test-results
 
       - name: Run Playwright tests
         env:

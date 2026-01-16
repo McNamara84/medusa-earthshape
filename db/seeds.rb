@@ -23,10 +23,12 @@ def ensure_user_with_group_and_box!(username:, administrator:, email:, password:
   user.administrator = administrator
   user.email = email
 
-  # Always set the password to ensure it matches the expected value
-  # This is important for CI/E2E tests where we need a known password
-  user.password = password
-  user.password_confirmation = password
+  # Set password for new users, or force reset in CI/test environments
+  # CI sets MEDUSA_ADMIN_PASSWORD to ensure known credentials for E2E tests
+  if user.new_record? || ENV['CI'].present? || ENV['MEDUSA_ADMIN_PASSWORD'].present?
+    user.password = password
+    user.password_confirmation = password
+  end
 
   user.save!
 

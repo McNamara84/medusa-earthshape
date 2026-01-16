@@ -38,22 +38,21 @@ test.describe('Primary navigation', () => {
 
     for (const destination of destinations) {
       await page.getByRole('link', { name: destination.label }).click();
-      const pathPattern = destination.path.replace(/\//g, '\\/');
-      await expect(page).toHaveURL(new RegExp(`${baseURL}${pathPattern}`));
+      await expect(page).toHaveURL(`${baseURL}${destination.path}`);
       await expect(page.getByRole('navigation')).toBeVisible();
     }
   });
 
   test('samples index shows filter table', async ({ page }) => {
     await page.getByRole('navigation').getByRole('link', { name: 'Sample', exact: true }).click();
-    await expect(page).toHaveURL(new RegExp(`${baseURL}/stones`));
+    await expect(page).toHaveURL(`${baseURL}/stones`);
     await expect(page.locator('table.table.table-striped')).toBeVisible();
     await expect(page.getByRole('link', { name: 'New Entry' })).toBeVisible();
   });
 
   test('boxes index shows filter table', async ({ page }) => {
     await page.getByRole('navigation').getByRole('link', { name: 'Storageroom/Box', exact: true }).click();
-    await expect(page).toHaveURL(new RegExp(`${baseURL}/boxes`));
+    await expect(page).toHaveURL(`${baseURL}/boxes`);
     await expect(page.locator('table.table.table-striped')).toBeVisible();
     await expect(page.getByRole('link', { name: 'New Entry' })).toBeVisible();
   });
