@@ -66,7 +66,11 @@ class StonesController < ApplicationController
   def igsn_register
 
     if current_user.admin?
-        igsn=IgsnHelper::Igsn.new(:user =>"user", :password=>"secret", :endpoint=>'https://doidb.wdc-terra.org/igsnaa')
+        igsn=IgsnHelper::Igsn.new(
+          :user => ENV.fetch('IGSN_USER'),
+          :password => ENV.fetch('IGSN_PASSWORD'),
+          :endpoint => ENV.fetch('IGSN_ENDPOINT', 'https://doidb.wdc-terra.org/igsnaa')
+        )
         stone=Stone.find(params[:id])
 
 	igsnparents= Array.new
