@@ -4,6 +4,9 @@
  * Credentials are read from environment variables with fallback defaults.
  * In CI, set MEDUSA_E2E_USERNAME and MEDUSA_E2E_PASSWORD (or MEDUSA_ADMIN_*).
  * The fallback password matches config/application.yml.example for local development.
+ *
+ * WARNING: The default password is for LOCAL DEVELOPMENT ONLY.
+ * In CI/production-like environments, always set MEDUSA_E2E_PASSWORD explicitly.
  */
 
 const config = {

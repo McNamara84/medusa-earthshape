@@ -21,9 +21,10 @@ class ApplicationController < ActionController::Base
 
   def basic_authentication
     # Allow disabling HTTP basic auth for automated browser tests (e.g., Playwright in CI)
-    # SECURITY: Only honored in development/test environments to prevent accidental production bypass
+    # SECURITY: Only honored in development/test environments to prevent accidental bypass
+    # in staging, timemachine, or other sensitive environments
     # Must be explicitly set to "1" to prevent accidental activation with values like "0" or "false"
-    return if ENV["DISABLE_HTTP_BASIC"] == "1" && !Rails.env.production?
+    return if ENV["DISABLE_HTTP_BASIC"] == "1" && (Rails.env.development? || Rails.env.test?)
 
     authenticate_or_request_with_http_basic do |name, password|
       resource = User.find_by(username: name)

@@ -83,7 +83,9 @@ jobs:
         run: |
           docker compose run --rm -e MEDUSA_ADMIN_PASSWORD="${MEDUSA_ADMIN_PASSWORD}" --entrypoint "" web bundle exec rails runner "
             user = User.find_by!(username: 'admin')
-            raise 'Invalid password' unless user.valid_password?(ENV['MEDUSA_ADMIN_PASSWORD'])
+            unless user.valid_password?(ENV['MEDUSA_ADMIN_PASSWORD'])
+              raise 'Admin user password verification failed - password does not match MEDUSA_ADMIN_PASSWORD. Check that db:seed ran successfully.'
+            end
             puts 'Admin user verified successfully'
           "
 
