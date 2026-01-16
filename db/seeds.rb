@@ -23,10 +23,10 @@ def ensure_user_with_group_and_box!(username:, administrator:, email:, password:
   user.administrator = administrator
   user.email = email
 
-  if user.new_record?
-    user.password = password
-    user.password_confirmation = password
-  end
+  # Always set the password to ensure it matches the expected value
+  # This is important for CI/E2E tests where we need a known password
+  user.password = password
+  user.password_confirmation = password
 
   user.save!
 

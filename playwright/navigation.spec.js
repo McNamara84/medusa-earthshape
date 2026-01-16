@@ -9,10 +9,12 @@ const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:3000';
 
 async function login(page) {
   await page.goto(`${baseURL}/users/sign_in`);
-  await page.getByLabel('Username').fill(username);
-  await page.getByLabel('Password').fill(password);
+  // Use more specific selectors that match the Rails form_for output
+  await page.locator('#user_username').fill(username);
+  await page.locator('#user_password').fill(password);
   await page.getByRole('button', { name: 'Sign in' }).click();
-  await expect(page.locator('a[title="logout"]')).toBeVisible();
+  await page.waitForLoadState('networkidle');
+  await expect(page.locator('a[title="logout"]')).toBeVisible({ timeout: 15000 });
 }
 
 test.describe('Primary navigation', () => {
