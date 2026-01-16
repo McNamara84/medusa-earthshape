@@ -70,6 +70,8 @@ npm run test:e2e:docker
 - Override `PLAYWRIGHT_BASE_URL` to point at another environment (e.g., preview deployment).
 - Reports: `playwright-report/` (HTML), traces/videos in `test-results/`.
 
+**CI/Test Password Behavior:** When running `db:seed` with `CI=true` or `MEDUSA_ADMIN_PASSWORD` set, the admin password is always reset to the specified value (even for existing users). This ensures consistent credentials for E2E tests. In local development without these variables, existing user passwords are preserved.
+
 **Stop the application:**
 ```bash
 docker compose down
