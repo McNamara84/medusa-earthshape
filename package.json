@@ -1,8 +1,7 @@
 {
   "name": "medusa-earthshape",
   "version": "1.0.0",
-  "description": "[![Test Suite](https://github.com/McNamara84/medusa-earthshape/actions/workflows/test.yml/badge.svg)](https://github.com/McNamara84/medusa-earthshape/actions/workflows/test.yml)",
-  "main": "index.js",
+  "description": "E2E testing suite for Medusa EarthShape sample management system",
   "directories": {
     "lib": "lib"
   },

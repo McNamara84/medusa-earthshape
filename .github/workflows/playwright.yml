@@ -58,11 +58,14 @@ jobs:
           for i in {1..60}; do
             if docker compose exec -T db pg_isready -U medusa > /dev/null 2>&1; then
               echo "PostgreSQL is ready!"
-              break
+              exit 0
             fi
             echo "Waiting... ($i/60)"
             sleep 2
           done
+          echo "ERROR: PostgreSQL did not become ready after 60 attempts (120 seconds)"
+          docker compose logs db
+          exit 1
 
       - name: Prepare database schema
         run: |

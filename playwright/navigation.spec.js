@@ -24,6 +24,7 @@ test.describe('Primary navigation', () => {
     for (const destination of destinations) {
       await page.getByRole('link', { name: destination.label }).click();
       await expect(page).toHaveURL(`${config.baseURL}${destination.path}`);
+      await page.waitForLoadState('networkidle');
       await expect(page.getByRole('navigation')).toBeVisible();
     }
   });
