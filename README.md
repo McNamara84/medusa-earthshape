@@ -61,7 +61,8 @@ PLAYWRIGHT_BASE_URL=http://localhost:3000 \
 MEDUSA_E2E_USERNAME=admin MEDUSA_E2E_PASSWORD=vQxPIFMZ \
 npm run test:e2e
 
-# Run Playwright inside Docker (no host deps; expects web service already running)
+# Run Playwright inside Docker (no host Node.js required)
+# First start the web service, then run tests from a separate container
 docker compose up -d web
 npm run test:e2e:docker
 ```
