@@ -5,25 +5,24 @@
 </div>
 <div class="row">
   <div id="show-tools" class="col-lg-4">
-    <div class="row btn-toolbar tool-selector" role="toolbar">
-      <div class="btn-group btn-group-sm">
-	<%= link_to map_collection_path(@collection), class: "btn btn-secondary activate", remote: true do %>
-	  <%= bi_icon('globe') %>
+    <div class="btn-toolbar mb-2" role="toolbar">
+      <div class="btn-group me-2">
+	<%= link_to map_collection_path(@collection), class: "btn btn-outline-secondary btn-sm", remote: true do %>
+	  <%= bi_icon('globe', size: '14px') %>
 	<% end %>
       </div>    
       <% if can? :update, @place %>
-      <div class="btn-group btn-group-sm">
-	<%= link_to edit_collection_path(@collection), class: "btn btn-secondary btn-sm", remote: true do %>
-	  <%= bi_icon('pencil') %>
+      <div class="btn-group me-2">
+	<%= link_to edit_collection_path(@collection), class: "btn btn-outline-secondary btn-sm", remote: true do %>
+	  <%= bi_icon('pencil', size: '14px') %>
 	<% end %>
-	<%= link_to property_collection_path(@collection), class: "btn btn-secondary btn-sm", remote: true do %>
-	  <%= bi_icon('cog') %>
+	<%= link_to property_collection_path(@collection), class: "btn btn-outline-secondary btn-sm", remote: true do %>
+	  <%= bi_icon('cog', size: '14px') %>
 	<% end %>
       </div>
      <% end %>
     </div>
-    <img>
-    <div class="row tool-content">
+    <div class="tool-content">
     </div>
   </div>
   <div id="show-body" class="col-lg-8">

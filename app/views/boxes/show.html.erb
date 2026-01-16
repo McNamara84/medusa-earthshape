@@ -9,38 +9,37 @@
 </div>
 <div class="row">
   <div id="show-tools" class="col-lg-4">
-    <div class="row btn-toolbar tool-selector" role="toolbar">
-      <div class="btn-group btn-group-sm">
-        <%= link_to family_box_path(@box), class: "btn btn-secondary activate",  id: "tree-conifer-button", remote: true do %>
-          <%= bi_icon('tree-conifer') %>
+    <div class="btn-toolbar mb-2" role="toolbar">
+      <div class="btn-group me-2">
+        <%= link_to family_box_path(@box), class: "btn btn-outline-secondary btn-sm", id: "tree-conifer-button", remote: true do %>
+          <%= bi_icon('tree-conifer', size: '14px') %>
         <% end %>
         <% if @box.has_image? %>
-          <%= link_to picture_box_path(@box), class: "btn btn-secondary btn-sm", id: "picture-button", remote: true do %>
-            <%= bi_icon('picture') %>
+          <%= link_to picture_box_path(@box), class: "btn btn-outline-secondary btn-sm", id: "picture-button", remote: true do %>
+            <%= bi_icon('picture', size: '14px') %>
           <% end %>
         <% end %>
       </div>
       <% if can? :update, @box %>
-      <div class="btn-group btn-group-sm">
-        <%= link_to edit_box_path(@box), class: "btn btn-secondary btn-sm", id: "pencil-button", remote: true do %>
-          <%= bi_icon('pencil') %>
+      <div class="btn-group me-2">
+        <%= link_to edit_box_path(@box), class: "btn btn-outline-secondary btn-sm", id: "pencil-button", remote: true do %>
+          <%= bi_icon('pencil', size: '14px') %>
         <% end %>
-        <%= link_to property_box_path(@box), class: "btn btn-secondary btn-sm", id: "cog-button", remote: true do %>
-          <%= bi_icon('cog') %>
+        <%= link_to property_box_path(@box), class: "btn btn-outline-secondary btn-sm", id: "cog-button", remote: true do %>
+          <%= bi_icon('cog', size: '14px') %>
         <% end %>
       </div>
       <% end %>
-      <div class="btn-group btn-group-sm">
-        <%= link_to download_label_box_path(@box), class: "btn btn-secondary btn-sm", id: "tag-button" do %>
-          <%= bi_icon('tag') %>
+      <div class="btn-group me-2">
+        <%= link_to download_label_box_path(@box), class: "btn btn-outline-secondary btn-sm", id: "tag-button" do %>
+          CSV
         <% end %>
-        <%= link_to download_card_box_path(@box), class: "btn btn-secondary btn-sm", id: "file-button" do %>
-          <%= bi_icon('file') %>
+        <%= link_to download_card_box_path(@box), class: "btn btn-outline-secondary btn-sm", id: "file-button" do %>
+          <%= bi_icon('file', size: '14px') %>
         <% end %>
       </div>
     </div>
-    <img>
-    <div class="row tool-content">
+    <div class="tool-content">
     </div>
   </div>
 
