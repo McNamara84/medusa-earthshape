@@ -62,8 +62,9 @@ RUN if [ -d "db/csvs" ] && [ "$(ls -A db/csvs/*.csv 2>/dev/null)" ]; then \
       chmod 755 /tmp/medusa_csv_files || true; \
     fi
 
-# Precompile assets (will be done in entrypoint for development)
-# RUN RAILS_ENV=production bundle exec rake assets:precompile
+# Precompile assets for production
+# SECRET_KEY_BASE dummy value is needed for asset compilation (not used at runtime)
+RUN RAILS_ENV=production SECRET_KEY_BASE=dummy_key_for_asset_precompilation bundle exec rake assets:precompile
 
 # Make entrypoint script executable
 # The entrypoint is configured in docker-compose.yml (line 20), not in Dockerfile
