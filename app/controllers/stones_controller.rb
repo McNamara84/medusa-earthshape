@@ -64,59 +64,103 @@ class StonesController < ApplicationController
   end
 
   def igsn_register
-
-    if current_user.admin?
-        igsn=IgsnHelper::Igsn.new(
-          :user => ENV.fetch('IGSN_USER'),
-          :password => ENV.fetch('IGSN_PASSWORD'),
-          :endpoint => ENV.fetch('IGSN_ENDPOINT', 'https://doidb.wdc-terra.org/igsnaa')
-        )
-        stone=Stone.find(params[:id])
-
-	igsnparents= Array.new
-
-	begin 
-	  igsnparents << {stone: stone, igsn: stone.igsn, regmetadata: genregmetadata(stone), metadata: genmetadata(stone)}
-	  stone=stone.parent
-	end while stone
-
-	igsnsample=igsnparents.shift
-
-	#register parents
-	igsnparents.reverse_each do |stone| 
-	#send_data(metadata, filename: "igsn.xml", type: "text/xml")	
-		begin
-			logger.info "Looking up IGSN "+stone[:igsn]+"..."
-			igsn.resolve(stone[:igsn])
-			logger.info "...found "+stone[:igsn]
-		rescue  RestClient::ResourceNotFound => err
-			logger.info "Registering parent "+stone[:igsn]
-			igsn.mint(stone[:igsn],"http://dataservices.gfz-potsdam.de/igsn/esg/index.php?igsn="+stone[:igsn])
-			igsn.upload_regmetadata(stone[:regmetadata])
-			igsn.upload_metadata(stone[:igsn],stone[:metadata])
-		end
-	end
-
-	#register requested sample
-	logger.info "Registering "+igsnsample[:igsn]
-#	logger.info "Registering"+igsnsample[:regmetadata]
-#	logger.info "Registering"+igsnsample[:metadata]
-	igsn.mint(igsnsample[:igsn],"http://dataservices.gfz-potsdam.de/igsn/esg/index.php?igsn="+igsnsample[:igsn])
-
-        begin
-                igsn.upload_regmetadata(igsnsample[:regmetadata])
-                igsn.upload_metadata(igsnsample[:igsn],igsnsample[:metadata])
-        rescue
-                igsn.upload_metadata(igsnsample[:igsn],igsnsample[:metadata])
-                igsn.upload_regmetadata(igsnsample[:regmetadata])
-        end
-
-
-        solr=SolrHelper::Solr.new(:user=>"user",:password=>"secret")
-        solr.deltaupdate
+    logger.info "=== IGSN REGISTER START ==="
+    logger.info "User: #{current_user.try(:email)} (admin: #{current_user.try(:admin?)})"
+    
+    unless current_user.admin?
+      logger.warn "IGSN Register: User is not admin, aborting"
+      flash[:error] = "Only administrators can register IGSNs"
+      redirect_to stone_url(@stone)
+      return
     end
 
-    redirect_to stone_url(@stone)	  
+    begin
+      # Check environment variables
+      logger.info "IGSN_USER present: #{ENV['IGSN_USER'].present?}"
+      logger.info "IGSN_PASSWORD present: #{ENV['IGSN_PASSWORD'].present?}"
+      logger.info "IGSN_ENDPOINT: #{ENV.fetch('IGSN_ENDPOINT', 'https://doidb.wdc-terra.org/igsnaa')}"
+      
+      igsn = IgsnHelper::Igsn.new(
+        :user => ENV.fetch('IGSN_USER'),
+        :password => ENV.fetch('IGSN_PASSWORD'),
+        :endpoint => ENV.fetch('IGSN_ENDPOINT', 'https://doidb.wdc-terra.org/igsnaa')
+      )
+      logger.info "IGSN Helper initialized successfully"
+      
+      stone = Stone.find(params[:id])
+      logger.info "Stone found: #{stone.id} - #{stone.name} - IGSN: #{stone.igsn}"
+
+      igsnparents = Array.new
+
+      begin 
+        logger.info "Processing stone: #{stone.id} with IGSN: #{stone.igsn}"
+        igsnparents << {stone: stone, igsn: stone.igsn, regmetadata: genregmetadata(stone), metadata: genmetadata(stone)}
+        stone = stone.parent
+      end while stone
+
+      igsnsample = igsnparents.shift
+      logger.info "Main sample IGSN: #{igsnsample[:igsn]}"
+      logger.info "Parent samples count: #{igsnparents.count}"
+
+      # Register parents
+      igsnparents.reverse_each do |parent_stone|
+        begin
+          logger.info "Looking up parent IGSN #{parent_stone[:igsn]}..."
+          igsn.resolve(parent_stone[:igsn])
+          logger.info "...found #{parent_stone[:igsn]}"
+        rescue RestClient::ResourceNotFound => err
+          logger.info "Registering parent #{parent_stone[:igsn]}"
+          igsn.mint(parent_stone[:igsn], "http://dataservices.gfz-potsdam.de/igsn/esg/index.php?igsn=#{parent_stone[:igsn]}")
+          igsn.upload_regmetadata(parent_stone[:regmetadata])
+          igsn.upload_metadata(parent_stone[:igsn], parent_stone[:metadata])
+        rescue => e
+          logger.error "Error processing parent IGSN #{parent_stone[:igsn]}: #{e.class} - #{e.message}"
+          logger.error e.backtrace.first(10).join("\n")
+          raise e
+        end
+      end
+
+      # Register requested sample
+      logger.info "Registering main sample IGSN: #{igsnsample[:igsn]}"
+      igsn.mint(igsnsample[:igsn], "http://dataservices.gfz-potsdam.de/igsn/esg/index.php?igsn=#{igsnsample[:igsn]}")
+
+      begin
+        igsn.upload_regmetadata(igsnsample[:regmetadata])
+        igsn.upload_metadata(igsnsample[:igsn], igsnsample[:metadata])
+      rescue => e
+        logger.warn "First metadata upload order failed, trying reverse: #{e.message}"
+        igsn.upload_metadata(igsnsample[:igsn], igsnsample[:metadata])
+        igsn.upload_regmetadata(igsnsample[:regmetadata])
+      end
+
+      logger.info "IGSN registration successful, updating Solr..."
+      
+      # Solr update - use env vars if available
+      solr_user = ENV.fetch('SOLR_USER', 'user')
+      solr_password = ENV.fetch('SOLR_PASSWORD', 'secret')
+      solr = SolrHelper::Solr.new(:user => solr_user, :password => solr_password)
+      solr.deltaupdate
+      
+      logger.info "=== IGSN REGISTER COMPLETE ==="
+      flash[:notice] = "IGSN #{igsnsample[:igsn]} registered successfully"
+      
+    rescue KeyError => e
+      logger.error "IGSN Register: Missing environment variable: #{e.message}"
+      flash[:error] = "IGSN configuration error: Missing #{e.message}"
+    rescue RestClient::Unauthorized => e
+      logger.error "IGSN Register: Authentication failed: #{e.message}"
+      flash[:error] = "IGSN authentication failed. Please check credentials."
+    rescue RestClient::Exception => e
+      logger.error "IGSN Register: REST API error: #{e.class} - #{e.message}"
+      logger.error "Response body: #{e.response.body}" if e.response
+      flash[:error] = "IGSN API error: #{e.message}"
+    rescue => e
+      logger.error "IGSN Register: Unexpected error: #{e.class} - #{e.message}"
+      logger.error e.backtrace.first(15).join("\n")
+      flash[:error] = "IGSN registration failed: #{e.message}"
+    end
+
+    redirect_to stone_url(@stone)
   end
 
   def download_card
