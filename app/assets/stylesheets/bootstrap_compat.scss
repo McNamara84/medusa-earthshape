@@ -4,6 +4,15 @@
 // These classes can be removed after full migration is complete.
 
 // =================================
+// Bootstrap 3 → 5 hidden class compatibility
+// Bootstrap 5 removed the .hidden class, use .d-none instead
+// This provides backward compatibility for legacy code
+// =================================
+.hidden {
+  display: none !important;
+}
+
+// =================================
 // Bootstrap 3 → 5 form size compatibility
 // input-sm was renamed to form-control-sm in Bootstrap 4/5
 // =================================
