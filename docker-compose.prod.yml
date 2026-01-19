@@ -156,6 +156,9 @@ services:
       # Rails relative URL root for /sec prefix
       RAILS_RELATIVE_URL_ROOT: /sec
       TRAEFIK_HOST: ${TRAEFIK_HOST:-env.rz-vm499.gfz.de}
+      IGSN_USER: ${IGSN_USER:-}
+      IGSN_PASSWORD: ${IGSN_PASSWORD:-}
+      IGSN_ENDPOINT: ${IGSN_ENDPOINT:-https://doidb.wdc-terra.org/igsnaa}
     stdin_open: true
     tty: true
     networks:
