@@ -88,6 +88,11 @@ services:
       RAILS_RELATIVE_URL_ROOT: /esm
       # Traefik host (optional, uses default if not set)
       TRAEFIK_HOST: ${TRAEFIK_HOST:-env.rz-vm499.gfz.de}
+      # IGSN Registration - credentials for DataCite IGSN API
+      # Set these in Portainer environment variables
+      IGSN_USER: ${IGSN_USER:-}
+      IGSN_PASSWORD: ${IGSN_PASSWORD:-}
+      IGSN_ENDPOINT: ${IGSN_ENDPOINT:-https://doidb.wdc-terra.org/igsnaa}
     stdin_open: true
     tty: true
     networks:
