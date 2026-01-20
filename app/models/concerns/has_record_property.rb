@@ -9,7 +9,7 @@ module HasRecordProperty
     has_one :user, through: :record_property
     has_one :group, through: :record_property
     accepts_nested_attributes_for :record_property
-    delegate :global_id, :published_at, :readable?, to: :record_property
+    delegate :global_id, :published_at, to: :record_property
     delegate :user_id, :group_id, :published, to: :record_property, allow_nil: true
 
     after_create :generate_record_property
@@ -156,6 +156,12 @@ module HasRecordProperty
 
   def published=(published)
     record_property && record_property.published = published
+  end
+
+  # Permission checking methods that properly forward the user argument
+  # to RecordProperty. These are used by CanCan authorization in Ability class.
+  def readable?(user)
+    record_property&.readable?(user) || false
   end
 
   def writable?(user)

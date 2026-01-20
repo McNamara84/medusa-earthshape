@@ -31,13 +31,14 @@ describe HasRecordProperty do
     let(:published_at) { Time.now }
     let(:readable) { true }
     let(:json) { "json" }
+    let(:user) { FactoryBot.create(:user) }
     before do
-      allow(record_property).to receive(:readable?).and_return(readable)
+      allow(record_property).to receive(:readable?).with(user).and_return(readable)
     end
     it { expect(obj.global_id).to eq global_id }
     it { expect(obj.published).to eq published }
     it { expect(obj.published_at).to eq published_at }
-    it { expect(obj.readable?).to be_truthy }
+    it { expect(obj.readable?(user)).to be_truthy }
     it { expect(obj.to_json).to include "\"global_id\":\"#{global_id}\"" }
     it { expect(obj.to_xml).to include "<global-id>#{global_id}</global-id>" }
     it { expect(obj.latex_mode).to match /<.*: #{global_id}>/}
