@@ -52,9 +52,14 @@ services:
       - "traefik.docker.network=traefik"
 
   web:
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    # Use pre-built image from GitHub Container Registry
+    # Built automatically by GitHub Actions on every push to main
+    # To build locally instead: docker compose -f docker-compose.prod.yml build web
+    image: ghcr.io/mcnamara84/medusa-earthshape:latest
+    # Keep build config as fallback (comment out 'image:' above to use)
+    # build: 
+    #   context: .
+    #   dockerfile: Dockerfile
     # Production entrypoint with automatic database setup
     entrypoint: /app/docker-entrypoint.sh
     command: bundle exec rails server -b 0.0.0.0 -p 3000
@@ -126,9 +131,11 @@ services:
   # 2. The database will be created automatically on first start
   # =============================================================================
   web-sec:
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    # Use same pre-built image from GitHub Container Registry
+    image: ghcr.io/mcnamara84/medusa-earthshape:latest
+    # build: 
+    #   context: .
+    #   dockerfile: Dockerfile
     entrypoint: /app/docker-entrypoint.sh
     command: bundle exec rails server -b 0.0.0.0 -p 3000
     volumes:
