@@ -47,6 +47,7 @@ jobs:
         with:
           context: .
           push: true
+          pull: true  # Always pull latest Ruby 4.0.x base image
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha

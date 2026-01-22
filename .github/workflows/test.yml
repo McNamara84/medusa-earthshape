@@ -51,7 +51,7 @@ jobs:
           cp config/application.yml.example config/application.yml
 
       - name: Build Docker images
-        run: docker compose build
+        run: docker compose build --pull
 
       - name: Start database service only
         run: |
