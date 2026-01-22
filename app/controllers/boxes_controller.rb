@@ -106,7 +106,7 @@ class BoxesController < ApplicationController
   end
 
   def find_resource
-    @box = Box.find(params[:id]).decorate
+    @box = Box.find(params[:id])
   end
 
   def find_resources

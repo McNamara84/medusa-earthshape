@@ -162,7 +162,7 @@ class PlacesController < ApplicationController
   end
 
   def find_resource
-    @place = Place.find(params[:id]).decorate
+    @place = Place.find(params[:id])
   end
 
   def find_resources

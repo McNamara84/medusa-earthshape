@@ -94,7 +94,7 @@ class AttachmentFilesController < ApplicationController
   end
 
   def find_resource
-    @attachment_file = AttachmentFile.find(params[:id]).decorate
+    @attachment_file = AttachmentFile.find(params[:id])
   end
   def find_resources
     @attachment_files = AttachmentFile.where(id: params[:ids])

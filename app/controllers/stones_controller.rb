@@ -285,7 +285,7 @@ class StonesController < ApplicationController
   end
 
   def find_resource
-    @stone = Stone.find(params[:id]).decorate
+    @stone = Stone.find(params[:id])
   end
 
   def find_resources

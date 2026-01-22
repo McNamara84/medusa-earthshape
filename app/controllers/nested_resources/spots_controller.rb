@@ -62,7 +62,7 @@ class NestedResources::SpotsController < ApplicationController
   end
 
   def find_resource
-    @spot = Spot.find(params[:id]).decorate
+    @spot = Spot.find(params[:id])
   end
 
   def find_resources

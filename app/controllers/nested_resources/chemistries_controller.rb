@@ -103,7 +103,7 @@ class NestedResources::ChemistriesController < ApplicationController
    end
 
   def find_resource
-    @chemistry = Chemistry.find(params[:id]).decorate
+    @chemistry = Chemistry.find(params[:id])
   end
 
   def find_resources

@@ -116,7 +116,7 @@ class AnalysesController < ApplicationController
   end
 
   def find_resource
-    @analysis = Analysis.find(params[:id]).decorate
+    @analysis = Analysis.find(params[:id])
   end
 
   def find_resources

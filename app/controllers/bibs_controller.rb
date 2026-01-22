@@ -148,7 +148,7 @@ class BibsController < ApplicationController
   end
 
   def find_resource
-    @bib = Bib.find(params[:id]).decorate
+    @bib = Bib.find(params[:id])
   end
 
   def find_resources

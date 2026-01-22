@@ -94,7 +94,7 @@ class CollectionsController < ApplicationController
   end
 
   def find_resource
-    @collection = Collection.find(params[:id]).decorate
+    @collection = Collection.find(params[:id])
   end
 
   def find_resources
