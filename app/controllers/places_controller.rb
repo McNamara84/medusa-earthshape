@@ -3,6 +3,7 @@ class PlacesController < ApplicationController
   before_action :find_resource, except: [:index, :new, :create, :bundle_edit, :bundle_update, :download_bundle_card, :download_label, :download_bundle_label, :import]
   before_action :find_resources, only: [:bundle_edit, :bundle_update, :download_bundle_card, :download_bundle_label]
   load_and_authorize_resource
+  before_action :decorate_resource, only: [:show, :edit, :map]
 
   def index
     @search = Place.readables(current_user).ransack(params[:q]&.permit! || {})
@@ -163,6 +164,10 @@ class PlacesController < ApplicationController
 
   def find_resource
     @place = Place.find(params[:id])
+  end
+
+  def decorate_resource
+    @place = @place.decorate if @place
   end
 
   def find_resources

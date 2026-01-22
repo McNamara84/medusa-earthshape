@@ -3,6 +3,7 @@ class StonesController < ApplicationController
   before_action :find_resource, except: [:index, :create, :bundle_edit, :bundle_update, :download_card, :download_bundle_card, :download_label, :download_bundle_label]
   before_action :find_resources, only: [:bundle_edit, :bundle_update, :download_bundle_card, :download_bundle_label]
   load_and_authorize_resource
+  before_action :decorate_resource, only: [:show, :edit, :family, :picture, :map, :property]
 
   def index
     @search = Stone.readables(current_user).ransack(params[:q]&.permit! || {})
@@ -286,6 +287,10 @@ class StonesController < ApplicationController
 
   def find_resource
     @stone = Stone.find(params[:id])
+  end
+
+  def decorate_resource
+    @stone = @stone.decorate if @stone
   end
 
   def find_resources

@@ -3,6 +3,7 @@ class BibsController < ApplicationController
   before_action :find_resource, except: [:index, :create, :bundle_edit, :bundle_update, :download_bundle_card, :download_label, :download_bundle_label, :download_to_tex]
   before_action :find_resources, only: [:bundle_edit, :bundle_update, :download_bundle_card, :download_bundle_label, :download_to_tex]
   load_and_authorize_resource
+  before_action :decorate_resource, only: [:show, :edit]
 
   def index
     @search = Bib.readables(current_user).ransack(params[:q]&.permit! || {})
@@ -149,6 +150,10 @@ class BibsController < ApplicationController
 
   def find_resource
     @bib = Bib.find(params[:id])
+  end
+
+  def decorate_resource
+    @bib = @bib.decorate if @bib
   end
 
   def find_resources

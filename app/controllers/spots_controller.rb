@@ -2,6 +2,7 @@ class SpotsController < ApplicationController
   respond_to :html, :xml, :json
   before_action :find_resource
   load_and_authorize_resource
+  before_action :decorate_resource, only: [:edit]
 
   def edit
     respond_with @spot, layout: !request.xhr?
@@ -53,4 +54,7 @@ class SpotsController < ApplicationController
     @spot = Spot.find(params[:id])
   end
 
+  def decorate_resource
+    @spot = @spot.decorate if @spot
+  end
 end

@@ -4,6 +4,7 @@ class NestedResources::SpotsController < ApplicationController
   before_action :find_resource, except: [:index, :create]
   before_action :find_resources, only: [:create, :update, :destroy]
   load_and_authorize_resource
+  before_action :decorate_resource, only: [:show, :edit]
 
   def index
     @spots = AttachmentFile.find(params[:attachment_file_id]).spots
@@ -63,6 +64,10 @@ class NestedResources::SpotsController < ApplicationController
 
   def find_resource
     @spot = Spot.find(params[:id])
+  end
+
+  def decorate_resource
+    @spot = @spot.decorate if @spot
   end
 
   def find_resources

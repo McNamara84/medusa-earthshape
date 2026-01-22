@@ -3,6 +3,7 @@ class CollectionsController < ApplicationController
   before_action :find_resource, except: [:index, :new, :create, :bundle_edit, :bundle_update, :download_bundle_card, :download_label, :download_bundle_label, :import]
   before_action :find_resources, only: [:bundle_edit, :bundle_update, :download_bundle_card, :download_bundle_label]
   load_and_authorize_resource
+  before_action :decorate_resource, only: [:show, :edit, :property, :map]
 #  layout "admin_lab"
 
   def index
@@ -95,6 +96,10 @@ class CollectionsController < ApplicationController
 
   def find_resource
     @collection = Collection.find(params[:id])
+  end
+
+  def decorate_resource
+    @collection = @collection.decorate if @collection
   end
 
   def find_resources

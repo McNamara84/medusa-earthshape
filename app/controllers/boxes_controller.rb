@@ -3,6 +3,7 @@ class BoxesController < ApplicationController
   before_action :find_resource, except: [:index, :create, :bundle_edit, :bundle_update, :download_card, :download_bundle_card, :download_label, :download_bundle_label]
   before_action :find_resources, only: [:bundle_edit, :bundle_update, :download_bundle_card, :download_bundle_label]
   load_and_authorize_resource
+  before_action :decorate_resource, only: [:show, :edit, :family, :picture, :map, :property]
 
   def index
     @search = Box.readables(current_user).ransack(params[:q]&.permit! || {})
@@ -107,6 +108,10 @@ class BoxesController < ApplicationController
 
   def find_resource
     @box = Box.find(params[:id])
+  end
+
+  def decorate_resource
+    @box = @box.decorate if @box
   end
 
   def find_resources

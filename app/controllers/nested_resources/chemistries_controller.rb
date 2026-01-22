@@ -4,6 +4,7 @@ class NestedResources::ChemistriesController < ApplicationController
   before_action :find_resource, except: [:index, :multiple_new, :multiple_create, :create]
   before_action :find_resources, only: [:multiple_new, :multiple_create, :create, :update, :destroy]
   load_and_authorize_resource
+  before_action :decorate_resource, only: [:show, :edit]
 
   def index
     @chemistries = Analysis.find(params[:analysis_id]).chemistries
@@ -104,6 +105,10 @@ class NestedResources::ChemistriesController < ApplicationController
 
   def find_resource
     @chemistry = Chemistry.find(params[:id])
+  end
+
+  def decorate_resource
+    @chemistry = @chemistry.decorate if @chemistry
   end
 
   def find_resources

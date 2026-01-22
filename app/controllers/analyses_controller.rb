@@ -3,6 +3,7 @@ class AnalysesController < ApplicationController
   before_action :find_resource, except: [:index, :new, :create, :bundle_edit, :bundle_update, :import, :table, :castemls]
   before_action :find_resources, only: [:bundle_edit, :bundle_update, :table, :castemls]
   load_and_authorize_resource
+  before_action :decorate_resource, only: [:show, :edit, :property]
 
   def index
     @search = Analysis.readables(current_user).ransack(params[:q]&.permit! || {})
@@ -117,6 +118,10 @@ class AnalysesController < ApplicationController
 
   def find_resource
     @analysis = Analysis.find(params[:id])
+  end
+
+  def decorate_resource
+    @analysis = @analysis.decorate if @analysis
   end
 
   def find_resources

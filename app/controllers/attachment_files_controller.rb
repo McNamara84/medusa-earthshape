@@ -3,6 +3,7 @@ class AttachmentFilesController < ApplicationController
   before_action :find_resource, except: [:index, :create, :download, :bundle_edit, :bundle_update]
   before_action :find_resources, only: [:bundle_edit, :bundle_update]
   load_and_authorize_resource
+  before_action :decorate_resource, only: [:show, :edit]
 
   def index
     @search = AttachmentFile.readables(current_user).ransack(params[:q]&.permit! || {})
@@ -96,6 +97,11 @@ class AttachmentFilesController < ApplicationController
   def find_resource
     @attachment_file = AttachmentFile.find(params[:id])
   end
+
+  def decorate_resource
+    @attachment_file = @attachment_file.decorate if @attachment_file
+  end
+
   def find_resources
     @attachment_files = AttachmentFile.where(id: params[:ids])
   end
