@@ -1,6 +1,9 @@
 class Ability
   include CanCan::Ability
 
+  # List of model classes that use HasRecordProperty for permission checking
+  PERMISSION_MODELS = [AttachmentFile, Bib, Box, Analysis, Chemistry, Place, Spot, Stone, Collection, Preparation].freeze
+
   def initialize(user)
     alias_action :family, :picture, :map, :download_label, :download_card, :download, to: :read
 
@@ -8,19 +11,23 @@ class Ability
       can :manage, :all
     end
     
-    can :manage, [AttachmentFile, Bib, Box, Analysis, Chemistry, Place, Spot, Stone, Collection, Preparation] do |record|
-      if (record.instance_of?(Preparation))
-          true
+    can :manage, PERMISSION_MODELS do |record|
+      # Unwrap Draper decorator if present to get the actual model
+      actual_record = record.respond_to?(:object) ? record.object : record
+      if actual_record.instance_of?(Preparation)
+        true
       else
-         record.writable?(user)
+        actual_record.writable?(user)
       end
     end
 
-    can :read, [AttachmentFile, Bib, Box, Analysis, Chemistry, Place, Spot, Stone, Collection, Preparation] do |record|
-      if (record.instance_of?(Preparation))
-	 true
+    can :read, PERMISSION_MODELS do |record|
+      # Unwrap Draper decorator if present to get the actual model
+      actual_record = record.respond_to?(:object) ? record.object : record
+      if actual_record.instance_of?(Preparation)
+        true
       else
-         record.readable?(user)
+        actual_record.readable?(user)
       end
     end
 
