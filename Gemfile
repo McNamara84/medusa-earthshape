@@ -65,7 +65,7 @@ end
 gem 'unicorn'
 
 # Use puma for Capybara request specs (Rails 7.1 requires Puma 6+ for Rack 3)
-gem 'puma', '~> 7.1'  # Rails/Rack 3 compatible; allow update to Puma 7.1.x
+gem 'puma', '~> 7.0'  # Rails/Rack 3 compatible
 
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
@@ -77,7 +77,7 @@ gem 'devise'
 gem 'cancancan', '~> 3.6'  # Rails 7.0: Updated to 3.6+ (1.x deprecated)
 gem 'kaminari'
 gem 'draper'
-gem 'kt-paperclip', '~> 7.2'  # Maintained fork of Paperclip (Rails 7.x + Ruby 3.x compatible)
+gem 'kt-paperclip', '~> 7.2'  # Maintained fork of Paperclip (Rails 7.x/8.x + Ruby 3.x/4.x compatible)
 gem 'barby'
 gem 'rqrcode'
 gem 'chunky_png'
