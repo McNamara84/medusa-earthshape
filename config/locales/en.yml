@@ -30,6 +30,9 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+  navbar:
+    view_all: "View all entries"
+    map: "Map"
   confirm:
     logout: "Are you sure you want to logout?"
     delete: "Are you sure you want to delete?"

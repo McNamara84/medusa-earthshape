@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
-ruby '>= 4.0.0', '< 4.1'
+ruby '>= 4.0.2', '< 4.1'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 8.1.0'  # Upgraded to Rails 8.1
+gem 'rails', '~> 8.1.2'  # Upgraded to Rails 8.1.2
 gem 'nokogiri', '~> 1.16'  # Ruby 3.1+ requires nokogiri 1.13+ (upgraded from 1.10.10)
 gem 'loofah', '~> 2.22'  # Updated for nokogiri 1.16+ compatibility (upgraded from 2.3.1)
 # gem 'psych', '~> 3.3.0'  # Removed - Rails 7.0+ uses Psych 4.x natively
@@ -65,7 +65,7 @@ end
 gem 'unicorn'
 
 # Use puma for Capybara request specs (Rails 7.1 requires Puma 6+ for Rack 3)
-gem 'puma', '~> 7.1'  # Rails/Rack 3 compatible; allow update to Puma 7.1.x
+gem 'puma', '~> 7.0'  # Rails/Rack 3 compatible
 
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
@@ -73,11 +73,11 @@ gem 'puma', '~> 7.1'  # Rails/Rack 3 compatible; allow update to Puma 7.1.x
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-gem 'devise'
+gem 'devise', '~> 4.9'  # Pin to 4.x (5.0 is a major upgrade requiring migration)
 gem 'cancancan', '~> 3.6'  # Rails 7.0: Updated to 3.6+ (1.x deprecated)
 gem 'kaminari'
 gem 'draper'
-gem 'kt-paperclip', '~> 7.2'  # Maintained fork of Paperclip (Rails 7.x + Ruby 3.x compatible)
+gem 'kt-paperclip', '~> 7.2'  # Maintained fork of Paperclip (Rails 7.x/8.x + Ruby 3.x/4.x compatible)
 gem 'barby'
 gem 'rqrcode'
 gem 'chunky_png'
