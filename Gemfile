@@ -73,7 +73,7 @@ gem 'puma', '~> 7.0'  # Rails/Rack 3 compatible
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-gem 'devise'
+gem 'devise', '~> 4.9'  # Pin to 4.x (5.0 is a major upgrade requiring migration)
 gem 'cancancan', '~> 3.6'  # Rails 7.0: Updated to 3.6+ (1.x deprecated)
 gem 'kaminari'
 gem 'draper'
