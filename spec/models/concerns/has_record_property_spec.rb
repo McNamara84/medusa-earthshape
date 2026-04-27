@@ -316,6 +316,82 @@ describe HasRecordProperty do
     end
   end
 
+  describe ".choose_global_id" do
+    subject(:choices) { klass.choose_global_id(viewer) }
+
+    let(:viewer) { FactoryBot.create(:user_foo) }
+    let(:owner) { FactoryBot.create(:user_baa) }
+    let(:group) { FactoryBot.create(:group) }
+    let!(:alpha) { klass.create!(name: "Alpha") }
+    let!(:beta) { klass.create!(name: "Beta") }
+    let!(:hidden) { klass.create!(name: "Hidden") }
+
+    before do
+      GroupMember.create!(user: viewer, group: group)
+
+      alpha.record_property.update!(user_id: owner.id, group_id: group.id, owner_readable: true, group_readable: true, guest_readable: false, global_id: "gid-alpha")
+      beta.record_property.update!(user_id: owner.id, group_id: group.id, owner_readable: true, group_readable: true, guest_readable: false, global_id: "gid-beta")
+      hidden.record_property.update!(user_id: owner.id, group_id: nil, owner_readable: true, group_readable: false, guest_readable: false, global_id: "gid-hidden")
+    end
+
+    it "returns readable global IDs ordered by name" do
+      expect(choices).to eq([["Alpha", "gid-alpha"], ["Beta", "gid-beta"]])
+    end
+  end
+
+  describe ".choose_id" do
+    subject(:choices) { klass.choose_id(viewer) }
+
+    let(:viewer) { FactoryBot.create(:user_foo) }
+    let(:owner) { FactoryBot.create(:user_baa) }
+    let(:group) { FactoryBot.create(:group) }
+    let!(:alpha) { klass.create!(name: "Alpha") }
+    let!(:beta) { klass.create!(name: "Beta") }
+    let!(:hidden) { klass.create!(name: "Hidden") }
+
+    before do
+      GroupMember.create!(user: viewer, group: group)
+
+      alpha.record_property.update!(user_id: owner.id, group_id: group.id, owner_readable: true, group_readable: true, guest_readable: false)
+      beta.record_property.update!(user_id: owner.id, group_id: group.id, owner_readable: true, group_readable: true, guest_readable: false)
+      hidden.record_property.update!(user_id: owner.id, group_id: nil, owner_readable: true, group_readable: false, guest_readable: false)
+    end
+
+    it "returns readable record IDs ordered by name" do
+      expect(choices).to eq([["Alpha", alpha.id], ["Beta", beta.id]])
+    end
+  end
+
+  describe "display helpers" do
+    describe "#form_name" do
+      it "returns the physical form name for stones" do
+        physical_form = FactoryBot.create(:physical_form, name: "Ash")
+        stone = FactoryBot.create(:stone, physical_form: physical_form)
+
+        expect(stone.form_name).to eq("Ash")
+      end
+
+      it "returns the box type name for boxes" do
+        box_type = FactoryBot.create(:box_type, name: "Drawer")
+        box = FactoryBot.create(:box, box_type: box_type)
+
+        expect(box.form_name).to eq("Drawer")
+      end
+    end
+
+    describe "#bib_title" do
+      it "uses a vowel article case-insensitively and includes the location path" do
+        physical_form = FactoryBot.create(:physical_form, name: "Ash")
+        box = FactoryBot.create(:box, name: "Shelf")
+        stone = FactoryBot.create(:stone, name: "Specimen", physical_form: physical_form, box: box)
+
+        expect(stone.bib_title).to start_with("An Ash")
+        expect(stone.bib_title).to include("``Specimen''")
+        expect(stone.bib_title).to include("located at \\nolinkurl{/Shelf/Specimen}")
+      end
+    end
+  end
+
   describe "#writable?" do
     subject { obj.writable?(user) }
     let(:obj) { klass.create(name: "foo") }

@@ -7,7 +7,7 @@ class CollectionsController < ApplicationController
 #  layout "admin_lab"
 
   def index
-    @search = Collection.ransack(params[:q]&.permit! || {})
+    @search = Collection.readables(current_user).ransack(params[:q]&.permit! || {})
     @search.sorts = ["updated_at ASC"] if @search.sorts.empty?
     @collections = @search.result.page(params[:page]).per(params[:per_page])
     respond_with @collections

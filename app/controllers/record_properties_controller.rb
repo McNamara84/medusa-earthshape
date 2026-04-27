@@ -1,6 +1,7 @@
 class RecordPropertiesController < ApplicationController
   respond_to :html, :json, :xml
   before_action :find_resource
+  before_action :authorize_parent_resource
 
   def show
     respond_with @record_property
@@ -16,8 +17,13 @@ class RecordPropertiesController < ApplicationController
   def find_resource
     resource_name = params[:parent_resource]
     resource_class = resource_name.camelize.constantize
-    parent_resource = resource_class.find(params["#{resource_name}_id"])
-    @record_property = parent_resource.record_property
+    @parent_resource = resource_class.find(params["#{resource_name}_id"])
+    @record_property = @parent_resource.record_property
+  end
+
+  def authorize_parent_resource
+    action = action_name == "show" ? :read : :manage
+    authorize!(action, @parent_resource)
   end
 
   def record_property_params

@@ -60,7 +60,7 @@ module HasRecordProperty
     #title = ""
     if self.respond_to?(:form_name) && self.form_name
       form_name = self.form_name
-      if ['a', 'e', 'i', 'o', 'u'].include? form_name[0..0]
+      if ['a', 'e', 'i', 'o', 'u'].include?(form_name[0..0].downcase)
         items << 'An'
       else
         items << 'A'

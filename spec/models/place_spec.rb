@@ -92,6 +92,50 @@ describe Place do
     end
   end
 
+  describe "#parent_global_id" do
+    let(:place) { Place.new }
+    let(:parent_place) { FactoryBot.create(:place, is_parent: true) }
+
+    it "returns the parent's global id" do
+      place.parent = parent_place
+      expect(place.parent_global_id).to eq(parent_place.global_id)
+    end
+
+    it "sets parent_id from a place global id" do
+      place.parent_global_id = parent_place.global_id
+      expect(place.parent_id).to eq(parent_place.id)
+    end
+
+    it "ignores blank input" do
+      place.parent_global_id = ""
+      expect(place.parent_id).to be_nil
+    end
+
+    it "ignores global ids from another datum type" do
+      place.parent_global_id = FactoryBot.create(:box).global_id
+      expect(place.parent_id).to be_nil
+    end
+  end
+
+  describe "coordinate normalization" do
+    let(:place) { Place.new }
+
+    it "normalizes latitude strings with commas, spaces, and south indicator" do
+      place.latitude = " 12,3456 s "
+      expect(place.latitude).to eq(-12.3456)
+    end
+
+    it "normalizes longitude strings with commas, spaces, and west indicator" do
+      place.longitude = " 98,7654 w "
+      expect(place.longitude).to eq(-98.7654)
+    end
+
+    it "passes through non-string latitude values unchanged" do
+      place.latitude = 10.5
+      expect(place.latitude).to eq(10.5)
+    end
+  end
+
  describe "validates" do
     describe "name" do
       let(:obj) { FactoryBot.build(:place, name: name) }

@@ -1,5 +1,6 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
+require File.expand_path("support/simplecov", __dir__)
 require File.expand_path("../../config/environment", __FILE__)
 
 require 'rspec/rails'
@@ -39,6 +40,7 @@ RSpec.configure do |config|
   # Include Devise test helpers FIRST, then custom helpers
   # This ensures ControllerSpecHelper.sign_in can call super
   config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::IntegrationHelpers, type: :request
   # CRITICAL: Only include Capybara::DSL for request specs, NOT controller specs
   # Including globally causes controller specs to hang indefinitely
   config.include Capybara::DSL, type: :request
