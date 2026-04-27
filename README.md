@@ -18,12 +18,12 @@ Medusa is a comprehensive web-based sample management system designed for geolog
 
 ## System Requirements
 
-- **Ruby**: 3.4.8
-- **Rails**: 8.1.1
+- **Ruby**: 4.0.3
+- **Rails**: 8.1.3
 - **Database**: PostgreSQL 18 (or PostgreSQL 12+)
 - **Server**: Linux/Unix-based system (tested on Ubuntu/Debian)
 - **Web Server**: Apache 2.4+ with mod_proxy (or Nginx)
-- **Application Server**: Puma 6.x (or Unicorn)
+- **Application Server**: Puma 8.x (or Unicorn)
 
 ## Quick Start (Development)
 
@@ -163,9 +163,9 @@ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
 source ~/.bashrc
 
-# Install Ruby 3.4.8
-rbenv install 3.4.8
-rbenv global 3.4.8
+# Install Ruby 4.0.3
+rbenv install 4.0.3
+rbenv global 4.0.3
 gem install bundler -v '~> 2.3'
 ```
 
