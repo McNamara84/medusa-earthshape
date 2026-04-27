@@ -12,12 +12,12 @@ module HasIgsn
 		literal_to_number[c]=idx
 		number_to_literal[idx]=c
         end 
+	prefix = user.prefix
 	lastigsnstone=Stone.where("igsn ILIKE ?","#{prefix}%").order(igsn: :desc).first
 	
 #	logger.info Stone.where("igsn ILIKE ?","#{prefix}#%").order(igsn: :desc).to_sql.inspect
 #	lastigsnstone=Stone.where("igsn is not null").order(igsn: :desc).first	
 
-	prefix = user.prefix  
 	if (lastigsnstone)
 		lastigsn=lastigsnstone.igsn
 		lastigsn.sub!(prefix,"")

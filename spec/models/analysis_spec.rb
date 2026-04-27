@@ -232,7 +232,7 @@ describe Analysis do
 
         expect {
           analysis.fe_in_gram = " 12.5 "
-        }.to change(analysis.chemistries, :size).by(1)
+        }.to change { analysis.chemistries.length }.by(1)
 
         chemistry = analysis.chemistries.last
         expect(chemistry.measurement_item).to eq(measurement_item)

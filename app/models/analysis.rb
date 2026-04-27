@@ -99,7 +99,7 @@ class Analysis < ApplicationRecord
   end
 
   def self.set_object(methods, data_array)
-    data_array.each { |data| data.strip! unless data.blank? }
+    data_array.each { |data| data.strip! if data.respond_to?(:strip!) && !data.blank? }
     pkey_value = methods.index("id") ? data_array[methods.index("id")] : nil
     object = Analysis.find_or_initialize_by(id: pkey_value)
     object.attributes = Hash[methods.zip(data_array)]
@@ -161,7 +161,8 @@ class Analysis < ApplicationRecord
   end
 
   def associate_chemistry_by_item_nickname(nickname)
-    chemistries.joins(:measurement_item).merge(MeasurementItem.where(nickname: nickname)).first
+    chemistries.to_a.find { |chemistry| chemistry.measurement_item&.nickname == nickname } ||
+      chemistries.joins(:measurement_item).merge(MeasurementItem.where(nickname: nickname)).first
   end
 
   def self.to_castemls(objs)
