@@ -122,7 +122,7 @@ class ApplicationController < ActionController::Base
   rescue Encoding::UndefinedConversionError, Encoding::InvalidByteSequenceError
     nil
   end
-  
+
   def deny_access
     respond_to do |format|
       format.html { render "parts/access_denied", status: :forbidden }

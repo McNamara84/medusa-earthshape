@@ -166,6 +166,21 @@ describe ApplicationController do
         expect { controller.basic_authentication }.not_to raise_error
       end
     end
+
+    context 'when the password contains invalid bytes' do
+      let(:username) { 'valid-user' }
+      let(:password) { "\xC2\x16".b }
+
+      it 'rejects the credentials before hitting the database or password verification' do
+        resource = instance_double(User)
+
+        expect(User).not_to receive(:find_by)
+        expect(resource).not_to receive(:valid_password?)
+        expect(controller).not_to receive(:sign_in)
+
+        expect { controller.basic_authentication }.not_to raise_error
+      end
+    end
   end
 
   describe ".adjust_url_by_requesting_tab" do
