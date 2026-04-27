@@ -35,6 +35,7 @@ class ApplicationController < ActionController::Base
       next false unless resource&.valid_password?(secret)
 
       sign_in :user, resource
+      true
     end
   end
 

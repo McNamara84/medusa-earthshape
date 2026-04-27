@@ -143,7 +143,9 @@ describe ApplicationController do
     let(:password) { 'secret' }
 
     before do
-      allow(controller).to receive(:authenticate_or_request_with_http_basic).and_yield(username, password)
+      allow(controller).to receive(:authenticate_or_request_with_http_basic) do |&block|
+        block.call(username, password)
+      end
     end
 
     context 'when the user does not exist' do
@@ -153,7 +155,7 @@ describe ApplicationController do
         expect(User).to receive(:find_by).with(username: username).and_return(nil)
         expect(controller).not_to receive(:sign_in)
 
-        expect { controller.basic_authentication }.not_to raise_error
+        expect(controller.basic_authentication).to eq(false)
       end
     end
 
@@ -164,7 +166,7 @@ describe ApplicationController do
         expect(User).not_to receive(:find_by)
         expect(controller).not_to receive(:sign_in)
 
-        expect { controller.basic_authentication }.not_to raise_error
+        expect(controller.basic_authentication).to eq(false)
       end
     end
 
@@ -176,7 +178,7 @@ describe ApplicationController do
         expect(User).not_to receive(:find_by)
         expect(controller).not_to receive(:sign_in)
 
-        expect { controller.basic_authentication }.not_to raise_error
+        expect(controller.basic_authentication).to eq(false)
       end
     end
 
@@ -190,7 +192,7 @@ describe ApplicationController do
         expect(resource).to receive(:valid_password?).with(password).and_return(true)
         expect(controller).to receive(:sign_in).with(:user, resource)
 
-        expect { controller.basic_authentication }.not_to raise_error
+        expect(controller.basic_authentication).to eq(true)
       end
     end
   end
