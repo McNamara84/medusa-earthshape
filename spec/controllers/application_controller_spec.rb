@@ -142,6 +142,18 @@ describe ApplicationController do
     let(:invalid_utf8) { "\xC2\x16".dup.force_encoding(Encoding::UTF_8) }
     let(:password) { 'secret' }
 
+    around do |example|
+      original_disable_http_basic = ENV['DISABLE_HTTP_BASIC']
+      ENV.delete('DISABLE_HTTP_BASIC')
+      example.run
+    ensure
+      if original_disable_http_basic.nil?
+        ENV.delete('DISABLE_HTTP_BASIC')
+      else
+        ENV['DISABLE_HTTP_BASIC'] = original_disable_http_basic
+      end
+    end
+
     before do
       allow(controller).to receive(:authenticate_or_request_with_http_basic) do |&block|
         block.call(username, password)
