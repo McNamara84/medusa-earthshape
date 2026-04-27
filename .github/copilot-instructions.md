@@ -1,9 +1,9 @@
 # Medusa EarthShape - AI Coding Agent Instructions
 
 ## Project Overview
-Medusa is a **Rails 8.1.1** scientific sample management system built for geological/earth science research, currently running **Ruby 3.4.8**. It manages hierarchical collections of physical samples (stones), their containers (boxes), sampling locations (places), and analytical data (analyses with chemistry measurements). The system includes IGSN (International Geo Sample Number) registration capabilities and outputs data in various formats including PML (Phml Markup Language) and BibTeX.
+Medusa is a **Rails 8.1.3** scientific sample management system built for geological/earth science research, currently running **Ruby 4.0.3**. It manages hierarchical collections of physical samples (stones), their containers (boxes), sampling locations (places), and analytical data (analyses with chemistry measurements). The system includes IGSN (International Geo Sample Number) registration capabilities and outputs data in various formats including PML (Phml Markup Language) and BibTeX.
 
-**⚠️ Important**: The application has been successfully upgraded from Rails 4.0.2 to Rails 8.1.1 and Ruby 2.1.10 to Ruby 3.4.8. Currently at **Ruby 3.4.8 + Rails 8.1.1**. See `UPGRADE-PLAN.md` for upgrade history and next steps.
+**⚠️ Important**: The application has been successfully upgraded from Rails 4.0.2 to Rails 8.1.3 and Ruby 2.1.10 to Ruby 4.0.3. Currently at **Ruby 4.0.3 + Rails 8.1.3**. See `UPGRADE-PLAN.md` for upgrade history and next steps.
 
 ## Core Domain Architecture
 

@@ -138,6 +138,77 @@ describe ApplicationController do
     end
   end
 
+  describe '#basic_authentication' do
+    let(:invalid_utf8) { "\xC2\x16".dup.force_encoding(Encoding::UTF_8) }
+    let(:password) { 'secret' }
+
+    around do |example|
+      original_disable_http_basic = ENV['DISABLE_HTTP_BASIC']
+      ENV.delete('DISABLE_HTTP_BASIC')
+      example.run
+    ensure
+      if original_disable_http_basic.nil?
+        ENV.delete('DISABLE_HTTP_BASIC')
+      else
+        ENV['DISABLE_HTTP_BASIC'] = original_disable_http_basic
+      end
+    end
+
+    before do
+      allow(controller).to receive(:authenticate_or_request_with_http_basic) do |&block|
+        block.call(username, password)
+      end
+    end
+
+    context 'when the user does not exist' do
+      let(:username) { 'missing-user' }
+
+      it 'rejects the credentials without raising an error' do
+        expect(User).to receive(:find_by).with(username: username).and_return(nil)
+        expect(controller).not_to receive(:sign_in)
+
+        expect(controller.basic_authentication).to eq(false)
+      end
+    end
+
+    context 'when the username contains invalid bytes' do
+      let(:username) { invalid_utf8 }
+
+      it 'rejects the credentials before hitting the database' do
+        expect(User).not_to receive(:find_by)
+        expect(controller).not_to receive(:sign_in)
+
+        expect(controller.basic_authentication).to eq(false)
+      end
+    end
+
+    context 'when the password contains invalid bytes' do
+      let(:username) { 'valid-user' }
+      let(:password) { invalid_utf8 }
+
+      it 'rejects the credentials before hitting the database or password verification' do
+        expect(User).not_to receive(:find_by)
+        expect(controller).not_to receive(:sign_in)
+
+        expect(controller.basic_authentication).to eq(false)
+      end
+    end
+
+    context 'when the credentials are valid' do
+      let(:username) { 'valid-user' }
+
+      it 'looks up the user, verifies the password, and signs in' do
+        resource = instance_double(User)
+
+        expect(User).to receive(:find_by).with(username: username).and_return(resource)
+        expect(resource).to receive(:valid_password?).with(password).and_return(true)
+        expect(controller).to receive(:sign_in).with(:user, resource)
+
+        expect(controller.basic_authentication).to eq(true)
+      end
+    end
+  end
+
   describe ".adjust_url_by_requesting_tab" do
     subject{ @controller.adjust_url_by_requesting_tab(url) }
     let(:tabname){"analysis"}

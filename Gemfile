@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '>= 4.0.2', '< 4.1'
+ruby '>= 4.0.3', '< 4.1'
 # source 'http://dream.misasa.okayama-u.ac.jp/rubygems/'
 # Note: The above gem server is not publicly accessible
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -64,8 +64,8 @@ end
 # Use unicorn as the app server
 gem 'unicorn'
 
-# Use puma for Capybara request specs (Rails 7.1 requires Puma 6+ for Rack 3)
-gem 'puma', '~> 7.0'  # Rails/Rack 3 compatible
+# Use puma for Capybara request specs (Rails 8.1 works with Puma 8 on Rack 3)
+gem 'puma', '~> 8.0'  # Current Rack 3 compatible release line
 
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
