@@ -27,10 +27,14 @@ class ApplicationController < ActionController::Base
     return if ENV["DISABLE_HTTP_BASIC"] == "1" && (Rails.env.development? || Rails.env.test?)
 
     authenticate_or_request_with_http_basic do |name, password|
-      resource = User.find_by(username: name)
-      if resource.valid_password?(password)
-        sign_in :user, resource
-      end
+      username = normalize_http_basic_credential(name)
+      secret = normalize_http_basic_credential(password)
+      next false if username.nil? || secret.nil?
+
+      resource = User.find_by(username: username)
+      next false unless resource&.valid_password?(secret)
+
+      sign_in :user, resource
     end
   end
 
@@ -110,6 +114,14 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def normalize_http_basic_credential(value)
+    return unless value.is_a?(String)
+
+    value.encode(Encoding::UTF_8)
+  rescue Encoding::UndefinedConversionError, Encoding::InvalidByteSequenceError
+    nil
+  end
   
   def deny_access
     respond_to do |format|

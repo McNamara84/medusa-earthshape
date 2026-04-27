@@ -1,5 +1,5 @@
-# Use Ruby 4.0.2 - Based on Debian Bookworm (12)
-FROM ruby:4.0.2
+# Use Ruby 4.0.3 - Based on Debian Bookworm (12)
+FROM ruby:4.0.3
 
 # Install system dependencies (PhantomJS not available in Bookworm, but not needed for production)
 RUN apt-get update -qq && apt-get install -y \

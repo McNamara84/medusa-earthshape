@@ -138,6 +138,36 @@ describe ApplicationController do
     end
   end
 
+  describe '#basic_authentication' do
+    let(:password) { 'secret' }
+
+    before do
+      allow(controller).to receive(:authenticate_or_request_with_http_basic).and_yield(username, password)
+    end
+
+    context 'when the user does not exist' do
+      let(:username) { 'missing-user' }
+
+      it 'rejects the credentials without raising an error' do
+        expect(User).to receive(:find_by).with(username: username).and_return(nil)
+        expect(controller).not_to receive(:sign_in)
+
+        expect { controller.basic_authentication }.not_to raise_error
+      end
+    end
+
+    context 'when the username contains invalid bytes' do
+      let(:username) { "\xC2\x16".b }
+
+      it 'rejects the credentials before hitting the database' do
+        expect(User).not_to receive(:find_by)
+        expect(controller).not_to receive(:sign_in)
+
+        expect { controller.basic_authentication }.not_to raise_error
+      end
+    end
+  end
+
   describe ".adjust_url_by_requesting_tab" do
     subject{ @controller.adjust_url_by_requesting_tab(url) }
     let(:tabname){"analysis"}
