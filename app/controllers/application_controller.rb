@@ -118,9 +118,10 @@ class ApplicationController < ActionController::Base
   def normalize_http_basic_credential(value)
     return unless value.is_a?(String)
 
-    value.encode(Encoding::UTF_8)
-  rescue Encoding::UndefinedConversionError, Encoding::InvalidByteSequenceError
-    nil
+    normalized_value = value.dup.force_encoding(Encoding::UTF_8)
+    return unless normalized_value.valid_encoding?
+
+    normalized_value
   end
 
   def deny_access

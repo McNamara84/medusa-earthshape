@@ -139,6 +139,7 @@ describe ApplicationController do
   end
 
   describe '#basic_authentication' do
+    let(:invalid_utf8) { "\xC2\x16".dup.force_encoding(Encoding::UTF_8) }
     let(:password) { 'secret' }
 
     before do
@@ -157,7 +158,7 @@ describe ApplicationController do
     end
 
     context 'when the username contains invalid bytes' do
-      let(:username) { "\xC2\x16".b }
+      let(:username) { invalid_utf8 }
 
       it 'rejects the credentials before hitting the database' do
         expect(User).not_to receive(:find_by)
@@ -169,14 +170,25 @@ describe ApplicationController do
 
     context 'when the password contains invalid bytes' do
       let(:username) { 'valid-user' }
-      let(:password) { "\xC2\x16".b }
+      let(:password) { invalid_utf8 }
 
       it 'rejects the credentials before hitting the database or password verification' do
+        expect(User).not_to receive(:find_by)
+        expect(controller).not_to receive(:sign_in)
+
+        expect { controller.basic_authentication }.not_to raise_error
+      end
+    end
+
+    context 'when the credentials are valid' do
+      let(:username) { 'valid-user' }
+
+      it 'looks up the user, verifies the password, and signs in' do
         resource = instance_double(User)
 
-        expect(User).not_to receive(:find_by)
-        expect(resource).not_to receive(:valid_password?)
-        expect(controller).not_to receive(:sign_in)
+        expect(User).to receive(:find_by).with(username: username).and_return(resource)
+        expect(resource).to receive(:valid_password?).with(password).and_return(true)
+        expect(controller).to receive(:sign_in).with(:user, resource)
 
         expect { controller.basic_authentication }.not_to raise_error
       end
