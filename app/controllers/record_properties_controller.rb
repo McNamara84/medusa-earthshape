@@ -9,7 +9,7 @@ class RecordPropertiesController < ApplicationController
 
   def update
     @record_property.update(record_property_params)
-    respond_with @record_property
+    respond_with @record_property, location: safe_referer_url
   end
 
   private

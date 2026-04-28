@@ -26,7 +26,7 @@ describe "record property access", type: :request do
     it "allows access to readable parent resources" do
       sign_in viewer
 
-      get stone_record_property_path(readable_stone), as: :json
+      get stone_record_property_path(readable_stone), headers: { "ACCEPT" => "application/json" }
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body["global_id"]).to eq(readable_stone.global_id)
@@ -35,7 +35,7 @@ describe "record property access", type: :request do
     it "returns forbidden for unreadable parent resources" do
       sign_in viewer
 
-      get stone_record_property_path(private_stone), as: :json
+      get stone_record_property_path(private_stone), headers: { "ACCEPT" => "application/json" }
 
       expect(response).to have_http_status(:forbidden)
     end

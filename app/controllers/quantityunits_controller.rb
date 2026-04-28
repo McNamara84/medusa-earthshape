@@ -27,7 +27,7 @@ class QuantityunitsController < ApplicationController
 
   def update
     @quantityunit.update(quantityunit_params)
-    redirect_to quantityunit_path	  
+    redirect_to quantityunits_path	  
   end
 
   def destroy

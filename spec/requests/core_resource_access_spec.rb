@@ -59,6 +59,32 @@ describe "core resource access", type: :request do
   end
 
   describe "attachment files" do
-    include_examples "readable resource access", :attachment_file, :attachment_files_path, :attachment_file_path, "Readable Attachment", "Private Attachment"
+    let!(:readable_attachment) do
+      User.current = owner
+      FactoryBot.create(:attachment_file, data_file_name: "readable_attachment.jpg").tap do |attachment_file|
+        attachment_file.record_property.update!(guest_readable: true, owner_readable: true, group_readable: false)
+      end
+    end
+
+    let!(:private_attachment) do
+      User.current = owner
+      FactoryBot.create(:attachment_file, data_file_name: "private_attachment.jpg").tap do |attachment_file|
+        attachment_file.record_property.update!(guest_readable: false, owner_readable: true, group_readable: false)
+      end
+    end
+
+    it "filters unreadable records from the index" do
+      get attachment_files_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("readable_attachment.jpg")
+      expect(response.body).not_to include("private_attachment.jpg")
+    end
+
+    it "returns forbidden on show for unreadable records" do
+      get attachment_file_path(private_attachment)
+
+      expect(response).to have_http_status(:forbidden)
+    end
   end
 end

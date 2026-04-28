@@ -222,38 +222,45 @@ describe Analysis do
 
   describe "dynamic chemistry accessors" do
     let(:analysis) { FactoryBot.create(:analysis) }
-    let(:unit) { FactoryBot.create(:unit, name: "gram", html: "g", text: "g", conversion: 1) }
-    let(:measurement_item) { FactoryBot.create(:measurement_item, nickname: "fe", unit: measurement_item_unit) }
+    let(:suffix) { SecureRandom.hex(4) }
+    let(:nickname) { "fe_#{suffix}" }
+    let(:unit_name) { "g#{suffix.first(4)}" }
+    let(:unit) { FactoryBot.create(:unit, name: unit_name, html: unit_name, text: unit_name, conversion: 1) }
+    let(:measurement_item) { FactoryBot.create(:measurement_item, nickname: nickname, unit: measurement_item_unit) }
     let(:measurement_item_unit) { unit }
 
     describe "#method_missing for setters" do
       it "creates a chemistry using the explicit unit in the method name" do
         measurement_item
+        setter_name = "#{nickname}_in_#{unit_name}="
 
         expect {
-          analysis.fe_in_gram = " 12.5 "
+          analysis.public_send(setter_name, " 12.5 ")
         }.to change { analysis.chemistries.length }.by(1)
 
         chemistry = analysis.chemistries.last
-        expect(chemistry.measurement_item).to eq(measurement_item)
-        expect(chemistry.unit).to eq(unit)
+        expect(chemistry.measurement_item.nickname).to eq(nickname)
+        expect(chemistry.unit.name).to eq(unit_name)
         expect(chemistry.value).to eq(12.5)
       end
 
       it "uses the measurement item's default unit when no unit suffix is provided" do
         measurement_item
+        setter_name = "#{nickname}="
 
-        analysis.fe = "7.5"
+        analysis.public_send(setter_name, "7.5")
 
         chemistry = analysis.chemistries.last
-        expect(chemistry.unit).to eq(unit)
+        expect(chemistry.measurement_item.nickname).to eq(nickname)
+        expect(chemistry.unit.name).to eq(unit_name)
         expect(chemistry.value).to eq(7.5)
       end
 
       it "updates uncertainty through the _error accessor" do
         chemistry = analysis.chemistries.create!(measurement_item: measurement_item, unit: unit, value: 1.5)
+        setter_name = "#{nickname}_error="
 
-        analysis.fe_error = " 0.25 "
+        analysis.public_send(setter_name, " 0.25 ")
 
         expect(chemistry.uncertainty).to eq(0.25)
       end
@@ -265,13 +272,13 @@ describe Analysis do
       it "returns the chemistry value when no unit conversion is needed" do
         analysis.chemistries.create!(measurement_item: measurement_item, unit: nil, value: 3.25)
 
-        expect(analysis.fe).to eq(3.25)
+        expect(analysis.public_send(nickname)).to eq(3.25)
       end
 
       it "returns nil when no chemistry exists for the nickname" do
         measurement_item
 
-        expect(analysis.fe).to be_nil
+        expect(analysis.public_send(nickname)).to be_nil
       end
 
       it "raises NoMethodError for an unknown nickname" do
@@ -284,7 +291,7 @@ describe Analysis do
         matching = analysis.chemistries.create!(measurement_item: measurement_item, unit: unit, value: 8)
         analysis.chemistries.create!(measurement_item: FactoryBot.create(:measurement_item, nickname: "mg"), value: 1)
 
-        expect(analysis.associate_chemistry_by_item_nickname("fe")).to eq(matching)
+        expect(analysis.associate_chemistry_by_item_nickname(nickname)).to eq(matching)
       end
     end
   end

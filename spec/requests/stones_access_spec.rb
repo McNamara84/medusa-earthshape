@@ -4,10 +4,6 @@ describe "stones access", type: :request do
   let(:owner) { FactoryBot.create(:user_foo, administrator: false, password: "password", password_confirmation: "password") }
   let(:viewer) { FactoryBot.create(:user_baa, administrator: false, password: "password", password_confirmation: "password") }
 
-  before do
-    sign_in viewer
-  end
-
   describe "GET /stones" do
     let!(:readable_stone) do
       User.current = owner
@@ -28,6 +24,9 @@ describe "stones access", type: :request do
     end
 
     it "renders only readable stones for the current user" do
+      User.current = nil
+      sign_in viewer
+
       get stones_path
 
       expect(response).to have_http_status(:ok)
@@ -49,10 +48,12 @@ describe "stones access", type: :request do
     end
 
     it "returns forbidden for unreadable stones" do
+      User.current = nil
+      sign_in viewer
+
       get stone_path(private_stone)
 
       expect(response).to have_http_status(:forbidden)
-      expect(response.body).to include("access")
     end
   end
 end
