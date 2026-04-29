@@ -107,4 +107,53 @@ describe CollectionsController do
 
     it { expect { delete :destroy, params: { id: collection.id } }.to change(Collection, :count).by(-1) }
   end
+
+  describe "GET property" do
+    let(:collection) { FactoryBot.create(:collection) }
+
+    before { get :property, params: { id: collection.id } }
+
+    it { expect(assigns(:collection)).to eq collection }
+  end
+
+  describe "GET map" do
+    let(:collection) { FactoryBot.create(:collection) }
+    let(:place) { FactoryBot.create(:place, latitude: 35.0, longitude: 139.0) }
+    let(:stone) { FactoryBot.create(:stone, collection: collection, place: place) }
+    let(:markers) { [{ id: place.id }] }
+
+    before do
+      stone
+      allow(Gmaps4rails).to receive(:build_markers).and_return(markers)
+      get :map, params: { id: collection.id }
+    end
+
+    it { expect(assigns(:collection)).to eq collection }
+    it { expect(assigns(:places)).to eq [place] }
+    it { expect(assigns(:hash)).to eq markers }
+  end
+
+  describe "POST bundle_update" do
+    let(:original_name) { "collection_3" }
+    let(:collection_1) { FactoryBot.create(:collection, name: "collection_1") }
+    let(:collection_2) { FactoryBot.create(:collection, name: "collection_2") }
+    let(:collection_3) { FactoryBot.create(:collection, name: original_name) }
+    let(:attributes) { { name: "updated_collection" } }
+    let(:ids) { [collection_1.id, collection_2.id] }
+
+    before do
+      allow(controller).to receive(:render).with(:bundle_edit).and_return(nil)
+      collection_1
+      collection_2
+      collection_3
+      post :bundle_update, params: { ids: ids, collection: attributes }
+      collection_1.reload
+      collection_2.reload
+      collection_3.reload
+    end
+
+    it { expect(collection_1.name).to eq(attributes[:name]) }
+    it { expect(collection_2.name).to eq(attributes[:name]) }
+    it { expect(collection_3.name).to eq(original_name) }
+  end
 end

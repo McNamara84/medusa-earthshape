@@ -233,8 +233,21 @@ describe PlacesController do
     # send_data
   end
   
-  # send_data test returns unexpected object. Skip to avoid "FIXED" error.
-  xit "GET download_label" do
+  describe "GET download_label" do
+    let(:place) { FactoryBot.create(:place) }
+    let(:label) { "label-data" }
+
+    before do
+      allow(Place).to receive(:find).with(place.id.to_s).and_return(place)
+      allow(place).to receive(:build_label).and_return(label)
+      allow(controller).to receive(:send_data) { controller.response_body = "" }
+    end
+
+    it "sends the generated CSV" do
+      expect(controller).to receive(:send_data).with(label, filename: "place_#{place.id}.csv", type: "text/csv")
+
+      get :download_label, params: {id: place.id}
+    end
   end
   
   describe "GET download_bundle_label" do

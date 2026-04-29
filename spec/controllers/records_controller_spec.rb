@@ -502,7 +502,7 @@ describe RecordsController do
         stone
         get :property, params: {id: stone.record_property.global_id}, format: :html
       end
-      pending { expect(response).to render_template("") }
+      it { expect(response).to render_template("property") }
     end
     context "record not found json" do
       before do

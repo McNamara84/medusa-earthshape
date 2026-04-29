@@ -116,4 +116,147 @@ describe BibsController do
 
     it { expect { delete :destroy, params: { id: bib.id } }.to change(Bib, :count).by(-1) }
   end
+
+  describe "GET picture" do
+    let(:author) { FactoryBot.create(:author, name: "Picture Author") }
+    let(:bib) { FactoryBot.create(:bib, doi: "", authors: [author]) }
+
+    before { get :picture, params: { id: bib.id } }
+
+    it { expect(assigns(:bib)).to eq bib }
+  end
+
+  describe "GET property" do
+    let(:author) { FactoryBot.create(:author, name: "Property Author") }
+    let(:bib) { FactoryBot.create(:bib, doi: "", authors: [author]) }
+
+    before { get :property, params: { id: bib.id } }
+
+    it { expect(assigns(:bib)).to eq bib }
+  end
+
+  describe "POST bundle_edit" do
+    let(:author) { FactoryBot.create(:author, name: "Bundle Edit Author") }
+    let(:bib_1) { FactoryBot.create(:bib, name: "bib_1", doi: "", authors: [author]) }
+    let(:bib_2) { FactoryBot.create(:bib, name: "bib_2", doi: "", authors: [author]) }
+    let(:bib_3) { FactoryBot.create(:bib, name: "bib_3", doi: "", authors: [author]) }
+    let(:ids) { [bib_1.id, bib_2.id] }
+
+    before do
+      bib_1
+      bib_2
+      bib_3
+      post :bundle_edit, params: { ids: ids }
+    end
+
+    it { expect(assigns(:bibs)).to include(bib_1, bib_2) }
+    it { expect(assigns(:bibs)).not_to include(bib_3) }
+  end
+
+  describe "POST bundle_update" do
+    let(:author) { FactoryBot.create(:author, name: "Bundle Update Author") }
+    let(:original_name) { "bib_3" }
+    let(:bib_1) { FactoryBot.create(:bib, name: "bib_1", doi: "", authors: [author]) }
+    let(:bib_2) { FactoryBot.create(:bib, name: "bib_2", doi: "", authors: [author]) }
+    let(:bib_3) { FactoryBot.create(:bib, name: original_name, doi: "", authors: [author]) }
+    let(:attributes) { { name: "updated_bib", doi: "", entry_type: "misc" } }
+    let(:ids) { [bib_1.id, bib_2.id] }
+
+    before do
+      bib_1
+      bib_2
+      bib_3
+      post :bundle_update, params: { ids: ids, bib: attributes }
+      bib_1.reload
+      bib_2.reload
+      bib_3.reload
+    end
+
+    it { expect(bib_1.name).to eq(attributes[:name]) }
+    it { expect(bib_2.name).to eq(attributes[:name]) }
+    it { expect(bib_3.name).to eq(original_name) }
+  end
+
+  describe "GET download_bundle_card" do
+    let(:author) { FactoryBot.create(:author, name: "Bundle Card Author") }
+    let(:bib) { FactoryBot.create(:bib, doi: "", authors: [author]) }
+    let(:params_ids) { [bib.id.to_s] }
+    let(:bibs) { Bib.where(id: params_ids) }
+    let(:report) { instance_double("Report") }
+    let(:generated_pdf) { "pdf-data" }
+
+    before do
+      bib
+      allow(Bib).to receive(:where).and_return(bibs)
+      allow(Bib).to receive(:build_cards).with(bibs).and_return(report)
+      allow(report).to receive(:generate).and_return(generated_pdf)
+      allow(controller).to receive(:send_data) { controller.response_body = "" }
+    end
+
+    it "sends the generated bundle PDF" do
+      expect(controller).to receive(:send_data).with(generated_pdf, filename: "bibs.pdf", type: "application/pdf")
+
+      get :download_bundle_card, params: { ids: params_ids }
+    end
+  end
+
+  describe "GET download_label" do
+    let(:author) { FactoryBot.create(:author, name: "Label Author") }
+    let(:bib) { FactoryBot.create(:bib, doi: "", authors: [author]) }
+    let(:label) { "label-data" }
+
+    before do
+      allow(Bib).to receive(:find).with(bib.id.to_s).and_return(bib)
+      allow(bib).to receive(:build_label).and_return(label)
+      allow(controller).to receive(:send_data) { controller.response_body = "" }
+    end
+
+    it "sends the generated CSV" do
+      expect(controller).to receive(:send_data).with(label, filename: "bib_#{bib.id}.csv", type: "text/csv")
+
+      get :download_label, params: { id: bib.id }
+    end
+  end
+
+  describe "GET download_bundle_label" do
+    let(:author) { FactoryBot.create(:author, name: "Bundle Label Author") }
+    let(:bib) { FactoryBot.create(:bib, doi: "", authors: [author]) }
+    let(:params_ids) { [bib.id.to_s] }
+    let(:bibs) { Bib.where(id: params_ids) }
+    let(:label) { "label-data" }
+
+    before do
+      bib
+      allow(Bib).to receive(:where).and_return(bibs)
+      allow(Bib).to receive(:build_bundle_label).with(bibs).and_return(label)
+      allow(controller).to receive(:send_data) { controller.response_body = "" }
+    end
+
+    it "sends the generated bundle CSV" do
+      expect(controller).to receive(:send_data).with(label, filename: "bibs.csv", type: "text/csv")
+
+      get :download_bundle_label, params: { ids: params_ids }
+    end
+  end
+
+  describe "GET download_to_tex" do
+    let(:author) { FactoryBot.create(:author, name: "Tex Author") }
+    let(:bib) { FactoryBot.create(:bib, doi: "", authors: [author]) }
+    let(:params_ids) { [bib.id.to_s] }
+    let(:bibs) { Bib.where(id: params_ids) }
+    let(:tex) { "@article{demo}" }
+
+    before do
+      bib
+      allow(Bib).to receive(:where).and_return(bibs)
+      allow(Bib).to receive(:build_bundle_tex).with(bibs).and_return(tex)
+      allow(controller).to receive(:send_data) { controller.response_body = "" }
+    end
+
+    it "sends the generated bibtex export" do
+      expect(controller).to receive(:send_data).with(tex, filename: "bibs.bib", type: "text")
+
+      get :download_to_tex, params: { ids: params_ids }
+    end
+  end
 end
