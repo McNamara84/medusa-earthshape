@@ -4,7 +4,7 @@ class CollectorsController < ApplicationController
   # GET /collectors
   # GET /collectors.json
   def index
-    @collectors = Collector.all
+    @collectors = ::Collector.all
   end
 
   # GET /collectors/1
@@ -14,7 +14,7 @@ class CollectorsController < ApplicationController
 
   # GET /collectors/new
   def new
-    @collector = Collector.new
+    @collector = ::Collector.new
   end
 
   # GET /collectors/1/edit
@@ -24,7 +24,7 @@ class CollectorsController < ApplicationController
   # POST /collectors
   # POST /collectors.json
   def create
-    @collector = Collector.new(collector_params)
+    @collector = ::Collector.new(collector_params)
 
     respond_to do |format|
       if @collector.save
@@ -64,7 +64,7 @@ class CollectorsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_collector
-      @collector = Collector.find(params[:id])
+      @collector = ::Collector.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

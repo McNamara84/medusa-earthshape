@@ -27,7 +27,7 @@ class FiletopicsController < ApplicationController
 
   def update
     @filetopic.update(filetopic_params)
-    redirect_to filetopic_path	  
+    redirect_to filetopics_path	  
   end
 
   def destroy

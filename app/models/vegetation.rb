@@ -1,4 +1,4 @@
 class Vegetation < ApplicationRecord
   include Ransackable
-  belongs_to :place
+  has_many :places, dependent: :nullify
 end
