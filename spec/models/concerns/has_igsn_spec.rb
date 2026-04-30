@@ -70,5 +70,15 @@ describe HasIgsn do
 
       expect(stone.igsn).to eq "GFABC0001"
     end
+
+    it "raises a clear error before querying when no prefix is available" do
+      user.update!(prefix: nil)
+
+      expect(Stone).not_to receive(:where)
+
+      expect {
+        stone.create_igsn(nil, stone)
+      }.to raise_error(ArgumentError, "IGSN prefix is required")
+    end
   end
 end

@@ -12,7 +12,8 @@ module HasIgsn
 		literal_to_number[c]=idx
 		number_to_literal[idx]=c
         end 
-	prefix = prefix.presence || user.prefix
+	prefix = prefix.presence || user&.prefix.presence
+	raise ArgumentError, "IGSN prefix is required" if prefix.blank?
 	lastigsnstone=Stone.where("igsn ILIKE ?","#{prefix}%").order(igsn: :desc).first
 	
 #	logger.info Stone.where("igsn ILIKE ?","#{prefix}#%").order(igsn: :desc).to_sql.inspect
