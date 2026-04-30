@@ -136,7 +136,7 @@ jobs:
         env:
           COVERAGE: on
         run: |
-          docker compose exec -T web bundle exec rspec spec --format progress --format RspecJunitFormatter --out tmp/rspec-results.xml
+          docker compose exec -T -e COVERAGE="${COVERAGE}" web bundle exec rspec spec --format progress --format RspecJunitFormatter --out tmp/rspec-results.xml
 
       - name: Upload coverage report
         if: always()
