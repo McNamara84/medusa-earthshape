@@ -281,7 +281,7 @@ describe StonesController do
 
   describe "GET igsn_create" do
     let(:owner) { FactoryBot.create(:user, email: owner_email, username: owner_username, prefix: prefix) }
-    let(:stone) { FactoryBot.create(:stone, user: owner, igsn: nil) }
+    let(:stone) { FactoryBot.create(:stone, user: owner, igsn: nil, box: FactoryBot.create(:box, name: "igsn-create-box-#{owner_username}")) }
     let(:prefix) { "GFABC" }
     let(:owner_email) { "owner-igsn-create@example.com" }
     let(:owner_username) { "owner_igsn_create" }

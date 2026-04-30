@@ -96,6 +96,52 @@ describe BibsController do
         expect(assigns(:bib).name).to eq(attributes[:name])
       end
     end
+
+    describe "with DOI metadata available" do
+      let!(:existing_author) { FactoryBot.create(:author, name: "Existing, Author") }
+      let(:metadata) { instance_double(CrossrefHelper::Metadata) }
+      let(:doi) { "10.1000/example" }
+      let(:attributes) { { name: "", doi: doi, entry_type: "misc", author_ids: [] } }
+      let(:permitted_attributes) { ActionController::Parameters.new(attributes).permit! }
+
+      before do
+        allow(controller).to receive(:bib_params).and_return(permitted_attributes)
+        allow(CrossrefHelper::Metadata).to receive(:new).with(pid: "accountname", doi: doi).and_return(metadata)
+        allow(metadata).to receive(:result?).and_return(true)
+        allow(metadata).to receive(:authors).and_return(
+          [
+            { surname: "Existing", given_name: "Author" },
+            { surname: "New", given_name: "Writer" }
+          ]
+        )
+        allow(metadata).to receive(:title).and_return("Fetched Title")
+        allow(metadata).to receive(:published).and_return(year: "2024", month: "05")
+        allow(metadata).to receive(:journal).and_return(
+          month: "05",
+          full_title: "Journal of Testing",
+          volume: "12",
+          first_page: "10",
+          last_page: "20"
+        )
+      end
+
+      it "creates missing authors and populates the bib from DOI metadata" do
+        expect { post :create, params: { bib: attributes } }
+          .to change(Bib, :count).by(1)
+          .and change(Author, :count).by(1)
+
+        created_bib = assigns(:bib).reload
+        expect(created_bib).to be_persisted
+        expect(created_bib.name).to eq("Fetched Title")
+        expect(created_bib.year).to eq("2024")
+        expect(created_bib.month).to eq("05")
+        expect(created_bib.journal).to eq("Journal of Testing")
+        expect(created_bib.link_url).to eq("http://doi.org/#{doi}")
+        expect(created_bib.volume).to eq("12")
+        expect(created_bib.pages).to eq("10-20")
+        expect(created_bib.authors.pluck(:name)).to contain_exactly("Existing, Author", "New, Writer")
+      end
+    end
   end
 
   describe "PUT update" do

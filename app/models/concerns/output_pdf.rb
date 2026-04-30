@@ -89,7 +89,7 @@ module OutputPdf
 
 
     def build_igsn_a_four(resources)
-      report = ThinReports::Report.new(layout: resources.first.report_template("bundle"))
+      report = Thinreports::Report.new(layout: resources.first.report_template("bundle"))
       divide_by_three(resources).each do |resource_1, resource_2, resource_3|
         report.list.add_row do |row|
           set_igsn_bundle_data(row, 1, resource_1)
@@ -101,7 +101,7 @@ module OutputPdf
     end
     
     def build_igsn_cards(resources)
-      report = ThinReports::Report.new(layout: resources.first.report_template("igsn"))
+      report = Thinreports::Report.new(layout: resources.first.report_template("igsn"))
       resources.each do |resource|
         report.start_new_page do |page|
           resource.set_igsn_card_data(page)

@@ -4,6 +4,7 @@ require File.expand_path("support/simplecov", __dir__)
 require File.expand_path("../../config/environment", __FILE__)
 
 require 'rspec/rails'
+require 'warden/test/helpers'
 # require 'rspec/autorun'  # Removed - deprecated when running via 'rspec' command (RSpec 3.5+)
 
 # Load support files BEFORE RSpec configuration
@@ -40,6 +41,11 @@ RSpec.configure do |config|
   config.before(:each, type: :request) do
     Rails.application.reload_routes_unless_loaded
     host! "example.test"
+    Warden.test_mode!
+  end
+
+  config.after(:each, type: :request) do
+    Warden.test_reset!
   end
   
   # Include Devise test helpers FIRST, then custom helpers
@@ -77,7 +83,7 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
 
-  config.before(:all) do
+  config.before(:suite) do
     FactoryBot.reload
   end
 end

@@ -21,11 +21,12 @@ class BibsController < ApplicationController
   end
 
   def create
-
+    attributes = bib_params.to_h.with_indifferent_access
+    attributes[:author_ids] = Array(attributes[:author_ids]).map(&:to_s)
 
     paper=nil
-    if !(bib_params[:doi].empty?)
-	paper=CrossrefHelper::Metadata.new(:pid=>"accountname", :doi=>bib_params[:doi])
+    if !(attributes[:doi].empty?)
+  	paper=CrossrefHelper::Metadata.new(:pid=>"accountname", :doi=>attributes[:doi])
     end
    
     if (!paper.nil? && paper.result?)
@@ -39,16 +40,16 @@ class BibsController < ApplicationController
 			author.name=name
 			author.save		
 		end
-		bib_params[:author_ids].push author.id
+    attributes[:author_ids] |= [author.id.to_s]
 	end
-	@bib = Bib.new(bib_params)
+  @bib = Bib.new(attributes)
 	@bib.name=paper.title
 	@bib.year=paper.published[:year]
 	if (!paper.journal[:month].nil?)	
 		@bib.month=paper.published[:month]
 	end
 	@bib.journal=paper.journal[:full_title]	
-	@bib.link_url="http://doi.org/"+bib_params[:doi]
+  @bib.link_url="http://doi.org/"+attributes[:doi]
 	if (!paper.journal[:volume].nil?)
 		@bib.volume=paper.journal[:volume]
 	end
@@ -58,7 +59,7 @@ class BibsController < ApplicationController
 	@bib.save
 	respond_with @bib	
     else
-	@bib = Bib.new(bib_params)	
+  @bib = Bib.new(attributes)	
 	@bib.save
 	respond_with @bib	
     end   

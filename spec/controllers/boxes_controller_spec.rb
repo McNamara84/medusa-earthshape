@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'securerandom'
 include ActionDispatch::TestProcess
 
 describe BoxesController do
@@ -159,7 +160,7 @@ describe BoxesController do
   end
 
   describe "GET property" do
-    let(:box) { FactoryBot.create(:box) }
+    let(:box) { FactoryBot.create(:box, name: "property-box-#{SecureRandom.hex(4)}") }
     before { get :property, params: {id: box.id} }
     it { expect(assigns(:box)).to eq box }
   end

@@ -1,13 +1,28 @@
 require 'spec_helper'
+require 'securerandom'
 
 describe "stone" do
-  let(:login_user) { FactoryBot.create(:user) }
+  let(:unique_token) { SecureRandom.hex(6) }
+  let(:login_user) do
+    FactoryBot.create(:user, email: "#{unique_token}@example.com", username: "user_#{unique_token}")
+  end
   
   describe "stone detail screen" do
     let(:stone) do
       # Rails 5.0: Set User.current before creating stone to ensure proper record_property
       User.current = login_user
-      FactoryBot.create(:stone)
+      FactoryBot.create(
+        :stone,
+        name: "Stone #{unique_token}",
+        place: FactoryBot.create(:place, name: "Place #{unique_token}"),
+        box: FactoryBot.create(:box, name: "Box #{unique_token}"),
+        classification: FactoryBot.create(
+          :classification,
+          name: "Classification #{unique_token}",
+          full_name: "Classification #{unique_token}"
+        ),
+        physical_form: FactoryBot.create(:physical_form, name: "Physical Form #{unique_token}")
+      )
     end
     let(:attachment_file) { FactoryBot.create(:attachment_file, data_file_name: "file_name", data_content_type: data_type) }
     let(:data_type) { "image/jpeg" }
@@ -22,7 +37,7 @@ describe "stone" do
 
     describe "view spot" do
       context "picture-button is display" do
-        before { click_link("picture-button") }
+        before { visit picture_stone_path(stone) }
         let(:data_type) { "image/jpeg" }
         it "new spot label is properly displayed" do
           expect(page).to have_content("new spot with link(ID")
@@ -57,15 +72,27 @@ describe "stone" do
       end
 
       describe "new spot" do
-        # Skip to avoid "FIXED" error
-        xit "new spot creation implementation is difficult, pending" do
+        before { visit picture_stone_path(stone) }
+
+        it "creates a spot with the default picture form values" do
+          expect { click_button("add new spot") }.to change(Spot, :count).by(1)
+
+          spot = attachment_file.spots.order(:id).last
+
+          expect(spot).to have_attributes(
+            target_uid: "",
+            spot_x: 0.0,
+            spot_y: 0.0,
+            radius_in_percent: 2.0
+          )
+          expect(spot.name).to eq("untitled point 1")
         end
       end
 
       describe "thumbnail" do
         context "attachment_file is jpeg" do
           let(:data_type) { "image/jpeg" }
-          before { click_link("picture-button") }
+          before { visit picture_stone_path(stone) }
           it "image/jpeg is displayed" do
             expect(page).to have_css("div.spot-thumbnails img")
           end
@@ -80,7 +107,7 @@ describe "stone" do
     end
     
     describe "at-a-glance tab" do
-      before { click_link("at-a-glance") }
+      before { visit stone_path(stone, tab: "at-a-glance") }
       describe "pdf icon" do
         context "data_content_type is pdf" do
           let(:data_type) { "application/pdf" }
@@ -98,7 +125,7 @@ describe "stone" do
     end
     
     describe "file tab" do
-      before { click_link("file (1)") }
+      before { visit stone_path(stone, tab: "file") }
       describe "pdf icon" do
         context "data_content_type is pdf" do
           let(:data_type) { "application/pdf" }

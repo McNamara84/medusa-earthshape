@@ -85,6 +85,25 @@ describe ApplicationHelper do
       end
     end
   end
+
+  describe "#qrcode" do
+    before do
+      allow(helper).to receive(:qrcode_path).with("GFABC1234").and_return("/qrcodes/GFABC1234")
+      allow(helper).to receive(:image_tag).and_return("<img>")
+    end
+
+    it "uses the value as default alt text" do
+      expect(helper).to receive(:image_tag).with("/qrcodes/GFABC1234", alt: "GFABC1234").and_return("<img>")
+
+      helper.qrcode("GFABC1234")
+    end
+
+    it "accepts a custom alt text" do
+      expect(helper).to receive(:image_tag).with("/qrcodes/GFABC1234", alt: "QR code").and_return("<img>")
+
+      helper.qrcode("GFABC1234", alt: "QR code")
+    end
+  end
   
   describe "#li_if_exist" do
     after { helper.li_if_exist(prefix, value) }
@@ -151,6 +170,43 @@ describe ApplicationHelper do
     subject { helper.hidden_tabname_tag(filename) }
     let(:filename){"_stone.html.erb"}
     it { expect(subject).to eq hidden_field_tag(:tab,"stone")}
+  end
+
+  describe "#link_to_add_fields" do
+    let(:association) { :analyses }
+    let(:association_proxy) { double(:association_proxy, klass: analysis_class) }
+    let(:analysis_class) { double(:analysis_class) }
+    let(:new_object) { double(:new_object, object_id: 123) }
+    let(:object) { double(:object) }
+    let(:form_builder) { double(:form_builder, object: object) }
+    let(:nested_builder) { double(:nested_builder) }
+
+    before do
+      allow(object).to receive(:send).with(association).and_return(association_proxy)
+      allow(analysis_class).to receive(:new).and_return(new_object)
+      allow(helper).to receive(:render).with("analysis_fields", f: nested_builder).and_return("<input>\n<textarea></textarea>")
+      allow(form_builder).to receive(:fields_for).with(association, new_object, child_index: 123) do |_, _, child_index:, &block|
+        expect(child_index).to eq(123)
+        block.call(nested_builder)
+      end
+    end
+
+    it "builds an add-fields link with stripped nested markup" do
+      expect(helper).to receive(:link_to).with(
+        "Add analysis",
+        "#",
+        class: "btn add_fields",
+        data: { id: 123, fields: "<input><textarea></textarea>" }
+      )
+
+      helper.link_to_add_fields("Add analysis", "btn", form_builder, association)
+    end
+  end
+
+  describe "private tabname parsing" do
+    it "removes leading underscores and the template suffix" do
+      expect(helper.send(:tabname_from_filename, "/tmp/_at-a-glance.html.erb")).to eq("at-a-glance")
+    end
   end
 
 end

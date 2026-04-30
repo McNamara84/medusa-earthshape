@@ -14,6 +14,21 @@ describe NestedResources::PreparationsController do
   before { sign_in user }
   before { parent }
 
+  describe "GET index" do
+    before do
+      child
+      get :index, params: { parent_resource: parent_name, stone_id: parent, association_name: :preparations }, format: :json
+    end
+
+    it "assigns the parent's preparations" do
+      expect(assigns(:preparations)).to eq(parent.preparations)
+    end
+
+    it "responds successfully" do
+      expect(response).to be_successful
+    end
+  end
+
   describe "POST create" do
     let(:method) { post :create, params: { parent_resource: parent_name, stone_id: parent, preparation: attributes, association_name: :preparations } }
     
@@ -108,6 +123,76 @@ describe NestedResources::PreparationsController do
       
       it "raises RecordNotFound" do
         expect { method }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
+
+  describe "PATCH update" do
+    let(:child) { FactoryBot.create(:preparation, :with_preparation_type, stone: nil) }
+    let(:method) { patch :update, params: { parent_resource: parent_name, stone_id: parent, id: child.id, association_name: :preparations } }
+
+    before { method }
+
+    it "associates the existing preparation with the parent stone" do
+      expect(parent.preparations.exists?(id: child.id)).to eq true
+    end
+
+    it "redirects to referer" do
+      expect(response).to redirect_to request.env["HTTP_REFERER"]
+    end
+  end
+
+  describe "POST link_by_global_id" do
+    let(:global_id) { "PREP-123" }
+
+    context "with an existing preparation" do
+      let(:linked_preparation) { FactoryBot.create(:preparation, :with_preparation_type, stone: nil) }
+      let(:join_relation) { double(:join_relation) }
+      let(:where_relation) { double(:where_relation) }
+
+      before do
+        allow(Preparation).to receive(:joins).with(:record_property).and_return(join_relation)
+        allow(join_relation).to receive(:where).with(record_properties: { global_id: global_id }).and_return(where_relation)
+        allow(where_relation).to receive(:readonly).with(false).and_return(linked_preparation)
+        post :link_by_global_id, params: { parent_resource: parent_name, stone_id: parent, global_id: global_id, association_name: :preparations }
+      end
+
+      it "adds the preparation to the parent" do
+        expect(parent.preparations.exists?(id: linked_preparation.id)).to eq true
+      end
+
+      it "redirects to referer" do
+        expect(response).to redirect_to request.env["HTTP_REFERER"]
+      end
+    end
+
+    context "when lookup raises for html" do
+      before do
+        allow(Preparation).to receive(:joins).and_raise(StandardError)
+        post :link_by_global_id, params: { parent_resource: parent_name, stone_id: parent, global_id: global_id }, format: :html
+      end
+
+      it "renders the duplicate global id template" do
+        expect(response).to render_template("parts/duplicate_global_id")
+      end
+
+      it "returns unprocessable entity" do
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+
+    context "when lookup raises for json" do
+      before do
+        allow(Preparation).to receive(:joins).and_raise(StandardError)
+        post :link_by_global_id, params: { parent_resource: parent_name, stone_id: parent, global_id: global_id }, format: :json
+      end
+
+      it "returns an empty response body" do
+        expect(response.body).to be_blank
+      end
+
+      it "returns unprocessable entity" do
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end

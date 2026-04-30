@@ -1,18 +1,20 @@
 require "spec_helper"
+require "securerandom"
 
 describe HasIgsn do
+  let(:unique_token) { SecureRandom.hex(4) }
   let(:user) do
     FactoryBot.create(
       :user,
-      email: "igsn@example.com",
-      username: "igsn_user",
+      email: "igsn-#{unique_token}@example.com",
+      username: "igsn_user_#{unique_token}",
       prefix: "GFABC"
     )
   end
 
   let(:stone) do
     User.current = user
-    FactoryBot.create(:stone)
+    FactoryBot.create(:stone, box: FactoryBot.create(:box, name: "has-igsn-box-#{unique_token}"))
   end
 
   let(:literals) do
@@ -56,7 +58,7 @@ describe HasIgsn do
 
     it "increments from the latest matching IGSN" do
       User.current = user
-      FactoryBot.create(:stone, igsn: "GFABC0000")
+      FactoryBot.create(:stone, igsn: "GFABC0000", box: FactoryBot.create(:box, name: "has-igsn-existing-box-#{unique_token}"))
 
       stone.create_igsn("OTHER", stone)
 

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'securerandom'
 
 describe "group master" do
   before do
@@ -6,7 +7,10 @@ describe "group master" do
     create_data
     visit groups_path
   end
-  let(:login_user) { FactoryBot.create(:user) }
+  let(:unique_token) { SecureRandom.hex(6) }
+  let(:login_user) do
+    FactoryBot.create(:user, email: "#{unique_token}@example.com", username: "user_#{unique_token}")
+  end
   let(:create_data) {}
   
   describe "list screen" do
@@ -360,22 +364,36 @@ describe "group master" do
     end
   end
   
-  describe "create", js: true do
-    pending "Modal window does not display when clicking create button in test" do
-      # TODO: Modal window does not display when clicking create button in test, verification pending
-      before do
-        new_record_condition
-        click_button("save-button")
+  describe "create" do
+    before do
+      sign_in login_user
+      User.current = login_user
+    end
+
+    context "new record creation failed" do
+      it "returns json validation errors without creating a group" do
+        expect do
+          post groups_path(format: :json), params: { group: { name: "" } }
+        end.not_to change(Group, :count)
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(response.media_type).to eq("application/json")
+        expect(response.body).to include("can't be blank")
       end
-      context "new record creation failed" do
-        let(:new_record_condition) { fill_in("group_name", with: "") }
-        it "dialog content is displayed" do
-        end
-      end
-      context "new record creation succeeded" do
-        let(:new_record_condition) { fill_in("group_name", with: "test") }
-        it "dialog content is displayed" do
-        end
+    end
+
+    context "new record creation succeeded" do
+      let(:group_name) { "group_#{unique_token}" }
+
+      it "creates the group and returns json for the created record" do
+        expect do
+          post groups_path(format: :json), params: { group: { name: group_name } }
+        end.to change(Group, :count).by(1)
+
+        expect(response).to have_http_status(:created)
+        expect(response.media_type).to eq("application/json")
+        expect(response.body).to include(group_name)
+        expect(Group.exists?(name: group_name)).to be(true)
       end
     end
   end
