@@ -161,7 +161,9 @@ class Analysis < ApplicationRecord
   end
 
   def associate_chemistry_by_item_nickname(nickname)
-    chemistries.to_a.find { |chemistry| chemistry.measurement_item&.nickname == nickname } ||
+    in_memory_chemistries = chemistries.target
+
+    in_memory_chemistries.find { |chemistry| chemistry.measurement_item&.nickname == nickname } ||
       chemistries.joins(:measurement_item).merge(MeasurementItem.where(nickname: nickname)).first
   end
 

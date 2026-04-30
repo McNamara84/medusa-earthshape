@@ -50,8 +50,14 @@ describe HasIgsn do
   end
 
   describe "#create_igsn" do
-    it "assigns the first sequence using the owner's prefix" do
-      stone.create_igsn("IGNORED", stone)
+    it "uses the provided prefix when present" do
+      stone.create_igsn("GFZZZ", stone)
+
+      expect(stone.igsn).to eq "GFZZZ0000"
+    end
+
+    it "falls back to the owner's prefix when no prefix is passed" do
+      stone.create_igsn(nil, stone)
 
       expect(stone.igsn).to eq "GFABC0000"
     end
@@ -60,7 +66,7 @@ describe HasIgsn do
       User.current = user
       FactoryBot.create(:stone, igsn: "GFABC0000", box: FactoryBot.create(:box, name: "has-igsn-existing-box-#{unique_token}"))
 
-      stone.create_igsn("OTHER", stone)
+      stone.create_igsn(nil, stone)
 
       expect(stone.igsn).to eq "GFABC0001"
     end

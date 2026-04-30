@@ -179,7 +179,7 @@ describe Box do
     end
 
     it "builds the family view for non-root nodes" do
-      expect(child_1.families).to match_array([root, child_1, child_2, grandchild])
+      expect(Box.find(child_1.id).families).to match_array([root, child_1, child_2, grandchild])
     end
   end
 

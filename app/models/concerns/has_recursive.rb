@@ -37,7 +37,7 @@ module HasRecursive
     family_nodes << parent if parent.present?
     family_nodes += self_and_siblings.to_a
     if respond_to?(:children)
-      child_nodes = children.loaded? ? children.reload.to_a : children.to_a
+      child_nodes = children.to_a
       family_nodes += child_nodes
     end
     family_nodes.uniq

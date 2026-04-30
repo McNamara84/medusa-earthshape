@@ -98,7 +98,17 @@ describe Stone do
     end
 
     it "builds the family view for non-root nodes" do
-      expect(child_1.families).to match_array([root, child_1, child_2, grandchild])
+      expect(Stone.find(child_1.id).families).to match_array([root, child_1, child_2, grandchild])
+    end
+
+    it "reuses preloaded children when building the family view" do
+      preloaded_child = Stone.includes(:children, parent: :children).find(child_1.id)
+      children_association = preloaded_child.children
+
+      expect(children_association).to be_loaded
+      expect(children_association).not_to receive(:reload)
+
+      expect(preloaded_child.families).to match_array([root, child_1, child_2, grandchild])
     end
   end
 

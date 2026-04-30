@@ -24,8 +24,8 @@ class BibsController < ApplicationController
     attributes = bib_params.to_h.with_indifferent_access
     attributes[:author_ids] = Array(attributes[:author_ids]).map(&:to_s)
 
-    paper=nil
-    if !(attributes[:doi].empty?)
+  	paper=nil
+    if attributes[:doi].present?
   	paper=CrossrefHelper::Metadata.new(:pid=>"accountname", :doi=>attributes[:doi])
     end
    

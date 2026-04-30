@@ -293,6 +293,24 @@ describe Analysis do
 
         expect(analysis.associate_chemistry_by_item_nickname(nickname)).to eq(matching)
       end
+
+      it "returns a matching unsaved chemistry from memory without querying persisted chemistries" do
+        analysis.chemistries.load_target
+        matching = analysis.chemistries.build(measurement_item: measurement_item, unit: unit, value: 8)
+
+        expect(analysis.chemistries).not_to receive(:joins)
+
+        expect(analysis.associate_chemistry_by_item_nickname(nickname)).to eq(matching)
+      end
+
+      it "queries persisted chemistries without loading the full association" do
+        matching = analysis.chemistries.create!(measurement_item: measurement_item, unit: unit, value: 8)
+        analysis.reload
+
+        expect(analysis.association(:chemistries)).not_to be_loaded
+        expect(analysis.associate_chemistry_by_item_nickname(nickname)).to eq(matching)
+        expect(analysis.association(:chemistries)).not_to be_loaded
+      end
     end
   end
 

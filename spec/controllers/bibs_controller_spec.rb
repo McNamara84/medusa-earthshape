@@ -82,6 +82,19 @@ describe BibsController do
       end
     end
 
+    describe "with no doi parameter" do
+      let(:attributes) { { name: "bib_without_doi", entry_type: "misc", author_ids: [author.id] } }
+
+      it "creates the bib without instantiating DOI metadata" do
+        expect(CrossrefHelper::Metadata).not_to receive(:new)
+
+        expect { post :create, params: { bib: attributes } }.to change(Bib, :count).by(1)
+
+        expect(assigns(:bib)).to be_persisted
+        expect(assigns(:bib).link_url).to be_blank
+      end
+    end
+
     describe "with invalid attributes" do
       let(:attributes) { { name: "", doi: "", entry_type: "misc", author_ids: [] } }
 
