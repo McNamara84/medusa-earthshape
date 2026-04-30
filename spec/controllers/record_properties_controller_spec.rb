@@ -68,5 +68,21 @@ describe RecordPropertiesController do
     it "redirects back to the referer" do
       expect(response).to redirect_to("/stones/#{stone.id}")
     end
+
+    it "does not allow re-pointing the record property to a different datum" do
+      other_stone = FactoryBot.create(:stone, name: "other_editable_stone")
+
+      request.env["HTTP_REFERER"] = "/stones/#{stone.id}"
+      put :update, params: {
+        parent_resource: "stone",
+        stone_id: stone.id,
+        record_property: attributes.merge(datum_id: other_stone.id, datum_type: "Stone")
+      }
+
+      record_property = assigns(:record_property).reload
+      expect(record_property.datum).to eq(stone)
+      expect(record_property.datum_id).to eq(stone.id)
+      expect(record_property.datum_type).to eq("Stone")
+    end
   end
 end

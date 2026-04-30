@@ -28,8 +28,6 @@ class RecordPropertiesController < ApplicationController
 
   def record_property_params
     params.require(:record_property).permit(
-      :datum_id,
-      :datum_type,
       :user_id,
       :group_id,
       :global_id,
