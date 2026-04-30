@@ -136,8 +136,7 @@ jobs:
         env:
           COVERAGE: on
         run: |
-          REQUEST_COVERAGE_SPECS="spec/requests/stones_access_spec.rb spec/requests/core_resource_access_spec.rb spec/requests/global_id_form_flows_spec.rb spec/requests/nested_link_by_global_id_spec.rb spec/requests/collections_access_spec.rb spec/requests/record_properties_access_spec.rb"
-          docker compose exec -T web bundle exec rspec --format progress --format RspecJunitFormatter --out tmp/rspec-results.xml $REQUEST_COVERAGE_SPECS
+          docker compose exec -T web bundle exec rspec spec --format progress --format RspecJunitFormatter --out tmp/rspec-results.xml
 
       - name: Upload coverage report
         if: always()
@@ -163,8 +162,7 @@ jobs:
         run: |
           echo "## 🧪 Test Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          REQUEST_COVERAGE_SPECS="spec/requests/stones_access_spec.rb spec/requests/core_resource_access_spec.rb spec/requests/global_id_form_flows_spec.rb spec/requests/nested_link_by_global_id_spec.rb spec/requests/collections_access_spec.rb spec/requests/record_properties_access_spec.rb"
-          docker compose exec -T web bundle exec rspec --format documentation --dry-run $REQUEST_COVERAGE_SPECS 2>&1 | grep -E "examples|pending|failures" | tail -3 >> $GITHUB_STEP_SUMMARY || echo "Could not generate summary" >> $GITHUB_STEP_SUMMARY
+          docker compose exec -T web bundle exec rspec spec --format documentation --dry-run 2>&1 | grep -E "examples|pending|failures" | tail -3 >> $GITHUB_STEP_SUMMARY || echo "Could not generate summary" >> $GITHUB_STEP_SUMMARY
 
       - name: Stop services
         if: always()
