@@ -8,7 +8,7 @@ describe NestedResources::AttachmentFilesController do
   # Use :with_real_file for JSON format tests (as_json calls path methods that need real file)
   let(:child) { FactoryBot.create(child_name, :with_real_file) }
   let(:user) { FactoryBot.create(:user) }
-  let(:url){"where_i_came_from"}
+  let(:url){"/bibs/#{parent.id}"}
   let(:filetopic) { FactoryBot.create(:filetopic) }
   let(:attributes) { {data: data, filetopic_id: filetopic.id} }
   let(:data){ Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg'), 'image/jpeg') }
@@ -40,6 +40,14 @@ describe NestedResources::AttachmentFilesController do
       before { method }
       it { expect(parent.attachment_files.exists?(data_file_name: "test_image.jpg")).to eq true}
       it { expect(response).to redirect_to request.env["HTTP_REFERER"]}
+    end
+    context "with a path-relative referer" do
+      before do
+        request.env["HTTP_REFERER"] = "where_i_came_from"
+        method
+      end
+
+      it { expect(response).to redirect_to("/") }
     end
     context "invalidate" do
       let(:data){nil}

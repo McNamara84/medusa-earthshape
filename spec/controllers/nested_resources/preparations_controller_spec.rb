@@ -6,7 +6,7 @@ describe NestedResources::PreparationsController do
   let(:parent) { FactoryBot.create(parent_name) }
   let(:child) { FactoryBot.create(child_name, :with_preparation_type, stone: parent) }
   let(:user) { FactoryBot.create(:user) }
-  let(:url) { "where_i_came_from" }
+  let(:url) { "/stones/#{parent.id}" }
   let(:preparation_type) { FactoryBot.create(:preparation_type) }
   let(:attributes) { { info: "New preparation info", preparation_type_id: preparation_type.id } }
   
@@ -49,6 +49,17 @@ describe NestedResources::PreparationsController do
       
       it "redirects to referer" do
         expect(response).to redirect_to request.env["HTTP_REFERER"]
+      end
+    end
+
+    context "with a path-relative referer" do
+      before do
+        request.env["HTTP_REFERER"] = "where_i_came_from"
+        method
+      end
+
+      it "falls back to root" do
+        expect(response).to redirect_to("/")
       end
     end
 
@@ -177,7 +188,7 @@ describe NestedResources::PreparationsController do
       end
 
       it "returns unprocessable entity" do
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
 
@@ -192,7 +203,7 @@ describe NestedResources::PreparationsController do
       end
 
       it "returns unprocessable entity" do
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
