@@ -14,7 +14,7 @@ jobs:
   test:
     name: RSpec Tests
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -35,7 +35,7 @@ jobs:
             password: medusa_development
             host: db
             port: 5432
-          
+
           development:
             adapter: postgresql
             encoding: unicode
@@ -46,7 +46,7 @@ jobs:
             host: db
             port: 5432
           EOF
-          
+
           # Create application.yml from example
           cp config/application.yml.example config/application.yml
 
@@ -69,7 +69,7 @@ jobs:
             echo "Waiting... ($i/30)"
             sleep 2
           done
-          
+
           # Verify connection
           docker compose exec -T db psql -U medusa -d postgres -c "SELECT 1;" || exit 1
           echo "Database connection verified!"
@@ -80,7 +80,7 @@ jobs:
           docker compose exec -T db psql -U medusa -d postgres -c "DROP DATABASE IF EXISTS medusa_development;" || true
           docker compose exec -T db psql -U medusa -d postgres -c "CREATE DATABASE medusa_development OWNER medusa;"
           echo "Development database created"
-          
+
           # Create test database
           docker compose exec -T db psql -U medusa -d postgres -c "DROP DATABASE IF EXISTS medusa_test;" || true
           docker compose exec -T db psql -U medusa -d postgres -c "CREATE DATABASE medusa_test OWNER medusa;"
@@ -133,9 +133,20 @@ jobs:
           echo "Database setup completed"
 
       - name: Run RSpec tests
+        env:
+          COVERAGE: on
         run: |
-          docker compose exec -T web bundle exec rspec --format progress --format RspecJunitFormatter --out tmp/rspec-results.xml
-          
+          docker compose exec -T -e COVERAGE="${COVERAGE}" web bundle exec rspec spec --format progress --format RspecJunitFormatter --out tmp/rspec-results.xml
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rspec-coverage
+          path: |
+            coverage/**
+          if-no-files-found: ignore
+
       - name: Check test results
         if: always()
         run: |
@@ -151,7 +162,7 @@ jobs:
         run: |
           echo "## 🧪 Test Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          docker compose exec -T web bundle exec rspec --format documentation --dry-run 2>&1 | grep -E "examples|pending|failures" | tail -3 >> $GITHUB_STEP_SUMMARY || echo "Could not generate summary" >> $GITHUB_STEP_SUMMARY
+          docker compose exec -T web bundle exec rspec spec --format documentation --dry-run 2>&1 | grep -E "examples|pending|failures" | tail -3 >> $GITHUB_STEP_SUMMARY || echo "Could not generate summary" >> $GITHUB_STEP_SUMMARY
 
       - name: Stop services
         if: always()

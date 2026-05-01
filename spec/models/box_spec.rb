@@ -96,6 +96,31 @@ describe Box do
     end
   end
 
+  describe "#parent_global_id" do
+    let(:box) { Box.new }
+    let(:parent_box) { FactoryBot.create(:box) }
+
+    it "returns the parent's global id" do
+      box.parent = parent_box
+      expect(box.parent_global_id).to eq(parent_box.global_id)
+    end
+
+    it "sets parent_id from a box global id" do
+      box.parent_global_id = parent_box.global_id
+      expect(box.parent_id).to eq(parent_box.id)
+    end
+
+    it "ignores blank input" do
+      box.parent_global_id = ""
+      expect(box.parent_id).to be_nil
+    end
+
+    it "ignores global ids from another datum type" do
+      box.parent_global_id = FactoryBot.create(:place).global_id
+      expect(box.parent_id).to be_nil
+    end
+  end
+
   describe "#descendants" do
     let(:root) { FactoryBot.create(:box, name: "root") }
     let(:child_1){ FactoryBot.create(:box, parent_id: root.id) }
@@ -118,6 +143,44 @@ describe Box do
     it {
       expect(root.self_and_descendants).to match_array([root, child_1, child_1_1])
     }
+  end
+
+  describe "recursive helpers" do
+    let(:root) { FactoryBot.create(:box, name: "root") }
+    let(:child_1) { FactoryBot.create(:box, name: "child_1", parent_id: root.id) }
+    let(:child_2) { FactoryBot.create(:box, name: "child_2", parent_id: root.id) }
+    let(:grandchild) { FactoryBot.create(:box, name: "grandchild", parent_id: child_1.id) }
+
+    before do
+      root
+      child_1
+      child_2
+      grandchild
+    end
+
+    it "returns ancestors from direct parent to root" do
+      expect(grandchild.ancestors).to eq([child_1, root])
+    end
+
+    it "returns siblings without self" do
+      expect(child_1.siblings).to match_array([child_2])
+    end
+
+    it "returns self and siblings for a child node" do
+      expect(child_1.self_and_siblings).to match_array([child_1, child_2])
+    end
+
+    it "returns only self for a root node" do
+      expect(root.self_and_siblings).to eq([root])
+    end
+
+    it "returns the hierarchy root" do
+      expect(grandchild.root).to eq(root)
+    end
+
+    it "builds the family view for non-root nodes" do
+      expect(Box.find(child_1.id).families).to match_array([root, child_1, child_2, grandchild])
+    end
   end
 
   describe "analyses" do

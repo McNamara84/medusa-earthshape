@@ -58,6 +58,7 @@ class Place < ApplicationRecord
         table.delete(0)
         table.each do |row|
           place = new(row.to_hash)
+          place.is_parent = true
           place.save!
         end
       end

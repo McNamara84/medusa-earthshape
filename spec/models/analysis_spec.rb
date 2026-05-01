@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'securerandom'
 
 describe Analysis do
 
@@ -199,8 +200,119 @@ describe Analysis do
     it { expect(subject).to eq [object_1, object_2] }
   end
 
-  # Skip to avoid "FIXED" error - test needs implementation
-  xit "set_object" do
+  describe ".set_object" do
+    let(:existing_analysis) { FactoryBot.create(:analysis, name: "original", operator: "before") }
+    let(:methods) { ["id", "name", "operator"] }
+
+    it "updates an existing record when id is present" do
+      object = Analysis.set_object(methods, [existing_analysis.id, " updated ", " operator "])
+
+      expect(object).to eq(existing_analysis)
+      expect(object.name).to eq("updated")
+      expect(object.operator).to eq("operator")
+    end
+
+    it "builds a new record when no id column is provided" do
+      object = Analysis.set_object(["name", "operator"], [" new analysis ", " new operator "])
+
+      expect(object).to be_a_new(Analysis)
+      expect(object.name).to eq("new analysis")
+      expect(object.operator).to eq("new operator")
+    end
+  end
+
+  describe "dynamic chemistry accessors" do
+    let(:analysis) { FactoryBot.create(:analysis) }
+    let(:suffix) { SecureRandom.hex(4) }
+    let(:nickname) { "fe_#{suffix}" }
+    let(:unit_name) { "g#{suffix.first(4)}" }
+    let(:unit) { FactoryBot.create(:unit, name: unit_name, html: unit_name, text: unit_name, conversion: 1) }
+    let(:measurement_item) { FactoryBot.create(:measurement_item, nickname: nickname, unit: measurement_item_unit) }
+    let(:measurement_item_unit) { unit }
+
+    describe "#method_missing for setters" do
+      it "creates a chemistry using the explicit unit in the method name" do
+        measurement_item
+        setter_name = "#{nickname}_in_#{unit_name}="
+
+        expect {
+          analysis.public_send(setter_name, " 12.5 ")
+        }.to change { analysis.chemistries.length }.by(1)
+
+        chemistry = analysis.chemistries.last
+        expect(chemistry.measurement_item.nickname).to eq(nickname)
+        expect(chemistry.unit.name).to eq(unit_name)
+        expect(chemistry.value).to eq(12.5)
+      end
+
+      it "uses the measurement item's default unit when no unit suffix is provided" do
+        measurement_item
+        setter_name = "#{nickname}="
+
+        analysis.public_send(setter_name, "7.5")
+
+        chemistry = analysis.chemistries.last
+        expect(chemistry.measurement_item.nickname).to eq(nickname)
+        expect(chemistry.unit.name).to eq(unit_name)
+        expect(chemistry.value).to eq(7.5)
+      end
+
+      it "updates uncertainty through the _error accessor" do
+        chemistry = analysis.chemistries.create!(measurement_item: measurement_item, unit: unit, value: 1.5)
+        setter_name = "#{nickname}_error="
+
+        analysis.public_send(setter_name, " 0.25 ")
+
+        expect(chemistry.uncertainty).to eq(0.25)
+      end
+    end
+
+    describe "#method_missing for getters" do
+      let(:measurement_item_unit) { nil }
+
+      it "returns the chemistry value when no unit conversion is needed" do
+        analysis.chemistries.create!(measurement_item: measurement_item, unit: nil, value: 3.25)
+
+        expect(analysis.public_send(nickname)).to eq(3.25)
+      end
+
+      it "returns nil when no chemistry exists for the nickname" do
+        measurement_item
+
+        expect(analysis.public_send(nickname)).to be_nil
+      end
+
+      it "raises NoMethodError for an unknown nickname" do
+        expect { analysis.unknown_measurement = 1 }.to raise_error(NoMethodError)
+      end
+    end
+
+    describe "#associate_chemistry_by_item_nickname" do
+      it "returns the first matching chemistry" do
+        matching = analysis.chemistries.create!(measurement_item: measurement_item, unit: unit, value: 8)
+        analysis.chemistries.create!(measurement_item: FactoryBot.create(:measurement_item, nickname: "mg"), value: 1)
+
+        expect(analysis.associate_chemistry_by_item_nickname(nickname)).to eq(matching)
+      end
+
+      it "returns a matching unsaved chemistry from memory without querying persisted chemistries" do
+        analysis.chemistries.load_target
+        matching = analysis.chemistries.build(measurement_item: measurement_item, unit: unit, value: 8)
+
+        expect(analysis.chemistries).not_to receive(:joins)
+
+        expect(analysis.associate_chemistry_by_item_nickname(nickname)).to eq(matching)
+      end
+
+      it "queries persisted chemistries without loading the full association" do
+        matching = analysis.chemistries.create!(measurement_item: measurement_item, unit: unit, value: 8)
+        analysis.reload
+
+        expect(analysis.association(:chemistries)).not_to be_loaded
+        expect(analysis.associate_chemistry_by_item_nickname(nickname)).to eq(matching)
+        expect(analysis.association(:chemistries)).not_to be_loaded
+      end
+    end
   end
 
   describe "#to_castemls" do

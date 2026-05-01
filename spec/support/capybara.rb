@@ -1,5 +1,8 @@
 require 'capybara/rails'
 
+Capybara.default_host = 'http://example.test'
+Capybara.app_host = 'http://example.test'
+
 # Only configure Poltergeist if we're running request specs
 # This prevents PhantomJS/Xvfb issues in controller/model specs
 RSpec.configure do |config|

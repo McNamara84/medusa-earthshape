@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'securerandom'
 include ActionDispatch::TestProcess
 
 describe BoxesController do
@@ -159,7 +160,7 @@ describe BoxesController do
   end
 
   describe "GET property" do
-    let(:box) { FactoryBot.create(:box) }
+    let(:box) { FactoryBot.create(:box, name: "property-box-#{SecureRandom.hex(4)}") }
     before { get :property, params: {id: box.id} }
     it { expect(assigns(:box)).to eq box }
   end
@@ -199,6 +200,84 @@ describe BoxesController do
     it {expect(obj1.path).to eq attributes[:path]}
     it {expect(obj2.path).to eq attributes[:path]}
     it {expect(obj3.path).to eq obj3path}
+  end
+
+  describe "GET download_card" do
+    let(:box) { FactoryBot.create(:box) }
+    let(:report) { instance_double("Report") }
+    let(:generated_pdf) { "pdf-data" }
+
+    before do
+      allow(Box).to receive(:find).with(box.id.to_s).and_return(box)
+      allow(box).to receive(:build_card).and_return(report)
+      allow(report).to receive(:generate).and_return(generated_pdf)
+      allow(controller).to receive(:send_data) { controller.response_body = "" }
+    end
+
+    it "sends the generated PDF" do
+      expect(controller).to receive(:send_data).with(generated_pdf, filename: "box.pdf", type: "application/pdf")
+
+      get :download_card, params: {id: box.id}
+    end
+  end
+
+  describe "GET download_bundle_card" do
+    let(:box) { FactoryBot.create(:box) }
+    let(:params_ids) { [box.id.to_s] }
+    let(:report) { instance_double("Report") }
+    let(:generated_pdf) { "pdf-data" }
+    let(:boxes) { Box.where(id: params_ids) }
+
+    before do
+      box
+      allow(Box).to receive(:where).and_return(boxes)
+      allow(Box).to receive(:build_cards).with(boxes).and_return(report)
+      allow(report).to receive(:generate).and_return(generated_pdf)
+      allow(controller).to receive(:send_data) { controller.response_body = "" }
+    end
+
+    it "sends the generated bundle PDF" do
+      expect(controller).to receive(:send_data).with(generated_pdf, filename: "boxes.pdf", type: "application/pdf")
+
+      get :download_bundle_card, params: {ids: params_ids}
+    end
+  end
+
+  describe "GET download_label" do
+    let(:box) { FactoryBot.create(:box) }
+    let(:label) { "label-data" }
+
+    before do
+      allow(Box).to receive(:find).with(box.id.to_s).and_return(box)
+      allow(box).to receive(:build_label).and_return(label)
+      allow(controller).to receive(:send_data) { controller.response_body = "" }
+    end
+
+    it "sends the generated CSV" do
+      expect(controller).to receive(:send_data).with(label, filename: "box_#{box.id}.csv", type: "text/csv")
+
+      get :download_label, params: {id: box.id}
+    end
+  end
+
+  describe "GET download_bundle_label" do
+    let(:box) { FactoryBot.create(:box) }
+    let(:params_ids) { [box.id.to_s] }
+    let(:label) { "label-data" }
+    let(:boxes) { Box.where(id: params_ids) }
+
+    before do
+      box
+      allow(Box).to receive(:where).and_return(boxes)
+      allow(Box).to receive(:build_bundle_label).with(boxes).and_return(label)
+      allow(controller).to receive(:send_data) { controller.response_body = "" }
+    end
+
+    it "sends the generated bundle CSV" do
+      expect(controller).to receive(:send_data).with(label, filename: "boxes.csv", type: "text/csv")
+
+      get :download_bundle_label, params: {ids: params_ids}
+    end
   end
 
 end

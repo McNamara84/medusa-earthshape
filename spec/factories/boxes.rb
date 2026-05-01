@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :box do
-    sequence(:name) { |n| "box_#{n}" }
+    sequence(:name) { |n| "factory_box_#{n}" }
     parent_id { nil }
     position { 1 }
     path { "/path" }

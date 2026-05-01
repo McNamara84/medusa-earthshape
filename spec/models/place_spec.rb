@@ -67,28 +67,78 @@ describe Place do
       end
       context "content_type is 'text/csv'" do
         let(:content_type) { 'text/csv' }
-        # TODO: Fix CSV import validation failure - imported places need either:
-        #   1. is_parent=true flag set, OR
-        #   2. parent_id and topographic_position_id provided
-        # This is a known bug in Place.import_csv method. Track as GitHub issue.
-        pending "CSV import needs to handle validation requirements" do
-          expect(subject).to be_present
+
+        it "imports a parent place" do
+          expect { subject }.to change(Place, :count).by(1)
+
+          imported_place = Place.order(:id).last
+          expect(imported_place).to have_attributes(name: "place", is_parent: true)
         end
       end
       context "content_type is 'text/plain'" do
         let(:content_type) { 'text/plain' }
-        # TODO: Same CSV import validation issue as text/csv above
-        pending "CSV import needs to handle validation requirements" do
-          expect(subject).to be_present
+
+        it "imports a parent place" do
+          expect { subject }.to change(Place, :count).by(1)
+
+          imported_place = Place.order(:id).last
+          expect(imported_place).to have_attributes(name: "place", is_parent: true)
         end
       end
       context "content_type is 'application/csv'" do
         let(:content_type) { 'application/csv' }
-        # TODO: Same CSV import validation issue as text/csv above
-        pending "CSV import needs to handle validation requirements" do
-          expect(subject).to be_present
+
+        it "imports a parent place" do
+          expect { subject }.to change(Place, :count).by(1)
+
+          imported_place = Place.order(:id).last
+          expect(imported_place).to have_attributes(name: "place", is_parent: true)
         end
       end
+    end
+  end
+
+  describe "#parent_global_id" do
+    let(:place) { Place.new }
+    let(:parent_place) { FactoryBot.create(:place, is_parent: true) }
+
+    it "returns the parent's global id" do
+      place.parent = parent_place
+      expect(place.parent_global_id).to eq(parent_place.global_id)
+    end
+
+    it "sets parent_id from a place global id" do
+      place.parent_global_id = parent_place.global_id
+      expect(place.parent_id).to eq(parent_place.id)
+    end
+
+    it "ignores blank input" do
+      place.parent_global_id = ""
+      expect(place.parent_id).to be_nil
+    end
+
+    it "ignores global ids from another datum type" do
+      place.parent_global_id = FactoryBot.create(:box).global_id
+      expect(place.parent_id).to be_nil
+    end
+  end
+
+  describe "coordinate normalization" do
+    let(:place) { Place.new }
+
+    it "normalizes latitude strings with commas, spaces, and south indicator" do
+      place.latitude = " 12,3456 s "
+      expect(place.latitude).to eq(-12.3456)
+    end
+
+    it "normalizes longitude strings with commas, spaces, and west indicator" do
+      place.longitude = " 98,7654 w "
+      expect(place.longitude).to eq(-98.7654)
+    end
+
+    it "passes through non-string latitude values unchanged" do
+      place.latitude = 10.5
+      expect(place.latitude).to eq(10.5)
     end
   end
 

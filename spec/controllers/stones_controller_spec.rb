@@ -205,33 +205,152 @@ describe StonesController do
     it {expect(obj3.name).to eq obj3name}
   end
 
-  # send_data test returns unexpected object.
-  pending "GET download_card" do
-    after { get :download_card, params: {id: stone.id} }
-    let(:stone) { FactoryBot.create(:stone) }
+  describe "GET download_card" do
+    let(:owner) { FactoryBot.create(:user, email: "owner-download-card@example.com", username: "owner_download_card", prefix: "GFABC") }
+    let(:stone) { FactoryBot.create(:stone, user: owner, igsn: igsn) }
+    let(:report) { instance_double("Report") }
+    let(:generated_pdf) { "pdf-data" }
+    let(:igsn) { "IGSN-001" }
+
     before do
-      stone
-      allow(stone).to receive(:build_card).and_return(double(:report))
-      allow(double(:report)).to receive(:generate).and_return(double(:generate))
-      allow(controller).to receive(:send_data).and_return(nil)
+      allow(Stone).to receive(:find).with(stone.id.to_s).and_return(stone)
+      allow(stone).to receive(:build_igsn_card).and_return(report)
+      allow(report).to receive(:generate).and_return(generated_pdf)
+      allow(controller).to receive(:send_data) { controller.response_body = "" }
     end
-    it { expect(controller).to receive(:send_data).with(double(:generate), filename: "stone.pdf", type: "application/pdf") }
+
+    it "sends the generated PDF" do
+      expect(controller).to receive(:send_data).with(generated_pdf, filename: "sample.pdf", type: "application/pdf")
+
+      get :download_card, params: {id: stone.id}
+    end
+
+    context "when the stone has no igsn yet" do
+      let(:igsn) { nil }
+
+      before do
+        allow(stone).to receive(:create_igsn)
+        allow(stone).to receive(:save).and_return(true)
+      end
+
+      it "creates an igsn before generating the PDF" do
+        expect(stone).to receive(:create_igsn).with(owner.prefix, stone)
+        expect(stone).to receive(:save)
+
+        get :download_card, params: {id: stone.id}
+      end
+    end
+
+    context "when the owner has no igsn prefix" do
+      let(:owner) { FactoryBot.create(:user, email: "owner-download-card-no-prefix@example.com", username: "owner_download_card_no_prefix", prefix: nil) }
+
+      it "renders the missing-prefix warning" do
+        get :download_card, params: {id: stone.id}
+
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
   end
 
   describe "GET download_bundle_card" do
-    # send_data
-  end
-  
-  # send_data test returns unexpected object.
-  pending "GET download_label" do
-    after { get :download_label, params: {id: stone.id} }
-    let(:stone) { FactoryBot.create(:stone) }
+    let(:owner) { FactoryBot.create(:user, email: "owner-download-bundle-card@example.com", username: "owner_download_bundle_card", prefix: "GFABC") }
+    let(:stone) { FactoryBot.create(:stone, user: owner, igsn: nil) }
+    let(:stones) { [stone] }
+    let(:params_ids) { [stone.id.to_s] }
+    let(:report) { instance_double("Report") }
+    let(:generated_pdf) { "pdf-data" }
+
     before do
       stone
-      allow(stone).to receive(:build_label).and_return(double(:build_label))
-      allow(controller).to receive(:send_data).and_return(nil)
+      allow(Stone).to receive(:where).and_return(stones)
+      allow(stone).to receive(:create_igsn)
+      allow(stone).to receive(:save).and_return(true)
+      allow(Stone).to receive(:build_igsn_a_four).with(stones).and_return(report)
+      allow(report).to receive(:generate).and_return(generated_pdf)
+      allow(controller).to receive(:send_data) { controller.response_body = "" }
     end
-    it { expect(controller).to receive(:send_data).with(double(:build_label), filename: "Stone_#{stone.id}.csv", type: "text/csv") }
+
+    it "creates missing igsns and sends the bundle PDF" do
+      expect(stone).to receive(:create_igsn).with(owner.prefix, stone)
+      expect(stone).to receive(:save)
+      expect(controller).to receive(:send_data).with(generated_pdf, filename: "samples.pdf", type: "application/pdf")
+
+      get :download_bundle_card, params: {ids: params_ids, a4: "true"}
+    end
+  end
+
+  describe "GET igsn_create" do
+    let(:owner) { FactoryBot.create(:user, email: owner_email, username: owner_username, prefix: prefix) }
+    let(:stone) { FactoryBot.create(:stone, user: owner, igsn: nil, box: FactoryBot.create(:box, name: "igsn-create-box-#{owner_username}")) }
+    let(:prefix) { "GFABC" }
+    let(:owner_email) { "owner-igsn-create@example.com" }
+    let(:owner_username) { "owner_igsn_create" }
+
+    before do
+      allow(Stone).to receive(:find).with(stone.id.to_s).and_return(stone)
+    end
+
+    context "when the owner has an igsn prefix" do
+      before do
+        allow(stone).to receive(:create_igsn)
+        allow(stone).to receive(:save).and_return(true)
+      end
+
+      it "creates an igsn and redirects to the stone" do
+        expect(stone).to receive(:create_igsn).with(owner.prefix, stone)
+        expect(stone).to receive(:save)
+
+        get :igsn_create, params: {id: stone.id}
+
+        expect(response).to redirect_to(stone_path(stone))
+      end
+    end
+
+    context "when the owner has no igsn prefix" do
+      let(:prefix) { nil }
+      let(:owner_email) { "owner-igsn-create-no-prefix@example.com" }
+      let(:owner_username) { "owner_igsn_create_no_prefix" }
+
+      it "renders the missing-prefix warning" do
+        get :igsn_create, params: {id: stone.id}
+
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
+
+  describe "GET igsn_register" do
+    let(:non_admin) { FactoryBot.create(:user, email: "stone-igsn-register-non-admin@example.com", username: "stone_igsn_register_non_admin", administrator: false) }
+    let(:stone) { FactoryBot.create(:stone) }
+
+    before do
+      sign_out user
+      sign_in non_admin
+    end
+
+    it "rejects non-admin users" do
+      get :igsn_register, params: {id: stone.id}
+
+      expect(flash[:error]).to eq("Only administrators can register IGSNs")
+      expect(response).to redirect_to(stone_url(stone))
+    end
+  end
+  
+  describe "GET download_label" do
+    let(:stone) { FactoryBot.create(:stone, name: "sample-name") }
+    let(:label) { "label-data" }
+
+    before do
+      allow(Stone).to receive(:find).with(stone.id.to_s).and_return(stone)
+      allow(stone).to receive(:build_label).and_return(label)
+      allow(controller).to receive(:send_data) { controller.response_body = "" }
+    end
+
+    it "sends the generated CSV" do
+      expect(controller).to receive(:send_data).with(label, filename: "sample_sample-name.csv", type: "text/csv")
+
+      get :download_label, params: {id: stone.id}
+    end
   end
   
   describe "download_bundle_label" do

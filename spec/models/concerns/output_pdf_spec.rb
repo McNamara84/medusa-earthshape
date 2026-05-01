@@ -40,6 +40,16 @@ describe OutputPdf do
     it { expect(obj.build_card.class).to eq Thinreports::Report::Base }
   end
 
+  describe "build_igsn_card" do
+    let(:obj) { klass.create(name: "foo", global_id: "1234") }
+    before { allow(obj).to receive(:set_igsn_card_data) }
+    after { obj.build_igsn_card }
+    it { expect(Thinreports::Report).to receive(:new).and_call_original }
+    it { expect(obj).to receive(:report_template).with("igsn").and_call_original }
+    it { expect(obj).to receive(:set_igsn_card_data) }
+    it { expect(obj.build_igsn_card.class).to eq Thinreports::Report::Base }
+  end
+
   describe "report_template" do
     subject { obj.report_template(type) }
     let(:obj) { klass.create(name: "foo", global_id: "1234") }
@@ -84,6 +94,36 @@ describe OutputPdf do
     #it { expect(item_image).to receive(:value).with(primary_attachment_file_path) }
   end
 
+  describe "set_igsn_card_data" do
+    after { obj.set_igsn_card_data(page) }
+    let(:obj) { klass.create(name: name, global_id: global_id) }
+    let(:name) { "foo" }
+    let(:global_id) { "1234" }
+    let(:page) { double(:page) }
+    let(:item_name) { double(:item_name) }
+    let(:item_global_id) { double(:item_global_id) }
+    let(:item_qr_code) { double(:item_qr_code) }
+    let(:igsn_qr_image) { double(:igsn_qr_image) }
+    before do
+      allow(obj).to receive(:igsn).and_return("GFABC1234")
+      allow(obj).to receive(:igsn_qr_image).and_return(igsn_qr_image)
+      allow(page).to receive(:item).with(:name).and_return(item_name)
+      allow(page).to receive(:item).with(:global_id).and_return(item_global_id)
+      allow(page).to receive(:item).with(:qr_code).and_return(item_qr_code)
+      allow(item_name).to receive(:value).with(name)
+      allow(item_global_id).to receive(:style).with(:font_size, 15).and_return(item_global_id)
+      allow(item_global_id).to receive(:value).with("IGSN:GFABC1234")
+      allow(item_qr_code).to receive(:src).with(igsn_qr_image)
+    end
+    it { expect(page).to receive(:item).with(:name) }
+    it { expect(item_name).to receive(:value).with(name) }
+    it { expect(page).to receive(:item).with(:global_id) }
+    it { expect(item_global_id).to receive(:style).with(:font_size, 15) }
+    it { expect(item_global_id).to receive(:value).with("IGSN:GFABC1234") }
+    it { expect(page).to receive(:item).with(:qr_code) }
+    it { expect(item_qr_code).to receive(:src).with(igsn_qr_image) }
+  end
+
   describe "qr_image" do
     # Rails 5.0+: Multiple tests with after hook cause "already received" errors
     # Don't use after hook - call method explicitly in test that needs return value
@@ -111,6 +151,34 @@ describe OutputPdf do
     
     it "should return a StringIO object" do
       expect(obj.qr_image).to be_a(StringIO)
+    end
+  end
+
+  describe "igsn_qr_image" do
+    let(:obj) { klass.create(name: "foo", global_id: "1234") }
+    let(:collectors) { double(:collectors) }
+    let(:dim) { klass::QRCODE_DIM }
+
+    before do
+      allow(obj).to receive(:igsn).and_return("GFABC1234")
+      allow(obj).to receive(:collectors).and_return(collectors)
+      allow(collectors).to receive(:pluck).with(:name).and_return(["Ada", "Ada", "Grace"])
+    end
+
+    it "creates a qr code payload that includes igsn, collectors and name" do
+      expect(Barby::QrCode).to receive(:new).with("GFABC1234 | Ada, Grace | foo").and_call_original
+      obj.igsn_qr_image
+    end
+
+    it "renders the qr code with the configured dimensions" do
+      expect_any_instance_of(Barby::QrCode).to receive(:to_png).with({xdim: dim, ydim: dim}).and_call_original
+      obj.igsn_qr_image
+    end
+
+    it "returns a UTF-8 string io" do
+      result = obj.igsn_qr_image
+      expect(result).to be_a(StringIO)
+      expect(result.external_encoding.to_s).to eq("UTF-8")
     end
   end
 
@@ -159,6 +227,33 @@ describe OutputPdf do
     it { expect(obj).to receive(:report_template).with("igsn").and_call_original }
     it { expect(obj).to receive(:set_card_data) }
     it { expect(klass.build_cards(resources).class).to eq Thinreports::Report::Base }
+  end
+
+  describe "build_igsn_a_four" do
+    after { klass.build_igsn_a_four(resources) }
+    let(:resources) { [obj] }
+    let(:obj) { klass.create(name: "foo", global_id: "1234") }
+    before do
+      allow(obj).to receive(:igsn).and_return("GFABC1234")
+      allow(obj).to receive(:primary_attachment_file_path)
+      allow(obj).to receive(:qr_image)
+    end
+    it { expect(Thinreports::Report).to receive(:new).and_call_original }
+    it { expect(obj).to receive(:report_template).with("bundle").and_call_original }
+    it { expect(klass).to receive(:divide_by_three).with(resources).and_call_original }
+    it { expect(klass).to receive(:set_igsn_bundle_data).exactly(3).times }
+    it { expect(klass.build_igsn_a_four(resources).class).to eq Thinreports::Report::Base }
+  end
+
+  describe "build_igsn_cards" do
+    after { klass.build_igsn_cards(resources) }
+    let(:resources) { [obj] }
+    let(:obj) { klass.create(name: "foo", global_id: "1234") }
+    before { allow(obj).to receive(:set_igsn_card_data) }
+    it { expect(Thinreports::Report).to receive(:new).and_call_original }
+    it { expect(obj).to receive(:report_template).with("igsn").and_call_original }
+    it { expect(obj).to receive(:set_igsn_card_data) }
+    it { expect(klass.build_igsn_cards(resources).class).to eq Thinreports::Report::Base }
   end
 
   describe "divide_by_three" do
@@ -219,6 +314,50 @@ describe OutputPdf do
       it { expect(row_item).to receive(:value).with(resource.name) }
       it { expect(row).to receive(:item).with(:global_id_1) }
       it { expect(row_item).to receive(:value).with(resource.global_id) }
+      it { expect(row).to receive(:item).with(:qr_code_1) }
+      it { expect(row_item).to receive(:src).with(qr_image) }
+      it { expect(row).to receive(:item).with(:image_1) }
+      it { expect(row_item).to receive(:value).with(primary_attachment_file_path) }
+    end
+  end
+
+  describe "set_igsn_bundle_data" do
+    after { klass.send(:set_igsn_bundle_data, row, num, resource) }
+    let(:row) { double(:row) }
+    let(:num) { 1 }
+    let(:row_item) { double(:item) }
+    context "resource is nil" do
+      let(:resource) { nil }
+      before do
+        allow(row).to receive(:item).and_return(row_item)
+        allow(row_item).to receive(:hide)
+      end
+      it { expect(row).to receive(:item).with(:name_1) }
+      it { expect(row).to receive(:item).with(:global_id_1) }
+      it { expect(row).to receive(:item).with(:qr_code_1) }
+      it { expect(row).to receive(:item).with(:image_1) }
+      it { expect(row_item).to receive(:hide).exactly(4).times }
+    end
+    context "resource is present" do
+      let(:resource) { klass.create(name: "foo", global_id: "1234") }
+      let(:qr_image) { double(:qr_image) }
+      let(:primary_attachment_file_path) { double(:path) }
+      before do
+        allow(resource).to receive(:igsn).and_return("GFABC1234")
+        allow(resource).to receive(:qr_image).and_return(qr_image)
+        allow(resource).to receive(:primary_attachment_file_path).and_return(primary_attachment_file_path)
+        allow(row).to receive(:item).and_return(row_item)
+        allow(row_item).to receive(:value).with(resource.name)
+        allow(row_item).to receive(:style).with(:font_size, 15).and_return(row_item)
+        allow(row_item).to receive(:value).with("IGSN:GFABC1234")
+        allow(row_item).to receive(:src).with(resource.qr_image)
+        allow(row_item).to receive(:value).with(resource.primary_attachment_file_path)
+      end
+      it { expect(row).to receive(:item).with(:name_1) }
+      it { expect(row_item).to receive(:value).with(resource.name) }
+      it { expect(row).to receive(:item).with(:global_id_1) }
+      it { expect(row_item).to receive(:style).with(:font_size, 15) }
+      it { expect(row_item).to receive(:value).with("IGSN:GFABC1234") }
       it { expect(row).to receive(:item).with(:qr_code_1) }
       it { expect(row_item).to receive(:src).with(qr_image) }
       it { expect(row).to receive(:item).with(:image_1) }

@@ -149,7 +149,13 @@ describe PlaceDecorator do
     context "get country name" do
       let(:latitude){35.3606}
       let(:longitude){132.75558}
-      it "returns Japan", :skip => "Requires external Geonames API" do
+      let(:country_subdivision) { instance_double("CountrySubdivision", country_name: "Japan") }
+
+      before do
+        allow(Geonames::WebService).to receive(:country_subdivision).with("35.36", "132.76").and_return([country_subdivision])
+      end
+
+      it "returns Japan" do
         expect(subject).to eq "Japan"
       end
     end
@@ -177,8 +183,13 @@ describe PlaceDecorator do
     context "get country name" do
       let(:latitude){35.3606}
       let(:longitude){132.75558}
-      # Requires external Geonames API
-      xit {expect(subject.count).to eq 10}
+      let(:geonames) { Array.new(10) { instance_double("Geoname") } }
+
+      before do
+        allow(Geonames::WebService).to receive(:find_nearby).with("35.36", "132.76", {radius: 100, maxRows: 10, style: "FULL"}).and_return(geonames)
+      end
+
+      it {expect(subject.count).to eq 10}
     end
   end
 

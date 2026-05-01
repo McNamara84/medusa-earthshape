@@ -19,9 +19,9 @@ describe PlacesController do
     let(:group_3) { FactoryBot.create(:group, :name => "group_3") }
     let(:params) { {q: query} }
 
-    let(:stone_1) { FactoryBot.create(:stone, name: "hoge", place_id: place_1.id) }
-    let(:stone_2) { FactoryBot.create(:stone, name: "stone_2", place_id: place_2.id) }
-    let(:stone_3) { FactoryBot.create(:stone, name: "stone_3", place_id: place_3.id) }
+    let(:stone_1) { FactoryBot.create(:stone, name: "hoge", place_id: place_1.id, box: FactoryBot.create(:box, name: "places-index-box-1")) }
+    let(:stone_2) { FactoryBot.create(:stone, name: "stone_2", place_id: place_2.id, box: FactoryBot.create(:box, name: "places-index-box-2")) }
+    let(:stone_3) { FactoryBot.create(:stone, name: "stone_3", place_id: place_3.id, box: FactoryBot.create(:box, name: "places-index-box-3")) }
     let(:analysis_1) do
       analysis = FactoryBot.create(:analysis)
       analysis.stones << stone_1
@@ -109,9 +109,9 @@ describe PlacesController do
 
   describe "GET show" do
     let(:obj){FactoryBot.create(:place) }
-    let(:stone_1) { FactoryBot.create(:stone, name: "hoge", place_id: obj.id) }
-    let(:stone_2) { FactoryBot.create(:stone, name: "stone_2", place_id: obj.id) }
-    let(:stone_3) { FactoryBot.create(:stone, name: "stone_3", place_id: obj.id) }
+    let(:stone_1) { FactoryBot.create(:stone, name: "hoge", place_id: obj.id, box: FactoryBot.create(:box, name: "places-show-box-1")) }
+    let(:stone_2) { FactoryBot.create(:stone, name: "stone_2", place_id: obj.id, box: FactoryBot.create(:box, name: "places-show-box-2")) }
+    let(:stone_3) { FactoryBot.create(:stone, name: "stone_3", place_id: obj.id, box: FactoryBot.create(:box, name: "places-show-box-3")) }
     let(:analysis_1) do
       analysis_1 = FactoryBot.create(:analysis)
       analysis_1.stones << stone_1
@@ -233,8 +233,21 @@ describe PlacesController do
     # send_data
   end
   
-  # send_data test returns unexpected object. Skip to avoid "FIXED" error.
-  xit "GET download_label" do
+  describe "GET download_label" do
+    let(:place) { FactoryBot.create(:place) }
+    let(:label) { "label-data" }
+
+    before do
+      allow(Place).to receive(:find).with(place.id.to_s).and_return(place)
+      allow(place).to receive(:build_label).and_return(label)
+      allow(controller).to receive(:send_data) { controller.response_body = "" }
+    end
+
+    it "sends the generated CSV" do
+      expect(controller).to receive(:send_data).with(label, filename: "place_#{place.id}.csv", type: "text/csv")
+
+      get :download_label, params: {id: place.id}
+    end
   end
   
   describe "GET download_bundle_label" do

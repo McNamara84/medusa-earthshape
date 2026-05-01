@@ -1,8 +1,10 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
+require File.expand_path("support/simplecov", __dir__)
 require File.expand_path("../../config/environment", __FILE__)
 
 require 'rspec/rails'
+require 'warden/test/helpers'
 # require 'rspec/autorun'  # Removed - deprecated when running via 'rspec' command (RSpec 3.5+)
 
 # Load support files BEFORE RSpec configuration
@@ -35,13 +37,24 @@ RSpec.configure do |config|
   config.before(:each, type: :controller) do
     Rails.application.reload_routes_unless_loaded
   end
+
+  config.before(:each, type: :request) do
+    Rails.application.reload_routes_unless_loaded
+    host! "example.test"
+    Warden.test_mode!
+  end
+
+  config.after(:each, type: :request) do
+    Warden.test_reset!
+  end
   
   # Include Devise test helpers FIRST, then custom helpers
   # This ensures ControllerSpecHelper.sign_in can call super
   config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::IntegrationHelpers, type: :request
   # CRITICAL: Only include Capybara::DSL for request specs, NOT controller specs
   # Including globally causes controller specs to hang indefinitely
-  config.include Capybara::DSL, type: :request
+  config.include Capybara::DSL, type: :request if defined?(Capybara::DSL)
   
   config.include ControllerSpecHelper, type: :controller
   config.include RequestSpecHelper, type: :request
@@ -70,7 +83,7 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
 
-  config.before(:all) do
+  config.before(:suite) do
     FactoryBot.reload
   end
 end
