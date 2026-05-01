@@ -85,7 +85,7 @@ describe CollectorsController do
 
       before { post :create, params: { collector: attributes }, format: :json }
 
-      it { expect(response).to have_http_status(:unprocessable_entity) }
+      it { expect(response).to have_http_status(:unprocessable_content) }
     end
   end
 
@@ -125,7 +125,7 @@ describe CollectorsController do
 
       before { put :update, params: { id: collector.id, collector: attributes }, format: :json }
 
-      it { expect(response).to have_http_status(:unprocessable_entity) }
+      it { expect(response).to have_http_status(:unprocessable_content) }
     end
   end
 

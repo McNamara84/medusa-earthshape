@@ -109,14 +109,14 @@ describe NestedResources::AttachmentFilesController do
           post :link_by_global_id, params: {parent_resource: parent_name.to_s, bib_id: parent.id, global_id: child.global_id}, format: :html
         end
         it { expect(response.body).to render_template("parts/duplicate_global_id") }
-        it { expect(response.status).to eq 422 }
+        it { expect(response).to have_http_status(:unprocessable_content) }
       end
       context "format json" do
         before do
           post :link_by_global_id, params: {parent_resource: parent_name.to_s, bib_id: parent.id, global_id: child.global_id}, format: :json
         end
         it { expect(response.body).to be_blank }
-        it { expect(response.status).to eq 422 }
+        it { expect(response).to have_http_status(:unprocessable_content) }
       end
     end
   end

@@ -229,8 +229,8 @@ class StonesController < ApplicationController
 
   def sample_owner_without_igsn_prefix
     respond_to do |format|
-      format.html { render "parts/sample_owner_without_igsn_prefix", status: :unprocessable_entity }
-      format.all { head :unprocessable_entity }
+      format.html { render "parts/sample_owner_without_igsn_prefix", status: :unprocessable_content }
+      format.all { head :unprocessable_content }
     end
   end
 

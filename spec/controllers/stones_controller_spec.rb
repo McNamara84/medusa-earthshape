@@ -247,7 +247,7 @@ describe StonesController do
       it "renders the missing-prefix warning" do
         get :download_card, params: {id: stone.id}
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -314,7 +314,7 @@ describe StonesController do
       it "renders the missing-prefix warning" do
         get :igsn_create, params: {id: stone.id}
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

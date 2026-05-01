@@ -84,8 +84,8 @@ class NestedResources::PlacesController < ApplicationController
 
   def duplicate_global_id
     respond_to do |format|
-      format.html { render "parts/duplicate_global_id", status: :unprocessable_entity }
-      format.all { head :unprocessable_entity }
+      format.html { render "parts/duplicate_global_id", status: :unprocessable_content }
+      format.all { head :unprocessable_content }
     end
   end
 
