@@ -18,7 +18,7 @@ describe AttachingsController do
     
 
   describe "POST move_to_top" do
-    before{request.env["HTTP_REFERER"]  = "where_i_came_from"}
+    before{request.env["HTTP_REFERER"]  = "http://test.host/places/#{place1.id}"}
     context "not count change" do
       it { expect { post :move_to_top, params: {id: attaching2.id} }.to change(Attaching, :count).by(0) }
     end
@@ -36,11 +36,20 @@ describe AttachingsController do
       it { expect(attaching3.position).to eq 1}
       it { expect(response).to redirect_to request.env["HTTP_REFERER"]}
     end
+
+    context "with a path-relative referer" do
+      before do
+        request.env["HTTP_REFERER"] = "where_i_came_from"
+        post :move_to_top, params: {id: attaching2.id}
+      end
+
+      it { expect(response).to redirect_to("/") }
+    end
   end
 
   describe ".add_tab_param" do
     let(:tabname){"stone"}
-    let(:base_url){"http://wwww.test.co.jp/"}
+    let(:base_url){"http://test.host/"}
     before do
       request.env["HTTP_REFERER"]  = url
       post :move_to_top, params: {id: attaching2.id, tab: tab} 

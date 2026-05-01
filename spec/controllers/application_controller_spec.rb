@@ -58,19 +58,19 @@ describe ApplicationController do
     end
 
     context 'when referer is a relative URL' do
-      it 'allows relative path (implicitly same-host)' do
+      it 'allows root-relative path (implicitly same-host)' do
         request.env['HTTP_REFERER'] = '/stones/123'
         get :test_safe_referer
         expect(response.body).to eq('/stones/123')
       end
 
-      it 'allows relative path without leading slash' do
+      it 'rejects path-relative referers without a leading slash' do
         request.env['HTTP_REFERER'] = 'stones/123'
         get :test_safe_referer
-        expect(response.body).to eq('stones/123')
+        expect(response.body).to eq('/')
       end
 
-      it 'allows relative path with query params' do
+      it 'allows root-relative path with query params' do
         request.env['HTTP_REFERER'] = '/stones?tab=info'
         get :test_safe_referer
         expect(response.body).to eq('/stones?tab=info')

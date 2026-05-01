@@ -19,18 +19,17 @@ module Medusa
     # Rails 7.2: Zeitwerk is the only autoloader
     # Ensure all autoloaded paths follow Zeitwerk naming conventions
 
-    # Rails 7.0+: Disable open redirect protection
+    # Rails 7.0+: Relax open redirect protection for legacy responder flows
     #
-    # SECURITY NOTE: This setting is disabled for legacy compatibility.
+    # SECURITY NOTE: This remains relaxed for legacy compatibility.
     #
     # Current state:
-    # - The application uses `respond_with location: request.referer` pattern in 39 places
-    #   across nested resource controllers for UX continuity after CRUD operations
-    # - Only 1 controller has been migrated to use `safe_referer_url`:
-    #   - CategoryMeasurementItemsController (move_to_top, destroy)
-    # - AttachingsController passes raw `request.referer` to `adjust_url_by_requesting_tab()`
-    #   (a URL utility that only manipulates query params, does not validate hosts)
-    # - The remaining 37 locations still use raw `request.referer` without validation
+    # - The application still has many legacy `respond_with ... location:` flows that were
+    #   preserved during the framework upgrade for behavior compatibility.
+    # - CategoryMeasurementItemsController and AttachingsController now redirect through
+    #   the safe referer helpers in ApplicationController.
+    # - Many nested resource controllers still use raw `request.referer` patterns and must
+    #   be migrated before strict redirect protection can be re-enabled.
     #
     # Risk mitigation:
     # - The application is an internal scientific data management system
@@ -39,16 +38,16 @@ module Medusa
     #
     # The `safe_referer_url` helper is available in ApplicationController for future use:
     # - Allows same-host absolute URLs
-    # - Allows relative URLs (implicitly same-host)
+    # - Allows root-relative URLs (implicitly same-host)
     # - Falls back to root_path for cross-host URLs
+    # - Rejects path-relative redirects without a leading slash
     #
-    # TODO: Migrate all 39 locations to use `respond_with @resource, location: safe_referer_url`
-    # pattern (for respond_with usage) or `redirect_to safe_referer_url` (for direct redirects),
-    # then re-enable this protection. Note: `redirect_to url, allow_other_host: false` is not
-    # applicable with respond_with as it uses the `location:` option which doesn't support
-    # the allow_other_host parameter.
+    # TODO: Migrate the remaining responder flows to `safe_referer_url` /
+    # `safe_referer_url_with_requested_tab` (or explicit `redirect_to` calls), then tighten
+    # this setting from `:log` back to `:raise`. Note: `redirect_to url, allow_other_host: false`
+    # is not applicable with `respond_with` because it uses the `location:` option instead.
     # See: https://github.com/McNamara84/medusa-earthshape/issues (create tracking issue)
-    config.action_controller.raise_on_open_redirects = false
+    config.action_controller.action_on_open_redirect = :log
 
     # Rails 8.1: Path-relative redirect protection
     #

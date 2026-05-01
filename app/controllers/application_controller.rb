@@ -78,7 +78,7 @@ class ApplicationController < ActionController::Base
   #
   # Accepts:
   # - Same-origin absolute URLs (e.g., "http://example.com:80/path")
-  # - Relative URLs (e.g., "/path" or "path") - implicitly same-origin
+  # - Root-relative URLs (e.g., "/path") - implicitly same-origin
   # - URLs without host - treated as same-origin
   # - URLs with fragments (e.g., "/path#section")
   def safe_referer_url
@@ -87,9 +87,13 @@ class ApplicationController < ActionController::Base
 
     begin
       referer_uri = URI.parse(referer)
-      
-      # Allow relative URLs (no host means same-origin)
-      return referer if referer_uri.host.nil?
+
+      # Allow only root-relative URLs; path-relative redirects are blocked.
+      if referer_uri.host.nil? && referer_uri.scheme.nil?
+        return referer if referer.start_with?("/")
+
+        return root_path
+      end
       
       # For absolute URLs, verify same origin (host, port, and scheme)
       request_uri = URI.parse(request.url)
@@ -105,6 +109,10 @@ class ApplicationController < ActionController::Base
     rescue URI::InvalidURIError
       root_path
     end
+  end
+
+  def safe_referer_url_with_requested_tab
+    adjust_url_by_requesting_tab(safe_referer_url)
   end
 
   protected
