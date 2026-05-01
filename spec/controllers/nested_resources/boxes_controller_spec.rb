@@ -6,7 +6,7 @@ describe NestedResources::BoxesController do
   let(:parent) { FactoryBot.create(parent_name) }
   let(:child) { FactoryBot.create(child_name) }
   let(:user) { FactoryBot.create(:user) }
-  let(:url){"where_i_came_from"}
+  let(:url){"/bibs/#{parent.id}"}
   let(:name){"child_name"}
   let(:attributes) { {name: name} }
   before { request.env["HTTP_REFERER"]  = url }
@@ -22,6 +22,14 @@ describe NestedResources::BoxesController do
       before { method }
       it { expect(parent.boxes.exists?(name: name)).to eq true}
       it { expect(response).to redirect_to request.env["HTTP_REFERER"]}
+    end
+    context "with a path-relative referer" do
+      before do
+        request.env["HTTP_REFERER"] = "where_i_came_from"
+        method
+      end
+
+      it { expect(response).to redirect_to("/") }
     end
     context "invalidate" do
       let(:name){""}
