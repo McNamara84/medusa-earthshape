@@ -11,7 +11,7 @@ describe NestedResources::ChemistriesController do
   let(:parent) { FactoryBot.create(parent_name) }
   let(:child) { FactoryBot.create(child_name) }
   let(:user) { FactoryBot.create(:user) }
-  let(:url){"where_i_came_from"}
+  let(:url){"/analyses/#{parent.id}"}
   let(:value){1}
   let(:unit){FactoryBot.create(:unit) }
   let(:measurement_item) { FactoryBot.create(:measurement_item) }
@@ -64,6 +64,14 @@ describe NestedResources::ChemistriesController do
       it { expect(parent.chemistries.exists?(measurement_item_id: measurement_item_id)).to eq true}
       it { expect(response).to redirect_to request.env["HTTP_REFERER"]}
     end
+    context "with a path-relative referer" do
+      before do
+        request.env["HTTP_REFERER"] = "where_i_came_from"
+        method
+      end
+
+      it { expect(response).to redirect_to("/") }
+    end
     context "invalidate" do
       let(:value){""}
       before { method }
@@ -81,6 +89,7 @@ describe NestedResources::ChemistriesController do
       before { method }
       it { expect(assigns(child_name)).to eq child }
       it { expect(parent.chemistries.exists?(id: child.id)).to eq true}
+      it { expect(response).to redirect_to request.env["HTTP_REFERER"] }
     end
     context "none child" do
       let(:child_id){0}

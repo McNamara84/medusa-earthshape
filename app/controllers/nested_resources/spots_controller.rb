@@ -14,13 +14,13 @@ class NestedResources::SpotsController < ApplicationController
   def create
     @spot = Spot.new(spot_params)
     @parent.spots << @spot
-    respond_with @spot, location: adjust_url_by_requesting_tab(request.referer), action: "error"
+    respond_with @spot, location: safe_referer_url_with_requested_tab, action: "error"
   end
 
   def update
     @spot = Spot.find(params[:id])
     @parent.spots << @spot
-    respond_with @spot, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @spot, location: safe_referer_url_with_requested_tab
   end
 
   def destroy
@@ -28,7 +28,7 @@ class NestedResources::SpotsController < ApplicationController
     spot_model = @spot.is_a?(Draper::Decorator) ? @spot.object : @spot
     spot_model.destroy
     @parent.spots.delete(spot_model)
-    respond_with @spot, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @spot, location: safe_referer_url_with_requested_tab
   end
 
   private
