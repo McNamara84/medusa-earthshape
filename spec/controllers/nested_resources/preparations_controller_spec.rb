@@ -187,7 +187,7 @@ describe NestedResources::PreparationsController do
         expect(response).to render_template("parts/duplicate_global_id")
       end
 
-      it "returns unprocessable entity" do
+      it "returns unprocessable content" do
         expect(response).to have_http_status(:unprocessable_content)
       end
     end
@@ -202,7 +202,7 @@ describe NestedResources::PreparationsController do
         expect(response.body).to be_blank
       end
 
-      it "returns unprocessable entity" do
+      it "returns unprocessable content" do
         expect(response).to have_http_status(:unprocessable_content)
       end
     end
