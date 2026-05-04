@@ -6,7 +6,7 @@ describe NestedResources::AnalysesController do
   let(:parent) { FactoryBot.create(parent_name) }
   let(:child) { FactoryBot.create(child_name) }
   let(:user) { FactoryBot.create(:user) }
-  let(:url){"where_i_came_from"}
+  let(:url){"/bibs/#{parent.id}"}
   let(:attributes) { {name: name, operator: "Test Operator"} }
   let(:name){"child_name"}
   before { request.env["HTTP_REFERER"]  = url }
@@ -22,6 +22,14 @@ describe NestedResources::AnalysesController do
       before { method }
       it { expect(parent.analyses.exists?(name: name)).to eq true}
       it { expect(response).to redirect_to request.env["HTTP_REFERER"]}
+    end
+    context "with a path-relative referer" do
+      before do
+        request.env["HTTP_REFERER"] = "where_i_came_from"
+        method
+      end
+
+      it { expect(response).to redirect_to("/") }
     end
     context "invalidate" do
       let(:name){""}
@@ -83,14 +91,14 @@ describe NestedResources::AnalysesController do
           post :link_by_global_id, params: {parent_resource: parent_name.to_s, bib_id: parent.id, global_id: child.global_id}, format: :html
         end
         it { expect(response.body).to render_template("parts/duplicate_global_id") }
-        it { expect(response.status).to eq 422 }
+        it { expect(response).to have_http_status(:unprocessable_content) }
       end
       context "format json" do
         before do
           post :link_by_global_id, params: {parent_resource: parent_name.to_s, bib_id: parent.id, global_id: child.global_id}, format: :json
         end
         it { expect(response.body).to be_blank }
-        it { expect(response.status).to eq 422 }
+        it { expect(response).to have_http_status(:unprocessable_content) }
       end
     end
   end

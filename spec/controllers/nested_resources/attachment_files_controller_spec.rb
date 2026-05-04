@@ -8,7 +8,7 @@ describe NestedResources::AttachmentFilesController do
   # Use :with_real_file for JSON format tests (as_json calls path methods that need real file)
   let(:child) { FactoryBot.create(child_name, :with_real_file) }
   let(:user) { FactoryBot.create(:user) }
-  let(:url){"where_i_came_from"}
+  let(:url){"/bibs/#{parent.id}"}
   let(:filetopic) { FactoryBot.create(:filetopic) }
   let(:attributes) { {data: data, filetopic_id: filetopic.id} }
   let(:data){ Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg'), 'image/jpeg') }
@@ -41,6 +41,14 @@ describe NestedResources::AttachmentFilesController do
       it { expect(parent.attachment_files.exists?(data_file_name: "test_image.jpg")).to eq true}
       it { expect(response).to redirect_to request.env["HTTP_REFERER"]}
     end
+    context "with a path-relative referer" do
+      before do
+        request.env["HTTP_REFERER"] = "where_i_came_from"
+        method
+      end
+
+      it { expect(response).to redirect_to("/") }
+    end
     context "invalidate" do
       let(:data){nil}
       before { method }
@@ -58,6 +66,15 @@ describe NestedResources::AttachmentFilesController do
       before { method }
       it { expect(assigns(child_name)).to eq child }
       it { expect(parent.attachment_files.exists?(id: child.id)).to eq true}
+      it { expect(response).to redirect_to request.env["HTTP_REFERER"] }
+    end
+    context "with a path-relative referer" do
+      before do
+        request.env["HTTP_REFERER"] = "where_i_came_from"
+        method
+      end
+
+      it { expect(response).to redirect_to("/") }
     end
     context "none child" do
       let(:child_id){0}
@@ -101,14 +118,14 @@ describe NestedResources::AttachmentFilesController do
           post :link_by_global_id, params: {parent_resource: parent_name.to_s, bib_id: parent.id, global_id: child.global_id}, format: :html
         end
         it { expect(response.body).to render_template("parts/duplicate_global_id") }
-        it { expect(response.status).to eq 422 }
+        it { expect(response).to have_http_status(:unprocessable_content) }
       end
       context "format json" do
         before do
           post :link_by_global_id, params: {parent_resource: parent_name.to_s, bib_id: parent.id, global_id: child.global_id}, format: :json
         end
         it { expect(response.body).to be_blank }
-        it { expect(response.status).to eq 422 }
+        it { expect(response).to have_http_status(:unprocessable_content) }
       end
     end
   end

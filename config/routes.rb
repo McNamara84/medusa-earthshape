@@ -86,7 +86,34 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :records, { id: /((?!\.(html$|json$|xml$|pml$)).)*/ } do
+  resources :records, only: [:index]
+
+  get 'records/by-global-id/*id/exact', to: 'records#show', as: :record_by_global_id, format: false
+  get 'records/by-global-id/*id/exact.:format', to: 'records#show', as: :formatted_record_by_global_id, constraints: { format: /json|xml|pml|html/ }
+  delete 'records/by-global-id/*id/exact', to: 'records#destroy', format: false
+  delete 'records/by-global-id/*id/exact.:format', to: 'records#destroy', as: :formatted_record_destroy_by_global_id, constraints: { format: /json|xml|pml|html/ }
+
+  {
+    'record_property' => :property,
+    'casteml' => :casteml,
+    'ancestors' => :ancestors,
+    'descendants' => :descendants,
+    'self_and_descendants' => :self_and_descendants,
+    'root' => :root,
+    'parent' => :parent,
+    'daughters' => :daughters,
+    'siblings' => :siblings,
+    'self_and_siblings' => :self_and_siblings,
+    'families' => :families
+  }.each do |path_segment, action_name|
+    route_name = action_name == :property ? :record_property_by_global_id : :"#{action_name}_by_global_id"
+    get "records/by-global-id/*id/#{path_segment}(.:format)",
+        to: "records##{action_name}",
+        as: route_name,
+        constraints: { format: /json|xml|pml|html/ }
+  end
+
+  resources :records, only: [], constraints: { id: /[^\/]+/ } do
     member do
       get 'record_property' => 'records#property'
       get 'casteml'
@@ -100,6 +127,9 @@ Rails.application.routes.draw do
       get 'self_and_siblings'
       get 'families'      
     end
+  end
+
+  resources :records, only: [:show, :destroy], constraints: { id: /((?!\.(html$|json$|xml$|pml$)).)+/ } do
   end
 
    resources :collections, concerns: [:bundleable, :reportable], except: [:new] do 

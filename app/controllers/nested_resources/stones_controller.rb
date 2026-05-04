@@ -15,25 +15,25 @@ class NestedResources::StonesController < ApplicationController
 #    logger.info @stone.inspect    
     @parent.send(params[:association_name]) << @stone if @stone.save
     @stone.copy_associations(@parent)    
-    respond_with @stone, location: adjust_url_by_requesting_tab(request.referer), action: "error" 
+    respond_with @stone, location: safe_referer_url_with_requested_tab, action: "error"
   end
 
   def update
     @stone = Stone.find(params[:id])
     @parent.send(params[:association_name]) << @stone
-    respond_with @stone
+    respond_with @stone, location: safe_referer_url_with_requested_tab
   end
 
   def destroy
     @stone = Stone.find(params[:id])
     @parent.send(params[:association_name]).delete(@stone)
-    respond_with @stone, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @stone, location: safe_referer_url_with_requested_tab
   end
 
   def link_by_global_id
     @stone = Stone.joins(:record_property).where(record_properties: {global_id: params[:global_id]}).readonly(false)
     @parent.send(params[:association_name]) << @stone
-    respond_with @stone, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @stone, location: safe_referer_url_with_requested_tab
   rescue
     duplicate_global_id
   end
@@ -95,8 +95,8 @@ class NestedResources::StonesController < ApplicationController
 
   def duplicate_global_id
     respond_to do |format|
-      format.html { render "parts/duplicate_global_id", status: :unprocessable_entity }
-      format.all { head :unprocessable_entity }
+      format.html { render "parts/duplicate_global_id", status: :unprocessable_content }
+      format.all { head :unprocessable_content }
     end
   end
 

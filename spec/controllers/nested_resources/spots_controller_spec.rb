@@ -11,7 +11,7 @@ describe NestedResources::SpotsController do
   let(:parent) { FactoryBot.create(parent_name) }
   let(:child) { FactoryBot.create(child_name) }
   let(:user) { FactoryBot.create(:user) }
-  let(:url){"where_i_came_from"}
+  let(:url){"/attachment_files/#{parent.id}"}
   let(:spot_x){1}
   let(:attributes) { {spot_x: spot_x,spot_y: 0} }
   before { request.env["HTTP_REFERER"]  = url }
@@ -27,6 +27,14 @@ describe NestedResources::SpotsController do
       before { method }
       it { expect(parent.spots.exists?(spot_x: spot_x)).to eq true}
       it { expect(response).to redirect_to request.env["HTTP_REFERER"]}
+    end
+    context "with a path-relative referer" do
+      before do
+        request.env["HTTP_REFERER"] = "where_i_came_from"
+        method
+      end
+
+      it { expect(response).to redirect_to("/") }
     end
     context "invalidate" do
       let(:spot_x){""}
@@ -44,6 +52,7 @@ describe NestedResources::SpotsController do
       before { method }
       it { expect(assigns(child_name)).to eq child }
       it { expect(parent.spots.exists?(id: child.id)).to eq true}
+      it { expect(response).to redirect_to request.env["HTTP_REFERER"] }
     end
     context "none child" do
       let(:child_id){0}

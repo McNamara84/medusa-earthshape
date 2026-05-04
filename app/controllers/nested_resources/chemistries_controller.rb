@@ -31,13 +31,13 @@ class NestedResources::ChemistriesController < ApplicationController
   def create
     @chemistry = Chemistry.new(chemistry_params)
     @parent.chemistries << @chemistry
-    respond_with @chemistry, location: adjust_url_by_requesting_tab(request.referer), action: "error"
+    respond_with @chemistry, location: safe_referer_url_with_requested_tab, action: "error"
   end
 
   def update
     @chemistry = Chemistry.find(params[:id])
     @parent.chemistries << @chemistry
-    respond_with @chemistry, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @chemistry, location: safe_referer_url_with_requested_tab
   end
 
   def destroy
@@ -45,7 +45,7 @@ class NestedResources::ChemistriesController < ApplicationController
     chemistry_model = @chemistry.is_a?(Draper::Decorator) ? @chemistry.object : @chemistry
     chemistry_model.destroy
     @parent.chemistries.delete(chemistry_model)
-    respond_with @chemistry, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @chemistry, location: safe_referer_url_with_requested_tab
   end
 
   private

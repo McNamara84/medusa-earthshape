@@ -13,25 +13,25 @@ class NestedResources::PlacesController < ApplicationController
     place_params.delete :is_parent  
     @place = Place.new(place_params)
     @parent.places << @place if @place.save
-    respond_with @place, location: adjust_url_by_requesting_tab(request.referer), action: "error"
+    respond_with @place, location: safe_referer_url_with_requested_tab, action: "error"
   end
 
   def update	  
     @place = Place.find(params[:id])
     @parent.places << @place
-    respond_with @place, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @place, location: safe_referer_url_with_requested_tab
   end
 
   def destroy
     @place = Place.find(params[:id])
     @parent.places.delete(@place)
-    respond_with @place, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @place, location: safe_referer_url_with_requested_tab
   end
 
   def link_by_global_id
     @place = Place.joins(:record_property).where(record_properties: {global_id: params[:global_id]}).readonly(false)
     @parent.places << @place
-    respond_with @place, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @place, location: safe_referer_url_with_requested_tab
   rescue
     duplicate_global_id
   end
@@ -84,8 +84,8 @@ class NestedResources::PlacesController < ApplicationController
 
   def duplicate_global_id
     respond_to do |format|
-      format.html { render "parts/duplicate_global_id", status: :unprocessable_entity }
-      format.all { head :unprocessable_entity }
+      format.html { render "parts/duplicate_global_id", status: :unprocessable_content }
+      format.all { head :unprocessable_content }
     end
   end
 

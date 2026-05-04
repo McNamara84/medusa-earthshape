@@ -8,11 +8,18 @@ describe ApplicationController do
     def test_safe_referer
       render plain: safe_referer_url
     end
+
+    def test_safe_referer_with_tab
+      render plain: safe_referer_url_with_requested_tab
+    end
   end
 
   describe '#safe_referer_url' do
     before do
-      routes.draw { get 'test_safe_referer' => 'anonymous#test_safe_referer' }
+      routes.draw do
+        get 'test_safe_referer' => 'anonymous#test_safe_referer'
+        get 'test_safe_referer_with_tab' => 'anonymous#test_safe_referer_with_tab'
+      end
     end
 
     context 'when referer is blank' do
@@ -83,6 +90,12 @@ describe ApplicationController do
         get :test_safe_referer
         expect(response.body).to eq('/')
       end
+
+      it 'returns root_path for malformed percent-encoding in the query string' do
+        request.env['HTTP_REFERER'] = '/stagings?bad=%E0%A4%A'
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
     end
 
     context 'edge cases' do
@@ -135,6 +148,39 @@ describe ApplicationController do
         # Request is http://test.host, referer is https://test.host
         expect(response.body).to eq('/')
       end
+    end
+  end
+
+  describe '#safe_referer_url_with_requested_tab' do
+    before do
+      routes.draw do
+        get 'test_safe_referer' => 'anonymous#test_safe_referer'
+        get 'test_safe_referer_with_tab' => 'anonymous#test_safe_referer_with_tab'
+      end
+    end
+
+    it 'replaces an existing tab parameter that follows another query param' do
+      request.env['HTTP_REFERER'] = '/stagings?view=import&tab=old'
+
+      get :test_safe_referer_with_tab, params: { tab: 'boxes' }
+
+      expect(response.body).to eq('/stagings?view=import&tab=boxes')
+    end
+
+    it 'falls back to root_path for malformed percent-encoding in the query string' do
+      request.env['HTTP_REFERER'] = '/stagings?bad=%E0%A4%A'
+
+      get :test_safe_referer_with_tab, params: { tab: 'boxes' }
+
+      expect(response.body).to eq('/')
+    end
+
+    it 'falls back to root_path for malformed percent-encoding even without a tab param' do
+      request.env['HTTP_REFERER'] = '/stagings?bad=%E0%A4%A'
+
+      get :test_safe_referer_with_tab
+
+      expect(response.body).to eq('/')
     end
   end
 
@@ -221,6 +267,11 @@ describe ApplicationController do
       let(:tab){""}
       let(:url){base_url}
       it { expect(subject).to eq base_url}
+
+      context "when the query string contains malformed percent encoding" do
+        let(:url){"/stagings?bad=%E0%A4%A"}
+        it { expect(subject).to eq "/"}
+      end
     end
     context "present tab param" do
       let(:tab){tabname}
@@ -243,7 +294,32 @@ describe ApplicationController do
           let(:url){"#{base_url}?#{other_tab_param}&#{other_param}"}
           it { expect(subject).to eq "#{base_url}?#{other_param}&#{tab_param}"}
         end
+        context "when tab is not the first query param" do
+          let(:url){"#{base_url}?#{other_param}&#{other_tab_param}"}
+          it { expect(subject).to eq "#{base_url}?#{other_param}&#{tab_param}"}
+        end
+        context "when the query string contains malformed percent encoding" do
+          let(:url){"/stagings?bad=%E0%A4%A"}
+          it { expect(subject).to eq "/"}
+        end
       end
+    end
+  end
+
+  describe '.record_path_for_global_id' do
+    before do
+      routes.draw do
+        get 'records/by-global-id/*id/exact' => 'records#show', as: :record_by_global_id, format: false
+        get 'records/by-global-id/*id/exact.:format' => 'records#show', as: :formatted_record_by_global_id, constraints: { format: /json|xml|pml|html/ }
+      end
+    end
+
+    it 'always uses the exact global-id route for html lookups' do
+      expect(@controller.record_path_for_global_id('folder/sample')).to eq('/records/by-global-id/folder/sample/exact')
+    end
+
+    it 'uses the formatted exact global-id route when a format is requested' do
+      expect(@controller.record_path_for_global_id('sample.id.v1.json', format: :json)).to eq('/records/by-global-id/sample.id.v1.json/exact.json')
     end
   end
 end

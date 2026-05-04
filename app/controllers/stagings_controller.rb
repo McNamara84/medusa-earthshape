@@ -161,7 +161,7 @@ end
         format.json { render action: 'show', status: :created, location: @staging }
       else
         format.html { render action: 'new' }
-        format.json { render json: @staging.errors, status: :unprocessable_entity }
+        format.json { render json: @staging.errors, status: :unprocessable_content }
       end
     end
   end
@@ -175,7 +175,7 @@ end
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
-        format.json { render json: @staging.errors, status: :unprocessable_entity }
+        format.json { render json: @staging.errors, status: :unprocessable_content }
       end
     end
   end
@@ -199,7 +199,7 @@ end
 		box=Box.new(params)
 		box.save!
 	end
-  	respond_with @stagings, location: adjust_url_by_requesting_tab(request.referer)
+  respond_with @stagings, location: safe_referer_url_with_requested_tab
  rescue
     render "box_invalid"		
 end
@@ -212,7 +212,7 @@ end
 		place=Place.new(params)
 		place.save!
 	end	 
-  	respond_with @stagings, location: adjust_url_by_requesting_tab(request.referer)
+  respond_with @stagings, location: safe_referer_url_with_requested_tab
   rescue
     render "place_invalid"		
  end
@@ -225,7 +225,7 @@ end
 		collection=Collection.new(params)
 		collection.save!
 	end	 
-  	respond_with @stagings, location: adjust_url_by_requesting_tab(request.referer)
+  respond_with @stagings, location: safe_referer_url_with_requested_tab
   rescue
     render "collection_invalid"		
 end
@@ -238,7 +238,7 @@ end
 		stone=Stone.new(params)
 		stone.save!
 	end	 
-  	respond_with @stagings, location: adjust_url_by_requesting_tab(request.referer)
+  respond_with @stagings, location: safe_referer_url_with_requested_tab
   rescue
     render "stone_invalid"	
  end

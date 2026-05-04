@@ -4,7 +4,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   helper_method :adjust_url_by_requesting_tab
+  helper_method :record_path_for_global_id
   helper_method :safe_referer_url
+  helper_method :safe_referer_url_with_requested_tab
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :authenticate_user!, :set_current_user
@@ -61,9 +63,32 @@ class ApplicationController < ActionController::Base
   end
 
   def adjust_url_by_requesting_tab(url)
-    return url if params[:tab].blank?
-    work_url = url.sub(/tab=.*&/,"").sub(/\?tab=.*/,"")
-    work_url + (work_url.include?("?") ? "&" : "?") + "tab=#{params[:tab]}"
+    return root_path if url.blank?
+
+    begin
+      uri = URI.parse(url)
+      query_string = uri.query.to_s
+      return root_path if query_string.match?(/%(?![0-9A-Fa-f]{2})/)
+
+      return url if params[:tab].blank?
+
+      query_pairs = URI.decode_www_form(query_string).reject { |key, _value| key == "tab" }
+      query_pairs << ["tab", params[:tab].to_s]
+      uri.query = query_pairs.any? ? URI.encode_www_form(query_pairs) : nil
+      uri.to_s
+    rescue URI::InvalidURIError, ArgumentError, TypeError
+      root_path
+    end
+  end
+
+  def record_path_for_global_id(global_id, format: nil)
+    route_options = { id: global_id }
+
+    if format.present?
+      formatted_record_by_global_id_path(route_options.merge(format: format))
+    else
+      record_by_global_id_path(route_options)
+    end
   end
 
   # Returns a safe referer URL that only allows redirects to the same origin.
@@ -87,6 +112,7 @@ class ApplicationController < ActionController::Base
 
     begin
       referer_uri = URI.parse(referer)
+      return root_path if referer_uri.query.to_s.match?(/%(?![0-9A-Fa-f]{2})/)
 
       # Allow only root-relative URLs; path-relative redirects are blocked.
       if referer_uri.host.nil? && referer_uri.scheme.nil?
@@ -112,7 +138,10 @@ class ApplicationController < ActionController::Base
   end
 
   def safe_referer_url_with_requested_tab
-    adjust_url_by_requesting_tab(safe_referer_url)
+    safe_url = safe_referer_url
+    return root_path if safe_url == root_path && request.referer.present? && request.referer != root_path
+
+    adjust_url_by_requesting_tab(safe_url)
   end
 
   protected

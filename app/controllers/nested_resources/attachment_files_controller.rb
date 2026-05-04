@@ -12,19 +12,19 @@ class NestedResources::AttachmentFilesController < ApplicationController
   def create
     @attachment_file = AttachmentFile.new(attachment_file_params)
     @parent.attachment_files << @attachment_file if @attachment_file.save
-    respond_with @attachment_file, location: adjust_url_by_requesting_tab(request.referer), action: "error"      
+    respond_with @attachment_file, location: safe_referer_url_with_requested_tab, action: "error"
   end
 
   def update
     @attachment_file = AttachmentFile.find(params[:id])
     @parent.attachment_files << @attachment_file
-    respond_with @attachment_file
+    respond_with @attachment_file, location: safe_referer_url_with_requested_tab
   end
 
   def destroy
     @attachment_file = AttachmentFile.find(params[:id])
     @parent.attachment_files.delete(@attachment_file)
-    respond_with @attachment_file, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @attachment_file, location: safe_referer_url_with_requested_tab
   end
 
   def link_by_global_id
@@ -39,7 +39,7 @@ class NestedResources::AttachmentFilesController < ApplicationController
     end
     
     @parent.attachment_files << @attachment_file
-    respond_with @attachment_file, location: adjust_url_by_requesting_tab(request.referer)
+    respond_with @attachment_file, location: safe_referer_url_with_requested_tab
   rescue
     duplicate_global_id
   end
@@ -79,8 +79,8 @@ class NestedResources::AttachmentFilesController < ApplicationController
 
   def duplicate_global_id
     respond_to do |format|
-      format.html { render "parts/duplicate_global_id", status: :unprocessable_entity }
-      format.all { head :unprocessable_entity }
+      format.html { render "parts/duplicate_global_id", status: :unprocessable_content }
+      format.all { head :unprocessable_content }
     end
   end
 
