@@ -89,6 +89,7 @@ Rails.application.routes.draw do
   resources :records, only: [:index]
 
   get 'records/by-global-id/*id/exact', to: 'records#show', as: :record_by_global_id, format: false
+  get 'records/by-global-id/*id/exact.:format', to: 'records#show', as: :formatted_record_by_global_id, constraints: { format: /json|xml|pml|html/ }
   delete 'records/by-global-id/*id/exact', to: 'records#destroy', format: false
 
   resources :records, only: [], constraints: { id: /[^\/]+/ } do

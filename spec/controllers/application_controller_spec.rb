@@ -286,4 +286,21 @@ describe ApplicationController do
       end
     end
   end
+
+  describe '.record_path_for_global_id' do
+    before do
+      routes.draw do
+        get 'records/by-global-id/*id/exact' => 'records#show', as: :record_by_global_id, format: false
+        get 'records/by-global-id/*id/exact.:format' => 'records#show', as: :formatted_record_by_global_id, constraints: { format: /json|xml|pml|html/ }
+      end
+    end
+
+    it 'always uses the exact global-id route for html lookups' do
+      expect(@controller.record_path_for_global_id('folder/sample')).to eq('/records/by-global-id/folder/sample/exact')
+    end
+
+    it 'uses the formatted exact global-id route when a format is requested' do
+      expect(@controller.record_path_for_global_id('sample.id.v1.json', format: :json)).to eq('/records/by-global-id/sample.id.v1.json/exact.json')
+    end
+  end
 end

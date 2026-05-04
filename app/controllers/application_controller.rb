@@ -82,12 +82,11 @@ class ApplicationController < ActionController::Base
 
   def record_path_for_global_id(global_id, format: nil)
     route_options = { id: global_id }
-    route_options[:format] = format if format.present?
 
-    if global_id.to_s.match?(/\.(html|json|xml|pml)\z/)
-      record_by_global_id_path(route_options)
+    if format.present?
+      formatted_record_by_global_id_path(route_options.merge(format: format))
     else
-      record_path(route_options)
+      record_by_global_id_path(route_options)
     end
   end
 
