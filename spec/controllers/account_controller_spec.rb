@@ -63,6 +63,15 @@ describe AccountsController do
       before { sign_in user }
       it { expect(response).to redirect_to(record_path(stone.record_property.global_id)) }
     end
+
+    context "with a global_id ending in .json" do
+      before do
+        stone.record_property.update!(global_id: 'sample.id.v1.json')
+        get :find_by_global_id, params: {global_id: stone.record_property.global_id}
+      end
+
+      it { expect(response).to redirect_to(record_by_global_id_path(id: stone.record_property.global_id)) }
+    end
   end
 
   describe "PUT update" do

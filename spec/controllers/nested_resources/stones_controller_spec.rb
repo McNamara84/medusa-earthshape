@@ -67,6 +67,15 @@ describe NestedResources::StonesController do
       before { method }
       it { expect(assigns(child_name)).to eq child }
       it { expect(parent.stones.exists?(id: child.id)).to eq true}
+      it { expect(response).to redirect_to request.env["HTTP_REFERER"] }
+    end
+    context "with a path-relative referer" do
+      before do
+        request.env["HTTP_REFERER"] = "where_i_came_from"
+        method
+      end
+
+      it { expect(response).to redirect_to("/") }
     end
     context "none child" do
       let(:child_id){0}
@@ -98,6 +107,15 @@ describe NestedResources::StonesController do
       before { method }
       it { expect(assigns(child_name)).to eq child }
       it { expect(parent.stones.exists?(id: child.id)).to eq true}
+      it { expect(response).to redirect_to request.env["HTTP_REFERER"] }
+    end
+    context "with a path-relative referer" do
+      before do
+        request.env["HTTP_REFERER"] = "where_i_came_from"
+        method
+      end
+
+      it { expect(response).to redirect_to("/") }
     end
     context "none child" do
       let(:child_id){0}

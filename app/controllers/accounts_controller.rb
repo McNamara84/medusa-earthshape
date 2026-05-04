@@ -3,7 +3,7 @@ class AccountsController < ApplicationController
   before_action :find_resource,except: [ :find_by_global_id ]
 
   def find_by_global_id
-    redirect_to "/records/#{params[:global_id]}"
+    redirect_to record_path_for_global_id(params[:global_id])
   end
 
   def show

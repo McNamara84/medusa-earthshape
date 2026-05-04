@@ -21,7 +21,7 @@ class NestedResources::StonesController < ApplicationController
   def update
     @stone = Stone.find(params[:id])
     @parent.send(params[:association_name]) << @stone
-    respond_with @stone
+    respond_with @stone, location: safe_referer_url_with_requested_tab
   end
 
   def destroy

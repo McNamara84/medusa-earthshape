@@ -88,7 +88,10 @@ Rails.application.routes.draw do
 
   resources :records, only: [:index]
 
-  resources :records, only: [:show, :destroy], constraints: { id: /((?!\.(html$|json$|xml$|pml$)).)+/ } do
+  get 'records/by-global-id/*id/exact', to: 'records#show', as: :record_by_global_id, format: false
+  delete 'records/by-global-id/*id/exact', to: 'records#destroy', format: false
+
+  resources :records, only: [], constraints: { id: /[^\/]+/ } do
     member do
       get 'record_property' => 'records#property'
       get 'casteml'
@@ -102,6 +105,9 @@ Rails.application.routes.draw do
       get 'self_and_siblings'
       get 'families'      
     end
+  end
+
+  resources :records, only: [:show, :destroy], constraints: { id: /((?!\.(html$|json$|xml$|pml$)).)+/ } do
   end
 
    resources :collections, concerns: [:bundleable, :reportable], except: [:new] do 

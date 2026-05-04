@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   helper_method :adjust_url_by_requesting_tab
+  helper_method :record_path_for_global_id
   helper_method :safe_referer_url
   helper_method :safe_referer_url_with_requested_tab
 
@@ -76,6 +77,17 @@ class ApplicationController < ActionController::Base
       uri.to_s
     rescue URI::InvalidURIError, ArgumentError, TypeError
       root_path
+    end
+  end
+
+  def record_path_for_global_id(global_id, format: nil)
+    route_options = { id: global_id }
+    route_options[:format] = format if format.present?
+
+    if global_id.to_s.match?(/\.(html|json|xml|pml)\z/)
+      record_by_global_id_path(route_options)
+    else
+      record_path(route_options)
     end
   end
 

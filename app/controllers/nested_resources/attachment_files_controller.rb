@@ -18,7 +18,7 @@ class NestedResources::AttachmentFilesController < ApplicationController
   def update
     @attachment_file = AttachmentFile.find(params[:id])
     @parent.attachment_files << @attachment_file
-    respond_with @attachment_file
+    respond_with @attachment_file, location: safe_referer_url_with_requested_tab
   end
 
   def destroy
