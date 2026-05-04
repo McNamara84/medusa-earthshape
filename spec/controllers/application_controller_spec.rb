@@ -90,6 +90,12 @@ describe ApplicationController do
         get :test_safe_referer
         expect(response.body).to eq('/')
       end
+
+      it 'returns root_path for malformed percent-encoding in the query string' do
+        request.env['HTTP_REFERER'] = '/stagings?bad=%E0%A4%A'
+        get :test_safe_referer
+        expect(response.body).to eq('/')
+      end
     end
 
     context 'edge cases' do
@@ -165,6 +171,14 @@ describe ApplicationController do
       request.env['HTTP_REFERER'] = '/stagings?bad=%E0%A4%A'
 
       get :test_safe_referer_with_tab, params: { tab: 'boxes' }
+
+      expect(response.body).to eq('/')
+    end
+
+    it 'falls back to root_path for malformed percent-encoding even without a tab param' do
+      request.env['HTTP_REFERER'] = '/stagings?bad=%E0%A4%A'
+
+      get :test_safe_referer_with_tab
 
       expect(response.body).to eq('/')
     end
@@ -253,6 +267,11 @@ describe ApplicationController do
       let(:tab){""}
       let(:url){base_url}
       it { expect(subject).to eq base_url}
+
+      context "when the query string contains malformed percent encoding" do
+        let(:url){"/stagings?bad=%E0%A4%A"}
+        it { expect(subject).to eq "/"}
+      end
     end
     context "present tab param" do
       let(:tab){tabname}

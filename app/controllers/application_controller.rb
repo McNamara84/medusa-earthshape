@@ -63,13 +63,14 @@ class ApplicationController < ActionController::Base
   end
 
   def adjust_url_by_requesting_tab(url)
-    return url if params[:tab].blank?
     return root_path if url.blank?
 
     begin
       uri = URI.parse(url)
       query_string = uri.query.to_s
       return root_path if query_string.match?(/%(?![0-9A-Fa-f]{2})/)
+
+      return url if params[:tab].blank?
 
       query_pairs = URI.decode_www_form(query_string).reject { |key, _value| key == "tab" }
       query_pairs << ["tab", params[:tab].to_s]
@@ -111,6 +112,7 @@ class ApplicationController < ActionController::Base
 
     begin
       referer_uri = URI.parse(referer)
+      return root_path if referer_uri.query.to_s.match?(/%(?![0-9A-Fa-f]{2})/)
 
       # Allow only root-relative URLs; path-relative redirects are blocked.
       if referer_uri.host.nil? && referer_uri.scheme.nil?
@@ -136,7 +138,10 @@ class ApplicationController < ActionController::Base
   end
 
   def safe_referer_url_with_requested_tab
-    adjust_url_by_requesting_tab(safe_referer_url)
+    safe_url = safe_referer_url
+    return root_path if safe_url == root_path && request.referer.present? && request.referer != root_path
+
+    adjust_url_by_requesting_tab(safe_url)
   end
 
   protected

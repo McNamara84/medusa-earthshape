@@ -32,6 +32,17 @@ describe 'records exact global ids' do
     expect(response.body).to include("\"global_id\":\"#{stone.record_property.global_id}\"")
   end
 
+  it 'supports path-based pml format on the exact global-id route' do
+    stone
+    analysis = FactoryBot.create(:analysis)
+    analysis.stones << stone
+
+    get formatted_record_by_global_id_path(id: stone.record_property.global_id, format: :pml)
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("<sample_global_id>#{stone.global_id}")
+  end
+
   it 'deletes through the exact global-id route' do
     stone
 
