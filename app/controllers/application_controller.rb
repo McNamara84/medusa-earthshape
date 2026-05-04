@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   helper_method :adjust_url_by_requesting_tab
   helper_method :safe_referer_url
+  helper_method :safe_referer_url_with_requested_tab
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :authenticate_user!, :set_current_user
@@ -62,15 +63,19 @@ class ApplicationController < ActionController::Base
 
   def adjust_url_by_requesting_tab(url)
     return url if params[:tab].blank?
+    return root_path if url.blank?
 
     begin
       uri = URI.parse(url)
-      query_pairs = URI.decode_www_form(uri.query.to_s).reject { |key, _value| key == "tab" }
+      query_string = uri.query.to_s
+      return root_path if query_string.match?(/%(?![0-9A-Fa-f]{2})/)
+
+      query_pairs = URI.decode_www_form(query_string).reject { |key, _value| key == "tab" }
       query_pairs << ["tab", params[:tab].to_s]
       uri.query = query_pairs.any? ? URI.encode_www_form(query_pairs) : nil
       uri.to_s
-    rescue URI::InvalidURIError
-      url
+    rescue URI::InvalidURIError, ArgumentError, TypeError
+      root_path
     end
   end
 

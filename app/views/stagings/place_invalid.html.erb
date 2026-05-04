@@ -1,4 +1,4 @@
 <div class="alert alert-danger">
- <div><%= link_to :back, adjust_url_by_requesting_tab(request.referer) %></div>
+ <div><%= link_to :back, safe_referer_url_with_requested_tab %></div>
   Can not create sampling location.
 </div>

@@ -160,6 +160,14 @@ describe ApplicationController do
 
       expect(response.body).to eq('/stagings?view=import&tab=boxes')
     end
+
+    it 'falls back to root_path for malformed percent-encoding in the query string' do
+      request.env['HTTP_REFERER'] = '/stagings?bad=%E0%A4%A'
+
+      get :test_safe_referer_with_tab, params: { tab: 'boxes' }
+
+      expect(response.body).to eq('/')
+    end
   end
 
   describe '#basic_authentication' do
@@ -270,6 +278,10 @@ describe ApplicationController do
         context "when tab is not the first query param" do
           let(:url){"#{base_url}?#{other_param}&#{other_tab_param}"}
           it { expect(subject).to eq "#{base_url}?#{other_param}&#{tab_param}"}
+        end
+        context "when the query string contains malformed percent encoding" do
+          let(:url){"/stagings?bad=%E0%A4%A"}
+          it { expect(subject).to eq "/"}
         end
       end
     end
