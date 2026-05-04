@@ -68,6 +68,25 @@ describe StagingsController do
     valid_attributes: { name: 'Imported stone' },
     invalid_template: 'stone_invalid'
 
+  describe 'POST ingest_box with tab param' do
+    let(:resource) { instance_double(Box.name, save!: true) }
+
+    before do
+      request.env['HTTP_REFERER'] = '/stagings?tab=old&view=import'
+      allow(Box).to receive(:new).and_return(resource)
+
+      post :ingest_box, params: {
+        id: staging_id,
+        tab: 'boxes',
+        staging: { box_create_attributes: { name: 'Imported box', box_type_id: '1' } }
+      }
+    end
+
+    it 'preserves the requested tab in the redirect' do
+      expect(response).to redirect_to('/stagings?view=import&tab=boxes')
+    end
+  end
+
   describe 'POST create' do
     let(:staging) { instance_double(Staging, save: false, errors: { base: ['invalid'] }) }
     let(:json_attributes) { { collection_create_attributes: { name: 'Invalid collection' } } }
