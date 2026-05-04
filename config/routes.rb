@@ -88,7 +88,7 @@ Rails.application.routes.draw do
 
   resources :records, only: [:index]
 
-  resources :records, only: [:show, :destroy], format: false, constraints: { id: /[^\/]+/ } do
+  resources :records, only: [:show, :destroy], constraints: { id: /((?!\.(html$|json$|xml$|pml$|modal$)).)+/ } do
     member do
       get 'record_property' => 'records#property'
       get 'casteml'
