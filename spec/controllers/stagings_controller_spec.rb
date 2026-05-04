@@ -87,6 +87,25 @@ describe StagingsController do
     end
   end
 
+  describe 'POST ingest_box updating an existing box with tab param' do
+    let(:resource) { instance_double(Box.name, update!: true) }
+
+    before do
+      request.env['HTTP_REFERER'] = '/stagings?view=import&tab=old'
+      allow(Box).to receive(:find).with('42').and_return(resource)
+
+      post :ingest_box, params: {
+        id: staging_id,
+        tab: 'boxes',
+        staging: { box_create_attributes: { id: '42', name: 'Imported box', box_type_id: '1' } }
+      }
+    end
+
+    it 'replaces the existing tab in the redirect after update' do
+      expect(response).to redirect_to('/stagings?view=import&tab=boxes')
+    end
+  end
+
   describe 'POST create' do
     let(:staging) { instance_double(Staging, save: false, errors: { base: ['invalid'] }) }
     let(:json_attributes) { { collection_create_attributes: { name: 'Invalid collection' } } }

@@ -62,8 +62,16 @@ class ApplicationController < ActionController::Base
 
   def adjust_url_by_requesting_tab(url)
     return url if params[:tab].blank?
-    work_url = url.sub(/tab=.*&/,"").sub(/\?tab=.*/,"")
-    work_url + (work_url.include?("?") ? "&" : "?") + "tab=#{params[:tab]}"
+
+    begin
+      uri = URI.parse(url)
+      query_pairs = URI.decode_www_form(uri.query.to_s).reject { |key, _value| key == "tab" }
+      query_pairs << ["tab", params[:tab].to_s]
+      uri.query = query_pairs.any? ? URI.encode_www_form(query_pairs) : nil
+      uri.to_s
+    rescue URI::InvalidURIError
+      url
+    end
   end
 
   # Returns a safe referer URL that only allows redirects to the same origin.

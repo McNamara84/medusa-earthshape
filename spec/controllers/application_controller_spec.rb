@@ -8,11 +8,18 @@ describe ApplicationController do
     def test_safe_referer
       render plain: safe_referer_url
     end
+
+    def test_safe_referer_with_tab
+      render plain: safe_referer_url_with_requested_tab
+    end
   end
 
   describe '#safe_referer_url' do
     before do
-      routes.draw { get 'test_safe_referer' => 'anonymous#test_safe_referer' }
+      routes.draw do
+        get 'test_safe_referer' => 'anonymous#test_safe_referer'
+        get 'test_safe_referer_with_tab' => 'anonymous#test_safe_referer_with_tab'
+      end
     end
 
     context 'when referer is blank' do
@@ -138,6 +145,23 @@ describe ApplicationController do
     end
   end
 
+  describe '#safe_referer_url_with_requested_tab' do
+    before do
+      routes.draw do
+        get 'test_safe_referer' => 'anonymous#test_safe_referer'
+        get 'test_safe_referer_with_tab' => 'anonymous#test_safe_referer_with_tab'
+      end
+    end
+
+    it 'replaces an existing tab parameter that follows another query param' do
+      request.env['HTTP_REFERER'] = '/stagings?view=import&tab=old'
+
+      get :test_safe_referer_with_tab, params: { tab: 'boxes' }
+
+      expect(response.body).to eq('/stagings?view=import&tab=boxes')
+    end
+  end
+
   describe '#basic_authentication' do
     let(:invalid_utf8) { "\xC2\x16".dup.force_encoding(Encoding::UTF_8) }
     let(:password) { 'secret' }
@@ -241,6 +265,10 @@ describe ApplicationController do
         end
         context "present other param in url" do
           let(:url){"#{base_url}?#{other_tab_param}&#{other_param}"}
+          it { expect(subject).to eq "#{base_url}?#{other_param}&#{tab_param}"}
+        end
+        context "when tab is not the first query param" do
+          let(:url){"#{base_url}?#{other_param}&#{other_tab_param}"}
           it { expect(subject).to eq "#{base_url}?#{other_param}&#{tab_param}"}
         end
       end
